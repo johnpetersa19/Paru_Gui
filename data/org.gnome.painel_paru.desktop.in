@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=painel_paru
+Exec=painel_paru
+Icon=org.gnome.painel_paru
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true
