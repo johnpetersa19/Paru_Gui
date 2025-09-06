@@ -5,7 +5,6 @@ build/
 
 # Meson / Flatpak
 *.in
-*.json
 
 # Arquivos de cache e logs
 *.log
@@ -18,3 +17,4 @@ build/
 
 # Flatpak-builder específico
 .flatpak-builder/
+
