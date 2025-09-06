@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="PackagesCard" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">20</property>
+    <property name="margin-start">30</property>
+    <property name="margin-end">30</property>
+    <property name="margin-top">20</property>
+    <property name="margin-bottom">20</property>
+
+    <!-- Cabeçalho -->
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">10</property>
+
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">package-x-generic-symbolic</property>
+            <property name="pixel-size">24</property>
+            <property name="css-classes">accent</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Pacotes Pré-Compilados Detectados</property>
+            <property name="css-classes">title-3</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Lista de pacotes -->
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="vexpand">true</property>
+        <property name="min-content-height">150</property>
+
+        <child>
+          <object class="GtkListBox" id="packages_list">
+            <property name="selection-mode">none</property>
+            <property name="css-classes">boxed-list</property>
+
+            <!-- Exemplo de item -->
+            <child>
+              <object class="GtkListBoxRow">
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">firefox-120.0-1-x86_64.pkg.tar.zst</property>
+                    <property name="subtitle">124.5 MB</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkListBoxRow">
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">vscodium-1.78.2-1-x86_64.pkg.tar.zst</property>
+                    <property name="subtitle">189.2 MB</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Ações -->
+    <child>
+      <object class="GtkButton" id="install_button">
+        <property name="label" translatable="yes">Instalar Todos</property>
+        <property name="css-classes">suggested-action</property>
+      </object>
+    </child>
+
+    <!-- Ações secundárias -->
+    <child>
+      <object class="GtkBox" id="secondary_actions">
+        <property name="spacing">10</property>
+
+        <child>
+          <object class="GtkButton" id="info_button">
+            <property name="label" translatable="yes">Ver Informações</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="verify_button">
+            <property name="label" translatable="yes">Verificar Assinatura</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="PkgbuildCard" parent="GtkBox" id="pkgbuild_card">  <!-- ✅ ID ADICIONADO! -->
+    <property name="orientation">vertical</property>
+    <property name="spacing">20</property>
+    <property name="margin-start">30</property>
+    <property name="margin-end">30</property>
+    <property name="margin-top">20</property>
+    <property name="margin-bottom">20</property>
+
+    <!-- Cabeçalho -->
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">10</property>
+
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">text-x-generic-symbolic</property>
+            <property name="pixel-size">24</property>
+            <property name="css-classes">accent</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">PKGBUILD Detectado</property>
+            <property name="css-classes">title-3</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Caminho da pasta -->
+    <child>
+      <object class="GtkLabel" id="pkgbuild_path">
+        <property name="label" translatable="yes">Caminho: ~/projetos/firefox-custom</property>
+        <property name="css-classes">caption</property>
+        <property name="wrap">true</property>
+        <property name="xalign">0</property>
+      </object>
+    </child>
+
+    <!-- Ações principais -->
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">10</property>
+
+        <child>
+          <object class="GtkButton" id="build_button">
+            <property name="label" translatable="yes">Compilar Pacote</property>
+            <property name="css-classes">suggested-action</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="edit_button">
+            <property name="label" translatable="yes">Editar PKGBUILD</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Ações secundárias -->
+    <child>
+      <object class="GtkBox" id="secondary_actions">
+        <property name="spacing">10</property>
+
+        <child>
+          <object class="GtkButton" id="deps_button">
+            <property name="label" translatable="yes">Ver Dependências</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="sources_button">
+            <property name="label" translatable="yes">Baixar Fontes</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

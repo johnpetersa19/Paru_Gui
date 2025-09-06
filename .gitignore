@@ -1,0 +1,20 @@
+# Build e arquivos temporários
+build/
+*.tmp
+*.cmb
+
+# Meson / Flatpak
+*.in
+*.json
+
+# Arquivos de cache e logs
+*.log
+.cache/
+
+# Arquivos de sistema
+*.swp
+*.DS_Store
+*.bak
+
+# Flatpak-builder específico
+.flatpak-builder/
