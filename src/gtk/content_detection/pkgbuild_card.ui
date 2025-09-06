@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="PkgbuildCard" parent="GtkBox" id="pkgbuild_card">  <!-- ✅ ID ADICIONADO! -->
+  <object class="GtkBox" id="pkgbuild_card">
     <property name="orientation">vertical</property>
     <property name="spacing">20</property>
     <property name="margin-start">30</property>
@@ -49,6 +49,14 @@
         <child>
           <object class="GtkButton" id="build_button">
             <property name="label" translatable="yes">Compilar Pacote</property>
+            <property name="css-classes">flat</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="build_install_button">
+            <property name="label" translatable="yes">Compilar e Instalar</property>
             <property name="css-classes">suggested-action</property>
             <property name="hexpand">true</property>
           </object>
@@ -86,5 +94,5 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

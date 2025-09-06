@@ -1,22 +1,20 @@
 project('painel_paru', 'c',
   version: '0.1.0',
   meson_version: '>=0.57.0',
-  default_options: [
-    'warning_level=1',
-    'c_std=c11'
-  ]
+  default_options: ['warning_level=1', 'c_std=c11']
 )
 
 # Diretórios de instalação
 prefix = get_option('prefix')
-datadir = join_paths(prefix, get_option('datadir'))
+datadir = join_paths(prefix, 'share')
+bindir = join_paths(prefix, 'bin')
 pkgdatadir = join_paths(datadir, meson.project_name())
-moduledir = pkgdatadir / 'painel_paru'  # Mantém consistência com .gschema.xml
+moduledir = pkgdatadir / 'painel_paru'
 
 gnome = import('gnome')
 
-# Lista completa de recursos UI para o GResource
-resources = [
+# Lista completa de recursos UI para o GResource (como objetos File)
+resources = files(
   'src/gtk/help-overlay.ui',
   'src/gtk/initial_screen.ui',
   'src/gtk/content_detection/pkgbuild_card.ui',
@@ -24,26 +22,22 @@ resources = [
   'src/gtk/content_detection/patches_card.ui',
   'src/gtk/content_detection/empty_card.ui',
   'src/gtk/conflict_resolver/conflict_dialog.ui',
-  'src/gtk/preferences/debug_preferences.ui',
-  'src/gtk/preferences/devel_preferences.ui',
-]
+  'src/gtk/preferences/debug_preferences.ui'
+)
 
-# CORREÇÃO DEFINITIVA: Adicionado install: true para garantir instalação do GResource
+# Configuração CORRETA do GResource usando gnome.compile_resources
+# Instala no local padrão do GLib para recursos
 gnome.compile_resources(
   'painel_paru',
-  'src/painel_paru.gresource.xml',
-  source_dir: 'src',
-  gresource_bundle: true,
+  'data/painel_paru.gresource.xml',
   c_name: 'org_gnome_painel_paru',
-  install: true,  # LINHA ADICIONADA - ESSENCIAL PARA RESOLVER O PROBLEMA
-  install_dir: pkgdatadir)
-
-python = import('python')
-py = python.find_installation('python3')
+  dependencies: resources,
+  install_dir: join_paths(datadir, 'glib-2.0', 'resources')
+)
 
 # Configuração para painel_paru.in
 conf = configuration_data()
-conf.set('PYTHON', py.full_path())
+conf.set('PYTHON', 'python3')
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', join_paths(prefix, get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
@@ -59,7 +53,7 @@ configure_file(
 )
 
 # Lista completa de fontes Python
-painel_paru_sources = [
+painel_paru_sources = files(
   'src/__init__.py',
   'src/main.py',
   'src/window.py',
@@ -70,7 +64,7 @@ painel_paru_sources = [
   'src/aur_downloader.py',
   'src/paru_runner.py',
   'src/terminal.py'
-]
+)
 
 # Instala os módulos Python no local CORRETO
 install_data(painel_paru_sources, install_dir: moduledir)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="EmptyCard" parent="GtkBox" id="empty_card">  <!-- ✅ ID ADICIONADO! -->
+  <template class="EmptyCard" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="spacing">20</property>
     <property name="margin-start">30</property>

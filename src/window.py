@@ -9,94 +9,66 @@ class PainelParuWindow(Adw.ApplicationWindow):
         super().__init__(*args, **kwargs)
         self.set_title("Paru GUI")
         self.set_default_size(900, 650)
+        
+        # INICIALIZAÇÃO ABSOLUTAMENTE PRIMÁRIA DAS CONFIGURAÇÕES
+        # IMPORTANTE: Importação explícita de Gio dentro do bloco try-except
+        try:
+            from gi.repository import Gio
+            self.settings = Gio.Settings.new("org.gnome.painel_paru")
+            print("✅ Configurações inicializadas com sucesso")
+        except Exception as e:
+            print(f"❌ Erro FATAL ao inicializar configurações: {e}")
+            # Cria um objeto mock para evitar erros - DEVE SER FEITO MESMO EM CASO DE FALHA
+            class MockSettings:
+                def get_string(self, key):
+                    return "gedit"  # Editor padrão
+            self.settings = MockSettings()
 
-        # Cria um ToolbarView para gerenciar a interface
+        # Configuração da interface
         self.toolbar_view = Adw.ToolbarView()
-        
-        # Cria uma HeaderBar personalizada
-        self.header_bar = Adw.HeaderBar()
-        self.header_bar.set_title_widget(Adw.WindowTitle(title="Paru GUI", subtitle="Gerenciador de Pacotes AUR"))
-        
-        # Adiciona um botão de menu
-        menu_button = Gtk.MenuButton()
-        menu_icon = Gtk.Image.new_from_icon_name("open-menu-symbolic")
-        menu_button.set_child(menu_icon)
-        
-        # Cria o menu popover
-        menu_model = Gio.Menu.new()
-        menu_model.append("Preferências", "app.preferences")
-        menu_model.append("Sobre", "app.about")
-        menu_model.append("Sair", "app.quit")
-        
-        # Conecta as ações
-        action_group = Gio.SimpleActionGroup.new()
-        
-        preferences_action = Gio.SimpleAction.new("preferences", None)
-        preferences_action.connect("activate", self.show_preferences)
-        action_group.add_action(preferences_action)
-        
-        about_action = Gio.SimpleAction.new("about", None)
-        about_action.connect("activate", self.show_about)
-        action_group.add_action(about_action)
-        
-        quit_action = Gio.SimpleAction.new("quit", None)
-        quit_action.connect("activate", lambda a, p: self.get_application().quit())
-        action_group.add_action(quit_action)
-        
-        self.insert_action_group("app", action_group)
-        
-        # Configura o popover do menu
-        popover = Gtk.PopoverMenu.new_from_model(menu_model)
-        menu_button.set_popover(popover)
-        
-        # Adiciona o botão de menu à header bar
-        self.header_bar.pack_end(menu_button)
-        
-        # Adiciona a header bar ao toolbar view
-        self.toolbar_view.add_top_bar(self.header_bar)
-        
-        # Configura o conteúdo principal
-        self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.toolbar_view.set_content(self.content_box)
-        
-        # Define o toolbar view como conteúdo da janela
         self.set_content(self.toolbar_view)
-
-        # Estado atual da interface
-        self.current_state = None
-        self.content_path = None
-
-        # Terminal integrado para saída de comandos
+        
+        # Cabeçalho
+        header = Adw.HeaderBar()
+        self.toolbar_view.add_top_bar(header)
+        
+        # Caixa de conteúdo principal
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.main_box.set_margin_start(20)
+        self.main_box.set_margin_end(20)
+        self.main_box.set_margin_top(20)
+        self.main_box.set_margin_bottom(20)
+        self.toolbar_view.set_content(self.main_box)
+        
+        # Status label
+        self.status_label = Gtk.Label(
+            label="Selecione um arquivo ou pasta para começar",
+            css_classes=["subtitle-2"],
+            margin_top=20
+        )
+        self.main_box.append(self.status_label)
+        
+        # Área de conteúdo
+        self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.main_box.append(self.content_box)
+        
+        # Terminal
         self.terminal = TerminalView()
-        self.terminal.set_vexpand(True)
+        self.main_box.append(self.terminal)
+        self.main_box.set_homogeneous(False)
         
-        # Carrega a tela inicial
-        self.load_initial_screen()
-
-    def load_initial_screen(self):
-        """Carrega a tela inicial com os dois ícones centrais"""
-        self.current_state = "initial"
+        # Botões de ação
+        action_box = Gtk.Box(spacing=10, halign=Gtk.Align.CENTER)
         
-        # Limpa o conteúdo atual
-        for child in self.content_box:
-            self.content_box.remove(child)
+        select_file_btn = Gtk.Button(label="Selecionar Arquivo")
+        select_file_btn.connect("clicked", self.on_select_file)
+        action_box.append(select_file_btn)
         
-        # Cria o conteúdo da tela inicial
-        builder = Gtk.Builder.new_from_resource(
-            "/org/gnome/painel_paru/gtk/initial_screen.ui"
-        )
+        select_folder_btn = Gtk.Button(label="Selecionar Pasta")
+        select_folder_btn.connect("clicked", self.on_select_folder)
+        action_box.append(select_folder_btn)
         
-        # Adiciona o conteúdo à caixa principal
-        self.content_box.append(builder.get_object("initial_screen"))
-        
-        # Conecta os botões
-        builder.get_object("file_button").connect(
-            "clicked", self.on_select_file
-        )
-        builder.get_object("folder_button").connect(
-            "clicked", self.on_select_folder
-        )
-        self.status_label = builder.get_object("status_label")
+        self.main_box.append(action_box)
 
     def on_select_file(self, button):
         """Handler para seleção de arquivo único"""
@@ -121,7 +93,6 @@ class PainelParuWindow(Adw.ApplicationWindow):
         if response == Gtk.ResponseType.ACCEPT:
             self.content_path = dialog.get_file().get_path()
             self.status_label.set_label(f"Analisando: {self.content_path}")
-
             # Detecta conteúdo e carrega tela apropriada
             from .content_detector import ContentDetector
             state = ContentDetector.detect_content(self.content_path)
@@ -145,150 +116,108 @@ class PainelParuWindow(Adw.ApplicationWindow):
         }
 
         # Carrega o recurso correto
-        builder = Gtk.Builder.new_from_resource(
-            f"/org/gnome/painel_paru/{ui_map.get(state, 'gtk/initial_screen.ui')}"
-        )
+        try:
+            builder = Gtk.Builder.new_from_resource(f"/org/gnome/painel_paru/{ui_map.get(state, 'gtk/initial_screen.ui')}")
 
-        # Configura o conteúdo principal
-        if state == "pkgbuild":
-            self._setup_pkgbuild_card(builder)
-        elif state == "packages":
-            self._setup_packages_card(builder)
-        elif state == "empty":
-            self._setup_empty_card(builder)
-        elif state == "patches":
-            self._setup_patches_card(builder)
+            # Configura o conteúdo principal
+            widget = builder.get_object(f"{state}_card")
+            if widget:
+                self.content_box.append(widget)
 
-        self.content_box.append(builder.get_object(f"{state}_card"))
-        self.status_label.set_label(f"Modo: {state.replace('_', ' ').title()}")
+                # Configura botões específicos
+                if state == "pkgbuild":
+                    build_button = builder.get_object("build_button")
+                    build_install_button = builder.get_object("build_install_button")
+                    edit_button = builder.get_object("edit_button")
+                    deps_button = builder.get_object("deps_button")
+                    sources_button = builder.get_object("sources_button")
 
-    def _setup_pkgbuild_card(self, builder):
-        """Configura ações para o card PKGBUILD"""
-        builder.get_object("build_button").connect(
-            "clicked", lambda _: self._build_pkgbuild()
-        )
-        builder.get_object("edit_button").connect(
-            "clicked", lambda _: self._edit_pkgbuild()
-        )
-        builder.get_object("deps_button").connect(
-            "clicked", lambda _: self._show_dependencies()
-        )
-        builder.get_object("sources_button").connect(
-            "clicked", lambda _: self._download_sources()
-        )
+                    if build_button:
+                        build_button.connect("clicked", self.on_build)
 
-        # Atualiza o caminho exibido
-        builder.get_object("pkgbuild_path").set_label(
-            f"Caminho: {Path(self.content_path).parent}"
-        )
+                    if build_install_button:
+                        build_install_button.connect("clicked", lambda b: self.on_build(b, install=True))
 
-    def _setup_empty_card(self, builder):
-        """Configura ações para o card de pasta vazia"""
-        aur_search = builder.get_object("aur_search")
+                    if edit_button:
+                        edit_button.connect("clicked", self.on_edit_pkgbuild)
 
-        # Atualiza botão de download conforme digitação
-        aur_search.connect("changed", lambda entry:
-            builder.get_object("download_button").set_sensitive(bool(entry.get_text().strip()))
-        )
+                    if deps_button:
+                        deps_button.connect("clicked", self.on_check_dependencies)
 
-        # Configura busca ao pressionar Enter
-        aur_search.connect("activate", lambda _:
-            builder.get_object("download_button").clicked()
-        )
+                    if sources_button:
+                        sources_button.connect("clicked", self.on_download_sources)
 
-        # Configura botão de download
-        builder.get_object("download_button").connect(
-            "clicked", lambda _: self._download_pkgbuild(
-                aur_search.get_text(),
-                builder.get_object("ssh_toggle").get_active(),
-                builder.get_object("comments_toggle").get_active()
-            )
-        )
+                elif state == "empty":
+                    aur_search = builder.get_object("aur_search")
+                    download_button = builder.get_object("download_button")
 
-    def _setup_patches_card(self, builder):
-        """Configura ações para o card de patches"""
-        # Preenche lista de patches
-        patches_list = builder.get_object("patches_list")
-        patch_template = builder.get_object("patch_template")
+                    if aur_search and download_button:
+                        # Atualiza botão de download conforme digitação
+                        aur_search.connect("changed", lambda entry:
+                            download_button.set_sensitive(bool(entry.get_text().strip())))
 
-        # Limpa itens existentes
-        while patches_list.get_first_child():
-            patches_list.remove(patches_list.get_first_child())
+                        # Configura busca ao pressionar Enter
+                        aur_search.connect("activate", lambda _: download_button.clicked())
 
-        # Adiciona patches detectados
-        from .content_detector import ContentDetector
-        patches = ContentDetector.get_patches_in_folder(self.content_path)
+                        # Configura botão de download
+                        download_button.connect("clicked", lambda _:
+                            self._download_pkgbuild(
+                                aur_search.get_text(),
+                                builder.get_object("ssh_toggle").get_active(),
+                                builder.get_object("comments_toggle").get_active()
+                            ))
+            else:
+                self.status_label.set_label("❌ Erro: Tela não encontrada")
+        except Exception as e:
+            self.status_label.set_label(f"❌ Erro ao carregar tela: {str(e)}")
+    
+    def on_build(self, button, install=False):
+        """Inicia processo de build"""
+        try:
+            self.terminal.append(f"Iniciando build de {self.content_path}...")
+            from .build_manager import BuildManager
+            BuildManager.start_build(self.content_path, install, self.terminal.append)
+        except Exception as e:
+            self.terminal.append(f"❌ Erro ao iniciar build: {str(e)}", "error")
+            print(f"❌ Erro ao iniciar build: {e}")
+    
+    def on_edit_pkgbuild(self, button):
+        """Abre o PKGBUILD no editor configurado"""
+        try:
+            # Usa editor configurado nas preferências
+            editor = self.settings.get_string("editor") or "gedit"
+            pkgbuild_path = os.path.join(self.content_path, "PKGBUILD")
+            subprocess.Popen([editor, pkgbuild_path])
+        except Exception as e:
+            self.terminal.append(f"❌ Erro ao editar PKGBUILD: {str(e)}", "error")
+            print(f"❌ Erro ao editar PKGBUILD: {e}")
 
-        for patch in patches:
-            row = Gtk.ListBoxRow()
-            action_row = Adw.ActionRow(
-                title=patch.name,
-                subtitle=self._get_patch_description(patch)
-            )
-            row.set_child(action_row)
-            patches_list.append(row)
+    def on_check_dependencies(self, button):
+        """Verifica dependências do pacote"""
+        try:
+            from .paru_runner import ParuRunner
+            ParuRunner.run_command(["paru", "-Si", Path(self.content_path).name], self.terminal.append)
+            self.status_label.set_label("✅ Dependências verificadas")
+        except Exception as e:
+            self.terminal.append(f"❌ Erro ao buscar dependências: {str(e)}", "error")
+            print(f"❌ Erro ao buscar dependências: {e}")
 
-        # Configura ações
-        builder.get_object("apply_patches").connect(
-            "clicked", lambda _: self._apply_patches()
-        )
-        builder.get_object("view_patch").connect(
-            "clicked", lambda _: self._view_selected_patch(patches_list)
-        )
-        builder.get_object("refresh_list").connect(
-            "clicked", lambda _: self._load_content_screen("patches")
-        )
-
-    def _get_patch_description(self, patch_path):
-        """Gera descrição para o patch (simulação)"""
-        # Na implementação real, isso leria metadados do patch
-        if "fix" in patch_path.name.lower():
-            return "Corrige bugs críticos"
-        elif "security" in patch_path.name.lower():
-            return "Atualização de segurança"
-        return "Modificações gerais"
-
-    def _build_pkgbuild(self):
-        """Simulação de build do PKGBUILD"""
-        print(f"Building PKGBUILD at {self.content_path}")
-        # Na implementação real: chamar build_manager.py
+    def on_download_sources(self, button):
+        """Baixa fontes do PKGBUILD"""
+        try:
+            from .paru_runner import ParuRunner
+            ParuRunner.run_command(["makepkg", "-d", "-C", "--noextract"], self.terminal.append)
+            self.status_label.set_label("✅ Baixando fontes...")
+        except Exception as e:
+            self.terminal.append(f"❌ Erro ao baixar fontes: {str(e)}", "error")
+            print(f"❌ Erro ao baixar fontes: {e}")
 
     def _download_pkgbuild(self, pkg_name, use_ssh, show_comments):
-        """Simulação de download do PKGBUILD do AUR"""
-        print(f"Downloading {pkg_name} from AUR (SSH: {use_ssh}, Comments: {show_comments})")
-        # Na implementação real: chamar aur_downloader.py
-
-    def _apply_patches(self):
-        """Simulação de aplicação de patches"""
-        print(f"Applying patches from {self.content_path}")
-        # Na implementação real: executar patch commands
-
-    def _view_selected_patch(self, patches_list):
-        """Visualiza o patch selecionado"""
-        selected_row = patches_list.get_selected_row()
-        if selected_row:
-            patch_name = selected_row.get_child().get_title()
-            print(f"Viewing patch: {patch_name}")
-            # Na implementação real: abrir diff viewer
-
-    def go_back(self, *args):
-        """Volta para a tela inicial"""
-        self.load_initial_screen()
-    
-    def show_preferences(self, action, parameter):
-        """Mostra a janela de preferências"""
-        print("Abrindo preferências")
-        # Na implementação real: criar e mostrar a janela de preferências
-    
-    def show_about(self, action, parameter):
-        """Mostra a janela Sobre"""
-        about = Adw.AboutWindow(
-            transient_for=self,
-            application_name="Painel Paru",
-            application_icon="org.gnome.painel_paru",
-            developer_name="Seu Nome",
-            version="0.1.0",
-            developers=["Seu Nome <seu@email.com>"],
-            copyright="© 2023 Seu Nome"
-        )
-        about.present()
+        """Baixa PKGBUILD do AUR"""
+        try:
+            from .aur_downloader import AurDownloader
+            AurDownloader.download_pkgbuild(pkg_name, self.content_path, use_ssh, show_comments, self.terminal.append)
+            self.status_label.set_label(f"✅ PKGBUILD de {pkg_name} baixado")
+        except Exception as e:
+            self.terminal.append(f"❌ Erro ao baixar PKGBUILD: {str(e)}", "error")
+            print(f"❌ Erro ao baixar PKGBUILD: {e}")

@@ -10,7 +10,12 @@
     "--socket=fallback-x11",
     "--device=dri",
     "--socket=wayland",
-    "--filesystem=home"
+    "--filesystem=home",
+    "--filesystem=xdg-run/flatpak",
+    "--filesystem=xdg-run/gvfs",
+    "--talk-name=org.freedesktop.Flatpak",
+    "--talk-name=org.freedesktop.DBus",
+    "--own-name=org.gnome.painel_paru"
   ],
   "cleanup": [
     "/include",
