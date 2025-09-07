@@ -62,6 +62,9 @@
             <property name="width-request">150</property>
             <child>
               <object class="GtkBox" id="folder_box">
+                <property name="baseline-child">-1</property>
+                <property name="can-focus">True</property>
+                <property name="can-target">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">10</property>
                 <child>

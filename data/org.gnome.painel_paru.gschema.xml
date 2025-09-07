@@ -1,22 +1,26 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/org/gnome/painel_paru">
-    <!-- Tela Inicial -->
-    <file>src/gtk/initial_screen.ui</file>
-
-    <!-- Detecção de Conteúdo -->
-    <file>src/gtk/content_detection/pkgbuild_card.ui</file>
-    <file>src/gtk/content_detection/packages_card.ui</file>
-    <file>src/gtk/content_detection/patches_card.ui</file>
-    <file>src/gtk/content_detection/empty_card.ui</file>
-
-    <!-- Sistema de Conflitos -->
-    <file>src/gtk/conflict_resolver/conflict_dialog.ui</file>
-
-    <!-- Preferências -->
-    <file>src/gtk/preferences/debug_preferences.ui</file>
-
-    <!-- Outros recursos -->
-    <file>src/gtk/help-overlay.ui</file>
-  </gresource>
-</gresources>
+<schemalist>
+  <schema id="org.gnome.painel_paru" path="/org/gnome/painel_paru/">
+    <key name="editor" type="s">
+      <default>"gedit"</default>
+      <summary>Editor de texto padrão</summary>
+    </key>
+    <key name="auto-install" type="b">
+      <default>false</default>
+      <summary>Instalar após build</summary>
+    </key>
+    <key name="log-level" type="i">
+      <default>2</default>
+      <summary>Nível de log</summary>
+    </key>
+    <key name="dev-reload-ui" type="b">
+      <default>false</default>
+      <summary>Recarregar UI com Ctrl+R</summary>
+    </key>
+    <key name="build-dir" type="s">
+      <default>"build"</default>
+      <summary>Diretório de build</summary>
+    </key>
+  </schema>
+</schemalist>

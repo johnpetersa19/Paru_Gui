@@ -17,7 +17,7 @@ class ConflictResolver:
             
         # Carrega o diálogo do UI
         builder = Gtk.Builder.new_from_resource(
-            "/org/gnome/Example/gtk/conflict_resolver/conflict_dialog.ui"
+            "/org/gnome/painel_paru/gtk/conflict_resolver/conflict_dialog.ui"
         )
         dialog = builder.get_object("conflict_dialog")
         dialog.set_transient_for(parent_window)
