@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkBox" id="pkgbuild_card">
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="PkgbuildCard" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="spacing">20</property>
     <property name="margin-start">30</property>
@@ -94,5 +95,5 @@
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>

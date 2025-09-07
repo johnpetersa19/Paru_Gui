@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/painel_paru">
+    <!-- Interface principal -->
+    <file>src/gtk/help-overlay.ui</file>
     <file>src/gtk/initial_screen.ui</file>
+
+    <!-- Preferências -->
+    <file>src/gtk/preferences/general_preferences.ui</file>
+    <file>src/gtk/preferences/debug_preferences.ui</file>
+    <file>src/gtk/preferences/devel_preferences.ui</file>
+
+    <!-- Telas de conteúdo -->
     <file>src/gtk/content_detection/pkgbuild_card.ui</file>
     <file>src/gtk/content_detection/packages_card.ui</file>
     <file>src/gtk/content_detection/patches_card.ui</file>
     <file>src/gtk/content_detection/empty_card.ui</file>
-    <file>src/gtk/preferences/debug_preferences.ui</file>
+
+    <!-- Diálogo de conflito -->
     <file>src/gtk/conflict_resolver/conflict_dialog.ui</file>
-    <file>src/gtk/help-overlay.ui</file>
   </gresource>
 </gresources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Cambalache 0.97.8 -->
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <object class="AdwPreferencesPage" id="general_preferences">
+    <property name="title" translatable="yes">Geral</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Configurações Básicas</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Editor de Texto</property>
+            <child type="suffix">
+              <object class="GtkEntry" id="editor_entry">
+                <property name="text">gedit</property>
+                <property name="show-trailing">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
