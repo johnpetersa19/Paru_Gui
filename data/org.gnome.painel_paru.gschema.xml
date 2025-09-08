@@ -34,5 +34,25 @@
       <default>false</default>
       <summary>Ignorar revisão do PKGBUILD</summary>
     </key>
+    <key name="verbose-debug" type="b">
+      <default>false</default>
+      <summary>Mostrar warnings detalhados</summary>
+      <description>Se verdadeiro, mostra warnings detalhados durante o build.</description>
+    </key>
+    <key name="install-debug" type="b">
+      <default>false</default>
+      <summary>Instalar pacotes de depuração</summary>
+      <description>Se verdadeiro, instala versões de depuração dos pacotes.</description>
+    </key>
+    <key name="devel-mode" type="b">
+      <default>false</default>
+      <summary>Modo de desenvolvedor</summary>
+      <description>Se verdadeiro, permite atualizar pacotes de desenvolvimento (ex: -git, -svn).</description>
+    </key>
+    <key name="ignored-packages" type="as">
+      <default>[]</default>
+      <summary>Pacotes ignorados</summary>
+      <description>Lista de pacotes que devem ser ignorados durante atualizações.</description>
+    </key>
   </schema>
 </schemalist>
