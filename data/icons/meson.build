@@ -1,13 +1,13 @@
 application_id = 'org.gnome.painel_paru'
 
-scalable_dir = 'hicolor' / 'scalable' / 'apps'
+# Instala ícone escalável
 install_data(
-  scalable_dir / ('@0@.svg').format(application_id),
-  install_dir: get_option('datadir') / 'icons' / scalable_dir
+  'hicolor/scalable/apps/@0@.svg'.format(application_id),
+  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'scalable' / 'apps'
 )
 
-symbolic_dir = 'hicolor' / 'symbolic' / 'apps'
+# Instala ícone simbólico
 install_data(
-  symbolic_dir / ('@0@-symbolic.svg').format(application_id),
-  install_dir: get_option('datadir') / 'icons' / symbolic_dir
+  'hicolor/symbolic/apps/@0@-symbolic.svg'.format(application_id),
+  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'symbolic' / 'apps'
 )

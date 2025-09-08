@@ -14,59 +14,27 @@ gnome = import('gnome')
 i18n = import('i18n')
 
 # Recursos UI
+resources = files(
+  'src/gtk/help-overlay.ui',
+  'src/gtk/initial_screen.ui',
+  'src/gtk/content_detection/pkgbuild_card.ui',
+  'src/gtk/content_detection/packages_card.ui',
+  'src/gtk/content_detection/patches_card.ui',
+  'src/gtk/content_detection/empty_card.ui',
+  'src/gtk/preferences/debug_preferences.ui',
+  'src/gtk/conflict_resolver/conflict_dialog.ui'
+)
 
 # Compila GResource
+gnome.compile_resources('painel_paru',
+  'src/painel_paru.gresource.xml',
+  c_name: 'org_gnome_painel_paru',
+  dependencies: resources,
+  install_dir: join_paths(datadir, 'glib-2.0', 'resources')
+)
 
 # Configuração
 python = find_program('python3', required: true)
-# Lista de arquivos UI
-resources = files(
-  'src/gtk/help-overlay.ui',
-  'src/gtk/initial_screen.ui',
-  'src/gtk/content_detection/pkgbuild_card.ui',
-  'src/gtk/content_detection/packages_card.ui',
-  'src/gtk/content_detection/patches_card.ui',
-  'src/gtk/content_detection/empty_card.ui',
-  'src/gtk/conflict_resolver/conflict_dialog.ui',
-  'src/gtk/preferences/general_preferences.ui',
-  'src/gtk/preferences/debug_preferences.ui',
-  'src/gtk/preferences/devel_preferences.ui'
-)
-
-# Compila os recursos GResource
-gnome.compile_resources(
-  'painel_paru',
-  'data/org.gnome.painel_paru.gresource.xml',
-  sources: resources,
-  c_name: 'org_gnome_painel_paru',
-  export: true
-)
-# Lista de arquivos UI
-resources = files(
-  'src/gtk/help-overlay.ui',
-  'src/gtk/initial_screen.ui',
-  'src/gtk/content_detection/pkgbuild_card.ui',
-  'src/gtk/content_detection/packages_card.ui',
-  'src/gtk/content_detection/patches_card.ui',
-  'src/gtk/content_detection/empty_card.ui',
-  'src/gtk/conflict_resolver/conflict_dialog.ui',
-  'src/gtk/preferences/general_preferences.ui',
-  'src/gtk/preferences/debug_preferences.ui',
-  'src/gtk/preferences/devel_preferences.ui'
-
-# Compila os recursos GResource
-gnome.compile_resources(
-  'painel_paru',
-  'data/org.gnome.painel_paru.gresource.xml',
-  sources: resources,
-  c_name: 'org_gnome_painel_paru',
-  export: true
-
-# Lista de arquivos UI
-
-# Compila os recursos GResource
-
-
 conf = configuration_data()
 conf.set('PYTHON', python.path())
 conf.set('VERSION', meson.project_version())
@@ -81,6 +49,7 @@ configure_file(
   install: true,
   install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
+)
 
 # Fontes do módulo
 painel_paru_sources = files(
@@ -94,9 +63,11 @@ painel_paru_sources = files(
   'src/painel_paru/aur_downloader.py',
   'src/painel_paru/paru_runner.py',
   'src/painel_paru/terminal.py'
+)
 install_data(painel_paru_sources, install_dir: moduledir)
 
 # Schema
 install_data('data/org.gnome.painel_paru.gschema.xml',
   install_dir: join_paths(datadir, 'glib-2.0', 'schemas')
+)
 meson.add_install_script('glib-compile-schemas', join_paths(datadir, 'glib-2.0', 'schemas'))

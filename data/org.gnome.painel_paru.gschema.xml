@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.painel_paru" path="/org/gnome/painel_paru/">
@@ -21,6 +20,19 @@
     <key name="build-dir" type="s">
       <default>"build"</default>
       <summary>Diretório de build</summary>
+    </key>
+    <!-- NOVAS CHAVES ADICIONADAS ABAIXO -->
+    <key name="review-pkgbuild" type="b">
+      <default>true</default>
+      <summary>Revisar PKGBUILD antes do build</summary>
+    </key>
+    <key name="clean-after" type="b">
+      <default>false</default>
+      <summary>Limpar após build (paru --cleanafter)</summary>
+    </key>
+    <key name="skip-review" type="b">
+      <default>false</default>
+      <summary>Ignorar revisão do PKGBUILD</summary>
     </key>
   </schema>
 </schemalist>

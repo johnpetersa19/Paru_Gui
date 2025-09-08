@@ -1,100 +1,52 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.97.8 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-name initial_screen.ui -->
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkBox" id="initial_screen">
-    <property name="halign">center</property>
-    <property name="margin-bottom">30</property>
-    <property name="margin-top">30</property>
-    <property name="orientation">vertical</property>
-    <property name="spacing">40</property>
-    <property name="valign">center</property>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="InitialScreen" parent="AdwBin">
+    <property name="vexpand">true</property>
     <child>
-      <object class="GtkLabel">
-        <property name="css-classes">title-4</property>
-        <property name="label">Paru GUI</property>
-        <property name="margin-bottom">20</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkCenterBox">
-        <property name="halign">fill</property>
-        <child type="start">
-          <object class="GtkButton" id="file_button">
-            <property name="css-classes">card,elevated</property>
-            <property name="halign">center</property>
-            <property name="height-request">150</property>
-            <property name="margin-end">60</property>
-            <property name="valign">center</property>
-            <property name="width-request">150</property>
-            <child>
-              <object class="GtkBox" id="file_box">
-                <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="css-classes">accent</property>
-                    <property name="icon-name">user-desktop</property>
-                    <property name="pixel-size">64</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="css-classes">heading</property>
-                    <property name="justify">center</property>
-                    <property name="label" translatable="yes">Selecionar Arquivo</property>
-                    <property name="max-width-chars">15</property>
-                    <property name="wrap">true</property>
-                  </object>
-                </child>
-              </object>
-            </child>
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+        <property name="spacing">20</property>
+        <property name="halign">center</property>
+        <property name="valign">center</property>
+        <property name="hexpand">true</property>
+        <property name="margin-top">40</property>
+        <property name="margin-bottom">40</property>
+        <property name="margin-start">40</property>
+        <property name="margin-end">40</property>
+        
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Selecione um arquivo ou pasta para começar</property>
+            <property name="css-classes">title-4</property>
           </object>
         </child>
-        <child type="end">
-          <object class="GtkButton" id="folder_button">
-            <property name="css-classes">card,elevated</property>
+        
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">10</property>
             <property name="halign">center</property>
-            <property name="height-request">150</property>
-            <property name="margin-start">60</property>
-            <property name="valign">center</property>
-            <property name="width-request">150</property>
+            
             <child>
-              <object class="GtkBox" id="folder_box">
-                <property name="baseline-child">-1</property>
-                <property name="can-focus">True</property>
-                <property name="can-target">True</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="css-classes">accent</property>
-                    <property name="icon-name">user-home</property>
-                    <property name="pixel-size">64</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="css-classes">heading</property>
-                    <property name="justify">center</property>
-                    <property name="label" translatable="yes">Escolher Pasta</property>
-                    <property name="max-width-chars">15</property>
-                    <property name="wrap">true</property>
-                  </object>
-                </child>
+              <object class="GtkButton" id="select_file_btn">
+                <property name="icon-name">document-open</property>
+                <property name="label" translatable="yes">Selecionar Arquivo</property>
+                <property name="css-classes">suggested-action</property>
+              </object>
+            </child>
+            
+            <child>
+              <object class="GtkButton" id="select_folder_btn">
+                <property name="icon-name">folder-open</property>
+                <property name="label" translatable="yes">Selecionar Pasta</property>
+                <property name="css-classes">suggested-action</property>
               </object>
             </child>
           </object>
         </child>
       </object>
     </child>
-    <child>
-      <object class="GtkLabel" id="status_label">
-        <property name="css-classes">subtitle-2</property>
-        <property name="label" translatable="yes">Selecione um arquivo ou pasta para começar</property>
-        <property name="margin-top">20</property>
-      </object>
-    </child>
-  </object>
+  </template>
 </interface>
