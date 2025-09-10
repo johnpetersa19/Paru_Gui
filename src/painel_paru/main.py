@@ -32,8 +32,13 @@ except ImportError as e:
     sys.exit(1)
 
 def main(version):
-    """Função principal do aplicativo"""
+    """Função principal do aplicativo
+
+    Args:
+        version: Versão do aplicativo passada pelo sistema de build
+    """
     print(f"Aplicativo iniciado às {GLib.DateTime.new_now_local().format('%H:%M:%S')}")
+    print(f"Versão: {version}")
 
     # Cria a aplicação
     app = Adw.Application(

@@ -2,17 +2,20 @@
 <gresources>
   <gresource prefix="/org/gnome/painel_paru/gtk">
     <!-- Telas principais -->
-    <file>gtk/initial_screen.ui</file>
-    <file>gtk/help-overlay.ui</file>
+    <file>initial_screen.ui</file>
+    <file>help-overlay.ui</file>
+
     <!-- Cards de detecção de conteúdo -->
-    <file>gtk/content_detection/pkgbuild_card.ui</file>
-    <file>gtk/content_detection/packages_card.ui</file>
-    <file>gtk/content_detection/patches_card.ui</file>
-    <file>gtk/content_detection/empty_card.ui</file>
+    <file>content_detection/pkgbuild_card.ui</file>
+    <file>content_detection/packages_card.ui</file>
+    <file>content_detection/patches_card.ui</file>
+    <file>content_detection/empty_card.ui</file>
+
     <!-- Diálogos -->
-    <file>gtk/conflict_resolver/conflict_dialog.ui</file>
+    <file>conflict_resolver/conflict_dialog.ui</file>
+
     <!-- Preferências -->
-    <file>gtk/preferences/debug_preferences.ui</file>
-    <file>gtk/preferences/devel_preferences.ui</file>
+    <file>preferences/debug_preferences.ui</file>
+    <file>preferences/devel_preferences.ui</file>
   </gresource>
 </gresources>

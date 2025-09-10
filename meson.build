@@ -36,7 +36,7 @@ gnome.compile_resources('painel_paru',
 # Configuração
 python = find_program('python3', required: true)
 conf = configuration_data()
-conf.set('PYTHON', python.path())
+conf.set('PYTHON', python.full_path()) # CORREÇÃO: Usando full_path() em vez de path()
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', join_paths(prefix, get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)

@@ -7,6 +7,9 @@ from .ui_builder import UI_Builder
 from .terminal_manager import TerminalManager
 from .preferences_manager import PreferencesManager
 import gettext
+import gi
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib
 _ = gettext.gettext
 
 class PainelParuWindow(Adw.ApplicationWindow):
@@ -56,12 +59,39 @@ class PainelParuWindow(Adw.ApplicationWindow):
         if self._cancel_button:
             self._cancel_button.set_visible(False)
 
-        # CORREÇÃO: Usa o UI_BUILDER para carregar a tela inicial
-        # O NavigationManager não tem o método load_initial_screen
-        self.ui_builder.load_initial_screen()
+        # CORREÇÃO: Usa GLib.idle_add para garantir que a interface esteja pronta
+        # O problema era que o recurso estava sendo carregado antes da interface estar totalmente construída
+        GLib.idle_add(self._load_initial_screen_safely)
 
         # Janela de preferências (inicialmente nula)
         self.preferences_window = None
+
+    def _load_initial_screen_safely(self):
+        """Carrega a tela inicial com tratamento de erro"""
+        try:
+            # Tenta carregar a tela inicial
+            self.ui_builder.load_initial_screen()
+            return False  # Retorna False para não executar novamente
+        except Exception as e:
+            print(f"❌ Erro ao carregar tela inicial: {str(e)}")
+            # Cria uma tela de erro simples
+            error_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+            error_box.set_margin_start(20)
+            error_box.set_margin_end(20)
+            error_box.set_margin_top(20)
+            error_box.set_margin_bottom(20)
+
+            error_label = Gtk.Label(label=_("Erro ao carregar a interface do usuário"))
+            error_label.set_wrap(True)
+            error_box.append(error_label)
+
+            error_detail = Gtk.Label(label=str(e))
+            error_detail.set_wrap(True)
+            error_detail.get_style_context().add_class("error")
+            error_box.append(error_detail)
+
+            self._content_box.append(error_box)
+            return False
 
     # Métodos de acesso para o estado centralizado
     def set_content_path(self, path):
