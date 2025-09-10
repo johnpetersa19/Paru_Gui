@@ -4,6 +4,7 @@ import subprocess
 import gettext
 from pathlib import Path
 import shutil
+import logging
 _ = gettext.gettext
 
 from .utils import check_content_path, check_path_exists, check_pkgbuild_exists
@@ -36,6 +37,11 @@ class WindowHandlers:
         if not check_content_path(self.window, self.terminal_manager):
             return
 
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
+            return
+
         if not check_pkgbuild_exists(self.window, self.terminal_manager):
             return
 
@@ -43,19 +49,32 @@ class WindowHandlers:
             pkgbuild_path = os.path.join(self.window.content_path, "PKGBUILD")
 
             # Obtém o editor das preferências
-            editor = self.settings.get_string("editor") or "gedit"
-            cmd = [editor, pkgbuild_path]
+            editor = self.settings.get_string("editor") or "xdg-open"
 
-            # Tenta abrir com o editor configurado
-            subprocess.Popen(cmd)
+            # Verifica se o editor existe
+            editor_path = shutil.which(editor)
+            if not editor_path:
+                self.terminal_manager.show_error(_("Editor não encontrado: %s") % editor)
+                return
+
+            cmd = [editor, pkgbuild_path]
+            # Executa sem shell para segurança
+            subprocess.Popen(cmd, shell=False)
             self.terminal_manager.show_info(_("PKGBUILD aberto no editor"))
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao editar PKGBUILD: ") + str(e))
-            print(f"❌ Erro ao editar PKGBUILD: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao editar PKGBUILD: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error editing PKGBUILD: %s - %s", error_type, str(e))
 
     def on_verify_signatures(self, *args, **kwargs):
         """Verifica assinaturas dos pacotes"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         try:
@@ -65,7 +84,7 @@ class WindowHandlers:
                 self.terminal_manager.show_warning(_("Nenhum arquivo .sig encontrado."))
             else:
                 for sig in sig_files:
-                    self.terminal_manager.show_info(_("Verificando: ") + sig.name)
+                    self.terminal_manager.show_info(_("Verificando: %s") % sig.name)
                     # Verifica a assinatura
                     from .paru_runner import ParuRunner
                     ParuRunner.run_command(["pacman-key", "--verify", str(sig)], self.terminal_manager.append)
@@ -78,17 +97,24 @@ class WindowHandlers:
                 for pkg in packages:
                     # Extrai o nome do pacote do arquivo
                     pkg_name = pkg.name.split('-')[0]
-                    self.terminal_manager.show_info(_("Verificando integridade: ") + pkg_name)
+                    self.terminal_manager.show_info(_("Verificando integridade: %s") % pkg_name)
                     # Comando correto para verificar a integridade de pacotes instalados
                     from .paru_runner import ParuRunner
                     ParuRunner.run_command(["pacman", "-Qk", pkg_name], self.terminal_manager.append)
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao verificar assinaturas: ") + str(e))
-            print(f"❌ Erro ao verificar assinaturas: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao verificar assinaturas: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error verifying signatures: %s - %s", error_type, str(e))
 
     def on_build_package(self, *args, **kwargs):
         """Inicia processo de build com verificação de conflitos"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_path_exists(self.window, self.terminal_manager):
@@ -115,11 +141,14 @@ class WindowHandlers:
                             package_name = line.split("=")[1].strip().strip('"')
                             break
             except Exception as e:
-                self.terminal_manager.show_error(_("Erro ao ler PKGBUILD: ") + str(e))
+                error_type = type(e).__name__
+                error_msg = _("Erro ao ler PKGBUILD: %s") % error_type
+                self.terminal_manager.show_error(error_msg)
+                logging.error("Error reading PKGBUILD: %s - %s", error_type, str(e))
                 return
 
             if package_name:
-                self.terminal_manager.show_info(_("Pacote detectado: ") + package_name)
+                self.terminal_manager.show_info(_("Pacote detectado: %s") % package_name)
                 # Verifica conflitos
                 from .paru_runner import ParuRunner
                 ParuRunner.run_command(["paru", "-Si", package_name], self.terminal_manager.append)
@@ -146,6 +175,11 @@ class WindowHandlers:
         if not check_content_path(self.window, self.terminal_manager):
             return
 
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
+            return
+
         if not check_path_exists(self.window, self.terminal_manager):
             return
 
@@ -154,18 +188,25 @@ class WindowHandlers:
 
             # Instala todos os pacotes .pkg.tar.zst no diretório
             for pkg in Path(self.window.content_path).glob("*.pkg.tar.zst"):
-                self.terminal_manager.show_info(_("Instalando: ") + pkg.name)
+                self.terminal_manager.show_info(_("Instalando: %s") % pkg.name)
                 from .paru_runner import ParuRunner
                 ParuRunner.run_command(["sudo", "pacman", "-U", str(pkg)], self.terminal_manager.append)
 
             self.terminal_manager.show_success(_("Instalação concluída!"))
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao instalar pacotes: ") + str(e))
-            print(f"❌ Erro ao instalar pacotes: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao instalar pacotes: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error installing packages: %s - %s", error_type, str(e))
 
     def on_apply_patches(self, *args, **kwargs):
         """Aplica patches ao PKGBUILD"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_path_exists(self.window, self.terminal_manager):
@@ -190,13 +231,13 @@ class WindowHandlers:
             # Faz backup do PKGBUILD original
             backup_path = f"{pkgbuild_path}.bak"
             shutil.copy2(pkgbuild_path, backup_path)
-            self.terminal_manager.show_info(_("Backup do PKGBUILD criado: ") + backup_path)
+            self.terminal_manager.show_info(_("Backup do PKGBUILD criado: %s") % backup_path)
 
             # Aplica cada patch
             all_patches_applied = True
             for patch in patches:
                 patch_path = os.path.join(self.window.content_path, patch)
-                self.terminal_manager.show_info(_("Aplicando patch: ") + patch)
+                self.terminal_manager.show_info(_("Aplicando patch: %s") % patch)
 
                 # Usa o comando patch para aplicar
                 result = subprocess.run(
@@ -208,7 +249,8 @@ class WindowHandlers:
                 if result.returncode == 0:
                     self.terminal_manager.show_success(_("Patch aplicado com sucesso."))
                 else:
-                    self.terminal_manager.show_error(_("Erro ao aplicar patch:") + result.stderr)
+                    error_msg = _("Erro ao aplicar patch: %s") % result.stderr
+                    self.terminal_manager.show_error(error_msg)
                     # Restaura o PKGBUILD original em caso de erro
                     shutil.copy2(backup_path, pkgbuild_path)
                     all_patches_applied = False
@@ -219,21 +261,34 @@ class WindowHandlers:
             else:
                 self.terminal_manager.show_warning(_("Alguns patches não foram aplicados."))
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao aplicar patches: ") + str(e))
-            print(f"❌ Erro ao aplicar patches: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao aplicar patches: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error applying patches: %s - %s", error_type, str(e))
 
     def on_cancel_operation(self, *args, **kwargs):
-        """Cancela a operação em andamento"""
+        """Cancela a operação em andamento com terminação robusta"""
         if hasattr(self.window, 'current_process') and self.window.current_process:
             try:
                 self.window.current_process.terminate()
+                try:
+                    # Aguarda até 2 segundos para o processo terminar
+                    self.window.current_process.wait(timeout=2.0)
+                except subprocess.TimeoutExpired:
+                    self.terminal_manager.show_warning(_("Processo não respondeu ao término gracioso, forçando encerramento..."))
+                    self.window.current_process.kill()
+                    self.window.current_process.wait()
+
                 self.terminal_manager.show_info(_("Operação cancelada"))
                 self.window.current_process = None
                 # Atualiza o estado do botão de cancelar
                 self.window.cancel_button.set_visible(False)
                 self.window.end_operation()
             except Exception as e:
-                self.terminal_manager.show_error(_("Erro ao cancelar operação: ") + str(e))
+                error_type = type(e).__name__
+                error_msg = _("Erro ao cancelar operação: %s") % error_type
+                self.terminal_manager.show_error(error_msg)
+                logging.error("Error cancelling operation: %s - %s", error_type, str(e))
 
     def on_show_preferences(self, *args, **kwargs):
         """Mostra janela de preferências"""
@@ -265,10 +320,10 @@ class WindowHandlers:
             license_type=Gtk.License.GPL_3_0
         )
         # Informações básicas
-        about.set_website("https://github.com/paru-gui      ")
+        about.set_website("https://github.com/paru-gui")
         # Links adicionais
-        about.add_link(_("Documentação"), "https://github.com/paru-gui/wiki      ")
-        about.add_link(_("Doações"), "https://github.com/sponsors/paru-gui      ")
+        about.add_link(_("Documentação"), "https://github.com/paru-gui/wiki")
+        about.add_link(_("Doações"), "https://github.com/sponsors/paru-gui")
         # Apresenta a janela
         about.present()
 
@@ -283,7 +338,7 @@ class WindowHandlers:
     def _show_file_chooser(self, action):
         """Mostra diálogo de seleção de arquivo/pasta"""
         dialog = Gtk.FileChooserNative(
-            title=_("Selecionar") + (" " + _("Arquivo") if action == Gtk.FileChooserAction.OPEN else " " + _("Pasta")),
+            title=_("Selecionar %s") % (_("Arquivo") if action == Gtk.FileChooserAction.OPEN else _("Pasta")),
             transient_for=self.window,
             action=action
         )
@@ -356,25 +411,40 @@ class WindowHandlers:
                     subprocess.Popen(["gio", "open", self.window.content_path])
                     self.terminal_manager.show_info(_("Pasta aberta no gerenciador de arquivos"))
                 except Exception as e:
-                    self.terminal_manager.show_error(_("Erro ao abrir pasta: ") + str(e))
+                    error_type = type(e).__name__
+                    error_msg = _("Erro ao abrir pasta: %s") % error_type
+                    self.terminal_manager.show_error(error_msg)
+                    logging.error("Error opening folder: %s - %s", error_type, str(e))
 
     def on_check_dependencies(self, *args, **kwargs):
         """Verifica dependências do pacote"""
         if not check_content_path(self.window, self.terminal_manager):
             return
 
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
+            return
+
         try:
             package_name = os.path.basename(self.window.content_path)
-            self.terminal_manager.show_progress(_("Verificando dependências de") + f" {package_name}...")
+            self.terminal_manager.show_progress(_("Verificando dependências de %s...") % package_name)
             from .paru_runner import ParuRunner
             ParuRunner.run_command(["paru", "-Si", package_name], self.terminal_manager.append)
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao verificar dependências: ") + str(e))
-            print(f"❌ Erro ao verificar dependências: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao verificar dependências: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error checking dependencies: %s - %s", error_type, str(e))
 
     def on_refresh_patches(self, *args, **kwargs):
         """Atualiza patches do repositório"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_path_exists(self.window, self.terminal_manager):
@@ -392,77 +462,25 @@ class WindowHandlers:
             else:
                 self.terminal_manager.show_warning(_("Diretório não é um repositório Git."))
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao atualizar patches: ") + str(e))
-            print(f"❌ Erro ao atualizar patches: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao atualizar patches: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error refreshing patches: %s - %s", error_type, str(e))
 
     def on_update_system(self, *args, **kwargs):
         """Atualiza o sistema completo"""
-        # Extraímos os parâmetros necessários para lidar com diferentes tipos de conexão
-        action = None
-        parameter = None
-
-        # Se houver pelo menos um argumento, assume-se que é o action
-        if len(args) > 0:
-            action = args[0]
-
-        # Se houver pelo menos dois argumentos, assume-se que o segundo é o parameter
-        if len(args) > 1:
-            parameter = args[1]
-
-        # Alternativamente, os parâmetros podem vir como argumentos nomeados
-        if action is None and 'action' in kwargs:
-            action = kwargs['action']
-        if parameter is None and 'parameter' in kwargs:
-            parameter = kwargs['parameter']
-
         self.terminal_manager.show_progress(_("Atualizando sistema..."))
         from .paru_runner import ParuRunner
         ParuRunner.run_command(["paru", "-Syu"], self.terminal_manager.append)
 
     def on_check_updates(self, *args, **kwargs):
         """Verifica atualizações disponíveis"""
-        # Extraímos os parâmetros necessários para lidar com diferentes tipos de conexão
-        action = None
-        parameter = None
-
-        # Se houver pelo menos um argumento, assume-se que é o action
-        if len(args) > 0:
-            action = args[0]
-
-        # Se houver pelo menos dois argumentos, assume-se que o segundo é o parameter
-        if len(args) > 1:
-            parameter = args[1]
-
-        # Alternativamente, os parâmetros podem vir como argumentos nomeados
-        if action is None and 'action' in kwargs:
-            action = kwargs['action']
-        if parameter is None and 'parameter' in kwargs:
-            parameter = kwargs['parameter']
-
         self.terminal_manager.show_progress(_("Verificando atualizações..."))
         from .paru_runner import ParuRunner
-        ParuRunner.run_command(["paru", "-Syu", "--dryrun"], self.terminal_manager.append)
+        ParuRunner.run_command(["paru", "-Qua", "--color=never"], self.terminal_manager.append)
 
     def on_clear_cache(self, *args, **kwargs):
         """Limpa o cache do paru"""
-        # Extraímos os parâmetros necessários para lidar com diferentes tipos de conexão
-        action = None
-        parameter = None
-
-        # Se houver pelo menos um argumento, assume-se que é o action
-        if len(args) > 0:
-            action = args[0]
-
-        # Se houver pelo menos dois argumentos, assume-se que o segundo é o parameter
-        if len(args) > 1:
-            parameter = args[1]
-
-        # Alternativamente, os parâmetros podem vir como argumentos nomeados
-        if action is None and 'action' in kwargs:
-            action = kwargs['action']
-        if parameter is None and 'parameter' in kwargs:
-            parameter = kwargs['parameter']
-
         self.terminal_manager.show_progress(_("Limpando cache..."))
         from .paru_runner import ParuRunner
         ParuRunner.run_command(["paru", "-Scc"], self.terminal_manager.append)
@@ -470,6 +488,11 @@ class WindowHandlers:
     def on_pkgbuild_info(self, *args, **kwargs):
         """Mostra informações do PKGBUILD"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_pkgbuild_exists(self.window, self.terminal_manager):
@@ -481,12 +504,19 @@ class WindowHandlers:
             ParuRunner.run_command(["cat", os.path.join(self.window.content_path, "PKGBUILD")],
                                   self.terminal_manager.append)
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao obter informações: ") + str(e))
-            print(f"❌ Erro ao obter informações: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao obter informações: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error getting PKGBUILD info: %s - %s", error_type, str(e))
 
     def on_packages_info(self, *args, **kwargs):
         """Mostra informações dos pacotes"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_path_exists(self.window, self.terminal_manager):
@@ -495,16 +525,23 @@ class WindowHandlers:
         try:
             # Comando para mostrar informações de todos os pacotes .pkg.tar.zst
             for pkg in Path(self.window.content_path).glob("*.pkg.tar.zst"):
-                self.terminal_manager.show_info(_("Obtendo informações de: ") + pkg.name)
+                self.terminal_manager.show_info(_("Obtendo informações de: %s") % pkg.name)
                 from .paru_runner import ParuRunner
                 ParuRunner.run_command(["pacman", "-Qi", str(pkg)], self.terminal_manager.append)
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao obter informações: ") + str(e))
-            print(f"❌ Erro ao obter informações: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao obter informações: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error getting packages info: %s - %s", error_type, str(e))
 
     def on_verify_packages(self, *args, **kwargs):
         """Verifica assinaturas dos pacotes corretamente"""
         if not check_content_path(self.window, self.terminal_manager):
+            return
+
+        # Verifica se é um diretório
+        if not os.path.isdir(self.window.content_path):
+            self.terminal_manager.show_error(_("Caminho selecionado não é um diretório"))
             return
 
         if not check_path_exists(self.window, self.terminal_manager):
@@ -517,7 +554,7 @@ class WindowHandlers:
                 self.terminal_manager.show_warning(_("Nenhum arquivo .sig encontrado."))
             else:
                 for sig in sig_files:
-                    self.terminal_manager.show_info(_("Verificando: ") + sig.name)
+                    self.terminal_manager.show_info(_("Verificando: %s") % sig.name)
                     # Verifica a assinatura
                     from .paru_runner import ParuRunner
                     ParuRunner.run_command(["pacman-key", "--verify", str(sig)], self.terminal_manager.append)
@@ -530,10 +567,12 @@ class WindowHandlers:
                 for pkg in packages:
                     # Extrai o nome do pacote do arquivo
                     pkg_name = pkg.name.split('-')[0]
-                    self.terminal_manager.show_info(_("Verificando integridade: ") + pkg_name)
+                    self.terminal_manager.show_info(_("Verificando integridade: %s") % pkg_name)
                     # Comando correto para verificar a integridade de pacotes instalados
                     from .paru_runner import ParuRunner
                     ParuRunner.run_command(["pacman", "-Qk", pkg_name], self.terminal_manager.append)
         except Exception as e:
-            self.terminal_manager.show_error(_("Erro ao verificar assinaturas: ") + str(e))
-            print(f"❌ Erro ao verificar assinaturas: {e}")
+            error_type = type(e).__name__
+            error_msg = _("Erro ao verificar assinaturas: %s") % error_type
+            self.terminal_manager.show_error(error_msg)
+            logging.error("Error verifying packages: %s - %s", error_type, str(e))

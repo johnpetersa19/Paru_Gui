@@ -5,23 +5,23 @@ _ = gettext.gettext
 # Configuração de mapeamento de estados para interfaces
 UI_BUILDER_CONFIG = {
     "packages": {
-        "file": "gtk/content_detection/packages_card.ui",
+        "file": "content_detection/packages_card.ui",
         "widget_id": "PackagesCard"
     },
     "patches": {
-        "file": "gtk/content_detection/patches_card.ui",
+        "file": "content_detection/patches_card.ui",
         "widget_id": "PatchesCard"
     },
     "aur": {
-        "file": "gtk/content_detection/aur_search.ui",
+        "file": "content_detection/aur_search.ui",
         "widget_id": "AurSearchCard"
     },
     "empty": {
-        "file": "gtk/content_detection/empty_card.ui",
+        "file": "content_detection/empty_card.ui",
         "widget_id": "EmptyCard"
     },
     "generic": {
-        "file": "gtk/content_detection/empty_card.ui",
+        "file": "content_detection/empty_card.ui",
         "widget_id": "EmptyCard"
     }
 }
@@ -152,7 +152,7 @@ class UI_Builder:
             self.content_box.remove(self.content_box.get_first_child())
 
         try:
-            # Carrega a tela inicial
+            # Carrega a tela inicial - CAMINHO CORRIGIDO (sem "src/gtk" extra)
             builder = Gtk.Builder.new_from_resource("/org/gnome/painel_paru/gtk/initial_screen.ui")
             initial_screen = builder.get_object("main_box")
 
@@ -187,8 +187,8 @@ class UI_Builder:
         config = UI_BUILDER_CONFIG.get(state, UI_BUILDER_CONFIG["empty"])
 
         try:
-            # Carrega o recurso
-            resource_path = f"/org/gnome/painel_paru/src/{config['file']}"
+            # Carrega o recurso - CAMINHO CORRIGIDO (prefixo correto do gresource)
+            resource_path = f"/org/gnome/painel_paru/gtk/{config['file']}"
             builder = Gtk.Builder.new_from_resource(resource_path)
 
             # Procura o widget principal

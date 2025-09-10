@@ -140,19 +140,27 @@ class TerminalManager:
     def start_operation(self):
         """Inicia uma operação e atualiza a UI"""
         self.update_progress(True, 0.1)
-        self.window.cancel_button.set_visible(True)
-        self.window.menu_manager.update_menu_state(True)
-        self.window.back_button.set_sensitive(False)
-        self.window.open_folder_button.set_sensitive(False)
+        if hasattr(self.window, 'cancel_button') and self.window.cancel_button:
+            self.window.cancel_button.set_visible(True)
+        if hasattr(self.window, 'menu_manager') and self.window.menu_manager:
+            self.window.menu_manager.update_menu_state(True)
+        if hasattr(self.window, 'back_button') and self.window.back_button:
+            self.window.back_button.set_sensitive(False)
+        if hasattr(self.window, 'open_folder_button') and self.window.open_folder_button:
+            self.window.open_folder_button.set_sensitive(False)
 
     def end_operation(self):
         """Finaliza uma operação e atualiza a UI"""
         self.update_progress(False)
-        self.window.cancel_button.set_visible(False)
-        self.window.menu_manager.update_menu_state(False)
-        # Corrigido: Usa o navigation_manager para verificar o histórico
-        self.window.back_button.set_sensitive(bool(self.window.navigation_manager.previous_paths))
-        self.window.open_folder_button.set_sensitive(bool(self.window.content_path))
+        if hasattr(self.window, 'cancel_button') and self.window.cancel_button:
+            self.window.cancel_button.set_visible(False)
+        if hasattr(self.window, 'menu_manager') and self.window.menu_manager:
+            self.window.menu_manager.update_menu_state(False)
+        # Corrigido: Verifica se navigation_manager existe antes de acessar
+        if hasattr(self.window, 'navigation_manager') and self.window.navigation_manager:
+            self.window.back_button.set_sensitive(bool(self.window.navigation_manager.previous_paths))
+        if hasattr(self.window, 'open_folder_button') and self.window.open_folder_button:
+            self.window.open_folder_button.set_sensitive(bool(self.window.content_path))
 
     def _scroll_to_end(self):
         """Rola o terminal para o final"""
@@ -185,5 +193,6 @@ class TerminalManager:
             self.show_info(_("Operação cancelada"))
             self.window.current_process = None
             # Atualiza o estado do botão de cancelar
-            self.window.cancel_button.set_visible(False)
+            if hasattr(self.window, 'cancel_button') and self.window.cancel_button:
+                self.window.cancel_button.set_visible(False)
             self.end_operation()

@@ -31,16 +31,30 @@ class ContentDetector:
         except PermissionError:
             return "error"
 
+        # Variáveis para armazenar os tipos de conteúdo encontrados
+        has_pkgbuild = False
+        has_packages = False
+        has_patches = False
+
+        # Itera sobre os arquivos uma única vez para detectar todos os tipos
+        for f in files:
+            if f.name == "PKGBUILD":
+                has_pkgbuild = True
+            elif f.name.endswith(".pkg.tar.zst"):
+                has_packages = True
+            elif f.name.endswith(".patch"):
+                has_patches = True
+
         # Prioridade 1: PKGBUILD
-        if any(f.name == "PKGBUILD" for f in files):
+        if has_pkgbuild:
             return "pkgbuild"
 
         # Prioridade 2: Pacotes pré-compilados
-        if any(f.name.endswith(".pkg.tar.zst") for f in files):
+        if has_packages:
             return "packages"
 
         # Prioridade 3: Patches
-        if any(f.name.endswith(".patch") for f in files):
+        if has_patches:
             return "patches"
 
         # Prioridade 4: Pasta vazia

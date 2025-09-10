@@ -13,7 +13,7 @@ moduledir = pkgdatadir / 'painel_paru'
 gnome = import('gnome')
 i18n = import('i18n')
 
-# Recursos UI
+# Recursos UI - CORRIGIDO: Adicionado devel_preferences.ui e verificado todos os caminhos
 resources = files(
   'src/gtk/help-overlay.ui',
   'src/gtk/initial_screen.ui',
@@ -22,14 +22,15 @@ resources = files(
   'src/gtk/content_detection/patches_card.ui',
   'src/gtk/content_detection/empty_card.ui',
   'src/gtk/preferences/debug_preferences.ui',
+  'src/gtk/preferences/devel_preferences.ui',  # CORREÇÃO: Adicionado arquivo faltando
   'src/gtk/conflict_resolver/conflict_dialog.ui'
 )
 
-# Compila GResource
+# Compila GResource - CORRIGIDO: Restaurado dependencies: resources
 gnome.compile_resources('painel_paru',
   'src/painel_paru.gresource.xml',
   c_name: 'org_gnome_painel_paru',
-  dependencies: resources,
+  dependencies: resources,  # CORREÇÃO: Dependência dos recursos restaurada
   install_dir: join_paths(datadir, 'glib-2.0', 'resources')
 )
 

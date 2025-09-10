@@ -73,25 +73,40 @@ class PainelParuWindow(Adw.ApplicationWindow):
             self.ui_builder.load_initial_screen()
             return False  # Retorna False para não executar novamente
         except Exception as e:
-            print(f"❌ Erro ao carregar tela inicial: {str(e)}")
-            # Cria uma tela de erro simples
+            # Mensagem amigável para o usuário
+            user_error_message = _("❌ Erro ao carregar a interface do usuário")
+            print(f"Technical details (for debugging): {str(e)}")
+
             error_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
             error_box.set_margin_start(20)
             error_box.set_margin_end(20)
             error_box.set_margin_top(20)
             error_box.set_margin_bottom(20)
 
-            error_label = Gtk.Label(label=_("Erro ao carregar a interface do usuário"))
+            error_label = Gtk.Label(label=user_error_message)
             error_label.set_wrap(True)
             error_box.append(error_label)
 
-            error_detail = Gtk.Label(label=str(e))
+            # Mensagem mais amigável em vez de exibir o erro completo
+            error_detail = Gtk.Label(label=_("Ocorreu um problema ao inicializar a interface. Por favor, verifique os logs técnicos."))
             error_detail.set_wrap(True)
             error_detail.get_style_context().add_class("error")
             error_box.append(error_detail)
 
+            # Botão para copiar detalhes técnicos
+            copy_button = Gtk.Button(label=_("Copiar detalhes técnicos"))
+            copy_button.connect("clicked", lambda b: self._copy_error_details(e))
+            error_box.append(copy_button)
+
             self._content_box.append(error_box)
             return False
+
+    def _copy_error_details(self, exception):
+        """Copia os detalhes técnicos do erro para a área de transferência"""
+        error_details = f"Erro: {type(exception).__name__}\nDetalhes: {str(exception)}"
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.set(error_details)
+        self.terminal_manager.show_info(_("Detalhes do erro copiados para a área de transferência"))
 
     # Métodos de acesso para o estado centralizado
     def set_content_path(self, path):
@@ -155,7 +170,7 @@ class PainelParuWindow(Adw.ApplicationWindow):
     def end_operation(self):
         """Finaliza uma operação e atualiza a UI"""
         self.set_operation_running(False)
-        self.terminal_manager.append(_("✅ Operação concluída"), "success")
+        self.terminal_manager.show_success(_("Operação concluída"))
         self.terminal_manager.append(_("──────────────────────────────────"), "normal")
 
     def _scroll_to_end(self):
