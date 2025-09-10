@@ -1,5 +1,8 @@
 from gi.repository import Gio, Gtk, Adw
 import gettext
+import os
+import logging
+from gi.repository import GLib
 _ = gettext.gettext
 
 class PreferencesManager:
@@ -14,6 +17,12 @@ class PreferencesManager:
         self.window = window
         self.settings = Gio.Settings.new("org.gnome.painel_paru")
         self.preferences_window = None  # Janela de preferências atual
+        self.observer = None  # Observador de arquivos para recarga automática
+        self.resource_dir = None  # Diretório dos recursos UI
+
+        # Tenta configurar o observador se a opção estiver ativada
+        if self.settings.get_boolean("dev-reload-ui"):
+            self._setup_ui_file_watcher()
 
     def show(self, parent_window=None):
         """
@@ -189,11 +198,11 @@ class PreferencesManager:
         review_row.add_suffix(review_switch)
         review_group.add(review_row)
 
-        # Limpar após build
+        # Limpar após build - CORREÇÃO AQUI: "clean-after" em vez de "clean-after-build"
         clean_switch = Gtk.Switch()
-        clean_switch.set_active(self.settings.get_boolean("clean-after-build"))
+        clean_switch.set_active(self.settings.get_boolean("clean-after"))
         clean_switch.connect("notify::active", lambda s, p:
-                            self.settings.set_boolean("clean-after-build", s.get_active()))
+                            self.settings.set_boolean("clean-after", s.get_active()))
 
         clean_row = Adw.ActionRow(
             title=_("Limpar após build"),
@@ -257,8 +266,16 @@ class PreferencesManager:
         # Recarga automática de UI
         reload_switch = Gtk.Switch()
         reload_switch.set_active(self.settings.get_boolean("dev-reload-ui"))
-        reload_switch.connect("notify::active", lambda s, p:
-                             self.settings.set_boolean("dev-reload-ui", s.get_active()))
+
+        def on_reload_toggled(switch, *args):
+            active = switch.get_active()
+            self.settings.set_boolean("dev-reload-ui", active)
+            if active:
+                self._setup_ui_file_watcher()
+            else:
+                self._stop_ui_file_watcher()
+
+        reload_switch.connect("notify::active", on_reload_toggled)
 
         reload_row = Adw.ActionRow(
             title=_("Recarga automática de UI"),
@@ -385,3 +402,82 @@ class PreferencesManager:
         info_group.add(info_row)
 
         self.preferences_window.add(page)
+
+    def _setup_ui_file_watcher(self):
+        """Configura observador de arquivos para recarregar UI automaticamente"""
+        try:
+            from watchdog.observers import Observer
+            from watchdog.events import FileSystemEventHandler
+
+            class UIChangeHandler(FileSystemEventHandler):
+                def __init__(self, window):
+                    self.window = window
+
+                def on_modified(self, event):
+                    if event.src_path.endswith('.ui'):
+                        GLib.idle_add(self.window.reload_ui)
+
+            # Para o observador atual se existir
+            self._stop_ui_file_watcher()
+
+            # Tenta determinar o diretório dos recursos UI
+            # Primeiro, tenta obter o caminho do recurso atual
+            if not self.resource_dir:
+                try:
+                    # Tenta encontrar o caminho do recurso baseado na janela
+                    if hasattr(self.window, 'resource_path') and self.window.resource_path:
+                        self.resource_dir = os.path.dirname(self.window.resource_path)
+                    else:
+                        # Tenta usar um caminho padrão
+                        module_dir = os.path.dirname(os.path.abspath(__file__))
+                        self.resource_dir = os.path.join(module_dir, '..', 'gtk')
+
+                        # Verifica se o diretório existe
+                        if not os.path.exists(self.resource_dir):
+                            # Tenta outra localização comum
+                            self.resource_dir = os.path.join(os.path.dirname(module_dir), 'share', 'painel_paru', 'gtk')
+
+                        if not os.path.exists(self.resource_dir):
+                            raise FileNotFoundError(_("Diretório de recursos UI não encontrado"))
+                except Exception as e:
+                    logging.error(f"Erro ao determinar diretório de recursos UI: {str(e)}")
+                    self.window.terminal_manager.show_error(
+                        _("Erro ao configurar recarga automática: diretório de recursos não encontrado")
+                    )
+                    return
+
+            # Configura o observador
+            self.observer = Observer()
+            self.observer.schedule(UIChangeHandler(self.window),
+                                  self.resource_dir,
+                                  recursive=True)
+            self.observer.start()
+
+            logging.info(f"Iniciado observador de arquivos para recarga automática em: {self.resource_dir}")
+            self.window.terminal_manager.show_info(
+                _("Recarga automática de UI ativada. Monitorando: %s") % self.resource_dir
+            )
+
+        except ImportError:
+            # Se watchdog não estiver instalado, mostramos um aviso
+            self.window.terminal_manager.show_warning(
+                _("Biblioteca 'watchdog' não encontrada. Instale com 'pip install watchdog' para usar recarga automática.")
+            )
+            self.observer = None
+        except Exception as e:
+            logging.error(f"Erro ao configurar observador de arquivos: {str(e)}")
+            self.window.terminal_manager.show_error(
+                _("Erro ao configurar recarga automática: %s") % str(e)
+            )
+            self.observer = None
+
+    def _stop_ui_file_watcher(self):
+        """Para o observador de arquivos se estiver em execução"""
+        if self.observer:
+            try:
+                self.observer.stop()
+                self.observer.join(timeout=2.0)
+                self.observer = None
+                logging.info("Observador de arquivos para recarga automática parado")
+            except Exception as e:
+                logging.error(f"Erro ao parar observador de arquivos: {str(e)}")

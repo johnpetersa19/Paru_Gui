@@ -7,17 +7,58 @@ import gettext
 _ = gettext.gettext
 
 class ParuRunner:
-    """Executa comandos Paru com suporte a atualização da interface e cancelamento"""
+    """Executa comandos Paru com suporte a atualização da interface e cancelamento
+
+    Esta classe fornece uma interface segura para executar comandos Paru em segundo plano,
+    com suporte para ambientes Flatpak e tratamento adequado de saída e erros. O método
+    principal, run_command(), executa comandos de forma assíncrona, atualizando a interface
+    do usuário através de callbacks e permitindo o cancelamento de operações em andamento.
+
+    Principais funcionalidades:
+    - Suporte automático para execução em ambientes Flatpak
+    - Configuração adequada do ambiente para evitar problemas de localização
+    - Tratamento robusto de erros e exceções
+    - Atualização em tempo real da interface do usuário
+    - Suporte para cancelamento de operações
+    """
     
     @staticmethod
     def run_command(cmd, output_callback):
         """
-        Executa um comando Paru e atualiza a interface com a saída.
-        Retorna o objeto do processo para permitir cancelamento.
+        Executa comandos Paru com suporte a atualização da interface e cancelamento.
 
-        :param cmd: Lista de comandos a serem executados
-        :param output_callback: Função de callback para atualizar a interface
-        :return: Objeto do processo ou None em caso de erro
+        Este método executa comandos Paru em um processo separado, gerenciando adequadamente
+        o ambiente (incluindo suporte para Flatpak) e atualizando a interface do usuário
+        através do callback fornecido. O método retorna o objeto do processo para permitir
+        cancelamento posterior.
+
+        O método configura automaticamente o ambiente para evitar problemas com localização
+        (definindo LANG=C e LC_ALL=C), o que garante que a saída do comando seja consistente
+        para parsing e detecção de padrões específicos.
+
+        Args:
+            cmd (list): Lista de strings representando o comando e seus argumentos.
+                        Exemplo: ["paru", "-Syu"]
+            output_callback (callable): Função de callback que recebe a saída do comando.
+                                        Deve aceitar pelo menos um parâmetro (a linha de saída)
+                                        e opcionalmente um tipo de mensagem (ex: "info", "error")
+
+        Returns:
+            subprocess.Popen: Objeto do processo em execução, permitindo cancelamento posterior
+            None: Em caso de erro durante a preparação ou execução do comando
+
+        Example:
+            >>> def callback(line, msg_type="info"):
+            ...     print(f"[{msg_type}] {line}")
+            >>> process = ParuRunner.run_command(["paru", "-Syu"], callback)
+            >>> # Para cancelar posteriormente:
+            >>> if process:
+            ...     process.terminate()
+
+        Note:
+            - Em ambientes Flatpak, o método tenta usar flatpak-spawn para acessar comandos do host
+            - A saída do comando é processada linha por linha para atualização imediata da interface
+            - O método trata diversos cenários de erro, incluindo comandos não encontrados e permissões
         """
         # Validação básica do comando
         if not cmd or not isinstance(cmd, list) or len(cmd) == 0:
@@ -111,3 +152,73 @@ class ParuRunner:
                 output_callback(error_msg, "error")
 
         return None
+
+    @staticmethod
+    def check_for_conflicts(package_name):
+        """
+        Verifica possíveis conflitos de pacotes antes da instalação.
+
+        Este método executa o comando 'paru -Si' para obter informações detalhadas
+        sobre um pacote, incluindo possíveis conflitos com pacotes já instalados.
+        Ele processa a saída do comando para identificar seções de conflitos que
+        podem abranger múltiplas linhas.
+
+        Args:
+            package_name (str): Nome do pacote a ser verificado
+
+        Returns:
+            list: Lista de dicionários com informações sobre conflitos detectados
+                  Cada dicionário contém:
+                  - "package": Nome do pacote em conflito
+                  - "current": Status do pacote atual ("instalado")
+                  - "new": Status do novo pacote ("será instalado")
+            []: Lista vazia se nenhum conflito for detectado
+
+        Example:
+            >>> conflicts = ParuRunner.check_for_conflicts("firefox")
+            >>> if conflicts:
+            ...     print(f"Conflitos detectados: {[c['package'] for c in conflicts]}")
+        """
+        try:
+            result = subprocess.run(
+                ["paru", "-Si", package_name],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            conflicts = []
+            in_conflicts_section = False
+
+            for line in result.stdout.splitlines():
+                if line.startswith("Conflicts With:"):
+                    in_conflicts_section = True
+                    packages = line.replace("Conflicts With:", "").strip()
+                    if packages and packages != "None":
+                        for pkg in packages.split():
+                            if pkg not in ["None", "-", ""]:
+                                conflicts.append({
+                                    "package": pkg,
+                                    "current": _("instalado"),
+                                    "new": _("será instalado")
+                                })
+                elif in_conflicts_section and line.strip() and not line.startswith("Replaces:"):
+                    # Processar linhas adicionais de conflitos
+                    for pkg in line.strip().split():
+                        if pkg not in ["None", "-", ""]:
+                            conflicts.append({
+                                "package": pkg,
+                                "current": _("instalado"),
+                                "new": _("será instalado")
+                            })
+                elif in_conflicts_section and (line.strip() == "" or line.startswith("Replaces:")):
+                    in_conflicts_section = False
+
+            return conflicts
+
+        except subprocess.CalledProcessError as e:
+            logging.error("Error checking conflicts for %s: %s", package_name, e.stderr)
+            return []
+        except Exception as e:
+            logging.exception("Critical error checking conflicts for %s", package_name)
+            return []
