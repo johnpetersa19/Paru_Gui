@@ -9,18 +9,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib, Gdk
 
-# CONFIGURAÇÃO CRÍTICA: SEU PREFIXO REAL
-RESOURCE_PREFIX = "/org/gnome/painel_paru"
-
-# Configuração para permitir importações relativas quando executado como script
-if __name__ == "__main__":
-    # Adiciona o diretório src ao sys.path
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    if parent_dir not in sys.path:
-        sys.path.insert(0, parent_dir)
-
-# Importações dos módulos lógicos que você criou
+# Importações dos módulos lógicos
 try:
     from .content_detector import ContentDetector
     from .paru_runner import ParuRunner

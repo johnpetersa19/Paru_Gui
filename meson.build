@@ -56,13 +56,20 @@ painel_paru_sources = files(
   'src/painel_paru/__init__.py',
   'src/painel_paru/main.py',
   'src/painel_paru/window.py',
+  'src/painel_paru/ui_builder.py',          # Arquivo adicionado
+  'src/painel_paru/terminal_manager.py',    # Arquivo adicionado
+  'src/painel_paru/preferences_manager.py',
+  'src/painel_paru/menu_manager.py',        # Arquivo adicionado
+  'src/painel_paru/action_manager.py',      # Arquivo adicionado
+  'src/painel_paru/handlers.py',            # ARQUIVO CRÍTICO ADICIONADO (corrigindo o erro)
   'src/painel_paru/content_detector.py',
   'src/painel_paru/conflict_resolver.py',
-  'src/painel_paru/preferences.py',
+  'src/painel_paru/navigation.py',          # Arquivo adicionado
   'src/painel_paru/build_manager.py',
   'src/painel_paru/aur_downloader.py',
   'src/painel_paru/paru_runner.py',
-  'src/painel_paru/terminal.py'
+  'src/painel_paru/terminal.py',
+  'src/painel_paru/utils.py'                # Arquivo adicionado
 )
 install_data(painel_paru_sources, install_dir: moduledir)
 
