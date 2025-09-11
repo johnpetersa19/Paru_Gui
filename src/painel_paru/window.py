@@ -1,5 +1,9 @@
 from gi.repository import Gtk, Gio, Adw
-from .handlers import WindowHandlers
+from .handlers.build_handlers import BuildHandlers
+from .handlers.package_handlers import PackageHandlers
+from .handlers.system_handlers import SystemHandlers
+from .handlers.ui_handlers import UIHandlers
+from .handlers.aur_handlers import AurHandlers
 from .menu_manager import MenuManager
 from .action_manager import ActionManager
 from .navigation import NavigationManager
@@ -33,7 +37,13 @@ class PainelParuWindow(Adw.ApplicationWindow):
         self.action_manager = ActionManager(self)
         self.navigation_manager = NavigationManager(self)
         self.terminal_manager = TerminalManager(self)
-        self.handlers = WindowHandlers(self)
+
+        # Inicializa os handlers especializados
+        self.build_handlers = BuildHandlers(self)
+        self.package_handlers = PackageHandlers(self)
+        self.system_handlers = SystemHandlers(self)
+        self.ui_handlers = UIHandlers(self)
+        self.aur_handlers = AurHandlers(self)  # CORREÇÃO: AurHandlers (com 'u' minúsculo)
 
         # Configura a interface - ARMAZENA A INSTÂNCIA DO UI_BUILDER
         self.ui_builder = UI_Builder(self)
@@ -164,8 +174,8 @@ class PainelParuWindow(Adw.ApplicationWindow):
 
     def show_pkgbuild_review(self, on_confirm):
         """Mostra diálogo de revisão do PKGBUILD"""
-        # Implementação do diálogo de revisão
-        pass
+        # Delega para o handler específico
+        self.build_handlers.show_pkgbuild_review(on_confirm)
 
     def end_operation(self):
         """Finaliza uma operação e atualiza a UI"""

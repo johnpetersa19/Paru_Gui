@@ -140,31 +140,28 @@ def main(version):
         # Cria a janela principal
         try:
             from painel_paru.window import PainelParuWindow
-        except ImportError:
-            try:
-                from window import PainelParuWindow
-            except ImportError as e:
-                error_msg = _("❌ Erro crítico ao importar PainelParuWindow")
-                print(error_msg)
-                print(_("Tipo do erro: %s") % type(e).__name__)
+        except ImportError as e:
+            error_msg = _("❌ Erro crítico ao importar PainelParuWindow")
+            print(error_msg)
+            print(_("Tipo do erro: %s") % type(e).__name__)
 
-                # Mostra informações adicionais para diagnóstico (somente no log técnico)
-                print("\nTechnical details (for debugging):")
-                print(f"Error details: {str(e)}")
-                print("\nEstrutura do diretório painel_paru:")
-                try:
-                    if module_dir:
-                        painel_paru_path = os.path.join(module_dir, 'painel_paru')
-                        if os.path.exists(painel_paru_path):
-                            for file in os.listdir(painel_paru_path):
-                                print(f" - {file}")
-                        else:
-                            print(f"O diretório {painel_paru_path} não existe")
+            # Mostra informações adicionais para diagnóstico (somente no log técnico)
+            print("\nTechnical details (for debugging):")
+            print(f"Error details: {str(e)}")
+            print("\nEstrutura do diretório painel_paru:")
+            try:
+                if module_dir:
+                    painel_paru_path = os.path.join(module_dir, 'painel_paru')
+                    if os.path.exists(painel_paru_path):
+                        for file in os.listdir(painel_paru_path):
+                            print(f" - {file}")
                     else:
-                        print("module_dir não está definido")
-                except Exception as diag_error:
-                    print(f"Erro ao verificar estrutura do diretório: {diag_error}")
-                sys.exit(1)
+                        print(f"O diretório {painel_paru_path} não existe")
+                else:
+                    print("module_dir não está definido")
+            except Exception as diag_error:
+                print(f"Erro ao verificar estrutura do diretório: {diag_error}")
+            sys.exit(1)
 
         win = PainelParuWindow(application=app)
         win.present()
