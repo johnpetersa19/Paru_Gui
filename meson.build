@@ -3,18 +3,17 @@ project('painel_paru', 'c',
   meson_version: '>=0.57.0',
   default_options: ['warning_level=1', 'c_std=c11'])
 
-# Diretórios principais
+# Diretórios
 prefix = get_option('prefix')
 datadir = join_paths(prefix, 'share')
 bindir = join_paths(prefix, 'bin')
 pkgdatadir = join_paths(datadir, meson.project_name())
 moduledir = pkgdatadir / 'painel_paru'
 
-# Importações de módulos Meson
 gnome = import('gnome')
 i18n = import('i18n')
 
-# Lista de arquivos de interface gráfica (UI) para inclusão no GResource
+# Recursos UI
 resources = files(
   'src/gtk/help-overlay.ui',
   'src/gtk/initial_screen.ui',
@@ -23,65 +22,52 @@ resources = files(
   'src/gtk/content_detection/patches_card.ui',
   'src/gtk/content_detection/empty_card.ui',
   'src/gtk/preferences/debug_preferences.ui',
-  'src/gtk/preferences/devel_preferences.ui',  # Adicionado: interface de preferências de desenvolvimento
   'src/gtk/conflict_resolver/conflict_dialog.ui'
 )
 
-# Compilação do recurso GResource com dependência explícita nos arquivos UI
+# Compila GResource
 gnome.compile_resources('painel_paru',
   'src/painel_paru.gresource.xml',
   c_name: 'org_gnome_painel_paru',
-  dependencies: resources
+  dependencies: resources,
+  install_dir: join_paths(datadir, 'glib-2.0', 'resources')
 )
 
-# Localização (internacionalização)
-i18n.gettext('painel_paru', preset: 'glib')
-
-# Programa Python encontrado
+# Configuração
 python = find_program('python3', required: true)
-
-# Dados de configuração para substituição no executável
 conf = configuration_data()
-conf.set('PYTHON', python.full_path())           # Caminho absoluto ao interpretador Python
-conf.set('VERSION', meson.project_version())     # Versão do projeto
+conf.set('PYTHON', python.path())
+conf.set('VERSION', meson.project_version())
 conf.set('localedir', join_paths(prefix, get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
 
-# Gerar script de inicialização com substituições
+# Executável
 configure_file(
   input: 'src/painel_paru.in',
   output: 'painel_paru',
   configuration: conf,
   install: true,
-  install_dir: bindir,
+  install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
 )
 
-# ✅ CORREÇÃO: Instala o diretório inteiro mantendo a estrutura, especialmente a pasta handlers/
-install_subdir('src/painel_paru', install_dir: moduledir)
+# Fontes do módulo
+painel_paru_sources = files(
+  'src/painel_paru/__init__.py',
+  'src/painel_paru/main.py',
+  'src/painel_paru/window.py',
+  'src/painel_paru/content_detector.py',
+  'src/painel_paru/conflict_resolver.py',
+  'src/painel_paru/preferences.py',
+  'src/painel_paru/build_manager.py',
+  'src/painel_paru/aur_downloader.py',
+  'src/painel_paru/paru_runner.py',
+  'src/painel_paru/terminal.py'
+)
+install_data(painel_paru_sources, install_dir: moduledir)
 
-# Instalação do esquema de configuração GLib
-schema_file = 'data/org.gnome.painel_paru.gschema.xml'
-install_data(schema_file,
+# Schema
+install_data('data/org.gnome.painel_paru.gschema.xml',
   install_dir: join_paths(datadir, 'glib-2.0', 'schemas')
 )
-
-# Validação opcional do esquema (se glib-compile-schemas estiver disponível)
-compile_schemas = find_program('glib-compile-schemas', required: false)
-
-if compile_schemas.found()
-  # Script pós-instalação para compilar esquemas
-  meson.add_install_script(
-    compile_schemas.full_path(),
-    join_paths(datadir, 'glib-2.0', 'schemas')
-  )
-
-  # Teste de validação do schema
-  test('Validate schema file',
-    compile_schemas,
-    args: ['--strict', '--dry-run', meson.project_source_root() / 'data']
-  )
-endif
-
-# Subdiretórios adicionais
-subdir('data/icons')
+meson.add_install_script('glib-compile-schemas', join_paths(datadir, 'glib-2.0', 'schemas'))

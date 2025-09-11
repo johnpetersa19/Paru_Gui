@@ -1,6 +1,4 @@
 from gi.repository import Gtk, Gdk, GLib, Pango
-import gettext
-_ = gettext.gettext
 
 class TerminalView(Gtk.TextView):
     """Terminal integrado com syntax highlighting e melhor feedback"""
@@ -77,11 +75,12 @@ class TerminalView(Gtk.TextView):
             self.progress_bar.set_visible(visible)
             if fraction is not None:
                 self.progress_bar.set_fraction(fraction)
-            # Adiciona a barra de progresso ao container (uma única vez)
+            # Adiciona a barra de progresso ao container
             if visible and self.get_parent() and not self.progress_bar.get_parent():
                 parent_box = self.get_parent()
                 if isinstance(parent_box, Gtk.Box):
-                    parent_box.append(self.progress_bar)
+                    parent_box.pack_start(self.progress_bar, False, False, 0)
+                    parent_box.reorder_child_after(self.progress_bar, self)
 
     def clear(self):
         """Limpa o terminal"""

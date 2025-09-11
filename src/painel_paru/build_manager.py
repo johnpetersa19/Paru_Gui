@@ -1,8 +1,6 @@
 import subprocess
 import os
 from gi.repository import GLib
-import gettext
-_ = gettext.gettext
 
 class BuildManager:
     """Gerencia operações de build com Paru e suporte a cancelamento"""

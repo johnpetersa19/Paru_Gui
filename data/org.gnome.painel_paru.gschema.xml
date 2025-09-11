@@ -2,7 +2,7 @@
 <schemalist>
   <schema id="org.gnome.painel_paru" path="/org/gnome/painel_paru/">
     <key name="editor" type="s">
-      <default>gedit</default>
+      <default>"gedit"</default>
       <summary>Editor de texto padrão</summary>
     </key>
     <key name="auto-install" type="b">
@@ -18,7 +18,7 @@
       <summary>Recarregar UI com Ctrl+R</summary>
     </key>
     <key name="build-dir" type="s">
-      <default>build</default>
+      <default>"build"</default>
       <summary>Diretório de build</summary>
     </key>
     <!-- NOVAS CHAVES ADICIONADAS ABAIXO -->

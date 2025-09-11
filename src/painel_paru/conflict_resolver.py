@@ -135,7 +135,7 @@ class ConflictResolver:
             icon_name="window-close-symbolic",
             tooltip_text=_("Fechar")
         )
-        close_button.connect("clicked", lambda *args, **kwargs: {
+        close_button.connect("clicked", lambda b: {
             dialog.close(),
             callback(None)  # None indica cancelamento
         })
@@ -217,10 +217,9 @@ class ConflictResolver:
         resolutions = {}
         
         # Função de seleção de conflito
-        def on_row_selected(*args, **kwargs):
-            # O primeiro argumento é a row
-            if args and hasattr(args[0], 'conflict'):
-                conflict = args[0].conflict
+        def on_row_selected(row):
+            if hasattr(row, 'conflict'):
+                conflict = row.conflict
                 details_buffer.set_text(
                     _("Conflito detectado com o pacote: {pkg}\n\n"
                       "Estado atual: {current}\n"
@@ -253,28 +252,19 @@ class ConflictResolver:
             conflicts_list.append(row)
 
             # Conecta evento com referência segura
-            row.connect("activated", on_row_selected)
+            row.connect("activated", lambda r: on_row_selected(r))
             
             # Inicializa o dicionário com o estado atual do switch
             resolutions[conflict["package"]] = True
             
             # Conecta o evento do switch para atualizar as resoluções
-            def on_switch_toggled(*args, **kwargs):
-                # O primeiro argumento é o switch
-                if args:
-                    switch = args[0]
-                    # Usamos o pkg do closure (capturado na definição da função)
-                    # Precisamos acessar o pkg do escopo externo
-                    if hasattr(switch, 'pkg'):
-                        pkg = switch.pkg
-                        resolutions[pkg] = switch.get_active()
+            def on_switch_toggled(switch, gparam, pkg=conflict["package"]):
+                resolutions[pkg] = switch.get_active()
             
-            # Armazenamos o pkg no switch para acessar no callback
-            switch.pkg = conflict["package"]
             switch.connect("notify::active", on_switch_toggled)
 
         # Ação ao clicar em "Resolver e Continuar"
-        def on_action_clicked(*args, **kwargs):
+        def on_action_clicked(_):
             dialog.close()
             callback(resolutions)  # Passa o dicionário de resoluções
 
