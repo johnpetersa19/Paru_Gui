@@ -81,3 +81,7 @@ def main(version):
 
     app.connect("activate", on_activate)
     return app.run(None)
+
+# Cria o alias necessário para resolver o erro de importação
+# Esta linha DEVE estar FORA da função main, no nível do módulo
+app_main = main
