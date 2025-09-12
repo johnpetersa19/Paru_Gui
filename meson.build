@@ -62,7 +62,18 @@ painel_paru_sources = files(
   'src/painel_paru/build_manager.py',
   'src/painel_paru/aur_downloader.py',
   'src/painel_paru/paru_runner.py',
-  'src/painel_paru/terminal.py'
+  'src/painel_paru/terminal.py',
+  # Novos arquivos para melhor organização
+  'src/painel_paru/window_core.py',
+  'src/painel_paru/window_ui.py',
+  'src/painel_paru/window_content.py',
+  'src/painel_paru/window_build.py',
+  'src/painel_paru/window_aur.py',
+  'src/painel_paru/window_preferences.py',
+  'src/painel_paru/window_conflicts.py',
+  'src/painel_paru/window_signatures.py',
+  'src/painel_paru/window_notifications.py',
+  'src/painel_paru/window_patches.py'
 )
 install_data(painel_paru_sources, install_dir: moduledir)
 

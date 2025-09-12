@@ -22,25 +22,35 @@ if __name__ == "__main__":
 
 # Importações dos módulos lógicos que você criou
 try:
+    # Tenta imports relativos primeiro (quando importado como módulo)
     from .content_detector import ContentDetector
     from .paru_runner import ParuRunner
     from .build_manager import BuildManager
     from .aur_downloader import AurDownloader
     from .terminal import TerminalView
     print("✅ Módulos importados com sucesso")
-except ImportError as e:
-    print(f"❌ Erro ao importar módulos: {str(e)}")
-    print("Diretórios no PYTHONPATH:")
-    for path in sys.path:
-        print(f"  - {path}")
+except ImportError:
+    try:
+        # Tenta imports absolutos com nome do pacote (quando executado como script)
+        from painel_paru.content_detector import ContentDetector
+        from painel_paru.paru_runner import ParuRunner
+        from painel_paru.build_manager import BuildManager
+        from painel_paru.aur_downloader import AurDownloader
+        from painel_paru.terminal import TerminalView
+        print("✅ Módulos importados com sucesso (modo script)")
+    except ImportError as e:
+        print(f"❌ Erro ao importar módulos: {str(e)}")
+        print("Diretórios no PYTHONPATH:")
+        for path in sys.path:
+            print(f"  - {path}")
 
-    # Tenta diagnosticar o problema
-    module_dir = os.path.dirname(os.path.abspath(__file__))
-    if os.path.exists(module_dir):
-        print("Arquivos disponíveis no diretório do módulo:")
-        for file in os.listdir(module_dir):
-            print(f"  - {file}")
-    sys.exit(1)
+        # Tenta diagnosticar o problema
+        module_dir = os.path.dirname(os.path.abspath(__file__))
+        if os.path.exists(module_dir):
+            print("Arquivos disponíveis no diretório do módulo:")
+            for file in os.listdir(module_dir):
+                print(f"  - {file}")
+        sys.exit(1)
 
 def main(version):
     """Função principal do aplicativo"""
@@ -53,8 +63,19 @@ def main(version):
     )
 
     def on_activate(app):
-        # Cria a janela principal
-        from .window import PainelParuWindow
+        """Cria a janela principal com suporte à nova estrutura de arquivos"""
+        try:
+            # Tenta importar com import relativo
+            from .window import PainelParuWindow
+        except ImportError:
+            try:
+                # Tenta importar com import absoluto
+                from painel_paru.window import PainelParuWindow
+            except ImportError as e:
+                print(f"❌ Erro FATAL ao importar PainelParuWindow: {str(e)}")
+                print("Verifique se os novos arquivos foram configurados corretamente")
+                sys.exit(1)
+
         win = PainelParuWindow(application=app)
         win.present()
 
