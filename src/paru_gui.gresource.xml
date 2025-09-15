@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/paru_gui">
+    <!-- Main application window -->
+    <file preprocess="xml-stripblanks">ui/screens/welcome_screen.ui</file>
+    <file preprocess="xml-stripblanks">ui/screens/content_view.ui</file>
+
+    <!-- Menu components -->
+    <file preprocess="xml-stripblanks">ui/menus/primary_menu.ui</file>
+    <file preprocess="xml-stripblanks">ui/menus/main_file_context_menu.ui</file>
+
+    <!-- UI components -->
+    <file preprocess="xml-stripblanks">ui/components/file_chooser_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/search_bar.ui</file>
+
+    <!-- Root UI files -->
+    <file preprocess="xml-stripblanks">window.ui</file>
+  </gresource>
+</gresources>

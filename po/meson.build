@@ -1,1 +1,1 @@
-i18n.gettext('painel_paru', preset: 'glib')
+i18n.gettext('paru_gui', preset: 'glib')

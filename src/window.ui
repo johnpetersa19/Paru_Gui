@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="ParuGuiWindow" parent="AdwApplicationWindow">
+    <property name="default-width">1000</property>
+    <property name="default-height">700</property>
+    <property name="title">Paru GUI</property>
+
+    <child>
+      <object class="AdwToastOverlay" id="toast_overlay">
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+
+            <!-- Header Bar - GNOME Standard -->
+            <child>
+              <object class="AdwHeaderBar" id="header_bar">
+                <property name="show-title-buttons">true</property>
+
+                <!-- Application Menu Button -->
+                <child type="start">
+                  <object class="GtkMenuButton" id="app_menu_button">
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Application Menu</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
+
+                <!-- Search Bar Component -->
+                <child>
+                  <object class="GtkBox" id="search_container">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkSearchEntry" id="search_entry">
+                        <property name="placeholder-text" translatable="yes">Search packages (e.g. firefox, paru -Ss keyword)</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="search_clear_button">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Clear search</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="search_options_button">
+                        <property name="icon-name">preferences-system-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Search options</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Main Content Area -->
+            <child>
+              <object class="GtkStack" id="main_stack">
+                <property name="transition-type">slide-left-right</property>
+                <property name="transition-duration">200</property>
+                <property name="vhomogeneous">False</property>
+                <property name="hhomogeneous">False</property>
+
+                <!-- Welcome Screen -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">welcome</property>
+                    <property name="title" translatable="yes">Welcome</property>
+                    <property name="child">
+                      <object class="GtkBox" id="welcome_screen">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">24</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin-top">48</property>
+                        <property name="margin-bottom">48</property>
+                        <property name="margin-start">48</property>
+                        <property name="margin-end">48</property>
+
+                        <!-- Application Logo and Title -->
+                        <child>
+                          <object class="GtkBox" id="welcome_header">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="halign">center</property>
+                            <child>
+                              <object class="GtkImage" id="welcome_icon">
+                                <property name="icon-name">system-software-install-symbolic</property>
+                                <property name="pixel-size">96</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="welcome_title">
+                                <property name="label" translatable="yes">Welcome to Paru GUI</property>
+                                <property name="css-classes">
+                                  <item>title-1</item>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="welcome_subtitle">
+                                <property name="label" translatable="yes">Manage AUR packages with ease and security</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                                <property name="wrap">True</property>
+                                <property name="max-width-chars">50</property>
+                                <property name="halign">center</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Main Selection Options -->
+                        <child>
+                          <object class="GtkBox" id="welcome_actions">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">24</property>
+                            <property name="halign">center</property>
+                            <property name="margin-top">24</property>
+
+                            <!-- Select File Button -->
+                            <child>
+                              <object class="GtkButton" id="select_file_button">
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">text-x-generic-symbolic</property>
+                                        <property name="pixel-size">48</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Select File</property>
+                                        <property name="css-classes">
+                                          <item>heading</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">PKGBUILD, .pkg.tar.zst, .patch</property>
+                                        <property name="css-classes">
+                                          <item>caption</item>
+                                          <item>dim-label</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                                <property name="css-classes">
+                                  <item>card</item>
+                                  <item>welcome-card</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <!-- Select Folder Button -->
+                            <child>
+                              <object class="GtkButton" id="select_folder_button">
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">folder-symbolic</property>
+                                        <property name="pixel-size">48</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Select Folder</property>
+                                        <property name="css-classes">
+                                          <item>heading</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Directory with package files</property>
+                                        <property name="css-classes">
+                                          <item>caption</item>
+                                          <item>dim-label</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                                <property name="css-classes">
+                                  <item>card</item>
+                                  <item>welcome-card</item>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Recent Files Section -->
+                        <child>
+                          <object class="GtkBox" id="recent_files_section">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">16</property>
+                            <property name="margin-top">32</property>
+                            <property name="halign">center</property>
+
+                            <child>
+                              <object class="GtkLabel" id="recent_files_title">
+                                <property name="label" translatable="yes">Recent Files</property>
+                                <property name="css-classes">
+                                  <item>heading</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkScrolledWindow" id="recent_files_scrolled">
+                                <property name="hscrollbar-policy">never</property>
+                                <property name="vscrollbar-policy">automatic</property>
+                                <property name="min-content-height">120</property>
+                                <property name="max-content-height">200</property>
+                                <child>
+                                  <object class="GtkListBox" id="recent_files_list">
+                                    <property name="selection-mode">none</property>
+                                    <property name="css-classes">
+                                      <item>boxed-list</item>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Additional Actions -->
+                        <child>
+                          <object class="GtkBox" id="welcome_footer">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">12</property>
+                            <property name="halign">center</property>
+                            <property name="margin-top">24</property>
+
+                            <child>
+                              <object class="GtkButton" id="tour_guide_button">
+                                <property name="label" translatable="yes">Tour Guide</property>
+                                <property name="css-classes">
+                                  <item>flat</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="documentation_button">
+                                <property name="label" translatable="yes">Documentation</property>
+                                <property name="css-classes">
+                                  <item>flat</item>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <!-- Content View Screen -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">content</property>
+                    <property name="title" translatable="yes">Content</property>
+                    <property name="child">
+                      <object class="GtkBox" id="content_view">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-end">24</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+
+                        <!-- Path Navigation -->
+                        <child>
+                          <object class="GtkBox" id="path_navigation">
+                            <property name="spacing">6</property>
+                            <property name="margin-bottom">8</property>
+
+                            <!-- Up button -->
+                            <child>
+                              <object class="GtkButton" id="up_button">
+                                <property name="icon-name">go-up-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Go up one level</property>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <!-- Current path display -->
+                            <child>
+                              <object class="GtkLabel" id="current_path_label">
+                                <property name="halign">start</property>
+                                <property name="hexpand">true</property>
+                                <property name="ellipsize">middle</property>
+                                <property name="max-width-chars">40</property>
+                                <property name="label">/home/user</property>
+                                <style>
+                                  <class name="monospace"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Content Cards FlowBox -->
+                        <child>
+                          <object class="GtkScrolledWindow" id="content_scrolled_window">
+                            <property name="vscrollbar-policy">automatic</property>
+                            <property name="hscrollbar-policy">never</property>
+                            <property name="vexpand">true</property>
+                            <property name="hexpand">true</property>
+                            <child>
+                              <object class="GtkFlowBox" id="content_cards">
+                                <property name="valign">start</property>
+                                <property name="max-children-per-line">3</property>
+                                <property name="min-children-per-line">1</property>
+                                <property name="row-spacing">12</property>
+                                <property name="column-spacing">12</property>
+                                <property name="homogeneous">False</property>
+                                <property name="selection-mode">none</property>
+                                <property name="activate-on-single-click">true</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Status Bar -->
+                        <child>
+                          <object class="GtkBox" id="status_bar">
+                            <property name="spacing">12</property>
+                            <property name="margin-top">8</property>
+
+                            <!-- File count -->
+                            <child>
+                              <object class="GtkLabel" id="file_count_label">
+                                <property name="halign">start</property>
+                                <property name="hexpand">true</property>
+                                <property name="label" translatable="yes">0 files found</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <!-- File type filters -->
+                            <child>
+                              <object class="GtkBox" id="filter_buttons">
+                                <property name="spacing">6</property>
+
+                                <child>
+                                  <object class="GtkToggleButton" id="filter_pkgbuild">
+                                    <property name="label" translatable="yes">PKGBUILD</property>
+                                    <property name="active">true</property>
+                                    <property name="name">PKGBUILD</property>
+                                    <style>
+                                      <class name="filter-button"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkToggleButton" id="filter_packages">
+                                    <property name="label" translatable="yes">Packages</property>
+                                    <property name="active">true</property>
+                                    <property name="name">PACKAGE</property>
+                                    <style>
+                                      <class name="filter-button"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkToggleButton" id="filter_patches">
+                                    <property name="label" translatable="yes">Patches</property>
+                                    <property name="active">true</property>
+                                    <property name="name">PATCH</property>
+                                    <style>
+                                      <class name="filter-button"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <!-- Loading Screen -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">loading</property>
+                    <property name="title" translatable="yes">Loading</property>
+                    <property name="child">
+                      <object class="AdwStatusPage" id="loading_page">
+                        <property name="icon-name">content-loading-symbolic</property>
+                        <property name="title" translatable="yes">Loading Content</property>
+                        <property name="description" translatable="yes">Analyzing selected files and packages...</property>
+                        <property name="child">
+                          <object class="GtkSpinner" id="loading_spinner">
+                            <property name="spinning">True</property>
+                            <property name="height-request">32</property>
+                            <property name="width-request">32</property>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <!-- Primary Menu Model - Complete Implementation -->
+  <menu id="primary_menu">
+    <!-- System Section -->
+    <section>
+      <item>
+        <attribute name="action">app.show-statistics</attribute>
+        <attribute name="label" translatable="yes">Statistics</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.show-arch-news</attribute>
+        <attribute name="label" translatable="yes">Arch News</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.clean-cache</attribute>
+        <attribute name="label" translatable="yes">Clean Cache</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.update-system</attribute>
+        <attribute name="label" translatable="yes">Update System</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.initial-tour</attribute>
+        <attribute name="label" translatable="yes">Initial Tour</attribute>
+      </item>
+    </section>
+
+    <!-- Preferences Section -->
+    <section>
+      <item> <!-- Changed from <submenu> to <item> -->
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <submenu> <!-- This submenu now correctly belongs to an <item> -->
+          <section>
+            <!-- Default Editor -->
+            <item>
+              <attribute name="action">app.default-editor</attribute>
+              <attribute name="label" translatable="yes">Default Editor</attribute>
+              <submenu>
+                <section>
+                  <item>
+                    <attribute name="action">app.editor-vscode</attribute>
+                    <attribute name="label" translatable="yes">VS Code</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.editor-gedit</attribute>
+                    <attribute name="label" translatable="yes">Gedit</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.editor-custom</attribute>
+                    <attribute name="label" translatable="yes">Custom Editor...</attribute>
+                  </item>
+                </section>
+              </submenu>
+            </item>
+
+            <!-- AUR Trust Levels -->
+            <item>
+              <attribute name="action">app.aur-trust-levels</attribute>
+              <attribute name="label" translatable="yes">AUR Trust Levels</attribute>
+              <submenu>
+                <section>
+                  <item>
+                    <attribute name="action">app.show-trust-icons</attribute>
+                    <attribute name="label" translatable="yes">Show trust icons</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.block-no-votes</attribute>
+                    <attribute name="label" translatable="yes">Block packages without votes</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.consider-update-time</attribute>
+                    <attribute name="label" translatable="yes">Consider time since last update</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.check-negative-comments</attribute>
+                    <attribute name="label" translatable="yes">Check recent negative comments</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                </section>
+              </submenu>
+            </item>
+
+            <!-- Simple Mode -->
+            <item>
+              <attribute name="action">app.simple-mode</attribute>
+              <attribute name="label" translatable="yes">Simple Mode</attribute>
+              <submenu>
+                <section>
+                  <item>
+                    <attribute name="action">app.hide-advanced-options</attribute>
+                    <attribute name="label" translatable="yes">Hide advanced options automatically</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                </section>
+              </submenu>
+            </item>
+
+            <!-- Developer Mode -->
+            <item>
+              <attribute name="action">app.developer-mode</attribute>
+              <attribute name="label" translatable="yes">Developer Mode</attribute>
+              <submenu>
+                <section>
+                  <item>
+                    <attribute name="action">app.check-devel-updates</attribute>
+                    <attribute name="label" translatable="yes">Check devel updates</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.ignore-specific-packages</attribute>
+                    <attribute name="label" translatable="yes">Ignore Specific Packages...</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.explanatory-tooltips</attribute>
+                    <attribute name="label" translatable="yes">Explanatory Tooltips</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.clear-after-build</attribute>
+                    <attribute name="label" translatable="yes">Clear After Build</attribute>
+                    <attribute name="target">true</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.review-pkgbuild</attribute>
+                    <attribute name="label" translatable="yes">Review PKGBUILD</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.debug-mode</attribute>
+                    <attribute name="label" translatable="yes">Debug Mode</attribute>
+                    <submenu>
+                      <section>
+                        <item>
+                          <attribute name="action">app.install-debug-packages</attribute>
+                          <attribute name="label" translatable="yes">Install debug packages</attribute>
+                          <attribute name="target">true</attribute>
+                        </item>
+                        <item>
+                          <attribute name="action">app.show-detailed-warnings</attribute>
+                          <attribute name="label" translatable="yes">Show detailed warnings</attribute>
+                          <attribute name="target">true</attribute>
+                        </item>
+                        <item>
+                          <attribute name="action">app.show-realtime-terminal</attribute>
+                          <attribute name="label" translatable="yes">Show realtime terminal</attribute>
+                          <submenu>
+                            <section>
+                              <item>
+                                <attribute name="action">app.auto-scroll</attribute>
+                                <attribute name="label" translatable="yes">Auto-scroll active</attribute>
+                                <attribute name="target">true</attribute>
+                              </item>
+                              <item>
+                                <attribute name="action">app.hide-success-commands</attribute>
+                                <attribute name="label" translatable="yes">Hide success commands</attribute>
+                                <attribute name="target">true</attribute>
+                              </item>
+                              <item>
+                                <attribute name="action">app.detail-level</attribute>
+                                <attribute name="label" translatable="yes">Detail level</attribute>
+                                <submenu>
+                                  <section>
+                                    <item>
+                                      <attribute name="action">app.detail-level</attribute>
+                                      <attribute name="label" translatable="yes">Minimum</attribute>
+                                      <attribute name="target">minimum</attribute>
+                                    </item>
+                                    <item>
+                                      <attribute name="action">app.detail-level</attribute>
+                                      <attribute name="label" translatable="yes">Default</attribute>
+                                      <attribute name="target">default</attribute>
+                                    </item>
+                                    <item>
+                                      <attribute name="action">app.detail-level</attribute>
+                                      <attribute name="label" translatable="yes">MAXIMUM</attribute>
+                                      <attribute name="target">maximum</attribute>
+                                    </item>
+                                  </section>
+                                </submenu>
+                              </item>
+                            </section>
+                          </submenu>
+                        </item>
+                      </section>
+                    </submenu>
+                  </item>
+                </section>
+              </submenu>
+            </item>
+          </section>
+        </submenu>
+      </item>
+
+      <!-- Action History -->
+      <item> <!-- Changed from <submenu> to <item> -->
+        <attribute name="label" translatable="yes">Action History</attribute>
+        <submenu> <!-- This submenu now correctly belongs to an <item> -->
+          <section>
+            <item>
+              <attribute name="action">app.undo-last-action</attribute>
+              <attribute name="label" translatable="yes">Undo Last Action (24h)</attribute>
+            </item>
+            <item>
+              <attribute name="action">app.export-detailed-log</attribute>
+              <attribute name="label" translatable="yes">Export Detailed Log</attribute>
+            </item>
+          </section>
+        </submenu>
+      </item>
+    </section>
+
+    <!-- Separator -->
+    <section>
+      <item>
+        <attribute name="action">win.show-help-overlay</attribute>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.about</attribute>
+        <attribute name="label" translatable="yes">About Paru GUI</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

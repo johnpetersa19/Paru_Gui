@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <!-- interface-name primary_menu.ui -->
+  <!-- interface-copyright Paru GUI Team -->
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.0"/>
+
+  <menu id="primary-menu">
+    <!-- System Section -->
+    <section>
+      <item>
+        <attribute name="action">app.show-statistics</attribute>
+        <attribute name="label" translatable="yes">Statistics</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.show-arch-news</attribute>
+        <attribute name="label" translatable="yes">Arch News</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.clean-cache</attribute>
+        <attribute name="label" translatable="yes">Clean Cache</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.update-system</attribute>
+        <attribute name="label" translatable="yes">Update System</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.initial-tour</attribute>
+        <attribute name="label" translatable="yes">Initial Tour</attribute>
+      </item>
+    </section>
+
+    <!-- Preferences Section -->
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <section>
+          <!-- Default Editor -->
+          <item>
+            <attribute name="action">app.default-editor</attribute>
+            <attribute name="label" translatable="yes">Default Editor</attribute>
+          </item>
+          <submenu>
+            <attribute name="label" translatable="yes">Editor</attribute>
+            <section>
+              <item>
+                <attribute name="action">app.editor-vscode</attribute>
+                <attribute name="label" translatable="yes">VS Code</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.editor-gedit</attribute>
+                <attribute name="label" translatable="yes">Gedit</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.editor-custom</attribute>
+                <attribute name="label" translatable="yes">Custom Editor...</attribute>
+              </item>
+            </section>
+          </submenu>
+
+          <!-- AUR Trust Levels -->
+          <item>
+            <attribute name="action">app.aur-trust-levels</attribute>
+            <attribute name="label" translatable="yes">AUR Trust Levels</attribute>
+          </item>
+          <submenu>
+            <attribute name="label" translatable="yes">Trust Settings</attribute>
+            <section>
+              <item>
+                <attribute name="action">app.show-trust-icons</attribute>
+                <attribute name="label" translatable="yes">Show trust icons</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.block-no-votes</attribute>
+                <attribute name="label" translatable="yes">Block packages without votes</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.consider-update-time</attribute>
+                <attribute name="label" translatable="yes">Consider time since last update</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.check-negative-comments</attribute>
+                <attribute name="label" translatable="yes">Check recent negative comments</attribute>
+              </item>
+            </section>
+          </submenu>
+
+          <!-- Simplified Mode -->
+          <item>
+            <attribute name="action">app.simplified-mode</attribute>
+            <attribute name="label" translatable="yes">Simplified Mode</attribute>
+          </item>
+          <submenu>
+            <attribute name="label" translatable="yes">Mode Settings</attribute>
+            <section>
+              <item>
+                <attribute name="action">app.hide-advanced-options</attribute>
+                <attribute name="label" translatable="yes">Hide advanced options automatically</attribute>
+              </item>
+            </section>
+          </submenu>
+
+          <!-- Developer Mode -->
+          <item>
+            <attribute name="action">app.developer-mode</attribute>
+            <attribute name="label" translatable="yes">Developer Mode</attribute>
+          </item>
+          <submenu>
+            <attribute name="label" translatable="yes">Developer Tools</attribute>
+            <section>
+              <item>
+                <attribute name="action">app.check-devel-updates</attribute>
+                <attribute name="label" translatable="yes">Check devel updates</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.ignore-specific-packages</attribute>
+                <attribute name="label" translatable="yes">Ignore Specific Packages</attribute>
+              </item>
+              <submenu>
+                <attribute name="label" translatable="yes">Ignored Packages</attribute>
+                <section>
+                  <item>
+                    <attribute name="action">app.ignore-package-firefox-git</attribute>
+                    <attribute name="label" translatable="yes">firefox-git</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.ignore-package-custom</attribute>
+                    <attribute name="label" translatable="yes">Add Custom Package...</attribute>
+                  </item>
+                </section>
+              </submenu>
+              <item>
+                <attribute name="action">app.explanatory-tooltips</attribute>
+                <attribute name="label" translatable="yes">Explanatory Tooltips</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.clear-after-build</attribute>
+                <attribute name="label" translatable="yes">Clear After Build</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.review-pkgbuild</attribute>
+                <attribute name="label" translatable="yes">Review PKGBUILD</attribute>
+              </item>
+              <item>
+                <attribute name="action">app.debug-mode</attribute>
+                <attribute name="label" translatable="yes">Debug Mode</attribute>
+              </item>
+              <submenu>
+                <attribute name="label" translatable="yes">Debug Options</attribute>
+                <section>
+                  <item>
+                    <attribute name="action">app.install-debug-packages</attribute>
+                    <attribute name="label" translatable="yes">Install debug packages</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.show-detailed-warnings</attribute>
+                    <attribute name="label" translatable="yes">Show detailed warnings</attribute>
+                  </item>
+                  <item>
+                    <attribute name="action">app.show-realtime-terminal</attribute>
+                    <attribute name="label" translatable="yes">Show realtime terminal</attribute>
+                  </item>
+                  <submenu>
+                    <attribute name="label" translatable="yes">Terminal Settings</attribute>
+                    <section>
+                      <item>
+                        <attribute name="action">app.autoscroll-active</attribute>
+                        <attribute name="label" translatable="yes">Autoscroll active</attribute>
+                      </item>
+                      <item>
+                        <attribute name="action">app.hide-success-commands</attribute>
+                        <attribute name="label" translatable="yes">Hide success commands</attribute>
+                      </item>
+                    </section>
+                  </submenu>
+                </section>
+              </submenu>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+
+      <!-- Action History -->
+      <submenu>
+        <attribute name="label" translatable="yes">Action History</attribute>
+        <section>
+          <item>
+            <attribute name="action">app.undo-last-action</attribute>
+            <attribute name="label" translatable="yes">Undo Last Action (24h)</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.export-detailed-log</attribute>
+            <attribute name="label" translatable="yes">Export Detailed Log</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+
+    <!-- Separator -->
+    <section>
+      <item>
+        <attribute name="action">win.show-help-overlay</attribute>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.about</attribute>
+        <attribute name="label" translatable="yes">About Paru GUI</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

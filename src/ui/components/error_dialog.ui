@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="ErrorDialog" parent="GtkDialog">
+    <property name="modal">true</property>
+    <property name="default-width">700</property>
+    <property name="default-height">500</property>
+    <property name="resizable">true</property>
+    <property name="destroy-with-parent">true</property>
+    <property name="transient-for">ParuGuiWindow</property>
+
+    <!-- Header Bar -->
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="show-title-buttons">true</property>
+        <child type="title">
+          <object class="GtkBox" id="header_title_box">
+            <property name="spacing">8</property>
+            <property name="halign">center</property>
+
+            <child>
+              <object class="GtkImage" id="error_icon">
+                <property name="icon-name">dialog-error-symbolic</property>
+                <property name="pixel-size">24</property>
+                <property name="css-classes">
+                  <item>error-color</item>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="error_title_label">
+                <property name="label" translatable="yes">Error Details</property>
+                <property name="css-classes">
+                  <item>title-4</item>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Main content area -->
+    <child internal-child="content_area">
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+        <property name="spacing">0</property>
+
+        <!-- Error Header with red background -->
+        <child>
+          <object class="GtkBox" id="error_header">
+            <property name="orientation">vertical</property>
+            <property name="spacing">8</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">16</property>
+            <property name="margin-end">16</property>
+            <property name="css-classes">
+              <item>error-header</item>
+            </property>
+
+            <child>
+              <object class="GtkLabel" id="error_type_label">
+                <property name="label" translatable="yes">RISK_DETECTED</property>
+                <property name="halign">start</property>
+                <property name="css-classes">
+                  <item>title-4</item>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="error_package_label">
+                <property name="label" translatable="yes">Package: suspicious-package-git (AUR)</property>
+                <property name="halign">start</property>
+                <property name="css-classes">
+                  <item>title-3</item>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Error Content -->
+        <child>
+          <object class="GtkScrolledWindow" id="error_scrolled_window">
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="hscrollbar-policy">automatic</property>
+            <property name="vexpand">true</property>
+            <property name="hexpand">true</property>
+            <property name="margin-start">16</property>
+            <property name="margin-end">16</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="css-classes">
+              <item>error-content</item>
+            </property>
+
+            <child>
+              <object class="GtkViewport">
+                <child>
+                  <object class="GtkBox" id="error_content_box">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">16</property>
+
+                    <!-- Detected Problems Section -->
+                    <child>
+                      <object class="GtkBox" id="problems_section">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Detected Problems:</property>
+                            <property name="halign">start</property>
+                            <property name="css-classes">
+                              <item>heading</item>
+                              <item>title-4</item>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="problems_list">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+
+                            <child>
+                              <object class="GtkLabel" id="problem_1">
+                                <property name="label" translatable="yes">• Less than 10 votes + 5 recent negative comments</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="problem_2">
+                                <property name="label" translatable="yes">• Maintainer without verified PGP keys</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="problem_3">
+                                <property name="label" translatable="yes">• Unjustified `sudo` commands in PKGBUILD</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Recommended Actions Section -->
+                    <child>
+                      <object class="GtkBox" id="actions_section">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">12</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Recommended Actions:</property>
+                            <property name="halign">start</property>
+                            <property name="css-classes">
+                              <item>heading</item>
+                              <item>title-4</item>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="actions_buttons">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+
+                            <child>
+                              <object class="GtkButton" id="ignore_risk_button">
+                                <property name="halign">fill</property>
+                                <property name="hexpand">true</property>
+                                <property name="css-classes">
+                                  <item>flat</item>
+                                  <item>error-color</item>
+                                </property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">8</property>
+
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">dialog-warning-symbolic</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Ignore Risk</property>
+                                        <property name="halign">start</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Only for experienced users</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">true</property>
+                                        <property name="css-classes">
+                                          <item>caption</item>
+                                          <item>dim-label</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="view_analysis_button">
+                                <property name="halign">fill</property>
+                                <property name="hexpand">true</property>
+                                <property name="css-classes">
+                                  <item>flat</item>
+                                  <item>warning-color</item>
+                                </property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">8</property>
+
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">system-search-symbolic</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">View Complete Analysis</property>
+                                        <property name="halign">start</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Show PKGBUILD heatmap</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">true</property>
+                                        <property name="css-classes">
+                                          <item>caption</item>
+                                          <item>dim-label</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="report_aur_button">
+                                <property name="halign">fill</property>
+                                <property name="hexpand">true</property>
+                                <property name="css-classes">
+                                  <item>flat</item>
+                                  <item>success-color</item>
+                                </property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">8</property>
+
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">dialog-information-symbolic</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Report to AUR</property>
+                                        <property name="halign">start</property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Send warning to community</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">true</property>
+                                        <property name="css-classes">
+                                          <item>caption</item>
+                                          <item>dim-label</item>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Critical Lines Section -->
+                    <child>
+                      <object class="GtkBox" id="critical_lines_section">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Critical Lines:</property>
+                            <property name="halign">start</property>
+                            <property name="css-classes">
+                              <item>heading</item>
+                              <item>title-4</item>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="critical_lines_content">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">prepare() {</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                  <item>monospace</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="critical_line">
+                                <property name="label" translatable="yes">  sudo rm -rf /usr/bin/*  # ⚠️ DANGEROUS OPERATION</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                  <item>monospace</item>
+                                  <item>error-color</item>
+                                  <item>bold</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">}</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                  <item>monospace</item>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Additional Context Section -->
+                    <child>
+                      <object class="GtkBox" id="context_section">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Additional Context:</property>
+                            <property name="halign">start</property>
+                            <property name="css-classes">
+                              <item>heading</item>
+                              <item>title-4</item>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="context_list">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+
+                            <child>
+                              <object class="GtkLabel" id="context_1">
+                                <property name="label" translatable="yes">- Last update: 2 hours ago (unusual for stable package)</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="context_2">
+                                <property name="label" translatable="yes">- Maintainer: "user123" (no verifiable history)</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="xalign">0</property>
+                                <property name="css-classes">
+                                  <item>body</item>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Action area -->
+    <child internal-child="action_area">
+      <object class="GtkBox" id="action_area">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">6</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="css-classes">
+          <item>error-footer</item>
+        </property>
+
+        <child>
+          <object class="GtkButton" id="close_button">
+            <property name="label" translatable="yes">Close</property>
+            <property name="halign">end</property>
+            <signal name="clicked" handler="on_close_clicked"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="copy_log_button">
+            <property name="label" translatable="yes">Copy Log</property>
+            <property name="halign">end</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
+            <signal name="clicked" handler="on_copy_log_clicked"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <!-- Template for risk level indicator -->
+  <template class="RiskLevelIndicator" parent="GtkBox">
+    <property name="orientation">horizontal</property>
+    <property name="spacing">4</property>
+
+    <child>
+      <object class="GtkImage" id="risk_icon">
+        <property name="icon-size">small</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkLabel" id="risk_label">
+        <property name="halign">start</property>
+      </object>
+    </child>
+  </template>
+</interface>

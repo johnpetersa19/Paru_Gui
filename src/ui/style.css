@@ -1,0 +1,428 @@
+/* =============================================================================
+   Paru GUI - GNOME Application Styles
+   Version: 2.6.1
+   ============================================================================= */
+
+/* =============================================================================
+   Base Application Styles
+   ============================================================================= */
+
+/* Main window styling */
+.main-window {
+    background-color: @theme_bg_color;
+}
+
+/* Header bar adjustments - Standard GNOME header with bottom border */
+.header-bar {
+    border-bottom: 1px solid @borders;
+}
+
+/* =============================================================================
+   Trust Level Indicators - WCAG Compliant
+   ============================================================================= */
+
+/* High Trust - Green with dot pattern (50+ votes + updated <30 days) */
+.trust-high {
+    background-color: @success_color;
+    background-image: radial-gradient(circle, alpha(@theme_fg_color, 0.1) 2px, transparent 2px);
+    background-size: 10px 10px;
+    border-left: 4px solid @success_color;
+}
+
+/* Medium Trust - Orange with diagonal stripes (10-50 votes or updated >60 days) */
+.trust-medium {
+    background-color: @warning_color;
+    background-image: repeating-linear-gradient(
+        45deg,
+        alpha(@theme_fg_color, 0.1),
+        alpha(@theme_fg_color, 0.1) 5px,
+        alpha(@theme_fg_color, 0.2) 5px,
+        alpha(@theme_fg_color, 0.2) 10px
+    );
+    border-left: 4px solid @warning_color;
+}
+
+/* Low Trust - Red with zigzag pattern (<10 votes + negative comments) */
+.trust-low {
+    background-color: @error_color;
+    background-image: linear-gradient(135deg,
+        alpha(@theme_fg_color, 0.1) 25%,
+        transparent 25%),
+        linear-gradient(225deg,
+        alpha(@theme_fg_color, 0.1) 25%,
+        transparent 25%),
+        linear-gradient(315deg,
+        alpha(@theme_fg_color, 0.1) 25%,
+        transparent 25%),
+        linear-gradient(45deg,
+        alpha(@theme_fg_color, 0.1) 25%,
+        transparent 25%);
+    background-position: 5px 0, 5px 0, 0 0, 0 0;
+    background-size: 10px 10px;
+    border-left: 4px solid @error_color;
+}
+
+/* =============================================================================
+   Risk Analysis Heatmap - WCAG Compliant
+   ============================================================================= */
+
+/* Critical risk - High contrast red (security issues, sudo commands) */
+.risk-critical {
+    background-color: @error_color;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        alpha(@theme_fg_color, 0.3),
+        alpha(@theme_fg_color, 0.3) 10px,
+        alpha(@theme_fg_color, 0.4) 10px,
+        alpha(@theme_fg_color, 0.4) 20px
+    );
+    color: @theme_fg_color;
+    font-weight: bold;
+}
+
+/* High risk - Orange with warning stripes (potential security concerns) */
+.risk-high {
+    background-color: shade(@warning_color, 0.8);
+    background-image: repeating-linear-gradient(
+        45deg,
+        alpha(@theme_fg_color, 0.2),
+        alpha(@theme_fg_color, 0.2) 8px,
+        transparent 8px,
+        transparent 16px
+    );
+    color: @theme_fg_color;
+}
+
+/* Medium risk - Yellow with wave pattern (moderate concerns) */
+.risk-medium {
+    background-color: @warning_color;
+    background-image: repeating-linear-gradient(
+        0deg,
+        alpha(@theme_fg_color, 0.1),
+        alpha(@theme_fg_color, 0.1) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    color: @theme_fg_color;
+}
+
+/* Low risk - Light yellow (minor concerns) */
+.risk-low {
+    background-color: mix(@warning_color, @theme_bg_color, 0.3);
+    color: @theme_fg_color;
+}
+
+/* No risk - Success green (safe operations) */
+.risk-none {
+    background-color: @success_color;
+    color: @theme_fg_color;
+}
+
+/* =============================================================================
+   File Card Styles
+   ============================================================================= */
+
+/* Generic file card - Standard styling for all content cards */
+.file-card {
+    margin: 6px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid @borders;
+    background-color: @theme_base_color;
+    box-shadow: 0 1px 2px alpha(@theme_fg_color, 0.1);
+    transition: all 200ms ease;
+}
+
+/* Hover effect for interactive elements */
+.file-card:hover {
+    box-shadow: 0 2px 8px alpha(@theme_fg_color, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Selection state for active items */
+.file-card:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+/* PKGBUILD card specific styling - Priority MAXIMUM */
+.pkgbuild-card {
+    border-top: 3px solid @theme_selected_bg_color;
+}
+
+/* Package file card - Priority MEDIUM */
+.package-card {
+    border-top: 3px solid @success_color;
+}
+
+/* Patch file card - Priority LOW */
+.patch-card {
+    border-top: 3px solid @warning_color;
+}
+
+/* Advanced card - Priority CUSTOM */
+.advanced-card {
+    border-top: 3px solid @theme_fg_color;
+}
+
+/* Empty card - For empty folders */
+.empty-card {
+    border: 2px dashed @borders;
+    background-color: alpha(@theme_fg_color, 0.05);
+    text-align: center;
+    padding: 24px;
+}
+
+/* =============================================================================
+   Content View FlowBox
+   ============================================================================= */
+
+/* Container for dynamic content cards */
+.content-flowbox {
+    padding: 12px;
+    background-color: @theme_bg_color;
+}
+
+/* Individual card container */
+.content-flowbox-child {
+    padding: 6px;
+}
+
+/* =============================================================================
+   Search Bar Styles
+   ============================================================================= */
+
+/* Main search bar container - Standard GNOME search bar */
+.search-bar {
+    background-color: @theme_base_color;
+    border-bottom: 1px solid @borders;
+    padding: 6px 12px;
+}
+
+/* Search entry styling with rounded corners */
+.search-entry {
+    border-radius: 9999px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* =============================================================================
+   Progress and Status Indicators
+   ============================================================================= */
+
+/* Progress bar for package operations */
+.package-progress {
+    margin: 6px 0;
+}
+
+.package-progress trough {
+    border-radius: 3px;
+    background-color: alpha(@theme_fg_color, 0.1);
+}
+
+.package-progress progress {
+    border-radius: 3px;
+    background-color: @theme_selected_bg_color;
+}
+
+/* Status icons for various operations */
+.status-success {
+    color: @success_color;
+}
+
+.status-warning {
+    color: @warning_color;
+}
+
+.status-error {
+    color: @error_color;
+}
+
+.status-info {
+    color: @theme_selected_bg_color;
+}
+
+/* =============================================================================
+   Terminal Output Styles
+   ============================================================================= */
+
+/* Terminal output container - For developer mode */
+.terminal-output {
+    font-family: monospace;
+    background-color: @theme_dark_bg_color;
+    color: @theme_fg_color;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* Terminal output success messages */
+.terminal-output-success {
+    color: @success_color;
+}
+
+/* Terminal output warning messages */
+.terminal-output-warning {
+    color: @warning_color;
+}
+
+/* Terminal output error messages */
+.terminal-output-error {
+    color: @error_color;
+    font-weight: bold;
+}
+
+/* Terminal command display */
+.terminal-output-command {
+    color: @theme_selected_bg_color;
+}
+
+/* =============================================================================
+   Error Dialog Styles
+   ============================================================================= */
+
+/* Main error dialog container */
+.error-dialog {
+    background-color: @theme_bg_color;
+    border: 1px solid @borders;
+}
+
+/* Error header with critical information */
+.error-header {
+    background-color: @error_color;
+    color: @theme_base_color;
+    padding: 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+/* Main error content area */
+.error-content {
+    padding: 12px;
+}
+
+/* Error footer with action buttons */
+.error-footer {
+    background-color: alpha(@theme_fg_color, 0.05);
+    padding: 12px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+/* =============================================================================
+   Help Overlay
+   ============================================================================= */
+
+/* Keyboard shortcuts overlay */
+.help-overlay {
+    background-color: alpha(@theme_bg_color, 0.95);
+    border-radius: 6px;
+    border: 1px solid @borders;
+}
+
+/* Shortcut group styling */
+.shortcut-group {
+    margin: 12px;
+}
+
+/* Shortcut section title */
+.shortcut-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: @theme_selected_bg_color;
+}
+
+/* Individual shortcut */
+.shortcut {
+    margin: 3px 0;
+}
+
+/* Shortcut key display */
+.shortcut-key {
+    background-color: alpha(@theme_fg_color, 0.1);
+    border: 1px solid @borders;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: monospace;
+    margin-right: 6px;
+}
+
+/* =============================================================================
+   Responsive Design
+   ============================================================================= */
+
+/* Mobile-friendly adjustments */
+@media (max-width: 768px) {
+    .file-card {
+        margin: 3px;
+        padding: 8px;
+    }
+
+    .content-flowbox {
+        padding: 6px;
+    }
+
+    .search-bar {
+        padding: 3px 6px;
+    }
+}
+
+/* =============================================================================
+   Accessibility Enhancements
+   ============================================================================= */
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+    .trust-high {
+        border-left-width: 6px;
+        border-style: solid;
+    }
+
+    .trust-medium {
+        border-left-width: 6px;
+        border-style: solid;
+    }
+
+    .trust-low {
+        border-left-width: 6px;
+        border-style: solid;
+    }
+
+    .risk-critical {
+        border: 2px solid @error_color;
+    }
+}
+
+/* Reduced motion support for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .file-card {
+        transition: none;
+    }
+
+    .file-card:hover {
+        transform: none;
+    }
+}
+
+/* =============================================================================
+   Dark Theme Support
+   ============================================================================= */
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .trust-high {
+        background-color: shade(@success_color, 0.8);
+    }
+
+    .trust-medium {
+        background-color: shade(@warning_color, 0.8);
+    }
+
+    .trust-low {
+        background-color: shade(@error_color, 0.8);
+    }
+
+    .terminal-output {
+        background-color: @theme_bg_color;
+    }
+}

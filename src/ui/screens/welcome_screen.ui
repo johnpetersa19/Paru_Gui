@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="WelcomeScreen" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">24</property>
+    <property name="margin-top">48</property>
+    <property name="margin-bottom">48</property>
+    <property name="margin-start">48</property>
+    <property name="margin-end">48</property>
+    <property name="halign">center</property>
+    <property name="valign">center</property>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="halign">center</property>
+
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">package-x-generic</property>
+            <property name="pixel-size">96</property>
+            <property name="css-classes">
+              <item>welcome-icon</item>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Welcome to Paru GUI</property>
+            <property name="css-classes">
+              <item>title-1</item>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Manage AUR packages with ease and security</property>
+            <property name="css-classes">
+              <item>body</item>
+            </property>
+            <property name="wrap">True</property>
+            <property name="max-width-chars">50</property>
+            <property name="halign">center</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">24</property>
+        <property name="halign">center</property>
+        <property name="margin-top">24</property>
+
+        <child>
+          <object class="GtkButton" id="select_file_button">
+            <property name="icon-name">document-open-symbolic</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">text-x-generic-symbolic</property>
+                    <property name="pixel-size">48</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Select File</property>
+                    <property name="css-classes">
+                      <item>heading</item>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">PKGBUILD, .pkg.tar.zst, .patch</property>
+                    <property name="css-classes">
+                      <item>caption</item>
+                      <item>dim-label</item>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="css-classes">
+              <item>card</item>
+              <item>welcome-card</item>
+            </property>
+            <signal name="clicked" handler="on_select_file_clicked"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="select_folder_button">
+            <property name="icon-name">folder-open-symbolic</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">folder-symbolic</property>
+                    <property name="pixel-size">48</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Select Folder</property>
+                    <property name="css-classes">
+                      <item>heading</item>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Directory with package files</property>
+                    <property name="css-classes">
+                      <item>caption</item>
+                      <item>dim-label</item>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="css-classes">
+              <item>card</item>
+              <item>welcome-card</item>
+            </property>
+            <signal name="clicked" handler="on_select_folder_clicked"/>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">16</property>
+        <property name="margin-top">32</property>
+        <property name="halign">center</property>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Recent Files</property>
+            <property name="css-classes">
+              <item>heading</item>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="min-content-height">120</property>
+            <property name="max-content-height">200</property>
+
+            <child>
+              <object class="GtkListBox" id="recent_files_list">
+                <property name="selection-mode">none</property>
+                <property name="css-classes">
+                  <item>boxed-list</item>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="halign">center</property>
+        <property name="margin-top">24</property>
+
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Tour Guide</property>
+            <property name="css-classes">
+              <item>flat</item>
+            </property>
+            <signal name="clicked" handler="on_tour_guide_clicked"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Documentation</property>
+            <property name="css-classes">
+              <item>flat</item>
+            </property>
+            <signal name="clicked" handler="on_documentation_clicked"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
