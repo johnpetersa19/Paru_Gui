@@ -7,7 +7,6 @@
     <property name="default-height">500</property>
     <property name="resizable">true</property>
     <property name="destroy-with-parent">true</property>
-    <property name="transient-for">ParuGuiWindow</property>
 
     <!-- Header Bar -->
     <child type="titlebar">
@@ -103,6 +102,10 @@
                   <object class="GtkBox" id="error_content_box">
                     <property name="orientation">vertical</property>
                     <property name="spacing">16</property>
+                    <property name="margin-top">12</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="margin-start">16</property>
+                    <property name="margin-end">16</property>
 
                     <!-- Detected Problems Section -->
                     <child>
@@ -459,7 +462,6 @@
           <object class="GtkButton" id="close_button">
             <property name="label" translatable="yes">Close</property>
             <property name="halign">end</property>
-            <signal name="clicked" handler="on_close_clicked"/>
           </object>
         </child>
 
@@ -470,7 +472,6 @@
             <style>
               <class name="suggested-action"/>
             </style>
-            <signal name="clicked" handler="on_copy_log_clicked"/>
           </object>
         </child>
       </object>
@@ -484,7 +485,7 @@
 
     <child>
       <object class="GtkImage" id="risk_icon">
-        <property name="icon-size">small</property>
+        <property name="icon-size">1</property>
       </object>
     </child>
 

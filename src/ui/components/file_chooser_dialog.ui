@@ -7,7 +7,7 @@
     <property name="default-width">900</property>
     <property name="default-height">650</property>
     <property name="resizable">true</property>
-    
+
     <!-- Header Bar -->
     <child type="titlebar">
       <object class="GtkHeaderBar">
@@ -22,7 +22,7 @@
         </child>
       </object>
     </child>
-    
+
     <!-- Main content area -->
     <child internal-child="content_area">
       <object class="GtkBox" id="main_box">
@@ -32,13 +32,13 @@
         <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        
+
         <!-- Path navigation bar -->
         <child>
           <object class="GtkBox" id="path_bar">
             <property name="spacing">6</property>
             <property name="margin-bottom">8</property>
-            
+
             <!-- Up button -->
             <child>
               <object class="GtkButton" id="up_button">
@@ -50,7 +50,7 @@
                 </style>
               </object>
             </child>
-            
+
             <!-- Current path display -->
             <child>
               <object class="GtkLabel" id="current_path_label">
@@ -64,7 +64,7 @@
                 </style>
               </object>
             </child>
-            
+
             <!-- Search entry -->
             <child>
               <object class="GtkSearchEntry" id="search_entry">
@@ -75,7 +75,7 @@
             </child>
           </object>
         </child>
-        
+
         <!-- File grid container -->
         <child>
           <object class="GtkScrolledWindow" id="scrolled_window">
@@ -83,7 +83,7 @@
             <property name="hscrollbar-policy">never</property>
             <property name="vexpand">true</property>
             <property name="hexpand">true</property>
-            
+
             <!-- FlowBox for file cards -->
             <child>
               <object class="GtkFlowBox" id="files_grid">
@@ -100,13 +100,13 @@
             </child>
           </object>
         </child>
-        
+
         <!-- Status bar -->
         <child>
           <object class="GtkBox" id="status_bar">
             <property name="spacing">12</property>
             <property name="margin-top">8</property>
-            
+
             <!-- File count -->
             <child>
               <object class="GtkLabel" id="file_count_label">
@@ -118,12 +118,12 @@
                 </style>
               </object>
             </child>
-            
+
             <!-- File type filters -->
             <child>
               <object class="GtkBox" id="filter_buttons">
                 <property name="spacing">6</property>
-                
+
                 <child>
                   <object class="GtkToggleButton" id="filter_pkgbuild">
                     <property name="label" translatable="yes">PKGBUILD</property>
@@ -135,7 +135,7 @@
                     </style>
                   </object>
                 </child>
-                
+
                 <child>
                   <object class="GtkToggleButton" id="filter_packages">
                     <property name="label" translatable="yes">Packages</property>
@@ -147,7 +147,7 @@
                     </style>
                   </object>
                 </child>
-                
+
                 <child>
                   <object class="GtkToggleButton" id="filter_patches">
                     <property name="label" translatable="yes">Patches</property>
@@ -159,7 +159,7 @@
                     </style>
                   </object>
                 </child>
-                
+
                 <child>
                   <object class="GtkToggleButton" id="filter_advanced">
                     <property name="label" translatable="yes">Advanced</property>
@@ -177,7 +177,7 @@
         </child>
       </object>
     </child>
-    
+
     <!-- Action area -->
     <child internal-child="action_area">
       <object class="GtkBox">
@@ -186,14 +186,14 @@
         <property name="margin-bottom">12</property>
         <property name="margin-end">12</property>
         <property name="margin-start">12</property>
-        
+
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
             <signal name="clicked" handler="on_cancel_clicked"/>
           </object>
         </child>
-        
+
         <child>
           <object class="GtkButton" id="open_button">
             <property name="label" translatable="yes">Open</property>
@@ -206,7 +206,7 @@
       </object>
     </child>
   </template>
-  
+
   <!-- Template para Card de Arquivo PKGBUILD -->
   <template class="PkgbuildCard" parent="GtkFrame">
     <property name="child">
@@ -217,12 +217,12 @@
         <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        
+
         <!-- Header com ícone e confiança -->
         <child>
           <object class="GtkBox" id="header_box">
             <property name="spacing">8</property>
-            
+
             <!-- Ícone do arquivo -->
             <child>
               <object class="GtkImage" id="file_icon">
@@ -230,21 +230,21 @@
                 <property name="icon-name">text-x-generic-symbolic</property>
               </object>
             </child>
-            
+
             <!-- Indicador de confiança -->
             <child>
               <object class="GtkBox" id="trust_container">
                 <property name="halign">end</property>
                 <property name="hexpand">true</property>
                 <property name="spacing">4</property>
-                
+
                 <child>
                   <object class="GtkImage" id="trust_icon">
                     <property name="icon-size">24</property>
                     <property name="visible">true</property>
                   </object>
                 </child>
-                
+
                 <child>
                   <object class="GtkLabel" id="trust_label">
                     <property name="visible">true</property>
@@ -258,7 +258,7 @@
             </child>
           </object>
         </child>
-        
+
         <!-- Nome do pacote -->
         <child>
           <object class="GtkLabel" id="package_name_label">
@@ -272,7 +272,7 @@
             </attributes>
           </object>
         </child>
-        
+
         <!-- Versão -->
         <child>
           <object class="GtkLabel" id="version_label">
@@ -285,7 +285,7 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Detalhes adicionais -->
         <child>
           <object class="GtkLabel" id="details_label">
@@ -300,14 +300,14 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Indicador de confiança detalhado -->
         <child>
           <object class="GtkBox" id="detailed_trust_box">
             <property name="spacing">4</property>
             <property name="halign">center</property>
             <property name="visible">false</property>
-            
+
             <child>
               <object class="GtkLabel" id="trust_votes_label">
                 <property name="label" translatable="yes">Votes: </property>
@@ -317,7 +317,7 @@
                 </style>
               </object>
             </child>
-            
+
             <child>
               <object class="GtkLabel" id="trust_update_label">
                 <property name="label" translatable="yes">Updated: </property>
@@ -327,7 +327,7 @@
                 </style>
               </object>
             </child>
-            
+
             <child>
               <object class="GtkLabel" id="trust_pgp_label">
                 <property name="label" translatable="yes">PGP: </property>
@@ -339,7 +339,7 @@
             </child>
           </object>
         </child>
-        
+
         <!-- Separator -->
         <child>
           <object class="GtkSeparator">
@@ -347,13 +347,13 @@
             <property name="margin-bottom">8</property>
           </object>
         </child>
-        
+
         <!-- Ações principais -->
         <child>
           <object class="GtkBox" id="actions_box">
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
-            
+
             <!-- Compilar Pacote -->
             <child>
               <object class="GtkButton" id="build_button">
@@ -365,7 +365,7 @@
                 <signal name="clicked" handler="on_build_clicked"/>
               </object>
             </child>
-            
+
             <!-- Editar PKGBUILD -->
             <child>
               <object class="GtkButton" id="edit_button">
@@ -376,7 +376,7 @@
                 <signal name="clicked" handler="on_edit_clicked"/>
               </object>
             </child>
-            
+
             <!-- Ver Dependências -->
             <child>
               <object class="GtkButton" id="dependencies_button">
@@ -387,7 +387,7 @@
                 <signal name="clicked" handler="on_dependencies_clicked"/>
               </object>
             </child>
-            
+
             <!-- Baixar Fontes -->
             <child>
               <object class="GtkButton" id="sources_button">
@@ -403,7 +403,7 @@
       </object>
     </property>
   </template>
-  
+
   <!-- Template para Card de Arquivo Pacote (.zst) -->
   <template class="PackageCard" parent="GtkFrame">
     <property name="child">
@@ -414,12 +414,12 @@
         <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        
+
         <!-- Header com ícone e confiança -->
         <child>
           <object class="GtkBox" id="header_box">
             <property name="spacing">8</property>
-            
+
             <!-- Ícone do arquivo -->
             <child>
               <object class="GtkImage" id="file_icon">
@@ -427,21 +427,21 @@
                 <property name="icon-name">package-x-generic</property>
               </object>
             </child>
-            
+
             <!-- Status de assinatura -->
             <child>
               <object class="GtkBox" id="signature_container">
                 <property name="halign">end</property>
                 <property name="hexpand">true</property>
                 <property name="spacing">4</property>
-                
+
                 <child>
                   <object class="GtkImage" id="signature_icon">
                     <property name="icon-size">24</property>
                     <property name="visible">true</property>
                   </object>
                 </child>
-                
+
                 <child>
                   <object class="GtkLabel" id="signature_label">
                     <property name="visible">true</property>
@@ -455,7 +455,7 @@
             </child>
           </object>
         </child>
-        
+
         <!-- Nome do pacote -->
         <child>
           <object class="GtkLabel" id="package_name_label">
@@ -469,7 +469,7 @@
             </attributes>
           </object>
         </child>
-        
+
         <!-- Versão -->
         <child>
           <object class="GtkLabel" id="version_label">
@@ -482,7 +482,7 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Detalhes adicionais -->
         <child>
           <object class="GtkLabel" id="details_label">
@@ -497,7 +497,7 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Separator -->
         <child>
           <object class="GtkSeparator">
@@ -505,13 +505,13 @@
             <property name="margin-bottom">8</property>
           </object>
         </child>
-        
+
         <!-- Ações principais -->
         <child>
           <object class="GtkBox" id="actions_box">
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
-            
+
             <!-- Instalar Pacote -->
             <child>
               <object class="GtkButton" id="install_button">
@@ -523,7 +523,7 @@
                 <signal name="clicked" handler="on_install_clicked"/>
               </object>
             </child>
-            
+
             <!-- Ver Informações -->
             <child>
               <object class="GtkButton" id="info_button">
@@ -534,7 +534,7 @@
                 <signal name="clicked" handler="on_info_clicked"/>
               </object>
             </child>
-            
+
             <!-- Verificar Assinatura -->
             <child>
               <object class="GtkButton" id="verify_button">
@@ -550,7 +550,7 @@
       </object>
     </property>
   </template>
-  
+
   <!-- Template para Card de Arquivo Patch -->
   <template class="PatchCard" parent="GtkFrame">
     <property name="child">
@@ -561,12 +561,12 @@
         <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        
+
         <!-- Header com ícone -->
         <child>
           <object class="GtkBox" id="header_box">
             <property name="spacing">8</property>
-            
+
             <!-- Ícone do arquivo -->
             <child>
               <object class="GtkImage" id="file_icon">
@@ -576,7 +576,7 @@
             </child>
           </object>
         </child>
-        
+
         <!-- Nome do patch -->
         <child>
           <object class="GtkLabel" id="patch_name_label">
@@ -590,7 +590,7 @@
             </attributes>
           </object>
         </child>
-        
+
         <!-- Descrição -->
         <child>
           <object class="GtkLabel" id="description_label">
@@ -605,7 +605,7 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Separator -->
         <child>
           <object class="GtkSeparator">
@@ -613,13 +613,13 @@
             <property name="margin-bottom">8</property>
           </object>
         </child>
-        
+
         <!-- Ações principais -->
         <child>
           <object class="GtkBox" id="actions_box">
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
-            
+
             <!-- Aplicar Patch -->
             <child>
               <object class="GtkButton" id="apply_button">
@@ -631,7 +631,7 @@
                 <signal name="clicked" handler="on_apply_clicked"/>
               </object>
             </child>
-            
+
             <!-- Pré-visualização -->
             <child>
               <object class="GtkButton" id="preview_button">
@@ -647,7 +647,7 @@
       </object>
     </property>
   </template>
-  
+
   <!-- Template para Card Avançado -->
   <template class="AdvancedCard" parent="GtkFrame">
     <property name="child">
@@ -658,12 +658,12 @@
         <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        
+
         <!-- Header com ícone -->
         <child>
           <object class="GtkBox" id="header_box">
             <property name="spacing">8</property>
-            
+
             <!-- Ícone do arquivo -->
             <child>
               <object class="GtkImage" id="file_icon">
@@ -671,7 +671,7 @@
                 <property name="icon-name">applications-engineering-symbolic</property>
               </object>
             </child>
-            
+
             <child>
               <object class="GtkLabel" id="title_label">
                 <property name="label" translatable="yes">Advanced Mode</property>
@@ -682,7 +682,7 @@
             </child>
           </object>
         </child>
-        
+
         <child>
           <object class="GtkLabel" id="description_label">
             <property name="label" translatable="yes">Execute custom commands with advanced options</property>
@@ -696,7 +696,7 @@
             </style>
           </object>
         </child>
-        
+
         <!-- Separator -->
         <child>
           <object class="GtkSeparator">
@@ -704,13 +704,13 @@
             <property name="margin-bottom">8</property>
           </object>
         </child>
-        
+
         <!-- Ações principais -->
         <child>
           <object class="GtkBox" id="actions_box">
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
-            
+
             <!-- Executar Comando Personalizado -->
             <child>
               <object class="GtkButton" id="custom_command_button">
@@ -722,7 +722,7 @@
                 <signal name="clicked" handler="on_custom_command_clicked"/>
               </object>
             </child>
-            
+
             <!-- Simular Ação (Dry Run) -->
             <child>
               <object class="GtkButton" id="dry_run_button">
@@ -733,7 +733,7 @@
                 <signal name="clicked" handler="on_dry_run_clicked"/>
               </object>
             </child>
-            
+
             <!-- Consultar Documentação -->
             <child>
               <object class="GtkButton" id="documentation_button">
@@ -742,114 +742,6 @@
                   <class name="small-button"/>
                 </style>
                 <signal name="clicked" handler="on_documentation_clicked"/>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </property>
-  </template>
-  
-  <!-- Template para Card Vazio -->
-  <template class="EmptyCard" parent="GtkFrame">
-    <property name="child">
-      <object class="GtkBox" id="card_container">
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <property name="margin-top">24</property>
-        <property name="margin-bottom">24</property>
-        <property name="margin-start">24</property>
-        <property name="margin-end">24</property>
-        <property name="valign">center</property>
-        <property name="halign">center</property>
-        
-        <!-- Ícone -->
-        <child>
-          <object class="GtkImage" id="empty_icon">
-            <property name="icon-size">48</property>
-            <property name="icon-name">folder-symbolic</property>
-            <property name="margin-bottom">12</property>
-          </object>
-        </child>
-        
-        <!-- Título -->
-        <child>
-          <object class="GtkLabel" id="title_label">
-            <property name="label" translatable="yes">Empty Folder</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-              <attribute name="size" value="large"/>
-            </attributes>
-          </object>
-        </child>
-        
-        <!-- Descrição -->
-        <child>
-          <object class="GtkLabel" id="description_label">
-            <property name="label" translatable="yes">This folder is empty. Download a PKGBUILD from AUR or create a new one.</property>
-            <property name="wrap">true</property>
-            <property name="wrap-mode">word-char</property>
-            <property name="justify">center</property>
-            <property name="max-width-chars">40</property>
-            <style>
-              <class name="caption"/>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        
-        <!-- Opções de Download -->
-        <child>
-          <object class="GtkBox" id="options_box">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <property name="margin-top">12</property>
-            
-            <!-- Baixar PKGBUILD -->
-            <child>
-              <object class="GtkButton" id="download_pkgbuild_button">
-                <property name="label" translatable="yes">Download PKGBUILD</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-                <signal name="clicked" handler="on_download_pkgbuild_clicked"/>
-              </object>
-            </child>
-            
-            <!-- Modo Construtor -->
-            <child>
-              <object class="GtkButton" id="builder_mode_button">
-                <property name="label" translatable="yes">Builder Mode (Wizard)</property>
-                <style>
-                  <class name="small-button"/>
-                </style>
-                <signal name="clicked" handler="on_builder_mode_clicked"/>
-              </object>
-            </child>
-          </object>
-        </child>
-        
-        <!-- Configurações de Download -->
-        <child>
-          <object class="GtkBox" id="settings_box">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <property name="margin-top">12</property>
-            <property name="visible">false</property>
-            
-            <!-- Usar SSH -->
-            <child>
-              <object class="GtkCheckButton" id="ssh_checkbox">
-                <property name="label" translatable="yes">Use SSH (recommended)</property>
-                <property name="active">true</property>
-              </object>
-            </child>
-            
-            <!-- Mostrar Comentários -->
-            <child>
-              <object class="GtkCheckButton" id="comments_checkbox">
-                <property name="label" translatable="yes">Show comments</property>
-                <property name="active">true</property>
               </object>
             </child>
           </object>
