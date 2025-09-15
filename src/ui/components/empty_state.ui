@@ -12,9 +12,6 @@
     <property name="margin-end">24</property>
     <property name="valign">center</property>
     <property name="halign">center</property>
-    <style>
-      <class name="dim-label"/>
-    </style>
 
     <!-- Ícone -->
     <child>
@@ -22,6 +19,8 @@
         <property name="icon-size">large</property>
         <property name="icon-name">folder-symbolic</property>
         <property name="margin-bottom">12</property>
+        <property name="visible">true</property>
+        <property name="sensitive">true</property>
       </object>
     </child>
 
@@ -35,6 +34,8 @@
         <style>
           <class name="title-2"/>
         </style>
+        <property name="visible">true</property>
+        <property name="sensitive">true</property>
       </object>
     </child>
 
@@ -48,8 +49,9 @@
         <property name="max-width-chars">40</property>
         <style>
           <class name="caption"/>
-          <class name="dim-label"/>
         </style>
+        <property name="visible">true</property>
+        <property name="sensitive">true</property>
       </object>
     </child>
 
@@ -59,11 +61,15 @@
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <property name="margin-top">12</property>
+        <property name="visible">true</property>
+        <property name="sensitive">true</property>
 
         <!-- Baixar PKGBUILD -->
         <child>
           <object class="GtkButton" id="download_pkgbuild_button">
             <property name="label" translatable="yes">Download PKGBUILD</property>
+            <property name="visible">true</property>
+            <property name="sensitive">true</property>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -74,8 +80,10 @@
         <child>
           <object class="GtkButton" id="builder_mode_button">
             <property name="label" translatable="yes">Builder Mode (Wizard)</property>
+            <property name="visible">true</property>
+            <property name="sensitive">true</property>
             <style>
-               <class name="flat"/>
+              <class name="flat"/>
             </style>
           </object>
         </child>
@@ -83,3 +91,4 @@
     </child>
   </object>
 </interface>
+
