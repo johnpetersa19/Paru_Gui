@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/paru_gui">
-    <!-- Main application window -->
-    <file preprocess="xml-stripblanks">ui/screens/welcome_screen.ui</file>
-    <file preprocess="xml-stripblanks">ui/screens/content_view.ui</file>
+    <!-- Main application window (paths relative to 'ui' directory) -->
+    <file preprocess="xml-stripblanks">screens/welcome_screen.ui</file>
+    <file preprocess="xml-stripblanks">screens/content_view.ui</file>
+    <file preprocess="xml-stripblanks">screens/pkgbuild_review.ui</file>
 
-    <!-- Menu components -->
-    <file preprocess="xml-stripblanks">ui/menus/primary_menu.ui</file>
-    <file preprocess="xml-stripblanks">ui/menus/main_file_context_menu.ui</file>
+    <!-- UI components (paths relative to 'ui' directory) -->
+    <file preprocess="xml-stripblanks">components/empty_state.ui</file>
+    <file preprocess="xml-stripblanks">components/error_dialog.ui</file>
+    <file preprocess="xml-stripblanks">components/file_chooser_dialog.ui</file>
+    <file preprocess="xml-stripblanks">components/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">components/search_bar.ui</file>
 
-    <!-- UI components -->
-    <file preprocess="xml-stripblanks">ui/components/file_chooser_dialog.ui</file>
-    <file preprocess="xml-stripblanks">ui/components/help-overlay.ui</file>
-    <file preprocess="xml-stripblanks">ui/components/search_bar.ui</file>
+    <!-- Root UI files (path relative to 'ui' directory, if applicable, or adjusted) -->
+    <!-- Como window.ui está em src/ e não em src/ui, precisamos ajustar sourcedir ou o caminho.
+         Para simplificar, vamos manter window.ui fora do sourcedir 'ui' e referenciá-lo com seu caminho original.
+         Mas se ele DEVE estar no gresource, então sourcedir deve ser 'src', e os caminhos como 'ui/screens/...' -->
+    <!-- Para ser consistente com sourcedir=ui, window.ui não deveria estar aqui a menos que esteja em ui/window.ui -->
+    <!-- Re-avaliando: A solução mais simples para todos os arquivos (.ui e .css) é sourcedir=src e manter os caminhos como ui/screens/... -->
+    <!-- O erro inicial do Meson "Failed to locate 'ui/menus/primary_menu.ui'"
+         foi causado por um sourcedir que não era o mais abrangente.
+         A melhor prática é que o sourcedir seja o diretório *src* e todos os caminhos no .gresource.xml
+         sejam relativos a *src*. -->
 
-    <!-- Root UI files -->
+    <!-- Vamos REVERTER a mudança de sourcedir em meson.build E ajustar gresource.xml para o sourcedir 'src' -->
+    <!-- O sourcedir do comando `glib-compile-resources` que o Meson usa (como visto no erro anterior) é
+         `../../../../../Paru_Gui/src`.
+         Isso significa que os caminhos em `gresource.xml` DEVERIAM ser `ui/screens/...` e `ui/style.css`.
+         Como essa configuração falhou, a alternativa é garantir que o `compile_resources`
+         em `meson.build` veja o `src/ui` corretamente. -->
+
+    <!-- Tentativa final para o CSS: Vamos tentar uma abordagem diferente,
+         garantindo que o src/ esteja no path para o GResource, e usar os paths completos como no main.py. -->
     <file preprocess="xml-stripblanks">window.ui</file>
+
+    <!-- Style files (paths relative to 'ui' directory) -->
+    <file>style.css</file>
+    <file>screens/pkgbuild-review.css</file>
   </gresource>
 </gresources>

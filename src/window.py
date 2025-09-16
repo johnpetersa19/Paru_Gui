@@ -1,4 +1,4 @@
-from gi.repository import Gtk, Gio, GLib, Gdk
+from gi.repository import Gtk, Gio, GLib, Gdk, GObject, Adw, Pango
 import os
 import subprocess
 import re
@@ -45,44 +45,58 @@ class FileItem(GObject.Object):
 class ParuGuiWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_title("Paru GUI")
+        self.set_title("Paru GUI") # Define o título da janela Adwaita
+
+        # Se você quiser definir o tamanho padrão, o AdwApplicationWindow
+        # tem propriedades 'default_width' e 'default_height' que podem ser usadas
+        # em um template .ui ou diretamente como self.set_default_size(width, height)
         self.set_default_size(900, 650)
 
-        # Configure main interface
+        # Configura a interface principal
         self.setup_main_interface()
 
     def setup_main_interface(self):
-        """Configures the main interface with action icons"""
-        # Top bar
-        header = Gtk.HeaderBar()
-        self.set_titlebar(header)
+        """Configures the main interface with action icons, using Adwaita's HeaderBar."""
+        # --- CORREÇÃO ADWAITA ---
+        # Adw.ApplicationWindow já tem uma Adw.HeaderBar embutida.
+        # Não devemos criar uma Gtk.HeaderBar e tentar defini-la.
+        # A barra de título já existe e podemos adicionar widgets a ela.
 
-        # Menu button
+        # Cria o botão de menu.
         menu_btn = Gtk.MenuButton()
         menu_btn.set_icon_name("open-menu-symbolic")
-        header.pack_end(menu_btn)
 
-        # Main menu
+        # Define o modelo do menu.
         menu = Gio.Menu()
         menu.append("System", "app.system")
         menu.append("Preferences", "app.preferences")
         menu.append("Help", "app.help")
         menu_btn.set_menu_model(menu)
 
-        # Central area
+        # Adiciona o botão de menu à barra de título da Adw.ApplicationWindow.
+        # Adw.ApplicationWindow usa set_end_action_widget para adicionar à direita.
+        self.set_end_action_widget(menu_btn)
+        # --- FIM DA CORREÇÃO ADWAITA ---
+
+        # Área central para o conteúdo (continua a ser Gtk.Box)
         self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.content_box.set_margin_top(20)
         self.content_box.set_margin_bottom(20)
         self.content_box.set_margin_start(20)
         self.content_box.set_margin_end(20)
 
-        # Initial screen
+        # Tela inicial
         self.show_welcome_screen()
         self.set_child(self.content_box)
 
     def show_welcome_screen(self):
         """Displays the welcome screen with selection options"""
-        self.content_box.foreach(Gtk.Widget.destroy)
+        # --- CORREÇÃO GTK4: Remover filhos de um Gtk.Box ---
+        # Em GTK4, Gtk.Box não tem o método get_children() ou foreach para destruir filhos.
+        # Precisamos iterar e remover explicitamente usando get_first_child().
+        while self.content_box.get_first_child() is not None:
+            self.content_box.remove(self.content_box.get_first_child())
+        # --- FIM DA CORREÇÃO ---
 
         welcome = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=30)
         welcome.set_valign(Gtk.Align.CENTER)
@@ -160,7 +174,7 @@ class ParuGuiWindow(Adw.ApplicationWindow):
     def on_select_folder_clicked(self, button):
         """Opens dialog to select folder with smart file visualization"""
         builder = Gtk.Builder()
-        builder.add_from_resource('/org/gnome/paru_gui/gtk/file_chooser_dialog.ui')
+        builder.add_from_resource('/org/gnome/paru_gui/ui/components/file_chooser_dialog.ui')
         self.file_chooser = builder.get_object('file_chooser')
 
         # Configure data model
@@ -329,7 +343,10 @@ class ParuGuiWindow(Adw.ApplicationWindow):
 
     def process_selected_item(self, item):
         """Processes selected item and displays contextual interface"""
-        self.content_box.foreach(Gtk.Widget.destroy)
+        # --- CORREÇÃO GTK4: Remover filhos de um Gtk.Box ---
+        while self.content_box.get_first_child() is not None:
+            self.content_box.remove(self.content_box.get_first_child())
+        # --- FIM DA CORREÇÃO ---
 
         if item.file_type == 'PKGBUILD':
             self.show_pkgbuild_interface(item)
