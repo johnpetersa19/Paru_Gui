@@ -2,29 +2,32 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
 
-  <!-- Widget para exibir quando a lista está vazia -->
+  <!-- Widget to display when the list is empty -->
   <object class="GtkBox" id="empty_state_box">
     <property name="orientation">vertical</property>
-    <property name="spacing">12</property>
-    <property name="margin-top">24</property>
-    <property name="margin-bottom">24</property>
-    <property name="margin-start">24</property>
-    <property name="margin-end">24</property>
+    <property name="spacing">24</property>
+    <property name="margin-top">60</property>
+    <property name="margin-bottom">60</property>
+    <property name="margin-start">36</property>
+    <property name="margin-end">36</property>
     <property name="valign">center</property>
     <property name="halign">center</property>
+    <property name="hexpand">true</property>
+    <property name="vexpand">true</property>
 
-    <!-- Ícone -->
+    <!-- Icon -->
     <child>
       <object class="GtkImage" id="empty_icon">
-        <property name="icon-size">large</property>
+        <property name="icon-size">6</property>
         <property name="icon-name">folder-symbolic</property>
-        <property name="margin-bottom">12</property>
+        <property name="margin-bottom">18</property>
         <property name="visible">true</property>
         <property name="sensitive">true</property>
+        <property name="opacity">0.7</property>
       </object>
     </child>
 
-    <!-- Título -->
+    <!-- Title -->
     <child>
       <object class="GtkLabel" id="empty_title_label">
         <property name="label" translatable="yes">Empty Folder</property>
@@ -33,38 +36,42 @@
         </attributes>
         <style>
           <class name="title-2"/>
+          <class name="dim-label"/>
         </style>
         <property name="visible">true</property>
         <property name="sensitive">true</property>
       </object>
     </child>
 
-    <!-- Descrição -->
+    <!-- Description -->
     <child>
       <object class="GtkLabel" id="empty_description_label">
         <property name="label" translatable="yes">This folder is empty. Download a PKGBUILD from AUR or create a new one.</property>
         <property name="wrap">true</property>
         <property name="wrap-mode">word-char</property>
         <property name="justify">center</property>
-        <property name="max-width-chars">40</property>
+        <property name="max-width-chars">55</property>
         <style>
-          <class name="caption"/>
+          <class name="body"/>
+          <class name="dim-label"/>
         </style>
         <property name="visible">true</property>
         <property name="sensitive">true</property>
       </object>
     </child>
 
-    <!-- Opções de Download -->
+    <!-- Download Options -->
     <child>
       <object class="GtkBox" id="empty_options_box">
         <property name="orientation">vertical</property>
-        <property name="spacing">6</property>
-        <property name="margin-top">12</property>
+        <property name="spacing">12</property>
+        <property name="margin-top">36</property>
         <property name="visible">true</property>
         <property name="sensitive">true</property>
+        <property name="width-request">280</property>
+        <property name="halign">center</property>
 
-        <!-- Baixar PKGBUILD -->
+        <!-- Download PKGBUILD -->
         <child>
           <object class="GtkButton" id="download_pkgbuild_button">
             <property name="label" translatable="yes">Download PKGBUILD</property>
@@ -72,11 +79,13 @@
             <property name="sensitive">true</property>
             <style>
               <class name="suggested-action"/>
+              <class name="pill"/>
             </style>
+            <property name="tooltip-text" translatable="yes">Search and download PKGBUILDs from AUR.</property>
           </object>
         </child>
 
-        <!-- Modo Construtor -->
+        <!-- Builder Mode -->
         <child>
           <object class="GtkButton" id="builder_mode_button">
             <property name="label" translatable="yes">Builder Mode (Wizard)</property>
@@ -84,11 +93,12 @@
             <property name="sensitive">true</property>
             <style>
               <class name="flat"/>
+              <class name="pill"/>
             </style>
+            <property name="tooltip-text" translatable="yes">Create a new PKGBUILD using a guided wizard.</property>
           </object>
         </child>
       </object>
     </child>
   </object>
 </interface>
-

@@ -42,7 +42,7 @@
             <property name="css-classes">
               <item>body</item>
             </property>
-            <property name="wrap">True</property>
+            <property name="wrap">true</property>
             <property name="max-width-chars">50</property>
             <property name="halign">center</property>
           </object>
@@ -59,19 +59,22 @@
 
         <child>
           <object class="GtkButton" id="select_file_button">
-            <property name="icon-name">document-open-symbolic</property>
-            <property name="child">
+            <property name="tooltip-text" translatable="yes">Select PKGBUILD file, .zst package, or patch file</property>
+            <signal name="clicked" handler="on_select_file_clicked"/>
+            <style>
+              <class name="card"/>
+              <class name="welcome-card"/>
+            </style>
+            <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <property name="spacing">8</property>
-
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">text-x-generic-symbolic</property>
+                    <property name="icon-name">document-open-symbolic</property>
                     <property name="pixel-size">48</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">Select File</property>
@@ -80,7 +83,6 @@
                     </property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">PKGBUILD, .pkg.tar.zst, .patch</property>
@@ -91,30 +93,28 @@
                   </object>
                 </child>
               </object>
-            </property>
-            <property name="css-classes">
-              <item>card</item>
-              <item>welcome-card</item>
-            </property>
-            <signal name="clicked" handler="on_select_file_clicked"/>
+            </child>
           </object>
         </child>
 
         <child>
           <object class="GtkButton" id="select_folder_button">
-            <property name="icon-name">folder-open-symbolic</property>
-            <property name="child">
+            <property name="tooltip-text" translatable="yes">Select folder with compatible files for smart visualization</property>
+            <signal name="clicked" handler="on_select_folder_clicked"/>
+            <style>
+              <class name="card"/>
+              <class name="welcome-card"/>
+            </style>
+            <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <property name="spacing">8</property>
-
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">folder-symbolic</property>
+                    <property name="icon-name">folder-open-symbolic</property>
                     <property name="pixel-size">48</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">Select Folder</property>
@@ -123,7 +123,6 @@
                     </property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">Directory with package files</property>
@@ -134,12 +133,7 @@
                   </object>
                 </child>
               </object>
-            </property>
-            <property name="css-classes">
-              <item>card</item>
-              <item>welcome-card</item>
-            </property>
-            <signal name="clicked" handler="on_select_folder_clicked"/>
+            </child>
           </object>
         </child>
       </object>
@@ -195,6 +189,7 @@
               <item>flat</item>
             </property>
             <signal name="clicked" handler="on_tour_guide_clicked"/>
+            <property name="tooltip-text" translatable="yes">Start an interactive tour for new users.</property>
           </object>
         </child>
 
@@ -205,6 +200,7 @@
               <item>flat</item>
             </property>
             <signal name="clicked" handler="on_documentation_clicked"/>
+            <property name="tooltip-text" translatable="yes">Open the Paru GUI documentation.</property>
           </object>
         </child>
       </object>

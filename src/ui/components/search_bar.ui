@@ -3,28 +3,37 @@
   <requires lib="gtk" version="4.0"/>
   <template class="ParuSearchBar" parent="GtkBox">
     <property name="orientation">horizontal</property>
-    <property name="spacing">6</property>
+    <property name="spacing">12</property>
     <property name="margin-start">12</property>
     <property name="margin-end">12</property>
-    <property name="margin-top">6</property>
-    <property name="margin-bottom">6</property>
+    <property name="margin-top">8</property>
+    <property name="margin-bottom">8</property>
+    <property name="halign">center</property>
+    <property name="css-classes">
+      <item>search-bar</item>
+    </property>
 
     <child>
       <object class="GtkSearchEntry" id="search_entry">
-        <property name="placeholder-text" translatable="yes">Search packages (e.g. firefox, paru -Ss keyword)</property>
-        <property name="hexpand">True</property>
+        <property name="placeholder-text" translatable="yes">Search packages (e.g. firefox, paru -Ss keyword) or type commands</property>
+        <property name="hexpand">true</property>
         <signal name="search-changed" handler="on_search_changed" swapped="no"/>
         <signal name="activate" handler="on_search_activated" swapped="no"/>
+        <style>
+          <class name="rounded"/>
+        </style>
+        <property name="tooltip-text" translatable="yes">Enter package name or paru search command. Type '-c' for command assistant.</property>
       </object>
     </child>
 
     <child>
       <object class="GtkButton" id="clear_button">
         <property name="icon-name">edit-clear-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Clear search</property>
+        <property name="tooltip-text" translatable="yes">Clear search input</property>
         <signal name="clicked" handler="on_clear_clicked" swapped="no"/>
         <style>
           <class name="flat"/>
+          <class name="circular"/>
         </style>
       </object>
     </child>
@@ -38,10 +47,11 @@
     <child>
       <object class="GtkButton" id="search_options_button">
         <property name="icon-name">preferences-system-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Search options</property>
+        <property name="tooltip-text" translatable="yes">Search options / Command assistant</property>
         <signal name="clicked" handler="on_search_options_clicked" swapped="no"/>
         <style>
           <class name="flat"/>
+          <class name="circular"/>
         </style>
       </object>
     </child>

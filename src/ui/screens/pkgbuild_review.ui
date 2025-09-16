@@ -1,52 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.97.8 -->
 <interface>
-  <!-- interface-name pkgbuild_review.ui -->
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.0"/>
-  <template class="PkgbuildReviewDialog" parent="GtkDialog">
-    <property name="default-height">650</property>
-    <property name="default-width">900</property>
-    <!-- REMOVIDO: <property name="title" ...> -->
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar">
-        <property name="show-title-buttons">true</property>
-        <child type="title">
-          <object class="GtkBox" id="header_title_box">
-            <property name="halign">center</property>
-            <property name="spacing">8</property>
-            <child>
-              <object class="GtkImage" id="pkgbuild_icon">
-                <property name="icon-name">text-x-generic</property>
-                <property name="pixel-size">24</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="header_title">
-                <property name="label" translatable="yes">PKGBUILD Security Review</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="trust_indicator">
-                <property name="ellipsize">end</property>
-                <property name="label" translatable="yes"/>
-                <property name="margin-start">8</property>
-                <property name="visible">true</property>
-                <style>
-                  <class name="success-color"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child internal-child="content_area">
+  <!-- As propriedades de janela (default-height, default-width, modal, resizable)
+       serão definidas no código Python para AdwDialog. -->
+  <template class="PkgbuildReviewDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">PKGBUILD Security Review</property>
+    <!-- O AdwDialog gerencia seu próprio AdwHeaderBar. -->
+
+    <!-- Conteúdo principal do diálogo, dentro de um único 'child' -->
+    <child>
       <object class="GtkBox" id="main_box">
         <property name="margin-bottom">12</property>
         <property name="margin-end">12</property>
@@ -54,6 +17,9 @@
         <property name="margin-top">12</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
+        <property name="vexpand">True</property> <!-- Adicionado para o box principal expandir -->
+        <property name="hexpand">True</property> <!-- Adicionado para o box principal expandir -->
+
         <child>
           <object class="GtkBox" id="package_info_box">
             <property name="margin-bottom">8</property>
@@ -84,9 +50,11 @@
                       <object class="GtkLabel" id="package_trust_label">
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes"/>
+                        <property name="visible">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                         <style>
                           <class name="success-color"/>
                         </style>
+                        <property name="tooltip-text" translatable="yes">Overall trust level of the PKGBUILD.</property>
                       </object>
                     </child>
                   </object>
@@ -118,6 +86,7 @@
                       <class name="caption"/>
                       <class name="dim-label"/>
                     </style>
+                    <property name="tooltip-text" translatable="yes">Full path to the PKGBUILD file.</property>
                   </object>
                 </child>
               </object>
@@ -138,7 +107,7 @@
             </child>
             <child>
               <object class="GtkToggleButton" id="step1_button">
-                <property name="active">true</property>
+                <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                 <property name="label" translatable="yes">1. Critical Changes</property>
                 <property name="name">step1</property>
                 <signal name="toggled" handler="on_step_toggled"/>
@@ -147,11 +116,11 @@
                   <class name="step-button"/>
                   <class name="active-step"/>
                 </style>
+                <property name="tooltip-text" translatable="yes">Review changes in critical PKGBUILD sections.</property>
               </object>
             </child>
             <child>
               <object class="GtkToggleButton" id="step2_button">
-                <property name="active">True</property>
                 <property name="label" translatable="yes">2. Risk Checklist</property>
                 <property name="name">step2</property>
                 <signal name="toggled" handler="on_step_toggled"/>
@@ -159,6 +128,7 @@
                   <class name="flat"/>
                   <class name="step-button"/>
                 </style>
+                <property name="tooltip-text" translatable="yes">Check for potential security risks.</property>
               </object>
             </child>
           </object>
@@ -167,7 +137,7 @@
           <object class="GtkBox" id="step1_content">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="visible">true</property>
+            <property name="visible">True</property> <!-- Certificado que está com 'T' maiúsculo -->
             <child>
               <object class="GtkLabel" id="step1_description">
                 <property name="label" translatable="yes">Review critical changes in the PKGBUILD that may affect security:</property>
@@ -207,15 +177,15 @@
                     <child>
                       <object class="GtkScrolledWindow" id="source_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">true</property>
+                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                         <property name="vscrollbar-policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="source_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">false</property>
-                            <property name="editable">false</property>
+                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                             <property name="left-margin">8</property>
-                            <property name="monospace">true</property>
+                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
                           </object>
@@ -252,15 +222,15 @@
                     <child>
                       <object class="GtkScrolledWindow" id="prepare_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">true</property>
+                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                         <property name="vscrollbar-policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="prepare_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">false</property>
-                            <property name="editable">false</property>
+                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                             <property name="left-margin">8</property>
-                            <property name="monospace">true</property>
+                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
                           </object>
@@ -297,15 +267,15 @@
                     <child>
                       <object class="GtkScrolledWindow" id="package_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">true</property>
+                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                         <property name="vscrollbar-policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="package_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">false</property>
-                            <property name="editable">false</property>
+                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                             <property name="left-margin">8</property>
-                            <property name="monospace">true</property>
+                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
                           </object>
@@ -322,7 +292,7 @@
           <object class="GtkBox" id="step2_content">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="visible">false</property>
+            <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
             <child>
               <object class="GtkLabel" id="step2_description">
                 <property name="label" translatable="yes">Check for potential security risks before proceeding:</property>
@@ -339,8 +309,8 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_sudo_check">
-                        <property name="active">True</property>
-                        <property name="inconsistent">false</property>
+                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                       </object>
                     </child>
                     <child>
@@ -358,7 +328,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_sudo_description">
                             <property name="label" translatable="yes">PKGBUILD contains sudo commands which could modify system files. This is dangerous unless it's an official package.</property>
-                            <property name="wrap">true</property>
+                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -375,8 +345,8 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_unverified_sources_check">
-                        <property name="active">false</property>
-                        <property name="inconsistent">true</property>
+                        <property name="active">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="inconsistent">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                       </object>
                     </child>
                     <child>
@@ -394,7 +364,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_unverified_sources_description">
                             <property name="label" translatable="yes">Source URLs are not from trusted domains or lack proper verification. Consider verifying the source authenticity.</property>
-                            <property name="wrap">true</property>
+                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -411,8 +381,8 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_system_modification_check">
-                        <property name="active">true</property>
-                        <property name="inconsistent">false</property>
+                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                       </object>
                     </child>
                     <child>
@@ -430,7 +400,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_system_modification_description">
                             <property name="label" translatable="yes">PKGBUILD modifies system files outside standard package directories. This could cause system instability.</property>
-                            <property name="wrap">true</property>
+                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -447,8 +417,8 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_patch_sources_check">
-                        <property name="active">true</property>
-                        <property name="inconsistent">false</property>
+                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                       </object>
                     </child>
                     <child>
@@ -466,7 +436,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_patch_sources_description">
                             <property name="label" translatable="yes">PKGBUILD applies patches from external sources. Ensure patches are from trusted repositories.</property>
-                            <property name="wrap">true</property>
+                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -630,15 +600,15 @@
                   <object class="GtkScrolledWindow" id="heatmap_scroll">
                     <property name="height-request">150</property>
                     <property name="hscrollbar-policy">automatic</property>
-                    <property name="vexpand">true</property>
+                    <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                     <property name="vscrollbar-policy">automatic</property>
                     <child>
                       <object class="GtkTextView" id="heatmap_view">
                         <property name="bottom-margin">8</property>
-                        <property name="cursor-visible">false</property>
-                        <property name="editable">false</property>
+                        <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
                         <property name="left-margin">8</property>
-                        <property name="monospace">true</property>
+                        <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
                         <property name="right-margin">8</property>
                         <property name="top-margin">8</property>
                       </object>
@@ -649,48 +619,53 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child internal-child="action_area">
-      <object class="GtkBox">
-        <property name="margin-bottom">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-start">12</property>
-        <property name="orientation">horizontal</property>
-        <property name="spacing">6</property>
+
+        <!-- Action area: Direto no box principal -->
         <child>
-          <object class="GtkButton" id="cancel_button">
-            <property name="label" translatable="yes">Cancel</property>
-            <signal name="clicked" handler="on_cancel_clicked"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="previous_button">
-            <property name="label" translatable="yes">Previous</property>
-            <property name="visible">false</property>
-            <signal name="clicked" handler="on_previous_clicked"/>
-            <style>
-              <class name="flat"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="next_button">
-            <property name="label" translatable="yes">Next</property>
-            <signal name="clicked" handler="on_next_clicked"/>
-            <style>
-              <class name="flat"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="build_button">
-            <property name="label" translatable="yes">Build Package</property>
-            <property name="visible">false</property>
-            <signal name="clicked" handler="on_build_clicked"/>
-            <style>
-              <class name="suggested-action"/>
-            </style>
+          <object class="GtkBox" id="action_area">
+            <property name="margin-bottom">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-top">12</property> <!-- Adicionado margem superior para espaçamento -->
+            <property name="orientation">horizontal</property>
+            <property name="spacing">6</property>
+            <property name="halign">end</property> <!-- Adicionado halign para alinhar à direita -->
+
+            <child>
+              <object class="GtkButton" id="cancel_button">
+                <property name="label" translatable="yes">Cancel</property>
+                <signal name="clicked" handler="on_cancel_clicked"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="previous_button">
+                <property name="label" translatable="yes">Previous</property>
+                <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                <signal name="clicked" handler="on_previous_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="next_button">
+                <property name="label" translatable="yes">Next</property>
+                <signal name="clicked" handler="on_next_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="build_button">
+                <property name="label" translatable="yes">Build Package</property>
+                <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                <signal name="clicked" handler="on_build_clicked"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
       </object>
