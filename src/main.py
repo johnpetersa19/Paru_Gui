@@ -21,8 +21,11 @@ import sys
 import gi
 from gettext import gettext as _
 
+# --- CORRECTION: gi.require_version MUST COME BEFORE IMPORTS ---
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
+# --- END OF CORRECTION ---
+
 from gi.repository import Gtk, Gio, Adw, Gdk
 from .window import ParuGuiWindow
 
@@ -37,6 +40,8 @@ class ParuGuiApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
+        # TODO: Add actions for other menu items from src/window.ui primary_menu here if not handled elsewhere
+        # Example: self.create_action('system', self.on_system_action)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -47,19 +52,20 @@ class ParuGuiApplication(Adw.Application):
         self.load_css()
         win = self.props.active_window
         if not win:
-            # Observação: Se window.py for usar Gtk.Builder para carregar window.ui,
-            # a criação da janela aqui e o construtor em ParuGuiWindow
-            # precisarão ser ajustados. Atualmente, ParuGuiWindow parece construir a UI em Python.
+            # Note: The ParuGuiWindow class currently constructs its UI programmatically in Python.
+            # If a Gtk.Builder based approach loading window.ui were to be used,
+            # this instantiation might need to pass the builder, or the window class itself
+            # would handle loading its UI from the .ui file resource.
             win = ParuGuiWindow(application=self)
         win.present()
 
     def load_css(self):
         """Load the CSS styles for the application"""
         css_provider = Gtk.CssProvider()
-        # Carrega o arquivo de estilo principal
+        # Loads the main style file
         css_provider.load_from_resource("/org/gnome/paru-gui/ui/style.css")
-        # Carrega o arquivo de estilo específico para revisão de PKGBUILD,
-        # assumindo que é parte do tema global da aplicação.
+        # Loads the specific style file for PKGBUILD review,
+        # assuming it's part of the global application theme.
         css_provider.load_from_resource("/org/gnome/paru-gui/ui/screens/pkgbuild-review.css")
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
@@ -82,6 +88,14 @@ class ParuGuiApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         print('app.preferences action activated')
+        # TODO: Instantiate and show the preferences dialog from src/window.ui (preferences_dialog)
+        # Example:
+        # builder = Gtk.Builder()
+        # builder.add_from_resource('/org/gnome/paru-gui/window.ui') # Assumes preferences_dialog is in window.ui
+        # prefs_dialog = builder.get_object('preferences_dialog')
+        # prefs_dialog.set_transient_for(self.props.active_window)
+        # prefs_dialog.present()
+
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
