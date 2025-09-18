@@ -252,9 +252,67 @@
                       </object>
                     </child>
                   </object>
-                </property>
+                  </property>
                 <property name="name">processing</property>
                 <property name="title">Processing</property>
+              </object>
+            </child>
+            <!-- NEW STACK PAGE FOR UPSTREAM UPDATES -->
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="GtkBox" id="upstream_updates_view">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="css-classes">title-2</property>
+                        <property name="label" translatable="yes">Upstream Updates</property>
+                        <property name="halign">start</property>
+                        <property name="margin-bottom">12</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkFlowBox" id="upstream_update_cards">
+                            <property name="column-spacing">18</property>
+                            <property name="homogeneous">False</property>
+                            <property name="margin-bottom">18</property>
+                            <property name="margin-end">18</property>
+                            <property name="margin-start">18</property>
+                            <property name="margin-top">18</property>
+                            <property name="max-children-per-line">3</property>
+                            <property name="row-spacing">18</property>
+                            <property name="selection-mode">none</property>
+                            <property name="valign">start</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="upstream_action_bar">
+                        <property name="margin-top">12</property>
+                        <property name="spacing">6</property>
+                        <property name="halign">end</property>
+                        <child>
+                          <object class="GtkButton" id="refresh_updates_button">
+                            <property name="label" translatable="yes">Refresh Updates</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <property name="name">upstream_updates</property>
+                <property name="title" translatable="yes">Upstream Updates</property>
               </object>
             </child>
           </object>
@@ -289,6 +347,10 @@
         <attribute name="action">app.initial-tour</attribute>
         <attribute name="label">Initial Tour</attribute>
       </item>
+      <item>
+        <attribute name="action">app.show-upstream-updates</attribute>
+        <attribute name="label" translatable="yes">Check Upstream Updates</attribute>
+      </item>
     </section>
     <section>
       <item>
@@ -315,7 +377,7 @@
         </item>
       </submenu>
       <submenu>
-        <attribute name="label">Simplified Mode</attribute>
+          <attribute name="label">Simplified Mode</attribute>
         <item>
           <attribute name="action">app.hide-advanced</attribute>
           <attribute name="label">Hide Advanced Options</attribute>
@@ -883,3 +945,4 @@
     </child>
   </object>
 </interface>
+
