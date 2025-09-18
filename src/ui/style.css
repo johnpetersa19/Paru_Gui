@@ -373,15 +373,34 @@
    Terminal Output Styles
    ============================================================================= */
 
-/* Terminal output container - For developer mode */
+/* Terminal output container (the GtkBox holding the terminal) */
+.terminal-box {
+    background-color: @theme_dark_bg_color;
+    border-radius: 6px;
+    border: 1px solid @borders;
+    /* Consider adding padding here if the internal GtkTextView doesn't handle it */
+}
+
+/* Terminal output GtkTextView */
+.terminal-view {
+    font-family: monospace;
+    background-color: transparent; /* Makes the GtkBox background visible */
+    color: @theme_fg_color;
+    font-size: 0.9em;
+}
+
+/* General terminal output class (if still used directly) */
 .terminal-output {
+    /* Kept for backwards compatibility if still used in some contexts,
+       but .terminal-box and .terminal-view are more specific. */
     font-family: monospace;
     background-color: @theme_dark_bg_color;
     color: @theme_fg_color;
-    padding: 12px;
+    padding: 12px; /* This padding might conflict with terminal-view margins if both are applied */
     border-radius: 6px;
     font-size: 0.9em;
 }
+
 
 /* Terminal output success messages */
 .terminal-output-success {
@@ -421,6 +440,11 @@
     padding: 12px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+}
+
+/* Large padding utility class */
+.large-padding {
+    padding: 18px; /* Defined for elements requiring more padding */
 }
 
 /* Main error content area */
@@ -576,7 +600,7 @@
         background-color: shade(@error_color, 0.8);
     }
 
-    .terminal-output {
+    .terminal-output, .terminal-box { /* Apply to both if .terminal-output is still generic */
         background-color: @theme_bg_color;
     }
 
