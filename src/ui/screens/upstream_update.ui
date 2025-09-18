@@ -127,6 +127,7 @@
             <property name="margin-top">8</property>
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
+            <!-- Botão de atualização principal -->
             <child>
               <object class="GtkButton" id="update_button">
                 <property name="css-classes">
@@ -137,24 +138,127 @@
                 <property name="tooltip-text" translatable="yes">Update to the new upstream version directly.</property>
               </object>
             </child>
+
+            <!-- Sandboxing Options Section (Using GtkExpander for consistency) -->
             <child>
-              <object class="GtkButton" id="update_sandbox_button">
-                <property name="label" translatable="yes">Update with Sandboxing</property>
-                <style><class name="flat"/><class name="pill"/></style>
-                <property name="tooltip-text" translatable="yes">Update in an isolated environment for increased security.</property>
+              <object class="GtkExpander" id="sandbox_expander">
+                <property name="label" translatable="yes">Sandbox Settings for Update</property>
+                <property name="expanded">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">8</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-end">12</property>
+                    <property name="margin-bottom">12</property>
+
+                    <!-- Enable sandboxing checkbox -->
+                    <child>
+                      <object class="GtkCheckButton" id="enable_sandbox_check">
+                        <property name="label" translatable="yes">Run in sandboxed environment</property>
+                        <property name="active">True</property>
+                        <!-- <signal name="toggled" handler="on_sandbox_toggled"/> -->
+                      </object>
+                    </child>
+
+                    <!-- Sandbox options (only visible when enabled) -->
+                    <child>
+                      <object class="GtkBox" id="sandbox_options_box">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
+                        <property name="margin-start">12</property>
+
+                        <!-- Isolation level -->
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">6</property>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Isolation Level:</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkComboBoxText" id="sandbox_level_combo">
+                                <items>
+                                  <item translatable="yes" id="strict">Strict</item>
+                                  <item translatable="yes" id="medium">Medium</item>
+                                  <item translatable="yes" id="minimal">Minimal</item>
+                                </items>
+                                <property name="active">0</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Network access -->
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_network_check">
+                            <property name="label" translatable="yes">Allow network access</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+
+                        <!-- Home directory access -->
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_home_check">
+                            <property name="label" translatable="yes">Allow access to home directory</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+
+                        <!-- Explanation label -->
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Sandboxing uses bubblewrap for secure isolation. Some updates may require adjusted settings.</property>
+                            <property name="wrap">True</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="confirm_sandbox_update">
+                            <property name="label" translatable="yes">Start Sandboxed Update</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                              <class name="small-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
+
+            <!-- Botão de changelog -->
             <child>
               <object class="GtkButton" id="view_changelog_button">
                 <property name="label" translatable="yes">View Changelog</property>
-                <style><class name="flat"/><class name="pill"/></style>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
                 <property name="tooltip-text" translatable="yes">Open the upstream changelog for details.</property>
               </object>
             </child>
+            <!-- Botão para ignorar versão -->
             <child>
               <object class="GtkButton" id="ignore_version_button">
                 <property name="label" translatable="yes">Ignore This Version</property>
-                <style><class name="flat"/><class name="pill"/></style>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
                 <property name="tooltip-text" translatable="yes">Do not show alerts for this specific upstream version.</property>
               </object>
             </child>

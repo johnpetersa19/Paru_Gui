@@ -1,6 +1,7 @@
 /* =============================================================================
    Paru GUI - GNOME Application Styles
-   Version: 2.6.1
+   Version: 2.7.0
+   Updated for GTK 4 compatibility - MARGINS FIXED
    ============================================================================= */
 
 /* =============================================================================
@@ -15,6 +16,127 @@
 /* Header bar adjustments - Standard GNOME header with bottom border */
 .header-bar {
     border-bottom: 1px solid @borders;
+}
+
+/* =============================================================================
+   GTK 4 MARGIN UTILITY CLASSES (ESSENCIAL PARA COMPATIBILIDADE)
+   ============================================================================= */
+
+/* Margin classes for general use */
+.margin-4 {
+    margin: 4px;
+}
+
+.margin-6 {
+    margin: 6px;
+}
+
+.margin-8 {
+    margin: 8px;
+}
+
+.margin-12 {
+    margin: 12px;
+}
+
+.margin-16 {
+    margin: 16px;
+}
+
+/* Direction-specific margins */
+.margin-top-4 {
+    margin-top: 4px;
+}
+
+.margin-top-6 {
+    margin-top: 6px;
+}
+
+.margin-top-8 {
+    margin-top: 8px;
+}
+
+.margin-top-12 {
+    margin-top: 12px;
+}
+
+.margin-top-16 {
+    margin-top: 16px;
+}
+
+.margin-bottom-4 {
+    margin-bottom: 4px;
+}
+
+.margin-bottom-6 {
+    margin-bottom: 6px;
+}
+
+.margin-bottom-8 {
+    margin-bottom: 8px;
+}
+
+.margin-bottom-12 {
+    margin-bottom: 12px;
+}
+
+.margin-bottom-16 {
+    margin-bottom: 16px;
+}
+
+.margin-start-4 {
+    margin-left: 4px; /* LTR */
+    margin-right: 4px; /* RTL */
+}
+
+.margin-start-6 {
+    margin-left: 6px; /* LTR */
+    margin-right: 6px; /* RTL */
+}
+
+.margin-start-8 {
+    margin-left: 8px; /* LTR */
+    margin-right: 8px; /* RTL */
+}
+
+.margin-start-12 {
+    margin-left: 12px; /* LTR */
+    margin-right: 12px; /* RTL */
+}
+
+.margin-start-16 {
+    margin-left: 16px; /* LTR */
+    margin-right: 16px; /* RTL */
+}
+
+.margin-end-4 {
+    margin-right: 4px; /* LTR */
+    margin-left: 4px; /* RTL */
+}
+
+.margin-end-6 {
+    margin-right: 6px; /* LTR */
+    margin-left: 6px; /* RTL */
+}
+
+.margin-end-8 {
+    margin-right: 8px; /* LTR */
+    margin-left: 8px; /* RTL */
+}
+
+.margin-end-12 {
+    margin-right: 12px; /* LTR */
+    margin-left: 12px; /* RTL */
+}
+
+.margin-end-16 {
+    margin-right: 16px; /* LTR */
+    margin-left: 16px; /* RTL */
+}
+
+/* Special class for popover content */
+.popover-content {
+    margin: 12px;
 }
 
 /* =============================================================================
@@ -163,6 +285,11 @@
 /* Advanced card - Priority CUSTOM */
 .advanced-card {
     border-top: 3px solid @theme_fg_color;
+}
+
+/* Upstream update card specific styling */
+.upstream-update-card {
+    border-top: 3px solid @accent_color;
 }
 
 /* Empty card - For empty folders */
@@ -348,6 +475,33 @@
 }
 
 /* =============================================================================
+   Sandboxing UI Elements
+   ============================================================================= */
+
+/* Sandboxing indicator */
+.sandbox-indicator {
+    background-color: alpha(@accent_color, 0.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+.sandbox-warning {
+    color: @warning_color;
+}
+
+.sandbox-high-security {
+    background-color: alpha(@error_color, 0.1);
+}
+
+.sandbox-medium-security {
+    background-color: alpha(@warning_color, 0.1);
+}
+
+.sandbox-low-security {
+    background-color: alpha(@success_color, 0.1);
+}
+
+/* =============================================================================
    Responsive Design
    ============================================================================= */
 
@@ -424,5 +578,18 @@
 
     .terminal-output {
         background-color: @theme_bg_color;
+    }
+
+    /* Sandboxing specific dark mode styles */
+    .sandbox-high-security {
+        background-color: alpha(shade(@error_color, 0.7), 0.2);
+    }
+
+    .sandbox-medium-security {
+        background-color: alpha(shade(@warning_color, 0.7), 0.2);
+    }
+
+    .sandbox-low-security {
+        background-color: alpha(shade(@success_color, 0.7), 0.2);
     }
 }

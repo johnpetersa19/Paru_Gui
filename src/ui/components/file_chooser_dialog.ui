@@ -394,6 +394,65 @@
                 <signal name="clicked" handler="on_build_clicked"/>
               </object>
             </child>
+            <!-- Novo botão para compilação com sandboxing -->
+            <child>
+              <object class="GtkMenuButton" id="build_sandbox_button">
+                <property name="label" translatable="yes">Compile with Sandboxing</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <property name="tooltip-text" translatable="yes">Compile in an isolated environment with customizable security settings.</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <property name="position">bottom</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="popover-content"/>
+                        </style>
+                        <child>
+                          <object class="GtkComboBoxText" id="pkgbuild_sandbox_level_combo">
+                            <property name="valign">center</property>
+                            <property name="hexpand">true</property>
+                            <items>
+                              <item translatable="yes" id="strict">Strict Isolation</item>
+                              <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
+                              <item translatable="yes" id="minimal">Minimal Isolation</item>
+                            </items>
+                            <property name="active">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="pkgbuild_sandbox_network_check">
+                            <property name="label" translatable="yes">Enable network access</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="pkgbuild_sandbox_filesystem_check">
+                            <property name="label" translatable="yes">Allow access to home directory</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="confirm_pkgbuild_sandbox_build">
+                            <property name="label" translatable="yes">Start Compile</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                              <class name="small-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
 
             <!-- Editar PKGBUILD -->
             <child>
@@ -576,6 +635,65 @@
                 <signal name="clicked" handler="on_install_clicked"/>
               </object>
             </child>
+            <!-- Novo botão para instalação com sandboxing -->
+            <child>
+              <object class="GtkMenuButton" id="install_sandbox_button">
+                <property name="label" translatable="yes">Install with Sandboxing</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <property name="tooltip-text" translatable="yes">Install in an isolated environment with customizable security settings.</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <property name="position">bottom</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="popover-content"/>
+                        </style>
+                        <child>
+                          <object class="GtkComboBoxText" id="package_sandbox_level_combo">
+                            <property name="valign">center</property>
+                            <property name="hexpand">true</property>
+                            <items>
+                              <item translatable="yes" id="strict">Strict Isolation</item>
+                              <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
+                              <item translatable="yes" id="minimal">Minimal Isolation</item>
+                            </items>
+                            <property name="active">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="package_sandbox_network_check">
+                            <property name="label" translatable="yes">Enable network access</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="package_sandbox_filesystem_check">
+                            <property name="label" translatable="yes">Allow access to home directory</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="confirm_package_sandbox_install">
+                            <property name="label" translatable="yes">Start Install</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                              <class name="small-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
 
             <!-- Ver Informações -->
             <child>
@@ -705,6 +823,65 @@
                 <signal name="clicked" handler="on_apply_clicked"/>
               </object>
             </child>
+            <!-- Novo botão para aplicação de patch com sandboxing -->
+            <child>
+              <object class="GtkMenuButton" id="apply_sandbox_button">
+                <property name="label" translatable="yes">Apply with Sandboxing</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <property name="tooltip-text" translatable="yes">Apply patch in an isolated environment with customizable security settings.</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <property name="position">bottom</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="popover-content"/>
+                        </style>
+                        <child>
+                          <object class="GtkComboBoxText" id="patch_sandbox_level_combo">
+                            <property name="valign">center</property>
+                            <property name="hexpand">true</property>
+                            <items>
+                              <item translatable="yes" id="strict">Strict Isolation</item>
+                              <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
+                              <item translatable="yes" id="minimal">Minimal Isolation</item>
+                            </items>
+                            <property name="active">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="patch_sandbox_network_check">
+                            <property name="label" translatable="yes">Enable network access</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="patch_sandbox_filesystem_check">
+                            <property name="label" translatable="yes">Allow access to home directory</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="confirm_patch_sandbox_apply">
+                            <property name="label" translatable="yes">Start Apply</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                              <class name="small-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
 
             <!-- Pré-visualização -->
             <child>
@@ -813,6 +990,65 @@
                   <class name="pill"/>
                 </style>
                 <signal name="clicked" handler="on_custom_command_clicked"/>
+              </object>
+            </child>
+            <!-- Novo botão para comandos com sandboxing -->
+            <child>
+              <object class="GtkMenuButton" id="custom_command_sandbox_button">
+                <property name="label" translatable="yes">Execute Sandboxed Command</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <property name="tooltip-text" translatable="yes">Run a custom command in an isolated environment with customizable security settings.</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <property name="position">bottom</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="popover-content"/>
+                        </style>
+                        <child>
+                          <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
+                            <property name="valign">center</property>
+                            <property name="hexpand">true</property>
+                            <items>
+                              <item translatable="yes" id="strict">Strict Isolation</item>
+                              <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
+                              <item translatable="yes" id="minimal">Minimal Isolation</item>
+                            </items>
+                            <property name="active">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="advanced_sandbox_network_check">
+                            <property name="label" translatable="yes">Enable network access</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="advanced_sandbox_filesystem_check">
+                            <property name="label" translatable="yes">Allow access to home directory</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="confirm_advanced_sandbox_command">
+                            <property name="label" translatable="yes">Start Command</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                              <class name="small-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
               </object>
             </child>
 

@@ -620,6 +620,97 @@
           </object>
         </child>
 
+				<!-- Sandboxing Options Section -->
+<child>
+  <object class="GtkExpander" id="sandbox_expander">
+    <property name="label" translatable="yes">Sandbox Settings</property>
+    <property name="expanded">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">8</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">12</property>
+
+        <!-- Enable sandboxing checkbox -->
+        <child>
+          <object class="GtkCheckButton" id="enable_sandbox_check">
+            <property name="label" translatable="yes">Run in sandboxed environment</property>
+            <property name="active">True</property>
+            <signal name="toggled" handler="on_sandbox_toggled"/>
+          </object>
+        </child>
+
+        <!-- Sandbox options (only visible when enabled) -->
+        <child>
+          <object class="GtkBox" id="sandbox_options_box">
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
+            <property name="margin-start">12</property>
+
+            <!-- Isolation level -->
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Isolation Level:</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkComboBoxText" id="sandbox_level_combo">
+                    <items>
+                      <item translatable="yes" id="strict">Strict</item>
+                      <item translatable="yes" id="medium">Medium</item>
+                      <item translatable="yes" id="minimal">Minimal</item>
+                    </items>
+                    <property name="active">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Network access -->
+            <child>
+              <object class="GtkCheckButton" id="sandbox_network_check">
+                <property name="label" translatable="yes">Allow network access</property>
+                <property name="active">False</property>
+              </object>
+            </child>
+
+            <!-- Home directory access -->
+            <child>
+              <object class="GtkCheckButton" id="sandbox_home_check">
+                <property name="label" translatable="yes">Allow access to home directory</property>
+                <property name="active">False</property>
+              </object>
+            </child>
+
+            <!-- Explanation label -->
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Sandboxing uses bubblewrap for secure isolation. Some packages may require adjusted settings.</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</child>
+
         <!-- Action area: Direto no box principal -->
         <child>
           <object class="GtkBox" id="action_area">
