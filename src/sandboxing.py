@@ -4,6 +4,7 @@ import logging
 import shlex
 from enum import Enum
 from typing import List, Dict, Optional, Tuple
+from dataclasses import dataclass, field # Corrected: Added import for dataclass and field
 
 # Basic logging configuration for this module
 logging.basicConfig(

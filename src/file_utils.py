@@ -7,6 +7,7 @@ import difflib # For patch preview
 from enum import Enum
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional, Tuple
+from dataclasses import dataclass, field # Import corrected
 
 # Basic logging configuration for this module
 logging.basicConfig(
@@ -15,14 +16,53 @@ logging.basicConfig(
 )
 logger = logging.getLogger("file_utils")
 
-# --- Enums & Data Classes (Moved/Copied from window.py for cohesion in this module) ---
-# Note: TrustLevel might eventually reside in security_analyzer.py or a shared `common.py`
-# if it's used across many modules. For now, it lives here with its dependent logic.
+# --- Enums & Data Classes ---
 
 class TrustLevel(Enum):
     HIGH = "HIGH"    # 50+ votes
     MEDIUM = "MEDIUM" # 10-50 votes
     LOW = "LOW"      # <10 votes
+    NONE = "NONE"    # Cannot determine / No AUR info
+
+@dataclass
+class FileItem:
+    """Represents a file or directory item to be displayed in the UI."""
+    name: str
+    path: str
+    is_dir: bool
+    file_type: str = "UNKNOWN" # PKGBUILD, PACKAGE, PATCH, ADVANCED, UNKNOWN
+    version: str = "N/A"
+    trust_level: Optional[TrustLevel] = TrustLevel.NONE
+    votes: int = 0
+    last_update_str: str = "N/A"
+    pgp_status: str = "N/A"
+    signature_status: str = "N/A" # For packages
+    extra_info: Optional[str] = None # For patch description, package details, etc.
+
+    def get_icon_name(self) -> str:
+        """Returns the appropriate icon name for the file type."""
+        if self.is_dir:
+            return "folder-symbolic"
+        elif self.file_type == 'PKGBUILD':
+            return "text-x-generic-symbolic"
+        elif self.file_type == 'PACKAGE':
+            return "package-x-generic-symbolic"
+        elif self.file_type == 'PATCH':
+            return "text-x-patch-symbolic"
+        elif self.file_type == 'ADVANCED':
+            return "utilities-terminal-symbolic"
+        return "text-x-generic-symbolic"
+
+    def get_trust_icon(self) -> str:
+        """Returns the appropriate trust level icon name."""
+        if self.trust_level == TrustLevel.HIGH:
+            return "security-high-symbolic"
+        elif self.trust_level == TrustLevel.MEDIUM:
+            return "security-medium-symbolic"
+        elif self.trust_level == TrustLevel.LOW:
+            return "security-low-symbolic"
+        return "dialog-question-symbolic" # Unknown/None
+
 
 class FileUtils:
     """
@@ -41,8 +81,11 @@ class FileUtils:
         self._votes_re = re.compile(r'Votes\s*:\s*(\d+)')
         self._pkginfo_pkgver_re = re.compile(r'pkgver\s*=\s*(\S+)')
         self._pkginfo_pkgrel_re = re.compile(r'pkgrel\s*=\s*(\S+)')
+        # PkGBUILDAnalyzer instance will be created and used for detailed parsing
+        from .pkgbuild_analyzer import PkGBUILDAnalyzer # Import here to avoid circular dependency on init
+        self.pkgbuild_analyzer = PkGBUILDAnalyzer()
 
-    # --- Implement smart file format detection (Moved from window.py) ---
+
     @staticmethod
     def identify_file_type(filepath: str) -> str:
         """
@@ -62,7 +105,6 @@ class FileUtils:
             return 'PATCH'
         return 'UNKNOWN'
 
-    # --- Develop logic to extract PKGBUILD metadata (Moved from window.py) ---
     def extract_pkgbuild_info(self, path: str) -> Tuple[str, str, str]:
         """
         Safely extracts pkgname, pkgver, and pkgrel from a PKGBUILD file without execution.
@@ -93,44 +135,47 @@ class FileUtils:
             logger.error(f"Error reading PKGBUILD {path} for info extraction: {e}")
         return (pkgname, pkgver, pkgrel)
 
-    def get_aur_votes(self, pkgname: str) -> int:
+    def get_aur_votes_and_last_update(self, pkgname: str) -> Tuple[int, str]:
         """
-        Fetches AUR votes for a given package name using `paru -Si`.
+        Fetches AUR votes and last update time for a given package name using `paru -Si`.
         This is a blocking call and should be executed in a separate thread/process.
 
         Args:
             pkgname: The name of the package on AUR.
 
         Returns:
-            The number of votes, or 0 if not found/error.
+            A tuple (votes: int, last_update_str: str). Returns (0, "N/A") if not found/error.
         """
         if not pkgname or pkgname == "unknown":
-            return 0
-        logger.info(f"Fetching AUR votes for {pkgname} using paru -Si (blocking)...")
+            return 0, "N/A"
+        logger.info(f"Fetching AUR info for {pkgname} using paru -Si (blocking)...")
         try:
-            # TODO: Integrate with CacheManager (if not already handled by UpstreamChecker)
             result = subprocess.run(
                 ['paru', '-Si', pkgname],
                 capture_output=True,
                 text=True,
-                timeout=10, # Increased timeout for network call
+                timeout=10,
                 check=False
             )
             if result.returncode == 0:
-                votes_match = self._votes_re.search(result.stdout)
-                return int(votes_match.group(1)) if votes_match else 0
+                votes_match = re.search(r'Votes\s*:\s*(\d+)', result.stdout)
+                last_update_match = re.search(r'Last Update\s*:\s*(.*)', result.stdout)
+
+                votes = int(votes_match.group(1)) if votes_match else 0
+                last_update_str = last_update_match.group(1).strip() if last_update_match else "N/A"
+                return votes, last_update_str
             else:
-                logger.warning(f"Paru command failed for {pkgname} (AUR votes): {result.stderr.strip()}")
-                return 0
+                logger.warning(f"Paru command failed for {pkgname} (AUR info): {result.stderr.strip()}")
+                return 0, "N/A"
         except FileNotFoundError:
             logger.error("Error: 'paru' command not found. Is paru installed?")
-            return 0
+            return 0, "N/A"
         except subprocess.TimeoutExpired:
-            logger.warning(f"Paru command timed out for {pkgname} (AUR votes).")
-            return 0
+            logger.warning(f"Paru command timed out for {pkgname} (AUR info).")
+            return 0, "N/A"
         except Exception as e:
-            logger.error(f"Error getting AUR votes for {pkgname}: {e}")
-            return 0
+            logger.error(f"Error getting AUR info for {pkgname}: {e}")
+            return 0, "N/A"
 
     def get_trust_level(self, votes: int) -> TrustLevel:
         """
@@ -142,9 +187,8 @@ class FileUtils:
         Returns:
             A TrustLevel enum member.
         """
-        # TODO: Integrate with PreferencesManager for configurable thresholds
-        min_medium = 10 # self.preferences_manager.get_min_votes_medium_trust()
-        min_high = 50   # self.preferences_manager.get_min_votes_high_trust()
+        min_medium = self.preferences_manager.get_min_votes_medium_trust() if self.preferences_manager else 10
+        min_high = self.preferences_manager.get_min_votes_high_trust() if self.preferences_manager else 50
 
         if votes >= min_high:
             return TrustLevel.HIGH
@@ -233,7 +277,6 @@ class FileUtils:
             logger.error(f"Error extracting package version from {filepath}: {e}")
             return "unknown"
 
-    # --- Create signature analysis system for .zst packages (Moved from window.py) ---
     def check_signature_zst(self, filepath: str) -> str:
         """
         Checks the digital signature status of a .pkg.tar.zst package.
@@ -251,23 +294,40 @@ class FileUtils:
                 logger.info(f"Signature file not found for {filepath}.")
                 return "Not signed"
 
-            # TODO: [ ] Implement actual signature verification via `gpg` or `pacman-key --verify`
-            # This is a placeholder for the real cryptographic verification.
-            logger.info(f"Performing signature verification for {filepath} (placeholder)...")
+            # Use pacman-key for robust verification if available
+            try:
+                result = subprocess.run(
+                    ['pacman-key', '--verify', sig_path, filepath],
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    check=False
+                )
+                if result.returncode == 0 and "Good signature" in result.stdout:
+                    return "Verified"
+                else:
+                    logger.warning(f"Signature verification failed for {filepath}: {result.stderr.strip()}")
+                    return "Verification failed"
+            except FileNotFoundError:
+                logger.warning("pacman-key not found. Falling back to gpg (less integrated).")
+                # Fallback to gpg if pacman-key is not found
+                try:
+                    result = subprocess.run(
+                        ['gpg', '--verify', sig_path, filepath],
+                        capture_output=True,
+                        text=True,
+                        timeout=10,
+                        check=False
+                    )
+                    if result.returncode == 0 and "Good signature" in result.stderr: # gpg output to stderr
+                        return "Verified"
+                    else:
+                        logger.warning(f"Signature verification failed (gpg) for {filepath}: {result.stderr.strip()}")
+                        return "Verification failed"
+                except FileNotFoundError:
+                    logger.error("Neither pacman-key nor gpg found. Cannot verify signature.")
+                    return "Verification failed (tools missing)"
 
-            # Simulate a verification check
-            import time
-            time.sleep(0.5)
-            # For demonstration purposes, simulate success/failure
-            if "badpackage" in os.path.basename(filepath).lower():
-                raise Exception("Simulated bad signature")
-
-            # A real verification might look like:
-            # result = subprocess.run(['pacman-key', '--verify', sig_path, filepath], ...)
-            # if result.returncode == 0: return "Verified"
-            # else: raise Exception(result.stderr)
-
-            return "Verified"
         except Exception as e:
             logger.error(f"Error checking signature for {filepath}: {e}")
             return "Verification failed"
@@ -287,12 +347,15 @@ class FileUtils:
                 first_line = f.readline().strip()
                 if first_line.startswith('#'):
                     return first_line[1:].strip()
+                # Try to extract from the diff header if no comment line
+                diff_header_match = re.match(r'--- a/(.+?)\s+\+\+\+ b/(.+?)', first_line)
+                if diff_header_match:
+                    return f"Patch for {diff_header_match.group(1)}"
                 return "Generic patch file"
         except Exception as e:
             logger.error(f"Error reading patch description from {filepath}: {e}")
             return "Unknown patch"
 
-    # --- Implement patch preview with change identification ---
     def preview_patch_diff(self, patch_filepath: str, original_filepath: Optional[str] = None) -> Tuple[bool, str, Optional[str]]:
         """
         Generates a unified diff string for a patch file.
@@ -312,29 +375,27 @@ class FileUtils:
 
         logger.info(f"Generating diff preview for {patch_filepath} (blocking)...")
         try:
+            # Using difflib to generate a diff directly if both files are provided
+            # This offers better control and doesn't rely on `diff` command.
             if original_filepath and os.path.exists(original_filepath):
-                # Use `diff` command for a more realistic and potentially colorized output
-                # `diff -u -L` for unified format, -L for labels
-                cmd = ['diff', '-u', '-L', os.path.basename(original_filepath), '-L', os.path.basename(patch_filepath), original_filepath, patch_filepath]
-                # A more accurate way to apply a patch for preview is to use `patch --dry-run`
-                # which also needs the original file and its directory.
-                # For simplicity here, we'll read the patch content and maybe run `diff -u` on it.
-
-                with open(patch_filepath, 'r', encoding='utf-8') as pf:
-                    patch_lines = pf.readlines()
                 with open(original_filepath, 'r', encoding='utf-8') as of:
                     original_lines = of.readlines()
+                with open(patch_filepath, 'r', encoding='utf-8') as pf:
+                    # For a "preview" of a patch file, we show the patch itself.
+                    # If we wanted to *apply* a patch for preview, we'd use patch --dry-run.
+                    # This function is for showing the patch content for review.
+                    patch_content_lines = pf.readlines()
 
-                d = difflib.unified_diff(original_lines, patch_lines,
-                                         fromfile=os.path.basename(original_filepath),
-                                         tofile=os.path.basename(patch_filepath),
-                                         lineterm='') # Avoid extra newlines
-
-                diff_text = "".join(list(d))
-                return True, diff_text, None
+                # For diff preview, we usually just want to see the patch file content.
+                # The 'original_filepath' might be used to derive context/metadata if needed,
+                # but the diff content is typically the patch file itself.
+                # If the intention was to show `diff -u original patched` after applying,
+                # that would be a different operation.
+                # For a "preview_patch_diff", returning the patch file content itself is standard.
+                return True, "".join(patch_content_lines), None
 
             else:
-                # Just return the raw patch content if no original file for diffing
+                # Just return the raw patch content if no original file for diffing or applying context
                 with open(patch_filepath, 'r', encoding='utf-8') as f:
                     content = f.read()
                 return True, content, None
@@ -343,7 +404,6 @@ class FileUtils:
             return False, "", str(e)
 
 
-    # --- Develop utilities for secure AUR PKGBUILD download ---
     def download_pkgbuild_from_aur(self, pkgname: str, target_dir: str) -> Tuple[bool, Optional[str], Optional[str]]:
         """
         Downloads a PKGBUILD and its associated files from AUR into a target directory using `paru -G`.
@@ -398,140 +458,189 @@ class FileUtils:
             logger.exception(error_msg)
             return False, None, error_msg
 
+    def scan_compatible_files_worker(self, folder_path: str) -> List[FileItem]:
+        """
+        Scans the given folder for compatible files (PKGBUILDs, .pkg.tar.zst, .patch)
+        and extracts relevant metadata. This is a worker function for a separate thread/process.
+
+        Args:
+            folder_path: The directory to scan.
+
+        Returns:
+            A list of FileItem objects.
+        """
+        file_items: List[FileItem] = []
+        if not os.path.isdir(folder_path):
+            logger.warning(f"Scan path is not a directory: {folder_path}")
+            return []
+
+        # Add an "Advanced Mode" virtual item if not in simplified mode
+        # This check is better handled in the UI layer (`_update_content_view`)
+        # when deciding which cards to create based on preferences.
+
+        try:
+            with os.scandir(folder_path) as entries:
+                for entry in entries:
+                    if entry.name.startswith('.'): # Skip hidden files/dirs
+                        continue
+
+                    full_path = entry.path
+
+                    if entry.is_dir():
+                        file_items.append(FileItem(
+                            name=entry.name,
+                            path=full_path,
+                            is_dir=True
+                        ))
+                    elif entry.is_file():
+                        file_type = self.identify_file_type(full_path)
+                        item_name = entry.name
+                        item_version = "N/A"
+                        item_trust_level = TrustLevel.NONE
+                        item_votes = 0
+                        item_last_update_str = "N/A"
+                        item_pgp_status = "N/A"
+                        item_signature_status = "N/A"
+                        item_extra_info = None
+
+                        if file_type == 'PKGBUILD':
+                            pkgname, pkgver, pkgrel = self.extract_pkgbuild_info(full_path)
+                            item_name = pkgname
+                            item_version = f"{pkgver}-{pkgrel}"
+                            if self.preferences_manager and self.preferences_manager.get_show_trust_icons():
+                                votes, last_update = self.get_aur_votes_and_last_update(pkgname)
+                                item_votes = votes
+                                item_last_update_str = last_update
+                                item_trust_level = self.get_trust_level(votes)
+                                # PGP status could be fetched here from SecurityAnalyzer if needed,
+                                # but usually done during full security review.
+                                # For initial display, keep as N/A or derive from simple check.
+
+                        elif file_type == 'PACKAGE':
+                            item_name = self.get_pkg_name_from_zst(full_path)
+                            item_version = self.get_pkg_version_from_zst(full_path)
+                            item_signature_status = self.check_signature_zst(full_path)
+
+                        elif file_type == 'PATCH':
+                            item_extra_info = self.get_patch_description(full_path)
+
+                        file_items.append(FileItem(
+                            name=item_name,
+                            path=full_path,
+                            is_dir=False,
+                            file_type=file_type,
+                            version=item_version,
+                            trust_level=item_trust_level,
+                            votes=item_votes,
+                            last_update_str=item_last_update_str,
+                            pgp_status=item_pgp_status,
+                            signature_status=item_signature_status,
+                            extra_info=item_extra_info
+                        ))
+        except Exception as e:
+            logger.error(f"Error scanning directory {folder_path}: {e}")
+
+        # Sort directories first, then files alphabetically
+        file_items.sort(key=lambda x: (not x.is_dir, x.name.lower()))
+
+        # Add a single 'ADVANCED' card at the end if not in simplified mode
+        # This is handled in `_update_content_view` now when populating the FlowBox.
+
+        return file_items
 
 # Example Usage (for testing this module directly)
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG) # Enable DEBUG logs for testing
 
-    file_utils = FileUtils()
+    # Mock a PreferencesManager for testing purposes
+    class MockPreferencesManager:
+        def get_show_trust_icons(self): return True
+        def get_min_votes_medium_trust(self): return 10
+        def get_min_votes_high_trust(self): return 50
+
+    mock_prefs = MockPreferencesManager()
+    file_utils = FileUtils(preferences_manager=mock_prefs)
 
     print("\n--- Testing identify_file_type ---")
-    dummy_pkgbuild = "/tmp/PKGBUILD"
-    dummy_package = "/tmp/my-app-1.0.0-1-x86_64.pkg.tar.zst"
-    dummy_patch = "/tmp/fix.patch"
-    dummy_text = "/tmp/notes.txt"
+    dummy_pkgbuild_path = "/tmp/PKGBUILD"
+    dummy_package_path = "/tmp/my-app-1.0.0-1-x86_64.pkg.tar.zst"
+    dummy_patch_path = "/tmp/fix.patch"
+    dummy_text_path = "/tmp/notes.txt"
+    dummy_dir_path = "/tmp/test_dir"
 
-    with open(dummy_pkgbuild, "w") as f: f.write("pkgname=test")
-    with open(dummy_package, "w") as f: f.write("binary data")
-    with open(dummy_patch, "w") as f: f.write("--- a/file\n+++ b/file")
-    with open(dummy_text, "w") as f: f.write("hello world")
+    os.makedirs(dummy_dir_path, exist_ok=True)
+    with open(dummy_pkgbuild_path, "w") as f: f.write("pkgname=test\npkgver=1.0.0\npkgrel=1")
+    with open(dummy_package_path, "w") as f: f.write("binary data")
+    with open(dummy_patch_path, "w") as f: f.write("# My patch\n--- a/file\n+++ b/file")
+    with open(dummy_text_path, "w") as f: f.write("hello world")
 
-    print(f"Type of {os.path.basename(dummy_pkgbuild)}: {file_utils.identify_file_type(dummy_pkgbuild)}")
-    print(f"Type of {os.path.basename(dummy_package)}: {file_utils.identify_file_type(dummy_package)}")
-    print(f"Type of {os.path.basename(dummy_patch)}: {file_utils.identify_file_type(dummy_patch)}")
-    print(f"Type of {os.path.basename(dummy_text)}: {file_utils.identify_file_type(dummy_text)}")
+    print(f"Type of {os.path.basename(dummy_pkgbuild_path)}: {file_utils.identify_file_type(dummy_pkgbuild_path)}")
+    print(f"Type of {os.path.basename(dummy_package_path)}: {file_utils.identify_file_type(dummy_package_path)}")
+    print(f"Type of {os.path.basename(dummy_patch_path)}: {file_utils.identify_file_type(dummy_patch_path)}")
+    print(f"Type of {os.path.basename(dummy_text_path)}: {file_utils.identify_file_type(dummy_text_path)}")
 
 
     print("\n--- Testing extract_pkgbuild_info ---")
-    pkgname, pkgver, pkgrel = file_utils.extract_pkgbuild_info(dummy_pkgbuild)
+    pkgname, pkgver, pkgrel = file_utils.extract_pkgbuild_info(dummy_pkgbuild_path)
     print(f"PKGBUILD Info: {pkgname}-{pkgver}-{pkgrel}")
 
 
-    print("\n--- Testing get_aur_votes (requires paru installed) ---")
-    # This will attempt to run `paru -Si` for 'spotify'
-    # If paru is not installed or network is down, it will log errors and return 0.
-    # Replace 'spotify' with a known AUR package for reliable testing.
-    votes = file_utils.get_aur_votes("spotify")
-    print(f"Spotify AUR Votes: {votes} (Trust: {file_utils.get_trust_level(votes).value})")
-    votes_unknown = file_utils.get_aur_votes("non-existent-package-123")
-    print(f"Non-existent package votes: {votes_unknown} (Trust: {file_utils.get_trust_level(votes_unknown).value})")
+    print("\n--- Testing get_aur_votes_and_last_update (requires paru installed) ---")
+    votes, last_update = file_utils.get_aur_votes_and_last_update("paru") # Use a known AUR package
+    print(f"Paru AUR Votes: {votes}, Last Update: {last_update} (Trust: {file_utils.get_trust_level(votes).value})")
+    votes_unknown, update_unknown = file_utils.get_aur_votes_and_last_update("non-existent-package-123")
+    print(f"Non-existent package votes: {votes_unknown}, Last Update: {update_unknown} (Trust: {file_utils.get_trust_level(votes_unknown).value})")
 
 
-    print("\n--- Testing get_pkg_name_from_zst & get_pkg_version_from_zst ---")
-    # This assumes dummy_package contains a valid .PKGINFO.
-    # For a real test, you'd generate a minimal valid .pkg.tar.zst.
-    pkg_name = file_utils.get_pkg_name_from_zst(dummy_package)
-    pkg_version = file_utils.get_pkg_version_from_zst(dummy_package)
-    print(f"Package Name: {pkg_name}, Version: {pkg_version}")
+    print("\n--- Testing get_pkg_name_from_zst & get_pkg_version_from_zst (requires tar) ---")
+    # For a real test, generate a minimal valid .pkg.tar.zst.
+    # The dummy one won't work well as tar expects actual archive.
+    pkg_name = file_utils.get_pkg_name_from_zst(dummy_package_path)
+    pkg_version = file_utils.get_pkg_version_from_zst(dummy_package_path)
+    print(f"Package Name from zst: {pkg_name}, Version: {pkg_version}")
 
 
-    print("\n--- Testing check_signature_zst ---")
+    print("\n--- Testing check_signature_zst (requires pacman-key or gpg) ---")
     # Create dummy .sig file for testing
-    dummy_signature = dummy_package + ".sig"
-    with open(dummy_signature, "w") as f: f.write("dummy signature content")
+    dummy_signature_path = dummy_package_path + ".sig"
+    with open(dummy_signature_path, "w") as f: f.write("dummy signature content")
 
-    # Simulate a "bad" package name to trigger simulated failure
-    dummy_bad_package = "/tmp/badpackage-1.0.0-1-x86_64.pkg.tar.zst"
-    with open(dummy_bad_package, "w") as f: f.write("malicious binary data")
-    with open(dummy_bad_package + ".sig", "w") as f: f.write("valid looking sig")
+    # Simulate a "bad" package name to trigger simulated failure for gpg/pacman-key
+    dummy_bad_package_path = "/tmp/badpackage-1.0.0-1-x86_64.pkg.tar.zst"
+    with open(dummy_bad_package_path, "w") as f: f.write("malicious binary data")
+    with open(dummy_bad_package_path + ".sig", "w") as f: f.write("valid looking sig")
 
-    print(f"Signature Status ({os.path.basename(dummy_package)}): {file_utils.check_signature_zst(dummy_package)}")
-    print(f"Signature Status ({os.path.basename(dummy_bad_package)}): {file_utils.check_signature_zst(dummy_bad_package)}")
-    print(f"Signature Status (no .sig): {file_utils.check_signature_zst(dummy_text)}")
+    print(f"Signature Status ({os.path.basename(dummy_package_path)}): {file_utils.check_signature_zst(dummy_package_path)}")
+    print(f"Signature Status ({os.path.basename(dummy_bad_package_path)}): {file_utils.check_signature_zst(dummy_bad_package_path)}")
+    print(f"Signature Status (no .sig): {file_utils.check_signature_zst(dummy_text_path)}")
 
 
     print("\n--- Testing get_patch_description ---")
-    dummy_patch_with_desc = "/tmp/patch_with_desc.patch"
-    with open(dummy_patch_with_desc, "w") as f:
-        f.write("# This is a test patch description\n--- a/file\n+++ b/file")
-    print(f"Patch description: {file_utils.get_patch_description(dummy_patch_with_desc)}")
-    print(f"Patch description ({os.path.basename(dummy_patch)}): {file_utils.get_patch_description(dummy_patch)}")
+    print(f"Patch description ({os.path.basename(dummy_patch_path)}): {file_utils.get_patch_description(dummy_patch_path)}")
 
 
     print("\n--- Testing preview_patch_diff ---")
-    dummy_original_file = "/tmp/original.txt"
-    dummy_modified_file = "/tmp/modified.txt"
-    dummy_simple_patch = "/tmp/simple.patch"
-
-    with open(dummy_original_file, "w") as f: f.write("line 1\nline 2\nline 3\n")
-    with open(dummy_modified_file, "w") as f: f.write("line 1\nchanged line 2\nline 3.1\n")
-
-    # Create a patch using diff command for testing
-    try:
-        patch_process = subprocess.run(
-            ['diff', '-u', dummy_original_file, dummy_modified_file],
-            capture_output=True, text=True, check=True
-        )
-        with open(dummy_simple_patch, "w") as f: f.write(patch_process.stdout)
-
-        success, diff_content, err_msg = file_utils.preview_patch_diff(dummy_simple_patch, dummy_original_file)
-        if success:
-            print(f"Patch Preview (with original file):\n{diff_content}")
-        else:
-            print(f"Patch Preview failed: {err_msg}")
-    except Exception as e:
-        print(f"Could not create dummy patch for testing diff preview: {e}")
-
-    success, content, err = file_utils.preview_patch_diff(dummy_simple_patch)
+    # This will simply return the content of dummy_patch_path as no original_filepath is given.
+    success, content, err = file_utils.preview_patch_diff(dummy_patch_path)
     if success:
         print(f"Patch Preview (raw content):\n{content}")
     else:
-        print(f"Patch Preview (raw) failed: {err}")
+        print(f"Patch Preview failed: {err}")
 
-
-    print("\n--- Testing download_pkgbuild_from_aur (requires paru and network) ---")
-    test_download_dir = "/tmp/aur_download_test"
-    test_aur_pkg = "paru" # Use paru itself as a test case
-
-    success, downloaded_pkgbuild_path, err_msg = file_utils.download_pkgbuild_from_aur(test_aur_pkg, test_download_dir)
-    if success:
-        print(f"PKGBUILD for '{test_aur_pkg}' downloaded to: {downloaded_pkgbuild_path}")
-        # Verify content
-        if os.path.exists(downloaded_pkgbuild_path):
-            with open(downloaded_pkgbuild_path, 'r') as f:
-                first_line = f.readline().strip()
-                print(f"First line of downloaded PKGBUILD: {first_line}")
-    else:
-        print(f"Failed to download PKGBUILD for '{test_aur_pkg}': {err_msg}")
-
-    # Clean up downloaded files
-    if os.path.exists(os.path.join(test_download_dir, test_aur_pkg)):
-        import shutil
-        shutil.rmtree(os.path.join(test_download_dir, test_aur_pkg))
-
+    print("\n--- Testing scan_compatible_files_worker ---")
+    test_scan_dir = "/tmp" # Scan the /tmp directory
+    scanned_items = file_utils.scan_compatible_files_worker(test_scan_dir)
+    for item in scanned_items:
+        print(f"Scanned: {item.name}, Path: {item.path}, Type: {item.file_type}, IsDir: {item.is_dir}, Version: {item.version}, Trust: {item.trust_level.value}, Votes: {item.votes}")
 
     # Clean up dummy files
-    os.remove(dummy_pkgbuild)
-    os.remove(dummy_package)
-    os.remove(dummy_signature)
-    os.remove(dummy_bad_package)
-    os.remove(dummy_bad_package + ".sig")
-    os.remove(dummy_patch)
-    os.remove(dummy_text)
-    if os.path.exists(dummy_patch_with_desc): os.remove(dummy_patch_with_desc)
-    if os.path.exists(dummy_original_file): os.remove(dummy_original_file)
-    if os.path.exists(dummy_modified_file): os.remove(dummy_modified_file)
-    if os.path.exists(dummy_simple_patch): os.remove(dummy_simple_patch)
-    if os.path.exists(test_download_dir): os.rmdir(test_download_dir) # Only if empty
+    os.remove(dummy_pkgbuild_path)
+    os.remove(dummy_package_path)
+    os.remove(dummy_signature_path)
+    os.remove(dummy_bad_package_path)
+    os.remove(dummy_bad_package_path + ".sig")
+    os.remove(dummy_patch_path)
+    os.remove(dummy_text_path)
+    os.rmdir(dummy_dir_path)
 
     print("\n--- FileUtils Test Complete ---")

@@ -2,18 +2,16 @@ pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 moduledir = pkgdatadir / 'paru_gui'
 gnome = import('gnome')
 
-# --- CORREÇÃO AQUI para GResource ---
 # Adicionado extra_args para especificar o diretório-raiz dos recursos UI
 gnome.compile_resources('paru_gui',
   'paru_gui.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
-  # O sourcedir agora aponta para 'ui', então os caminhos dentro do gresource.xml
-  # devem ser relativos a 'ui', e não a 'src'.
+  # O sourcedir aponta para 'ui', então os caminhos dentro do gresource.xml
+  # (ex: 'screens/welcome_screen.ui') devem ser relativos a 'src/ui'.
   extra_args: ['--sourcedir=ui']
 )
-# --- FIM DA CORREÇÃO ---
 
 python = import('python')
 
@@ -32,10 +30,29 @@ configure_file(
   install_mode: 'r-xr-xr-x'
 )
 
-paru_gui_sources = [
+# Lista dos arquivos Python de nível superior do pacote paru_gui
+paru_gui_top_level_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'error_handler.py',
+  'file_utils.py',
+  'history_manager.py',
+  'pkgbuild_analyzer.py',
+  'preferences_manager.py',
+  'sandboxing.py',
+  'security_analyzer.py',
+  'terminal_manager.py',
+  'tour_guide.py',
+  'upstream_checker.py',
 ]
 
-install_data(paru_gui_sources, install_dir: moduledir)
+# Instala os arquivos Python de nível superior para o diretório do módulo
+install_data(paru_gui_top_level_sources, install_dir: moduledir)
+
+# CORREÇÃO CRÍTICA AQUI: Instala o subdiretório 'ui' DIRETAMENTE no diretório do módulo,
+# para que a estrutura seja moduledir/ui/screens, e não moduledir/ui/ui/screens.
+install_subdir(
+  'ui',
+  install_dir: moduledir
+)

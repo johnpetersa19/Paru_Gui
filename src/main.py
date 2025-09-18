@@ -40,24 +40,65 @@ class ParuGuiApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
-        # TODO: Add actions for other menu items from src/window.ui primary_menu here if not handled elsewhere
-        # Example: self.create_action('system', self.on_system_action)
+        # These actions are defined in window.ui's primary_menu
+        # and will be handled by methods in ParuGuiWindow
+        # The accels are defined in ParuGuiWindow or help-overlay.ui
+        self.create_action('system', lambda *_: None)
+        self.create_action('statistics', lambda *_: None)
+        self.create_action('arch-news', lambda *_: None)
+        self.create_action('clean-cache', lambda *_: None)
+        self.create_action('update-system', lambda *_: None)
+        self.create_action('initial-tour', lambda *_: None)
+        self.create_action('show-upstream-updates', lambda *_: None)
+        self.create_action('refresh-upstream-updates', lambda *_: None) # New action
+        self.create_action('action-history', lambda *_: None)
+        self.create_action('shortcuts', lambda *_: None) # Handled by TourGuide via help_button
+        self.create_action('hide-advanced', lambda *_: None) # Toggle simplified mode
+        self.create_action('check-devel', lambda *_: None)
+        self.create_action('install-debug', lambda *_: None)
+        self.create_action('show-warnings', lambda *_: None)
+        self.create_action('show-terminal', lambda *_: None)
+        self.create_action('review-pkgbuild', lambda *_: None)
+        self.create_action('go-home', lambda *_: None) # From help-overlay.ui
+        self.create_action('go-back', lambda *_: None) # From help-overlay.ui
+        self.create_action('go-forward', lambda *_: None) # From help-overlay.ui
+        self.create_action('search-packages', lambda *_: None) # From help-overlay.ui
+        self.create_action('select-file', lambda *_: None) # From help-overlay.ui
+        self.create_action('select-folder', lambda *_: None) # From help-overlay.ui
+        self.create_action('refresh-view', lambda *_: None) # From help-overlay.ui
+        self.create_action('download-sources', lambda *_: None) # From help-overlay.ui
+        self.create_action('build-package', lambda *_: None) # From help-overlay.ui
+        self.create_action('edit-pkgbuild', lambda *_: None) # From help-overlay.ui
+        self.create_action('view-analysis', lambda *_: None) # From help-overlay.ui
+        self.create_action('install-package', lambda *_: None) # From help-overlay.ui
+        self.create_action('verify-signature', lambda *_: None) # From help-overlay.ui
+        self.create_action('apply-patch', lambda *_: None) # From help-overlay.ui
+        self.create_action('view-diff', lambda *_: None) # From help-overlay.ui
+        self.create_action('execute-custom-command', lambda *_: None) # From help-overlay.ui
+        self.create_action('dry-run', lambda *_: None) # From help-overlay.ui
+        self.create_action('consult-docs', lambda *_: None) # From help-overlay.ui
+        self.create_action('show-help-overlay', lambda *_: None) # From help-overlay.ui
+
+    def do_startup(self):
+        """Called once when the application is started."""
+        Gtk.Application.do_startup(self)
+        self.load_css() # Load CSS early during startup
 
     def do_activate(self):
         """Called when the application is activated.
 
-        Loads CSS styles and raises the application's main window,
-        creating it if necessary.
+        Raises the application's main window, creating it if necessary.
         """
-        self.load_css()
         win = self.props.active_window
         if not win:
-            # Note: The ParuGuiWindow class currently constructs its UI programmatically in Python.
-            # If a Gtk.Builder based approach loading window.ui were to be used,
-            # this instantiation might need to pass the builder, or the window class itself
-            # would handle loading its UI from the .ui file resource.
+            # The ParuGuiWindow class now fully manages its UI loading from .ui files.
             win = ParuGuiWindow(application=self)
         win.present()
+        # Optionally, start the initial tour after the window is presented.
+        # This is now handled by a signal connection in ParuGuiWindow's setup_main_interface
+        # or directly in do_activate if preferred.
+        # win.tour_guide.show_initial_tour()
+
 
     def load_css(self):
         """Load the CSS styles for the application"""
@@ -85,16 +126,12 @@ class ParuGuiApplication(Adw.Application):
         about.set_translator_credits(_('translator-credits'))
         about.present(self.props.active_window)
 
-    def on_preferences_action(self, widget, _):
+    def on_preferences_action(self, *args):
         """Callback for the app.preferences action."""
-        print('app.preferences action activated')
-        # TODO: Instantiate and show the preferences dialog from src/window.ui (preferences_dialog)
-        # Example:
-        # builder = Gtk.Builder()
-        # builder.add_from_resource('/org/gnome/paru-gui/window.ui') # Assumes preferences_dialog is in window.ui
-        # prefs_dialog = builder.get_object('preferences_dialog')
-        # prefs_dialog.set_transient_for(self.props.active_window)
-        # prefs_dialog.present()
+        print('app.preferences action activated from main.py')
+        win = self.props.active_window
+        if win and hasattr(win, 'on_preferences_action'):
+            win.on_preferences_action() # Delegate to the window's method to show preferences dialog
 
 
     def create_action(self, name, callback, shortcuts=None):
