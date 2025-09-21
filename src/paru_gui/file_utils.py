@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GObject, Adw, Pango, Gio
+from gi.repository import Gtk, GObject, Adw, Pango
 from typing import Optional, List, Dict, Any, Callable, Tuple
 import os
 from enum import Enum

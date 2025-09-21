@@ -18,7 +18,7 @@
     <!-- Icon -->
     <child>
       <object class="GtkImage" id="empty_icon">
-        <property name="icon-size">6</property>
+        <property name="icon-size">large</property>
         <property name="icon-name">folder-symbolic</property>
         <property name="margin-bottom">18</property>
         <property name="visible">true</property>

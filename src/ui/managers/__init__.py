@@ -1,6 +1,6 @@
 # src/ui/__init__.py
 #
-# Copyright 2025 MiniMax Agent
+# Copyright 2025 Unknown
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,25 +17,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"""
-UI Module Initialization
-========================
+"""UI management modules for Paru GUI."""
 
-This module exports all the UI manager classes from their respective modules.
-It provides a centralized entry point for importing UI components.
-"""
+from .ui_manager import UIManager
+from .action_handlers import ActionHandlers
+from .file_operations import FileOperations
+from .content_view_manager import ContentViewManager
+from .preferences_dialog_manager import PreferencesDialogManager
+from .search_manager import SearchManager
 
-# Import managers from the managers subpackage using the managers __init__.py
-from .managers import (
-    UIManager,
-    ActionHandlers,
-    FileOperations,
-    ContentViewManager,
-    PreferencesDialogManager,
-    SearchManager
-)
-
-# Export all classes for external imports
 __all__ = [
     'UIManager',
     'ActionHandlers', 

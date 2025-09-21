@@ -2,23 +2,31 @@ pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 moduledir = pkgdatadir / 'paru_gui'
 gnome = import('gnome')
 
-# Adicionado extra_args para especificar o diretório-raiz dos recursos UI
-gnome.compile_resources('paru_gui',
+# Compilar recursos com configuração corrigida
+resources = gnome.compile_resources('paru_gui',
   'paru_gui.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
-  # O sourcedir aponta para 'ui', então os caminhos dentro do gresource.xml
-  # (ex: 'screens/welcome_screen.ui') devem ser relativos a 'src/ui'.
-  extra_args: ['--sourcedir=ui']
+  source_dir: '.',
+  dependencies: files(
+    '../window.ui',
+    'ui/screens/welcome_screen.ui',
+    'ui/screens/content_view.ui',
+    'ui/screens/pkgbuild_review.ui',
+    'ui/screens/upstream_update.ui',
+    'ui/components/empty_state.ui',
+    'ui/components/error_dialog.ui',
+    'ui/components/file_chooser_dialog.ui',
+    'ui/components/help-overlay.ui',
+    'ui/components/search_bar.ui',
+    'ui/style.css',
+    'ui/screens/pkgbuild-review.css'
+  )
 )
 
 python = import('python')
-
-# --- ADICIONE ESTA LINHA PARA DEPURAR ---
 py_path = python.find_installation('python3').full_path()
-message('Meson DEBUG: Python path found = ' + py_path)
-# --- FIM DA LINHA DE DEBUG ---
 
 conf = configuration_data()
 conf.set('PYTHON', py_path)
@@ -35,29 +43,27 @@ configure_file(
   install_mode: 'r-xr-xr-x'
 )
 
-# Lista dos arquivos Python de nível superior do pacote paru_gui
-paru_gui_top_level_sources = [
-  '__init__.py',
-  'main.py',
-  'window.py',
-  'error_handler.py',
-  'file_utils.py',
-  'history_manager.py',
-  'pkgbuild_analyzer.py',
-  'preferences_manager.py',
-  'sandboxing.py',
-  'security_analyzer.py',
-  'terminal_manager.py',
-  'tour_guide.py',
-  'upstream_checker.py',
+# Lista dos arquivos Python (caminhos corretos para src/paru_gui/)
+paru_gui_sources = [
+  'paru_gui/__init__.py',
+  'paru_gui/main.py',
+  'paru_gui/error_handler.py',
+  'paru_gui/file_utils.py',
+  'paru_gui/history_manager.py',
+  'paru_gui/pkgbuild_analyzer.py',
+  'paru_gui/preferences_manager.py',
+  'paru_gui/sandboxing.py',
+  'paru_gui/security_analyzer.py',
+  'paru_gui/terminal_manager.py',
+  'paru_gui/tour_guide.py',
+  'paru_gui/upstream_checker.py',
 ]
 
-# Instala os arquivos Python de nível superior para o diretório do módulo
-install_data(paru_gui_top_level_sources, install_dir: moduledir)
+# window.py está na raiz, então precisa de referência especial
+window_py_source = [
+  '../window.py',
+]
 
-# CORREÇÃO CRÍTICA AQUI: Instala o subdiretório 'ui' DIRETAMENTE no diretório do módulo,
-# para que a estrutura seja moduledir/ui/screens, e não moduledir/ui/ui/screens.
-install_subdir(
-  'ui',
-  install_dir: moduledir
-)
+install_data(paru_gui_sources, install_dir: moduledir)
+install_data(window_py_source, install_dir: moduledir)
+install_subdir('ui', install_dir: moduledir)

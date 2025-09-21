@@ -234,7 +234,6 @@ class HistoryManager:
         min_timestamp = datetime.utcnow() - timedelta(hours=self.MAX_UNDO_HOURS)
         return self.get_history(
             min_timestamp=min_timestamp,
-            is_undoable=True,
             status=ActionStatus.SUCCESS # Only show successful, non-undone actions
         )
 
@@ -297,197 +296,128 @@ class HistoryManager:
         Exports history entries to a human-readable string.
 
         Args:
-            limit: Maximum number of entries.
-            offset: Offset for pagination.
-            format_json: If True, exports full JSON for each entry; otherwise, a summary.
+            limit: Maximum number of entries to export.
+            offset: Number of entries to skip.
+            format_json: If True, returns JSON format; otherwise, a readable format.
 
         Returns:
-            A string containing the formatted history.
+            A string representation of the history.
         """
         entries = self.get_history(limit=limit, offset=offset)
-        if not entries:
-            return "No history available."
-
-        output_lines: List[str] = [f"--- History Export ({datetime.utcnow().isoformat()}) ---"]
-        for entry in entries:
-            if format_json:
-                # Use default=str to handle datetime objects correctly during JSON serialization
-                output_lines.append(json.dumps(entry.__dict__, default=str, indent=2))
-            else:
-                output_lines.append(f"[{entry.timestamp.isoformat()}] [{entry.action_type.value}] {entry.summary} (Status: {entry.status.value})")
+        
+        if format_json:
+            # Convert to JSON-serializable format
+            json_data = []
+            for entry in entries:
+                json_data.append({
+                    "id": entry.id,
+                    "timestamp": entry.timestamp.isoformat(),
+                    "action_type": entry.action_type.value,
+                    "summary": entry.summary,
+                    "status": entry.status.value,
+                    "details": entry.details,
+                    "is_undoable": entry.is_undoable,
+                    "related_pkg": entry.related_pkg,
+                    "user_initiated": entry.user_initiated
+                })
+            return json.dumps(json_data, indent=2)
+        else:
+            # Human-readable format
+            lines = ["Paru GUI Action History"]
+            lines.append("=" * 30)
+            lines.append("")
+            
+            for entry in entries:
+                lines.append(f"[{entry.timestamp.strftime('%Y-%m-%d %H:%M:%S')}] {entry.action_type.value}")
+                lines.append(f"  Status: {entry.status.value}")
+                lines.append(f"  Summary: {entry.summary}")
                 if entry.related_pkg:
-                    output_lines.append(f"  Package: {entry.related_pkg}")
+                    lines.append(f"  Package: {entry.related_pkg}")
                 if entry.details:
-                    # Only show key details, not entire JSON unless format_json is true
-                    detail_summary = ", ".join([f"{k}: {str(v)[:50]}" for k, v in entry.details.items() if k in ["command", "file", "error"]])
-                    if detail_summary:
-                        output_lines.append(f"  Details: {detail_summary}")
-                if entry.is_undoable:
-                    output_lines.append(f"  [Undoable: YES]")
-            output_lines.append("-" * 60)
-        return "\n".join(output_lines)
+                    lines.append(f"  Details: {json.dumps(entry.details)}")
+                lines.append("  " + "-" * 40)
+                lines.append("")
+            
+            return "\n".join(lines)
 
-    def export_history_to_file(self,
-                               file_path: str,
-                               limit: int = 500,
-                               offset: int = 0,
-                               format_json: bool = False
-                               ) -> bool:
+    def clear_old_entries(self, days_to_keep: int = 30) -> int:
         """
-        Exports history entries to a specified file.
+        Removes history entries older than the specified number of days.
 
         Args:
-            file_path: The full path to the output file.
-            limit: Maximum number of entries.
-            offset: Offset for pagination.
-            format_json: If True, exports full JSON for each entry.
+            days_to_keep: Number of days of history to retain.
 
         Returns:
-            True if export was successful, False otherwise.
+            Number of entries deleted.
         """
-        try:
-            history_string = self.export_history_to_string(limit=limit, offset=offset, format_json=format_json)
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(history_string)
-            logger.info(f"History exported to {file_path}")
-            return True
-        except Exception as e:
-            logger.error(f"Error exporting history to file {file_path}: {e}")
-            return False
-
-    def _clean_old_history(self, older_than_days: int = 90):
-        """
-        Removes history entries older than a specified number of days.
-        This could be run periodically as a background task.
-        """
+        cutoff_date = datetime.utcnow() - timedelta(days=days_to_keep)
         conn = None
+        deleted_count = 0
+        
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            cutoff_date = datetime.utcnow() - timedelta(days=older_than_days)
+            
             cursor.execute(f"DELETE FROM {self.TABLE_NAME} WHERE timestamp < ?", (cutoff_date.isoformat(),))
+            deleted_count = cursor.rowcount
             conn.commit()
-            logger.info(f"Cleaned {cursor.rowcount} old history entries older than {older_than_days} days.")
+            
+            logger.info(f"Deleted {deleted_count} history entries older than {days_to_keep} days.")
         except sqlite3.Error as e:
-            logger.error(f"Error cleaning old history: {e}")
+            logger.error(f"Error clearing old entries: {e}")
         finally:
             if conn:
                 conn.close()
+                
+        return deleted_count
 
-# Example Usage (for testing this module directly)
-if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.DEBUG) # Enable DEBUG logs for testing
+    def get_statistics(self) -> Dict[str, Any]:
+        """
+        Returns statistics about the action history.
 
-    # Use a temporary directory for testing
-    test_db_dir = "/tmp/paru_gui_history_test"
-    if not os.path.exists(test_db_dir):
-        os.makedirs(test_db_dir)
-
-    history_manager = HistoryManager(db_dir=test_db_dir)
-
-    # --- Add some actions ---
-    print("\n--- Adding Actions ---")
-    action1_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(days=1, hours=2),
-        action_type=ActionType.PKGBUILD_BUILD, summary="Built 'firefox-git'",
-        status=ActionStatus.SUCCESS, related_pkg="firefox-git",
-        details={"path": "/home/user/aur/firefox-git", "command": "makepkg -s"}
-    ))
-    action2_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(hours=1),
-        action_type=ActionType.PACKAGE_INSTALL, summary="Installed 'nginx-mainline'",
-        status=ActionStatus.SUCCESS, related_pkg="nginx-mainline",
-        details={"file": "/tmp/nginx.pkg.tar.zst", "command": "pacman -U"},
-        is_undoable=True # Potentially undoable (pacman -R)
-    ))
-    action3_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(minutes=30),
-        action_type=ActionType.SECURITY_ALERT, summary="High risk in 'malicious-pkg'",
-        status=ActionStatus.WARNING, related_pkg="malicious-pkg",
-        details={"risk_level": "CRITICAL", "line": 15, "description": "sudo rm -rf /"},
-        is_undoable=False # Security alerts are not undoable operations
-    ))
-    action4_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(minutes=10),
-        action_type=ActionType.RISK_IGNORED, summary="Ignored risk for 'malicious-pkg'",
-        status=ActionStatus.INFO, related_pkg="malicious-pkg",
-        details={"original_alert_id": action3_id, "user_choice": "proceed"},
-        is_undoable=True # User choice can be 'undone' to re-flag
-    ))
-    action5_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(minutes=5),
-        action_type=ActionType.SYSTEM_UPDATE, summary="Updated system packages",
-        status=ActionStatus.FAILED,
-        details={"command": "paru -Syu", "error": "Network error", "stderr": "curl: (6) Could not resolve host"},
-        is_undoable=False # System updates are not undoable
-    ))
-    action6_id = history_manager.add_action(HistoryEntry(
-        id=None, timestamp=datetime.utcnow() - timedelta(days=5), # Older entry
-        action_type=ActionType.UI_INTERACTION, summary="Opened welcome screen",
-        status=ActionStatus.INFO, user_initiated=False,
-        is_undoable=True
-    ))
-
-    # --- Retrieve History ---
-    print("\n--- Retrieving All History (last 5) ---")
-    all_history = history_manager.get_history(limit=5)
-    for entry in all_history:
-        print(f"ID: {entry.id}, Time: {entry.timestamp}, Type: {entry.action_type.value}, Summary: {entry.summary}, Status: {entry.status.value}, Pkg: {entry.related_pkg}, Undoable: {entry.is_undoable}")
-
-    # --- Retrieve Undoable Actions (last 24 hours) ---
-    print(f"\n--- Retrieving Undoable Actions (last {history_manager.MAX_UNDO_HOURS} hours) ---")
-    undoable_actions = history_manager.get_undoable_actions()
-    if undoable_actions:
-        for entry in undoable_actions:
-            print(f"ID: {entry.id}, Time: {entry.timestamp}, Type: {entry.action_type.value}, Summary: {entry.summary}, Pkg: {entry.related_pkg}")
-    else:
-        print("No undoable actions found in the last 24 hours.")
-
-    # --- Attempt to Undo an Action ---
-    if action2_id:
-        print(f"\n--- Attempting to UNDO Action ID {action2_id} (Install 'nginx-mainline') ---")
-        if history_manager.undo_action(action2_id):
-            print(f"Action {action2_id} conceptually undone.")
-            # Verify status changed
-            undone_entry = history_manager.get_history(limit=1, min_timestamp=datetime.fromtimestamp(0), related_pkg="nginx-mainline")
-            if undone_entry and undone_entry[0].id == action2_id:
-                print(f"Verified status is now: {undone_entry[0].status.value}")
-        else:
-            print(f"Failed to conceptually undo action {action2_id}.")
-
-    # --- Export History ---
-    print("\n--- Exporting History to String (summary) ---")
-    summary_export = history_manager.export_history_to_string(limit=3)
-    print(summary_export)
-
-    print("\n--- Exporting History to String (JSON) ---")
-    json_export = history_manager.export_history_to_string(limit=1, format_json=True)
-    print(json_export)
-
-    export_file_path = os.path.join(test_db_dir, "paru_gui_history.txt")
-    if history_manager.export_history_to_file(export_file_path):
-        print(f"\nHistory successfully exported to {export_file_path}")
-    else:
-        print("\nFailed to export history to file.")
-
-    # --- Clean Old History ---
-    print("\n--- Cleaning Old History (entries older than 3 days) ---")
-    history_manager._clean_old_history(older_than_days=3)
-    print("Old history cleaning attempted. Check logs for details.")
-
-    # --- Final check after clean ---
-    print("\n--- Final History Check ---")
-    final_history = history_manager.get_history(limit=5)
-    for entry in final_history:
-        print(f"ID: {entry.id}, Time: {entry.timestamp}, Type: {entry.action_type.value}, Summary: {entry.summary}")
-
-
-    # Clean up test database and directory
-    try:
-        os.remove(history_manager.db_path)
-        if os.path.exists(export_file_path): # Check if it was created and exists before trying to remove
-            os.remove(export_file_path)
-        os.rmdir(test_db_dir)
-        print(f"\nCleaned up test directory: {test_db_dir}")
-    except OSError as e:
-        print(f"Error cleaning up test directory: {e}")
+        Returns:
+            A dictionary with various statistics.
+        """
+        conn = None
+        stats = {
+            "total_entries": 0,
+            "entries_by_type": {},
+            "entries_by_status": {},
+            "recent_activity": 0,  # Last 24 hours
+            "undoable_actions": 0
+        }
+        
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            
+            # Total entries
+            cursor.execute(f"SELECT COUNT(*) FROM {self.TABLE_NAME}")
+            stats["total_entries"] = cursor.fetchone()[0]
+            
+            # Entries by type
+            cursor.execute(f"SELECT action_type, COUNT(*) FROM {self.TABLE_NAME} GROUP BY action_type")
+            for row in cursor.fetchall():
+                stats["entries_by_type"][row[0]] = row[1]
+            
+            # Entries by status
+            cursor.execute(f"SELECT status, COUNT(*) FROM {self.TABLE_NAME} GROUP BY status")
+            for row in cursor.fetchall():
+                stats["entries_by_status"][row[0]] = row[1]
+            
+            # Recent activity (last 24 hours)
+            recent_cutoff = datetime.utcnow() - timedelta(hours=24)
+            cursor.execute(f"SELECT COUNT(*) FROM {self.TABLE_NAME} WHERE timestamp >= ?", (recent_cutoff.isoformat(),))
+            stats["recent_activity"] = cursor.fetchone()[0]
+            
+            # Undoable actions
+            cursor.execute(f"SELECT COUNT(*) FROM {self.TABLE_NAME} WHERE is_undoable = 1")
+            stats["undoable_actions"] = cursor.fetchone()[0]
+            
+        except sqlite3.Error as e:
+            logger.error(f"Error getting statistics: {e}")
+        finally:
+            if conn:
+                conn.close()
+                
+        return stats

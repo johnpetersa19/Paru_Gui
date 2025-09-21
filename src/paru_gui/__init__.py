@@ -1,4 +1,4 @@
-# src/ui/__init__.py
+# src/__init__.py
 #
 # Copyright 2025 MiniMax Agent
 #
@@ -17,30 +17,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"""
-UI Module Initialization
-========================
+"""Paru GUI - Package module initialization."""
 
-This module exports all the UI manager classes from their respective modules.
-It provides a centralized entry point for importing UI components.
-"""
-
-# Import managers from the managers subpackage using the managers __init__.py
-from .managers import (
-    UIManager,
-    ActionHandlers,
-    FileOperations,
-    ContentViewManager,
-    PreferencesDialogManager,
-    SearchManager
-)
-
-# Export all classes for external imports
-__all__ = [
-    'UIManager',
-    'ActionHandlers', 
-    'FileOperations',
-    'ContentViewManager',
-    'PreferencesDialogManager',
-    'SearchManager'
-]
+__version__ = "0.1.0"
+__author__ = "MiniMax Agent"
+__description__ = "A modern and secure graphical interface for managing Arch User Repository (AUR) packages"

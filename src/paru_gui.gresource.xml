@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/gnome/paru-gui"> <!-- Corrigido prefixo para corresponder ao application_id -->
-    <!-- Main application window (path relative to 'src' directory) -->
-    <file preprocess="xml-stripblanks">window.ui</file>
+  <gresource prefix="/org/gnome/paru-gui">
+    <!-- Main application window (será copiado para o caminho correto) -->
+    <file preprocess="xml-stripblanks" alias="window.ui">../window.ui</file>
 
     <!-- UI screens (paths relative to 'src' directory) -->
     <file preprocess="xml-stripblanks">ui/screens/welcome_screen.ui</file>
     <file preprocess="xml-stripblanks">ui/screens/content_view.ui</file>
     <file preprocess="xml-stripblanks">ui/screens/pkgbuild_review.ui</file>
-    <file preprocess="xml-stripblanks">ui/screens/upstream_update.ui</file> <!-- Adicionado: estava faltando -->
+    <file preprocess="xml-stripblanks">ui/screens/upstream_update.ui</file>
 
     <!-- UI components (paths relative to 'src' directory) -->
     <file preprocess="xml-stripblanks">ui/components/empty_state.ui</file>
@@ -22,3 +22,4 @@
     <file>ui/screens/pkgbuild-review.css</file>
   </gresource>
 </gresources>
+
