@@ -15,8 +15,13 @@ gnome.compile_resources('paru_gui',
 
 python = import('python')
 
+# --- ADICIONE ESTA LINHA PARA DEPURAR ---
+py_path = python.find_installation('python3').full_path()
+message('Meson DEBUG: Python path found = ' + py_path)
+# --- FIM DA LINHA DE DEBUG ---
+
 conf = configuration_data()
-conf.set('PYTHON', python.find_installation('python3').full_path())
+conf.set('PYTHON', py_path)
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)

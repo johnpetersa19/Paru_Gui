@@ -82,7 +82,7 @@ class FileUtils:
         self._pkginfo_pkgver_re = re.compile(r'pkgver\s*=\s*(\S+)')
         self._pkginfo_pkgrel_re = re.compile(r'pkgrel\s*=\s*(\S+)')
         # PkGBUILDAnalyzer instance will be created and used for detailed parsing
-        from .pkgbuild_analyzer import PkGBUILDAnalyzer # Import here to avoid circular dependency on init
+        from paru_gui.pkgbuild_analyzer import PkGBUILDAnalyzer # Import here to avoid circular dependency on init
         self.pkgbuild_analyzer = PkGBUILDAnalyzer()
 
 

@@ -33,18 +33,18 @@ from gi.repository import Gtk, Gio, GLib, Gdk, GObject, Adw, Pango
 from .upstream_checker import UpstreamChecker
 from .security_analyzer import SecurityAnalyzer
 from .sandboxing import SandboxManager, SandboxOptions, IsolationLevel
-from .error_handler import ErrorHandler, ErrorContext, ErrorCategory, ErrorDetail, SuggestedAction
-from .history_manager import HistoryManager, ActionType, ActionStatus, HistoryEntry
+from paru_gui.error_handler import ErrorHandler, ErrorContext, ErrorCategory, ErrorDetail, SuggestedAction
+from paru_gui.history_manager import HistoryManager, ActionType, ActionStatus, HistoryEntry
 from .preferences_manager import PreferencesManager
-from .file_utils import FileUtils, FileItem # Import FileItem from file_utils
+from paru_gui.file_utils import FileUtils, FileItem # Import FileItem from file_utils
 from .terminal_manager import TerminalManager
 from .tour_guide import TourGuide # Ensure TourGuide is imported
 
 # Import UI screen/component classes for direct instantiation
-from .ui.screens.pkgbuild_review_dialog import PkgbuildReviewDialog
-from .ui.screens.upstream_update import UpstreamUpdateCard
-from .ui.components.file_chooser_dialog import FileChooserDialog as CustomFileChooserDialog # Rename to avoid conflict
-from .ui.components.help_overlay import HelpOverlay
+from paru_gui.ui.screens.pkgbuild_review_dialog import PkgbuildReviewDialog
+from paru_gui.ui.screens.upstream_update import UpstreamUpdateCard
+from paru_gui.ui.components.file_chooser_dialog import FileChooserDialog as CustomFileChooserDialog # Rename to avoid conflict
+from paru_gui.ui.components.help_overlay import HelpOverlay
 
 
 class ParuGuiWindow(Adw.ApplicationWindow):
@@ -1036,7 +1036,7 @@ class ParuGuiWindow(Adw.ApplicationWindow):
             pkgbuild_metadata = self.file_utils.pkgbuild_analyzer.parse_pkgbuild_detailed(pkgbuild_path)
             source_content = "\n".join(pkgbuild_metadata.source) if pkgbuild_metadata and pkgbuild_metadata.source else ""
             # Ensure PkgbuildFunction is imported or defined
-            from .pkgbuild_analyzer import PkgbuildFunction
+            from paru_gui.pkgbuild_analyzer import PkgbuildFunction
             prepare_content = pkgbuild_metadata.functions.get("prepare", PkgbuildFunction("", "", -1, -1)).content if pkgbuild_metadata else ""
             package_content = pkgbuild_metadata.functions.get("package", PkgbuildFunction("", "", -1, -1)).content if pkgbuild_metadata else ""
 

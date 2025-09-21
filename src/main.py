@@ -27,7 +27,7 @@ gi.require_version('Adw', '1')
 # --- END OF CORRECTION ---
 
 from gi.repository import Gtk, Gio, Adw, Gdk
-from .window import ParuGuiWindow
+from paru_gui.window import ParuGuiWindow
 
 
 class ParuGuiApplication(Adw.Application):
