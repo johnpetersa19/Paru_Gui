@@ -466,9 +466,43 @@ UpstreamUpdateScreen .patch-content {
     padding: 0;
 }
 
-/* Garante que não há elementos vazios criando espaços */
+/* ✅ CORREÇÃO APLICADA: Substituindo 'display: none' por alternativas compatíveis com GTK */
+/* Elementos vazios agora são ocultados de forma compatível com GTK4/Libadwaita */
 .empty-box,
 .placeholder,
 .spacer {
-    display: none;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+    min-width: 0;
+}
+
+/* --- Melhorias Adicionais para Compatibilidade GTK4 --- */
+
+/* Garante compatibilidade com Libadwaita */
+window {
+    background-color: @window_bg_color;
+}
+
+/* Melhora a aparência dos scrollbars */
+scrollbar {
+    background-color: alpha(@theme_fg_color, 0.1);
+    border-radius: 6px;
+}
+
+scrollbar slider {
+    background-color: alpha(@theme_fg_color, 0.3);
+    border-radius: 6px;
+}
+
+scrollbar slider:hover {
+    background-color: alpha(@theme_fg_color, 0.5);
+}
+
+/* Melhora a aparência dos separadores */
+separator {
+    background-color: @borders;
+    min-width: 1px;
+    min-height: 1px;
 }
