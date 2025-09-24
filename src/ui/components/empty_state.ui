@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-
-  <!-- Widget to display when the list is empty -->
   <object class="GtkBox" id="empty_state_box">
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
@@ -14,11 +12,9 @@
     <property name="halign">center</property>
     <property name="hexpand">true</property>
     <property name="vexpand">true</property>
-
-    <!-- Icon -->
     <child>
       <object class="GtkImage" id="empty_icon">
-        <property name="icon-size">large</property>
+        <property name="pixel-size">64</property>
         <property name="icon-name">folder-symbolic</property>
         <property name="margin-bottom">18</property>
         <property name="visible">true</property>
@@ -26,8 +22,6 @@
         <property name="opacity">0.7</property>
       </object>
     </child>
-
-    <!-- Title -->
     <child>
       <object class="GtkLabel" id="empty_title_label">
         <property name="label" translatable="yes">Empty Folder</property>
@@ -42,8 +36,6 @@
         <property name="sensitive">true</property>
       </object>
     </child>
-
-    <!-- Description -->
     <child>
       <object class="GtkLabel" id="empty_description_label">
         <property name="label" translatable="yes">This folder is empty. Download a PKGBUILD from AUR or create a new one.</property>
@@ -59,8 +51,6 @@
         <property name="sensitive">true</property>
       </object>
     </child>
-
-    <!-- Download Options -->
     <child>
       <object class="GtkBox" id="empty_options_box">
         <property name="orientation">vertical</property>
@@ -70,8 +60,6 @@
         <property name="sensitive">true</property>
         <property name="width-request">280</property>
         <property name="halign">center</property>
-
-        <!-- Download PKGBUILD -->
         <child>
           <object class="GtkButton" id="download_pkgbuild_button">
             <property name="label" translatable="yes">Download PKGBUILD</property>
@@ -84,8 +72,6 @@
             <property name="tooltip-text" translatable="yes">Search and download PKGBUILDs from AUR.</property>
           </object>
         </child>
-
-        <!-- Builder Mode -->
         <child>
           <object class="GtkButton" id="builder_mode_button">
             <property name="label" translatable="yes">Builder Mode (Wizard)</property>

@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
+  <requires lib="gio" version="2.0"/>
   <template class="ContentView" parent="GtkBox">
     <property name="margin-bottom">16</property>
     <property name="margin-end">24</property>
@@ -8,10 +9,16 @@
     <property name="margin-top">16</property>
     <property name="orientation">vertical</property>
     <property name="spacing">16</property>
+    <accessibility>
+      <property name="label" translatable="yes">Main content view for package management</property>
+    </accessibility>
     <child>
       <object class="GtkBox" id="path_bar">
         <property name="margin-bottom">12</property>
         <property name="spacing">8</property>
+        <accessibility>
+          <property name="label" translatable="yes">Navigation and filter controls</property>
+        </accessibility>
         <child>
           <object class="GtkButton" id="up_button">
             <property name="icon-name">go-up-symbolic</property>
@@ -21,29 +28,38 @@
               <class name="flat"/>
               <class name="circular"/>
             </style>
+            <accessibility>
+              <property name="label" translatable="yes">Navigate up one directory level</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="current_path_label">
             <property name="ellipsize">middle</property>
             <property name="halign">start</property>
-            <property name="hexpand">true</property>
+            <property name="hexpand">True</property>
             <property name="label">/home/user</property>
             <property name="max-width-chars">40</property>
-            <property name="wrap">false</property>
+            <property name="wrap">False</property>
             <style>
               <class name="monospace"/>
               <class name="dim-label"/>
             </style>
             <property name="tooltip-text" translatable="yes">Current directory path.</property>
+            <accessibility>
+              <property name="label" translatable="yes">Current directory path display</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="filter_buttons">
             <property name="spacing">6</property>
+            <accessibility>
+              <property name="label" translatable="yes">File type filter buttons</property>
+            </accessibility>
             <child>
               <object class="GtkToggleButton" id="filter_pkgbuild">
-                <property name="active">true</property>
+                <property name="active">True</property>
                 <property name="label" translatable="yes">PKGBUILD</property>
                 <property name="name">PKGBUILD</property>
                 <style>
@@ -51,11 +67,14 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show PKGBUILD files.</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle PKGBUILD files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkToggleButton" id="filter_packages">
-                <property name="active">true</property>
+                <property name="active">True</property>
                 <property name="label" translatable="yes">Packages</property>
                 <property name="name">PACKAGE</property>
                 <style>
@@ -63,11 +82,14 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show pre-compiled package files (.pkg.tar.zst).</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle package files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkToggleButton" id="filter_patches">
-                <property name="active">true</property>
+                <property name="active">True</property>
                 <property name="label" translatable="yes">Patches</property>
                 <property name="name">PATCH</property>
                 <style>
@@ -75,11 +97,14 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show patch files (.patch, .diff).</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle patch files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkToggleButton" id="filter_advanced">
-                <property name="active">true</property>
+                <property name="active">True</property>
                 <property name="label" translatable="yes">Advanced</property>
                 <property name="name">ADVANCED</property>
                 <style>
@@ -87,6 +112,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show other compatible files and advanced options.</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle advanced options visibility</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -97,39 +125,48 @@
       <object class="GtkBox" id="main_content_area">
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
-        <property name="vexpand">true</property>
+        <property name="vexpand">True</property>
+        <accessibility>
+          <property name="label" translatable="yes">Main content area with file cards</property>
+        </accessibility>
         <child>
           <object class="GtkScrolledWindow" id="scrolled_content">
             <property name="hscrollbar-policy">automatic</property>
-            <property name="vexpand">true</property>
+            <property name="vexpand">True</property>
             <property name="vscrollbar-policy">automatic</property>
+            <accessibility>
+              <property name="label" translatable="yes">Scrollable content area</property>
+            </accessibility>
             <child>
               <object class="GtkFlowBox" id="content_cards">
-                <property name="accept-unpaired-release">false</property>
-                <property name="activate-on-single-click">true</property>
+                <property name="accept-unpaired-release">False</property>
+                <property name="activate-on-single-click">True</property>
                 <property name="column-spacing">16</property>
-                <property name="homogeneous">false</property>
+                <property name="homogeneous">False</property>
                 <property name="max-children-per-line">4</property>
                 <property name="min-children-per-line">0</property>
                 <property name="orientation">horizontal</property>
                 <property name="row-spacing">16</property>
                 <property name="selection-mode">none</property>
                 <property name="valign">start</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Grid of file cards organized by type</property>
+                </accessibility>
                 <!-- PKGBUILD Card Template -->
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="child">
                       <object class="GtkFrame" id="pkgbuild_card_template">
-                        <property name="css-classes">
-                          <item>card</item>
-                          <item>pkgbuild-card</item>
-                        </property>
+                        <property name="css-classes">card pkgbuild-card</property>
                         <property name="margin-bottom">4</property>
                         <property name="margin-end">4</property>
                         <property name="margin-start">4</property>
                         <property name="margin-top">4</property>
                         <property name="width-request">220</property>
                         <property name="height-request">300</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">PKGBUILD file card template</property>
+                        </accessibility>
                         <property name="child">
                           <object class="GtkBox">
                             <property name="margin-bottom">12</property>
@@ -145,18 +182,26 @@
                                   <object class="GtkImage" id="pkgbuild_icon">
                                     <property name="icon-name">text-x-generic-symbolic</property>
                                     <property name="pixel-size">32</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">PKGBUILD file icon</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="trust_container">
                                     <property name="halign">end</property>
-                                    <property name="hexpand">true</property>
+                                    <property name="hexpand">True</property>
                                     <property name="spacing">4</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Trust level indicators</property>
+                                    </accessibility>
                                     <child>
                                       <object class="GtkImage" id="trust_icon">
                                         <property name="pixel-size">16</property>
-                                        <property name="visible">true</property>
                                         <property name="tooltip-text" translatable="yes">Trust level indicator</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Trust level icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
@@ -167,6 +212,9 @@
                                           <class name="dim-label"/>
                                         </style>
                                         <property name="tooltip-text" translatable="yes">AUR trust level (votes, update time, comments)</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Trust level text description</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -178,35 +226,44 @@
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
                                 <property name="max-width-chars">20</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
                                 <style><class name="heading"/></style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package name</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel" id="pkgbuild_version">
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
-                                <property name="wrap">false</property>
+                                <property name="wrap">False</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package version</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel" id="pkgbuild_download_size">
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
-                                <property name="wrap">false</property>
+                                <property name="wrap">False</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
                                 </style>
                                 <property name="label" translatable="yes">Download Size: N/A</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Download size information</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
@@ -214,23 +271,34 @@
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">2</property>
                                 <property name="halign">center</property>
-                                <property name="visible">true</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Detailed trust metrics</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkLabel" id="pkgbuild_votes_label">
                                     <property name="label" translatable="yes">Votes: 0</property>
                                     <style><class name="caption"/><class name="dim-label"/></style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">AUR community votes</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="pkgbuild_update_time_label">
                                     <property name="label" translatable="yes">Last Update: N/A</property>
                                     <style><class name="caption"/><class name="dim-label"/></style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Last update timestamp</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="pkgbuild_pgp_status_label">
                                     <property name="label" translatable="yes">PGP: Unverified</property>
                                     <style><class name="caption"/><class name="dim-label"/></style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">PGP signature verification status</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -240,14 +308,17 @@
                                 <property name="margin-top">8</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">PKGBUILD action buttons</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkButton" id="build_button">
-                                    <property name="css-classes">
-                                      <item>suggested-action</item>
-                                      <item>pill</item>
-                                    </property>
+                                    <property name="css-classes">suggested-action pill</property>
                                     <property name="label" translatable="yes">Compile Package</property>
                                     <property name="tooltip-text" translatable="yes">Compile the PKGBUILD into an installable package.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Compile package from PKGBUILD</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <!-- Novo botão para compilação com sandboxing -->
@@ -259,9 +330,15 @@
                                       <class name="pill"/>
                                     </style>
                                     <property name="tooltip-text" translatable="yes">Compile in an isolated environment with customizable security settings.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Compile with sandbox security options</property>
+                                    </accessibility>
                                     <property name="popover">
                                       <object class="GtkPopover">
                                         <property name="position">bottom</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Sandbox compilation options</property>
+                                        </accessibility>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="orientation">vertical</property>
@@ -272,25 +349,34 @@
                                             <child>
                                               <object class="GtkComboBoxText" id="pkgbuild_sandbox_level_combo">
                                                 <property name="valign">center</property>
-                                                <property name="hexpand">true</property>
+                                                <property name="hexpand">True</property>
                                                 <items>
                                                   <item translatable="yes" id="strict">Strict Isolation</item>
                                                   <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
                                                   <item translatable="yes" id="minimal">Minimal Isolation</item>
                                                 </items>
                                                 <property name="active">0</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Select sandbox isolation level</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="pkgbuild_sandbox_network_check">
                                                 <property name="label" translatable="yes">Enable network access</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow network access during compilation</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="pkgbuild_sandbox_filesystem_check">
                                                 <property name="label" translatable="yes">Allow access to home directory</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow access to user home directory</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
@@ -301,6 +387,9 @@
                                                   <class name="pill"/>
                                                   <class name="small-button"/>
                                                 </style>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Confirm and start sandbox compilation</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                           </object>
@@ -314,6 +403,9 @@
                                     <property name="label" translatable="yes">Edit PKGBUILD</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Open the PKGBUILD file in your default editor.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Open PKGBUILD file in editor</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
@@ -321,6 +413,9 @@
                                     <property name="label" translatable="yes">View Dependencies</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Show the package dependencies.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Display package dependencies</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
@@ -328,6 +423,9 @@
                                     <property name="label" translatable="yes">Download Sources</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Download the source files required for building.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Download required source files</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -343,16 +441,16 @@
                   <object class="GtkFlowBoxChild">
                     <property name="child">
                       <object class="GtkFrame" id="package_card_template">
-                        <property name="css-classes">
-                          <item>card</item>
-                          <item>package-card</item>
-                        </property>
+                        <property name="css-classes">card package-card</property>
                         <property name="margin-bottom">4</property>
                         <property name="margin-end">4</property>
                         <property name="margin-start">4</property>
                         <property name="margin-top">4</property>
                         <property name="width-request">220</property>
                         <property name="height-request">300</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Package file card template</property>
+                        </accessibility>
                         <property name="child">
                           <object class="GtkBox">
                             <property name="margin-bottom">12</property>
@@ -369,30 +467,40 @@
                                   <object class="GtkImage" id="package_icon">
                                     <property name="icon-name">package-x-generic-symbolic</property>
                                     <property name="pixel-size">32</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Package file icon</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="signature_container">
                                     <property name="halign">end</property>
-                                    <property name="hexpand">true</property>
+                                    <property name="hexpand">True</property>
                                     <property name="spacing">4</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Package signature indicators</property>
+                                    </accessibility>
 
                                     <child>
                                       <object class="GtkImage" id="signature_icon">
                                         <property name="pixel-size">16</property>
-                                        <property name="visible">true</property>
                                         <property name="tooltip-text" translatable="yes">Package signature status</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Signature status icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
 
                                     <child>
                                       <object class="GtkLabel" id="signature_label">
-                                        <property name="visible">true</property>
                                         <property name="ellipsize">end</property>
                                         <style>
                                           <class name="caption"/>
                                         </style>
                                         <property name="tooltip-text" translatable="yes">Signature status (Signed/Unsigned)</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Signature status description</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -404,28 +512,34 @@
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
                                 <property name="max-width-chars">20</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
                                 <style><class name="heading"/></style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package name</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel" id="package_version">
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
-                                <property name="wrap">false</property>
+                                <property name="wrap">False</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package version</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel" id="details_label">
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <property name="justify">center</property>
                                 <property name="max-width-chars">25</property>
@@ -435,6 +549,9 @@
                                   <class name="dim-label"/>
                                 </style>
                                 <property name="label" translatable="yes">Pre-compiled package file.</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package details description</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
@@ -442,14 +559,17 @@
                                 <property name="margin-top">8</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package action buttons</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkButton" id="install_button">
-                                    <property name="css-classes">
-                                      <item>suggested-action</item>
-                                      <item>pill</item>
-                                    </property>
+                                    <property name="css-classes">suggested-action pill</property>
                                     <property name="label" translatable="yes">Install Package</property>
                                     <property name="tooltip-text" translatable="yes">Install the selected .pkg.tar.zst package.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Install package file</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <!-- Novo botão para instalação com sandboxing -->
@@ -461,9 +581,15 @@
                                       <class name="pill"/>
                                     </style>
                                     <property name="tooltip-text" translatable="yes">Install in an isolated environment with customizable security settings.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Install with sandbox security options</property>
+                                    </accessibility>
                                     <property name="popover">
                                       <object class="GtkPopover">
                                         <property name="position">bottom</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Sandbox installation options</property>
+                                        </accessibility>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="orientation">vertical</property>
@@ -474,25 +600,34 @@
                                             <child>
                                               <object class="GtkComboBoxText" id="package_sandbox_level_combo">
                                                 <property name="valign">center</property>
-                                                <property name="hexpand">true</property>
+                                                <property name="hexpand">True</property>
                                                 <items>
                                                   <item translatable="yes" id="strict">Strict Isolation</item>
                                                   <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
                                                   <item translatable="yes" id="minimal">Minimal Isolation</item>
                                                 </items>
                                                 <property name="active">0</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Select sandbox isolation level</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="package_sandbox_network_check">
                                                 <property name="label" translatable="yes">Enable network access</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow network access during installation</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="package_sandbox_filesystem_check">
                                                 <property name="label" translatable="yes">Allow access to home directory</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow access to user home directory</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
@@ -503,6 +638,9 @@
                                                   <class name="pill"/>
                                                   <class name="small-button"/>
                                                 </style>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Confirm and start sandbox installation</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                           </object>
@@ -516,6 +654,9 @@
                                     <property name="label" translatable="yes">View Information</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Display detailed information about the package.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">View detailed package information</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
@@ -523,6 +664,9 @@
                                     <property name="label" translatable="yes">Verify Signature</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Verify the digital signature of the package.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Verify package digital signature</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -538,16 +682,16 @@
                   <object class="GtkFlowBoxChild">
                     <property name="child">
                       <object class="GtkFrame" id="patch_card_template">
-                        <property name="css-classes">
-                          <item>card</item>
-                          <item>patch-card</item>
-                        </property>
+                        <property name="css-classes">card patch-card</property>
                         <property name="margin-bottom">4</property>
                         <property name="margin-end">4</property>
                         <property name="margin-start">4</property>
                         <property name="margin-top">4</property>
                         <property name="width-request">220</property>
                         <property name="height-request">300</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Patch file card template</property>
+                        </accessibility>
                         <property name="child">
                           <object class="GtkBox">
                             <property name="margin-bottom">12</property>
@@ -563,6 +707,9 @@
                                   <object class="GtkImage" id="patch_icon">
                                     <property name="icon-name">text-x-patch-symbolic</property>
                                     <property name="pixel-size">32</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Patch file icon</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -572,12 +719,15 @@
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
                                 <property name="max-width-chars">20</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
                                 <style><class name="heading"/></style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Patch file name</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
@@ -585,12 +735,15 @@
                                 <property name="ellipsize">end</property>
                                 <property name="justify">center</property>
                                 <property name="max-width-chars">25</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Patch description</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
@@ -598,14 +751,17 @@
                                 <property name="margin-top">8</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Patch action buttons</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkButton" id="apply_patch_button">
-                                    <property name="css-classes">
-                                      <item>suggested-action</item>
-                                      <item>pill</item>
-                                    </property>
+                                    <property name="css-classes">suggested-action pill</property>
                                     <property name="label" translatable="yes">Apply Patch</property>
                                     <property name="tooltip-text" translatable="yes">Apply this patch to the relevant source files.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Apply patch to source files</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <!-- Novo botão para aplicação de patch com sandboxing -->
@@ -617,9 +773,15 @@
                                       <class name="pill"/>
                                     </style>
                                     <property name="tooltip-text" translatable="yes">Apply patch in an isolated environment with customizable security settings.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Apply patch with sandbox security options</property>
+                                    </accessibility>
                                     <property name="popover">
                                       <object class="GtkPopover">
                                         <property name="position">bottom</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Sandbox patch application options</property>
+                                        </accessibility>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="orientation">vertical</property>
@@ -630,25 +792,34 @@
                                             <child>
                                               <object class="GtkComboBoxText" id="patch_sandbox_level_combo">
                                                 <property name="valign">center</property>
-                                                <property name="hexpand">true</property>
+                                                <property name="hexpand">True</property>
                                                 <items>
                                                   <item translatable="yes" id="strict">Strict Isolation</item>
                                                   <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
                                                   <item translatable="yes" id="minimal">Minimal Isolation</item>
                                                 </items>
                                                 <property name="active">0</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Select sandbox isolation level</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="patch_sandbox_network_check">
                                                 <property name="label" translatable="yes">Enable network access</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow network access during patching</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="patch_sandbox_filesystem_check">
                                                 <property name="label" translatable="yes">Allow access to home directory</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow access to user home directory</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
@@ -659,6 +830,9 @@
                                                   <class name="pill"/>
                                                   <class name="small-button"/>
                                                 </style>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Confirm and start sandbox patch application</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                           </object>
@@ -672,6 +846,9 @@
                                     <property name="label" translatable="yes">View Diff</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Preview changes in a sandbox mode.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Preview patch changes</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -687,18 +864,18 @@
                   <object class="GtkFlowBoxChild">
                     <property name="child">
                       <object class="GtkFrame" id="advanced_card_template">
-                        <property name="css-classes">
-                          <item>card</item>
-                          <item>advanced-card</item>
-                        </property>
+                        <property name="css-classes">card advanced-card</property>
                         <property name="margin-bottom">4</property>
                         <property name="margin-end">4</property>
                         <property name="margin-start">4</property>
                         <property name="margin-top">4</property>
                         <property name="width-request">220</property>
                         <property name="height-request">300</property>
-                        <property name="hexpand">false</property>
-                        <property name="vexpand">false</property>
+                        <property name="hexpand">False</property>
+                        <property name="vexpand">False</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Advanced operations card template</property>
+                        </accessibility>
                         <property name="child">
                           <object class="GtkBox">
                             <property name="margin-bottom">12</property>
@@ -714,17 +891,23 @@
                                   <object class="GtkImage" id="advanced_icon">
                                     <property name="icon-name">utilities-terminal-symbolic</property>
                                     <property name="pixel-size">32</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Advanced mode terminal icon</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="halign">start</property>
-                                    <property name="hexpand">true</property>
+                                    <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Advanced Mode</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
                                     <style><class name="heading"/></style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Advanced mode title</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -733,11 +916,14 @@
                               <object class="GtkLabel">
                                 <property name="justify">center</property>
                                 <property name="label" translatable="yes">Execute custom commands with safety features</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <style>
                                   <class name="dim-label"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Advanced mode description</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
@@ -745,14 +931,17 @@
                                 <property name="margin-top">8</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Advanced operation buttons</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkButton" id="custom_command_button">
-                                    <property name="css-classes">
-                                      <item>suggested-action</item>
-                                      <item>pill</item>
-                                    </property>
+                                    <property name="css-classes">suggested-action pill</property>
                                     <property name="label" translatable="yes">Execute Custom Command</property>
                                     <property name="tooltip-text" translatable="yes">Run a custom command with auto-complete and real-time terminal.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Execute custom terminal command</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <!-- Novo botão para comandos com sandboxing -->
@@ -764,9 +953,15 @@
                                       <class name="pill"/>
                                     </style>
                                     <property name="tooltip-text" translatable="yes">Run a custom command in an isolated environment with customizable security settings.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Execute command with sandbox security options</property>
+                                    </accessibility>
                                     <property name="popover">
                                       <object class="GtkPopover">
                                         <property name="position">bottom</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Sandbox command execution options</property>
+                                        </accessibility>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="orientation">vertical</property>
@@ -777,25 +972,34 @@
                                             <child>
                                               <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
                                                 <property name="valign">center</property>
-                                                <property name="hexpand">true</property>
+                                                <property name="hexpand">True</property>
                                                 <items>
                                                   <item translatable="yes" id="strict">Strict Isolation</item>
                                                   <item translatable="yes" id="medium">Medium Isolation (Recommended)</item>
                                                   <item translatable="yes" id="minimal">Minimal Isolation</item>
                                                 </items>
                                                 <property name="active">0</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Select sandbox isolation level</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="advanced_sandbox_network_check">
                                                 <property name="label" translatable="yes">Enable network access</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow network access for command</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkCheckButton" id="advanced_sandbox_filesystem_check">
                                                 <property name="label" translatable="yes">Allow access to home directory</property>
-                                                <property name="active">false</property>
+                                                <property name="active">False</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Allow access to user home directory</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
@@ -806,6 +1010,9 @@
                                                   <class name="pill"/>
                                                   <class name="small-button"/>
                                                 </style>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Confirm and start sandbox command</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                           </object>
@@ -819,6 +1026,9 @@
                                     <property name="label" translatable="yes">Simulate Action (Dry Run)</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Show commands without executing them.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Simulate command without execution</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
@@ -826,6 +1036,9 @@
                                     <property name="label" translatable="yes">Consult Documentation</property>
                                     <style><class name="flat"/><class name="pill"/></style>
                                     <property name="tooltip-text" translatable="yes">Access 'man paru' and AUR wiki documentation.</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Access documentation resources</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -841,16 +1054,16 @@
                   <object class="GtkFlowBoxChild">
                     <property name="child">
                       <object class="GtkFrame" id="empty_card_template">
-                        <property name="css-classes">
-                          <item>card</item>
-                          <item>empty-card</item>
-                        </property>
+                        <property name="css-classes">card empty-card</property>
                         <property name="margin-bottom">4</property>
                         <property name="margin-end">4</property>
                         <property name="margin-start">4</property>
                         <property name="margin-top">4</property>
                         <property name="width-request">220</property>
                         <property name="height-request">300</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Empty folder card template</property>
+                        </accessibility>
                         <property name="child">
                           <object class="GtkBox">
                             <property name="halign">center</property>
@@ -866,28 +1079,34 @@
                                 <property name="icon-name">folder-symbolic</property>
                                 <property name="opacity">0.5</property>
                                 <property name="pixel-size">48</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Empty folder icon</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="justify">center</property>
                                 <property name="label" translatable="yes">This folder is empty</property>
-                                <property name="wrap">true</property>
+                                <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
                                 <style><class name="heading"/></style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Empty folder message</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="download_pkgbuild_button">
-                                <property name="css-classes">
-                                  <item>suggested-action</item>
-                                  <item>pill</item>
-                                </property>
+                                <property name="css-classes">suggested-action pill</property>
                                 <property name="label" translatable="yes">Download PKGBUILD</property>
                                 <property name="tooltip-text" translatable="yes">Download a PKGBUILD from AUR. Optional Builder Mode.</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Download PKGBUILD from AUR</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -905,10 +1124,13 @@
           <object class="GtkBox" id="terminal_area">
             <property name="orientation">vertical</property>
             <property name="spacing">8</property>
-            <property name="visible">false</property>
+            <property name="visible">False</property>
             <property name="margin-top">12</property>
             <property name="margin-bottom">12</property>
-            <property name="css-classes"><item>terminal-box</item></property>
+            <property name="css-classes">terminal-box</property>
+            <accessibility>
+              <property name="label" translatable="yes">Terminal output area</property>
+            </accessibility>
 
             <child>
               <object class="GtkBox" id="terminal_toolbar">
@@ -917,6 +1139,9 @@
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
                 <property name="margin-top">6</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Terminal control toolbar</property>
+                </accessibility>
 
                 <child>
                   <object class="GtkLabel" id="terminal_label">
@@ -926,19 +1151,28 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                     <style><class name="heading"/></style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal output section title</property>
+                    </accessibility>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="halign">end</property>
-                    <property name="hexpand">true</property>
+                    <property name="hexpand">True</property>
                     <property name="spacing">6</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal control buttons</property>
+                    </accessibility>
                     <child>
                       <object class="GtkToggleButton" id="autoscroll_toggle">
                         <property name="label" translatable="yes">Auto-scroll</property>
-                        <property name="active">true</property>
+                        <property name="active">True</property>
                         <style><class name="flat"/></style>
                         <property name="tooltip-text" translatable="yes">Automatically scroll to the bottom of the terminal output.</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Toggle automatic scrolling</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -946,6 +1180,9 @@
                         <property name="label" translatable="yes">Clear</property>
                         <style><class name="flat"/></style>
                         <property name="tooltip-text" translatable="yes">Clear the terminal output.</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Clear terminal output</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -953,6 +1190,9 @@
                         <property name="label" translatable="yes">Hide</property>
                         <style><class name="flat"/></style>
                         <property name="tooltip-text" translatable="yes">Hide the terminal output panel.</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Hide terminal panel</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -964,6 +1204,9 @@
                         </items>
                         <property name="active-id">std</property>
                         <property name="tooltip-text" translatable="yes">Select the level of detail for terminal output.</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Terminal output detail level selector</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -973,25 +1216,31 @@
             <child>
               <object class="GtkScrolledWindow" id="terminal_scrolled_window">
                 <property name="hscrollbar-policy">automatic</property>
-                <property name="vexpand">true</property>
+                <property name="vexpand">True</property>
                 <property name="vscrollbar-policy">automatic</property>
                 <property name="height-request">200</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
                 <property name="margin-bottom">12</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Terminal output scrollable view</property>
+                </accessibility>
                 <child>
                   <object class="GtkTextView" id="terminal_output_view">
                     <property name="bottom-margin">8</property>
-                    <property name="cursor-visible">false</property>
-                    <property name="editable">false</property>
+                    <property name="cursor-visible">False</property>
+                    <property name="editable">False</property>
                     <property name="left-margin">8</property>
-                    <property name="monospace">true</property>
+                    <property name="monospace">True</property>
                     <property name="right-margin">8</property>
                     <property name="top-margin">8</property>
                     <property name="wrap-mode">word</property>
                     <style>
                       <class name="terminal-view"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal output text view</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -1004,14 +1253,20 @@
       <object class="GtkBox" id="status_bar">
         <property name="margin-top">8</property>
         <property name="spacing">12</property>
+        <accessibility>
+          <property name="label" translatable="yes">Status bar with file count information</property>
+        </accessibility>
         <child>
           <object class="GtkLabel" id="file_count_label">
             <property name="halign">start</property>
-            <property name="hexpand">true</property>
+            <property name="hexpand">True</property>
             <property name="label" translatable="yes">0 files found</property>
             <style>
               <class name="dim-label"/>
             </style>
+            <accessibility>
+              <property name="label" translatable="yes">File count display</property>
+            </accessibility>
           </object>
         </child>
       </object>

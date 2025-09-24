@@ -1,53 +1,133 @@
-/* pkgbuild-review.css */
-
 .risk-critical {
-  background-color: @error_color;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    alpha(@theme_fg_color, 0.3),
-    alpha(@theme_fg_color, 0.3) 10px,
-    alpha(@theme_fg_color, 0.4) 10px,
-    alpha(@theme_fg_color, 0.4) 20px
-  );
-  color: @theme_fg_color;
-  font-weight: bold;
+    background-color: @error_color;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        alpha(@theme_fg_color, 0.3),
+        alpha(@theme_fg_color, 0.3) 10px,
+        alpha(@theme_fg_color, 0.4) 10px,
+        alpha(@theme_fg_color, 0.4) 20px
+    );
+    color: @theme_fg_color;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 0;
 }
 
+/* High Risk - Laranja com padrão diagonal invertido */
 .risk-high {
-  background-color: shade(@warning_color, 0.8);
-  background-image: repeating-linear-gradient(
-    45deg,
-    alpha(@theme_fg_color, 0.2),
-    alpha(@theme_fg_color, 0.2) 8px,
-    transparent 8px,
-    transparent 16px
-  );
-  color: @theme_fg_color;
+    background-color: shade(@warning_color, 0.8);
+    background-image: repeating-linear-gradient(
+        45deg,
+        alpha(@theme_fg_color, 0.2),
+        alpha(@theme_fg_color, 0.2) 8px,
+        transparent 8px,
+        transparent 16px
+    );
+    color: @theme_fg_color;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 0;
 }
 
+/* Medium Risk - Amarelo com padrão horizontal */
 .risk-medium {
-  background-color: @warning_color;
-  background-image: repeating-linear-gradient(
-    0deg,
-    alpha(@theme_fg_color, 0.1),
-    alpha(@theme_fg_color, 0.1) 2px,
-    transparent 2px,
-    transparent 4px
-  );
-  color: @theme_fg_color;
+    background-color: @warning_color;
+    background-image: repeating-linear-gradient(
+        0deg,
+        alpha(@theme_fg_color, 0.1),
+        alpha(@theme_fg_color, 0.1) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    color: @theme_fg_color;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 0;
 }
 
+/* Low Risk - Amarelo suave sem padrão */
 .risk-low {
-  background-color: mix(@warning_color, @theme_bg_color, 0.3);
-  color: @theme_fg_color;
+    background-color: mix(@warning_color, @theme_bg_color, 0.3);
+    color: @theme_fg_color;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 0;
 }
 
+/* --- Step Navigation Buttons --- */
+
+/* Botão padrão de step */
 .step-button {
-  padding: 6px 12px;
-  border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin: 2px;
+    transition: all 200ms ease-in-out;
+    background-color: transparent;
+    color: @theme_fg_color;
 }
 
+/* Step ativo */
 .step-button.active-step {
-  background-color: alpha(@theme_selected_bg_color, 0.1);
-  font-weight: bold;
+    background-color: alpha(@theme_selected_bg_color, 0.15);
+    color: @theme_selected_fg_color;
+    font-weight: bold;
+    border: 1px solid alpha(@theme_selected_bg_color, 0.4);
+}
+
+/* Step hover */
+.step-button:hover {
+    background-color: alpha(@theme_selected_bg_color, 0.08);
+    color: @theme_fg_color;
+}
+
+/* Step disabled */
+.step-button:disabled {
+    opacity: 0.5;
+    color: @insensitive_fg_color;
+}
+
+/* --- Risk Indicators - Variações Adicionais --- */
+
+/* Para textos dentro de cards de risco */
+.risk-critical .risk-text {
+    text-shadow: 0 1px 2px alpha(@theme_bg_color, 0.8);
+}
+
+.risk-high .risk-text {
+    text-shadow: 0 1px 1px alpha(@theme_bg_color, 0.6);
+}
+
+/* Para ícones de risco */
+.risk-icon.critical {
+    color: @error_color;
+}
+
+.risk-icon.high {
+    color: @warning_color;
+}
+
+.risk-icon.medium {
+    color: shade(@warning_color, 1.2);
+}
+
+.risk-icon.low {
+    color: mix(@warning_color, @theme_fg_color, 0.6);
+}
+
+/* --- Melhorias para Acessibilidade --- */
+
+/* Foco visível em elementos de risco */
+.risk-critical:focus,
+.risk-high:focus,
+.risk-medium:focus,
+.risk-low:focus {
+    outline: 2px solid @theme_selected_bg_color;
+    outline-offset: 2px;
+}
+
+/* Contraste melhorado para step buttons */
+.step-button:focus {
+    outline: 2px solid @theme_selected_bg_color;
+    outline-offset: 1px;
 }

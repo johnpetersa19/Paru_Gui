@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
+  <requires lib="gio" version="2.0"/>
   <template class="ParuSearchBar" parent="GtkBox">
     <property name="orientation">horizontal</property>
     <property name="spacing">12</property>
@@ -9,20 +10,25 @@
     <property name="margin-top">8</property>
     <property name="margin-bottom">8</property>
     <property name="halign">center</property>
-    <property name="css-classes">
-      <item>search-bar</item>
-    </property>
+    <property name="css-classes">search-bar</property>
+    <accessibility>
+      <property name="label" translatable="yes">Package search bar with options</property>
+    </accessibility>
 
     <child>
       <object class="GtkSearchEntry" id="search_entry">
         <property name="placeholder-text" translatable="yes">Search packages (e.g. firefox, paru -Ss keyword) or type commands</property>
-        <property name="hexpand">true</property>
+        <property name="hexpand">True</property>
         <signal name="search-changed" handler="on_search_changed" swapped="no"/>
         <signal name="activate" handler="on_search_activated" swapped="no"/>
         <style>
           <class name="rounded"/>
         </style>
         <property name="tooltip-text" translatable="yes">Enter package name or paru search command. Type '-c' for command assistant.</property>
+        <accessibility>
+          <property name="label" translatable="yes">Package search input field</property>
+          <property name="description" translatable="yes">Search for packages by name or use paru commands</property>
+        </accessibility>
       </object>
     </child>
 
@@ -35,12 +41,19 @@
           <class name="flat"/>
           <class name="circular"/>
         </style>
+        <accessibility>
+          <property name="label" translatable="yes">Clear search button</property>
+          <property name="description" translatable="yes">Clear the search input field</property>
+        </accessibility>
       </object>
     </child>
 
     <child>
       <object class="GtkSeparator">
         <property name="orientation">vertical</property>
+        <accessibility>
+          <property name="label" translatable="yes">Visual separator</property>
+        </accessibility>
       </object>
     </child>
 
@@ -53,6 +66,10 @@
           <class name="flat"/>
           <class name="circular"/>
         </style>
+        <accessibility>
+          <property name="label" translatable="yes">Search options button</property>
+          <property name="description" translatable="yes">Access advanced search options and command assistant</property>
+        </accessibility>
       </object>
     </child>
   </template>

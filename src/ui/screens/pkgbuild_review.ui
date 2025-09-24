@@ -1,14 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.0"/>
-  <!-- As propriedades de janela (default-height, default-width, modal, resizable)
-       serão definidas no código Python para AdwDialog. -->
+  <requires lib="gio" version="2.0"/>
+
   <template class="PkgbuildReviewDialog" parent="AdwDialog">
     <property name="title" translatable="yes">PKGBUILD Security Review</property>
-    <!-- O AdwDialog gerencia seu próprio AdwHeaderBar. -->
+    <accessibility>
+      <property name="label">PKGBUILD security analysis and review dialog</property>
+    </accessibility>
 
-    <!-- Conteúdo principal do diálogo, dentro de um único 'child' -->
     <child>
       <object class="GtkBox" id="main_box">
         <property name="margin-bottom">12</property>
@@ -17,8 +18,8 @@
         <property name="margin-top">12</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
-        <property name="vexpand">True</property> <!-- Adicionado para o box principal expandir -->
-        <property name="hexpand">True</property> <!-- Adicionado para o box principal expandir -->
+        <property name="vexpand">True</property>
+        <property name="hexpand">True</property>
 
         <child>
           <object class="GtkBox" id="package_info_box">
@@ -28,6 +29,9 @@
               <object class="GtkImage" id="package_icon">
                 <property name="icon-name">text-x-generic</property>
                 <property name="pixel-size">48</property>
+                <accessibility>
+                  <property name="label">PKGBUILD file icon</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -44,17 +48,23 @@
                           <attribute name="weight" value="bold"/>
                           <attribute name="size" value="16000"/>
                         </attributes>
+                        <accessibility>
+                          <property name="label">Package name</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="package_trust_label">
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes"/>
-                        <property name="visible">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="visible">True</property>
                         <style>
                           <class name="success-color"/>
                         </style>
                         <property name="tooltip-text" translatable="yes">Overall trust level of the PKGBUILD.</property>
+                        <accessibility>
+                          <property name="label">Package trust level indicator</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -87,6 +97,9 @@
                       <class name="dim-label"/>
                     </style>
                     <property name="tooltip-text" translatable="yes">Full path to the PKGBUILD file.</property>
+                    <accessibility>
+                      <property name="label">PKGBUILD file path</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -107,7 +120,7 @@
             </child>
             <child>
               <object class="GtkToggleButton" id="step1_button">
-                <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                <property name="active">True</property>
                 <property name="label" translatable="yes">1. Critical Changes</property>
                 <property name="name">step1</property>
                 <signal name="toggled" handler="on_step_toggled"/>
@@ -117,6 +130,9 @@
                   <class name="active-step"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Review changes in critical PKGBUILD sections.</property>
+                <accessibility>
+                  <property name="label">Step 1 - Review critical PKGBUILD changes</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -129,6 +145,9 @@
                   <class name="step-button"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Check for potential security risks.</property>
+                <accessibility>
+                  <property name="label">Step 2 - Security risk checklist</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -137,7 +156,7 @@
           <object class="GtkBox" id="step1_content">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="visible">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+            <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="step1_description">
                 <property name="label" translatable="yes">Review critical changes in the PKGBUILD that may affect security:</property>
@@ -177,17 +196,23 @@
                     <child>
                       <object class="GtkScrolledWindow" id="source_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="vexpand">True</property>
                         <property name="vscrollbar-policy">automatic</property>
+                        <accessibility>
+                          <property name="label">Source URLs diff view</property>
+                        </accessibility>
                         <child>
                           <object class="GtkTextView" id="source_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
-                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="cursor-visible">False</property>
+                            <property name="editable">False</property>
                             <property name="left-margin">8</property>
-                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="monospace">True</property>
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
+                            <accessibility>
+                              <property name="label">Source URLs changes and differences</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -222,17 +247,23 @@
                     <child>
                       <object class="GtkScrolledWindow" id="prepare_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="vexpand">True</property>
                         <property name="vscrollbar-policy">automatic</property>
+                        <accessibility>
+                          <property name="label">Prepare function diff view</property>
+                        </accessibility>
                         <child>
                           <object class="GtkTextView" id="prepare_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
-                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="cursor-visible">False</property>
+                            <property name="editable">False</property>
                             <property name="left-margin">8</property>
-                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="monospace">True</property>
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
+                            <accessibility>
+                              <property name="label">Prepare function changes and commands</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -267,17 +298,23 @@
                     <child>
                       <object class="GtkScrolledWindow" id="package_diff_scroll">
                         <property name="hscrollbar-policy">automatic</property>
-                        <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="vexpand">True</property>
                         <property name="vscrollbar-policy">automatic</property>
+                        <accessibility>
+                          <property name="label">Package function diff view</property>
+                        </accessibility>
                         <child>
                           <object class="GtkTextView" id="package_diff_view">
                             <property name="bottom-margin">8</property>
-                            <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
-                            <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                            <property name="cursor-visible">False</property>
+                            <property name="editable">False</property>
                             <property name="left-margin">8</property>
-                            <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="monospace">True</property>
                             <property name="right-margin">8</property>
                             <property name="top-margin">8</property>
+                            <accessibility>
+                              <property name="label">Package function installation commands</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -292,7 +329,7 @@
           <object class="GtkBox" id="step2_content">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+            <property name="visible">False</property>
             <child>
               <object class="GtkLabel" id="step2_description">
                 <property name="label" translatable="yes">Check for potential security risks before proceeding:</property>
@@ -309,8 +346,11 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_sudo_check">
-                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
-                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="active">True</property>
+                        <property name="inconsistent">False</property>
+                        <accessibility>
+                          <property name="label">Sudo commands risk indicator</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -328,7 +368,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_sudo_description">
                             <property name="label" translatable="yes">PKGBUILD contains sudo commands which could modify system files. This is dangerous unless it's an official package.</property>
-                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -345,8 +385,11 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_unverified_sources_check">
-                        <property name="active">False</property> <!-- Certificado que está com 'F' maiúsculo -->
-                        <property name="inconsistent">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="active">False</property>
+                        <property name="inconsistent">True</property>
+                        <accessibility>
+                          <property name="label">Unverified sources risk indicator</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -364,7 +407,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_unverified_sources_description">
                             <property name="label" translatable="yes">Source URLs are not from trusted domains or lack proper verification. Consider verifying the source authenticity.</property>
-                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -381,8 +424,11 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_system_modification_check">
-                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
-                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="active">True</property>
+                        <property name="inconsistent">False</property>
+                        <accessibility>
+                          <property name="label">System modification risk indicator</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -400,7 +446,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_system_modification_description">
                             <property name="label" translatable="yes">PKGBUILD modifies system files outside standard package directories. This could cause system instability.</property>
-                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -417,8 +463,11 @@
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkCheckButton" id="risk_patch_sources_check">
-                        <property name="active">True</property> <!-- Certificado que está com 'T' maiúsculo -->
-                        <property name="inconsistent">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="active">True</property>
+                        <property name="inconsistent">False</property>
+                        <accessibility>
+                          <property name="label">External patches risk indicator</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -436,7 +485,7 @@
                         <child>
                           <object class="GtkLabel" id="risk_patch_sources_description">
                             <property name="label" translatable="yes">PKGBUILD applies patches from external sources. Ensure patches are from trusted repositories.</property>
-                            <property name="wrap">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -459,6 +508,9 @@
                         <style>
                           <class name="warning-color"/>
                         </style>
+                        <accessibility>
+                          <property name="label">Security warning icon</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -600,17 +652,23 @@
                   <object class="GtkScrolledWindow" id="heatmap_scroll">
                     <property name="height-request">150</property>
                     <property name="hscrollbar-policy">automatic</property>
-                    <property name="vexpand">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                    <property name="vexpand">True</property>
                     <property name="vscrollbar-policy">automatic</property>
+                    <accessibility>
+                      <property name="label">Risk analysis heatmap visualization</property>
+                    </accessibility>
                     <child>
                       <object class="GtkTextView" id="heatmap_view">
                         <property name="bottom-margin">8</property>
-                        <property name="cursor-visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
-                        <property name="editable">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                        <property name="cursor-visible">False</property>
+                        <property name="editable">False</property>
                         <property name="left-margin">8</property>
-                        <property name="monospace">True</property> <!-- Certificado que está com 'T' maiúsculo -->
+                        <property name="monospace">True</property>
                         <property name="right-margin">8</property>
                         <property name="top-margin">8</property>
+                        <accessibility>
+                          <property name="label">PKGBUILD code with risk highlighting</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -620,96 +678,111 @@
           </object>
         </child>
 
-				<!-- Sandboxing Options Section -->
-<child>
-  <object class="GtkExpander" id="sandbox_expander">
-    <property name="label" translatable="yes">Sandbox Settings</property>
-    <property name="expanded">False</property>
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">8</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-bottom">12</property>
-
-        <!-- Enable sandboxing checkbox -->
+        <!-- Sandboxing Options Section -->
         <child>
-          <object class="GtkCheckButton" id="enable_sandbox_check">
-            <property name="label" translatable="yes">Run in sandboxed environment</property>
-            <property name="active">True</property>
-            <signal name="toggled" handler="on_sandbox_toggled"/>
-          </object>
-        </child>
-
-        <!-- Sandbox options (only visible when enabled) -->
-        <child>
-          <object class="GtkBox" id="sandbox_options_box">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <property name="margin-start">12</property>
-
-            <!-- Isolation level -->
+          <object class="GtkExpander" id="sandbox_expander">
+            <property name="label" translatable="yes">Sandbox Settings</property>
+            <property name="expanded">False</property>
+            <accessibility>
+              <property name="label">Sandbox configuration options for secure build</property>
+            </accessibility>
             <child>
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">6</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-bottom">12</property>
 
+                <!-- Enable sandboxing checkbox -->
                 <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">Isolation Level:</property>
-                    <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                  <object class="GtkCheckButton" id="enable_sandbox_check">
+                    <property name="label" translatable="yes">Run in sandboxed environment</property>
+                    <property name="active">True</property>
+                    <signal name="toggled" handler="on_sandbox_toggled"/>
+                    <accessibility>
+                      <property name="label">Enable sandbox isolation for PKGBUILD build</property>
+                    </accessibility>
                   </object>
                 </child>
 
+                <!-- Sandbox options (only visible when enabled) -->
                 <child>
-                  <object class="GtkComboBoxText" id="sandbox_level_combo">
-                    <items>
-                      <item translatable="yes" id="strict">Strict</item>
-                      <item translatable="yes" id="medium">Medium</item>
-                      <item translatable="yes" id="minimal">Minimal</item>
-                    </items>
-                    <property name="active">0</property>
+                  <object class="GtkBox" id="sandbox_options_box">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="margin-start">12</property>
+
+                    <!-- Isolation level -->
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Isolation Level:</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">True</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkComboBoxText" id="sandbox_level_combo">
+                            <items>
+                              <item translatable="yes" id="strict">Strict</item>
+                              <item translatable="yes" id="medium">Medium</item>
+                              <item translatable="yes" id="minimal">Minimal</item>
+                            </items>
+                            <property name="active">0</property>
+                            <accessibility>
+                              <property name="label">Select sandbox isolation level</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Network access -->
+                    <child>
+                      <object class="GtkCheckButton" id="sandbox_network_check">
+                        <property name="label" translatable="yes">Allow network access</property>
+                        <property name="active">False</property>
+                        <accessibility>
+                          <property name="label">Allow sandbox to access network during build</property>
+                        </accessibility>
+                      </object>
+                    </child>
+
+                    <!-- Home directory access -->
+                    <child>
+                      <object class="GtkCheckButton" id="sandbox_home_check">
+                        <property name="label" translatable="yes">Allow access to home directory</property>
+                        <property name="active">False</property>
+                        <accessibility>
+                          <property name="label">Allow sandbox to access home directory</property>
+                        </accessibility>
+                      </object>
+                    </child>
+
+                    <!-- Explanation label -->
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Sandboxing uses bubblewrap for secure isolation. Some packages may require adjusted settings.</property>
+                        <property name="wrap">True</property>
+                        <property name="xalign">0</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
-              </object>
-            </child>
-
-            <!-- Network access -->
-            <child>
-              <object class="GtkCheckButton" id="sandbox_network_check">
-                <property name="label" translatable="yes">Allow network access</property>
-                <property name="active">False</property>
-              </object>
-            </child>
-
-            <!-- Home directory access -->
-            <child>
-              <object class="GtkCheckButton" id="sandbox_home_check">
-                <property name="label" translatable="yes">Allow access to home directory</property>
-                <property name="active">False</property>
-              </object>
-            </child>
-
-            <!-- Explanation label -->
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Sandboxing uses bubblewrap for secure isolation. Some packages may require adjusted settings.</property>
-                <property name="wrap">True</property>
-                <property name="xalign">0</property>
-                <style>
-                  <class name="caption"/>
-                  <class name="dim-label"/>
-                </style>
               </object>
             </child>
           </object>
         </child>
-      </object>
-    </child>
-  </object>
-</child>
 
         <!-- Action area: Direto no box principal -->
         <child>
@@ -717,25 +790,31 @@
             <property name="margin-bottom">12</property>
             <property name="margin-end">12</property>
             <property name="margin-start">12</property>
-            <property name="margin-top">12</property> <!-- Adicionado margem superior para espaçamento -->
+            <property name="margin-top">12</property>
             <property name="orientation">horizontal</property>
             <property name="spacing">6</property>
-            <property name="halign">end</property> <!-- Adicionado halign para alinhar à direita -->
+            <property name="halign">end</property>
 
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
                 <signal name="clicked" handler="on_cancel_clicked"/>
+                <accessibility>
+                  <property name="label">Cancel security review and close dialog</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="previous_button">
                 <property name="label" translatable="yes">Previous</property>
-                <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                <property name="visible">False</property>
                 <signal name="clicked" handler="on_previous_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
+                <accessibility>
+                  <property name="label">Go to previous review step</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -745,16 +824,22 @@
                 <style>
                   <class name="flat"/>
                 </style>
+                <accessibility>
+                  <property name="label">Go to next review step</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="build_button">
                 <property name="label" translatable="yes">Build Package</property>
-                <property name="visible">False</property> <!-- Certificado que está com 'F' maiúsculo -->
+                <property name="visible">False</property>
                 <signal name="clicked" handler="on_build_clicked"/>
                 <style>
                   <class name="suggested-action"/>
                 </style>
+                <accessibility>
+                  <property name="label">Build package after security review completion</property>
+                </accessibility>
               </object>
             </child>
           </object>

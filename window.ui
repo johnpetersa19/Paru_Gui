@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Created with Cambalache 0.97.8 -->
-<interface>
+<interface domain="paru-gui">
   <!-- interface-name window.ui -->
   <requires lib="gtk" version="4.0"/>
   <requires lib="gio" version="2.0"/>
@@ -15,25 +15,13 @@
         <child>
           <!-- Header Bar -->
           <object class="GtkHeaderBar" id="header_bar">
-            <property name="can-focus">True</property>
-            <property name="can-target">True</property>
-            <property name="focus-on-click">True</property>
-            <property name="focusable">False</property>
-            <property name="has-tooltip">False</property>
-            <property name="hexpand">False</property>
-            <property name="hexpand-set">False</property>
-            <property name="receives-default">False</property>
-            <property name="sensitive">True</property>
             <property name="show-title-buttons">False</property>
-            <property name="vexpand">False</property>
-            <property name="vexpand-set">False</property>
-            <property name="visible">True</property>
             <child type="start">
               <object class="GtkMenuButton" id="app_menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">primary_menu</property>
                 <accessibility>
-                  <state name="busy">False</state>
+                  <property name="label">Application menu</property>
                 </accessibility>
               </object>
             </child>
@@ -41,18 +29,18 @@
               <object class="GtkSearchEntry" id="search_entry">
                 <property name="placeholder-text">Search packages...</property>
                 <property name="width-request">400</property>
+                <accessibility>
+                  <property name="label">Search packages</property>
+                </accessibility>
               </object>
             </child>
             <child type="end">
               <object class="GtkButton" id="help_button">
-                <property name="can-focus">True</property>
-                <property name="can-shrink">False</property>
-                <property name="can-target">True</property>
-                <property name="focus-on-click">True</property>
-                <property name="focusable">True</property>
-                <property name="has-frame">True</property>
                 <property name="icon-name">help-about-symbolic</property>
                 <property name="tooltip-text">Help</property>
+                <accessibility>
+                  <property name="label">Help and About</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -83,13 +71,13 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="css-classes">title-1</property>
-                        <property name="label">Paru Package Manager</property>
+                        <property name="label" translatable="yes">Paru Package Manager</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="css-classes">dim-label</property>
-                        <property name="label">Select a PKGBUILD file or directory to get started</property>
+                        <property name="label" translatable="yes">Select a PKGBUILD file or directory to get started</property>
                       </object>
                     </child>
                     <child>
@@ -99,13 +87,19 @@
                         <child>
                           <object class="GtkButton" id="select_file_button">
                             <property name="css-classes">suggested-action</property>
-                            <property name="label">Select File</property>
+                            <property name="label" translatable="yes">Select File</property>
+                            <accessibility>
+                              <property name="label">Select PKGBUILD file</property>
+                            </accessibility>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="select_folder_button">
                             <property name="css-classes">suggested-action</property>
-                            <property name="label">Select Folder</property>
+                            <property name="label" translatable="yes">Select Folder</property>
+                            <accessibility>
+                              <property name="label">Select directory containing PKGBUILD</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -113,7 +107,7 @@
                     <child>
                       <object class="GtkLabel" id="recent_dirs_label">
                         <property name="css-classes">heading</property>
-                        <property name="label">Recent Directories</property>
+                        <property name="label" translatable="yes">Recent Directories</property>
                         <property name="margin-top">24</property>
                       </object>
                     </child>
@@ -122,12 +116,15 @@
                         <property name="halign">center</property>
                         <property name="max-children-per-line">3</property>
                         <property name="selection-mode">none</property>
+                        <accessibility>
+                          <property name="label">Recent directories list</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
                 </property>
                 <property name="name">welcome</property>
-                <property name="title">Welcome</property>
+                <property name="title" translatable="yes">Welcome</property>
               </object>
             </child>
             <child>
@@ -150,6 +147,9 @@
                             <property name="max-children-per-line">3</property>
                             <property name="row-spacing">12</property>
                             <property name="selection-mode">none</property>
+                            <accessibility>
+                              <property name="label">Package content cards</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -165,7 +165,10 @@
                         <child>
                           <object class="GtkButton" id="back_button">
                             <property name="halign">start</property>
-                            <property name="label">Back</property>
+                            <property name="label" translatable="yes">Back</property>
+                            <accessibility>
+                              <property name="label">Go back to previous screen</property>
+                            </accessibility>
                           </object>
                         </child>
                         <child>
@@ -175,7 +178,7 @@
                             <child>
                               <object class="GtkLabel" id="status_label">
                                 <property name="css-classes">dim-label</property>
-                                <property name="label">Ready</property>
+                                <property name="label" translatable="yes">Ready</property>
                               </object>
                             </child>
                           </object>
@@ -184,7 +187,10 @@
                           <object class="GtkButton" id="action_button">
                             <property name="css-classes">suggested-action</property>
                             <property name="halign">end</property>
-                            <property name="label">Action</property>
+                            <property name="label" translatable="yes">Action</property>
+                            <accessibility>
+                              <property name="label">Execute primary action</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -192,7 +198,7 @@
                   </object>
                 </property>
                 <property name="name">content</property>
-                <property name="title">Content</property>
+                <property name="title" translatable="yes">Content</property>
               </object>
             </child>
             <child>
@@ -213,13 +219,16 @@
                     <child>
                       <object class="GtkLabel" id="processing_label">
                         <property name="css-classes">title-2</property>
-                        <property name="label">Processing...</property>
+                        <property name="label" translatable="yes">Processing...</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkProgressBar" id="processing_progress">
                         <property name="show-text">True</property>
                         <property name="width-request">400</property>
+                        <accessibility>
+                          <property name="label">Processing progress</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -231,6 +240,9 @@
                             <property name="editable">False</property>
                             <property name="monospace">True</property>
                             <property name="wrap-mode">word</property>
+                            <accessibility>
+                              <property name="label">Processing log output</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -241,12 +253,18 @@
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkButton" id="cancel_button">
-                            <property name="label">Cancel</property>
+                            <property name="label" translatable="yes">Cancel</property>
+                            <accessibility>
+                              <property name="label">Cancel current operation</property>
+                            </accessibility>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="details_button">
-                            <property name="label">Details</property>
+                            <property name="label" translatable="yes">Details</property>
+                            <accessibility>
+                              <property name="label">Show operation details</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -254,7 +272,7 @@
                   </object>
                   </property>
                 <property name="name">processing</property>
-                <property name="title">Processing</property>
+                <property name="title" translatable="yes">Processing</property>
               </object>
             </child>
             <!-- NEW STACK PAGE FOR UPSTREAM UPDATES -->
@@ -292,6 +310,9 @@
                             <property name="row-spacing">18</property>
                             <property name="selection-mode">none</property>
                             <property name="valign">start</property>
+                            <accessibility>
+                              <property name="label">Upstream package updates list</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -305,6 +326,9 @@
                           <object class="GtkButton" id="refresh_updates_button">
                             <property name="label" translatable="yes">Refresh Updates</property>
                             <property name="icon-name">view-refresh-symbolic</property>
+                            <accessibility>
+                              <property name="label">Refresh upstream updates list</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -325,27 +349,27 @@
     <section>
       <item>
         <attribute name="action">app.system</attribute>
-        <attribute name="label">System</attribute>
+        <attribute name="label" translatable="yes">System</attribute>
       </item>
       <item>
         <attribute name="action">app.statistics</attribute>
-        <attribute name="label">Statistics</attribute>
+        <attribute name="label" translatable="yes">Statistics</attribute>
       </item>
       <item>
         <attribute name="action">app.arch-news</attribute>
-        <attribute name="label">Arch News</attribute>
+        <attribute name="label" translatable="yes">Arch News</attribute>
       </item>
       <item>
         <attribute name="action">app.clean-cache</attribute>
-        <attribute name="label">Clean Cache</attribute>
+        <attribute name="label" translatable="yes">Clean Cache</attribute>
       </item>
       <item>
         <attribute name="action">app.update-system</attribute>
-        <attribute name="label">Update System</attribute>
+        <attribute name="label" translatable="yes">Update System</attribute>
       </item>
       <item>
         <attribute name="action">app.initial-tour</attribute>
-        <attribute name="label">Initial Tour</attribute>
+        <attribute name="label" translatable="yes">Initial Tour</attribute>
       </item>
       <item>
         <attribute name="action">app.show-upstream-updates</attribute>
@@ -355,82 +379,82 @@
     <section>
       <item>
         <attribute name="action">app.preferences</attribute>
-        <attribute name="label">Preferences</attribute>
+        <attribute name="label" translatable="yes">Preferences</attribute>
       </item>
       <submenu>
-        <attribute name="label">Trust Levels</attribute>
+        <attribute name="label" translatable="yes">Trust Levels</attribute>
         <item>
           <attribute name="action">app.show-trust-icons</attribute>
-          <attribute name="label">Show Trust Icons</attribute>
+          <attribute name="label" translatable="yes">Show Trust Icons</attribute>
         </item>
         <item>
           <attribute name="action">app.block-unvoted</attribute>
-          <attribute name="label">Block Unvoted Packages</attribute>
+          <attribute name="label" translatable="yes">Block Unvoted Packages</attribute>
         </item>
         <item>
           <attribute name="action">app.consider-update-time</attribute>
-          <attribute name="label">Consider Update Time</attribute>
+          <attribute name="label" translatable="yes">Consider Update Time</attribute>
         </item>
         <item>
           <attribute name="action">app.check-comments</attribute>
-          <attribute name="label">Check Recent Comments</attribute>
+          <attribute name="label" translatable="yes">Check Recent Comments</attribute>
         </item>
       </submenu>
       <submenu>
-          <attribute name="label">Simplified Mode</attribute>
+          <attribute name="label" translatable="yes">Simplified Mode</attribute>
         <item>
           <attribute name="action">app.hide-advanced</attribute>
-          <attribute name="label">Hide Advanced Options</attribute>
+          <attribute name="label" translatable="yes">Hide Advanced Options</attribute>
         </item>
       </submenu>
       <submenu>
-        <attribute name="label">Developer Mode</attribute>
+        <attribute name="label" translatable="yes">Developer Mode</attribute>
         <item>
           <attribute name="action">app.check-devel</attribute>
-          <attribute name="label">Check Devel Updates</attribute>
+          <attribute name="label" translatable="yes">Check Devel Updates</attribute>
         </item>
         <item>
           <attribute name="action">app.ignore-packages</attribute>
-          <attribute name="label">Ignore Specific Packages</attribute>
+          <attribute name="label" translatable="yes">Ignore Specific Packages</attribute>
         </item>
         <item>
           <attribute name="action">app.clean-after-build</attribute>
-          <attribute name="label">Clean After Build</attribute>
+          <attribute name="label" translatable="yes">Clean After Build</attribute>
         </item>
         <item>
           <attribute name="action">app.review-pkgbuild</attribute>
-          <attribute name="label">Review PKGBUILD</attribute>
+          <attribute name="label" translatable="yes">Review PKGBUILD</attribute>
         </item>
         <submenu>
-          <attribute name="label">Debugging</attribute>
+          <attribute name="label" translatable="yes">Debugging</attribute>
           <item>
             <attribute name="action">app.install-debug</attribute>
-            <attribute name="label">Install Debug Packages</attribute>
+            <attribute name="label" translatable="yes">Install Debug Packages</attribute>
           </item>
           <item>
             <attribute name="action">app.show-warnings</attribute>
-            <attribute name="label">Show Detailed Warnings</attribute>
+            <attribute name="label" translatable="yes">Show Detailed Warnings</attribute>
           </item>
           <item>
             <attribute name="action">app.show-terminal</attribute>
-            <attribute name="label">Show Real-time Terminal</attribute>
+            <attribute name="label" translatable="yes">Show Real-time Terminal</attribute>
           </item>
         </submenu>
       </submenu>
       <item>
         <attribute name="action">app.action-history</attribute>
-        <attribute name="label">Action History</attribute>
+        <attribute name="label" translatable="yes">Action History</attribute>
         <attribute name="accel">&lt;Ctrl&gt;H</attribute>
       </item>
     </section>
     <section>
       <item>
         <attribute name="action">app.shortcuts</attribute>
-        <attribute name="label">Keyboard Shortcuts</attribute>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
       </item>
       <item>
         <attribute name="action">app.about</attribute>
-        <attribute name="label">About Paru GUI</attribute>
+        <attribute name="label" translatable="yes">About Paru GUI</attribute>
       </item>
     </section>
   </menu>
@@ -442,6 +466,9 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
+    <style>
+      <class name="card"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -462,6 +489,9 @@
           <object class="GtkImage" id="trust_indicator">
             <property name="css-classes">success</property>
             <property name="icon-name">security-high-symbolic</property>
+            <accessibility>
+              <property name="label">Trust level indicator</property>
+            </accessibility>
           </object>
         </child>
       </object>
@@ -488,17 +518,17 @@
           <object class="GtkButton" id="compile_button">
             <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
-            <property name="label">Compile</property>
+            <property name="label" translatable="yes">Compile</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="edit_button">
-            <property name="label">Edit</property>
+            <property name="label" translatable="yes">Edit</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="dependencies_button">
-            <property name="label">Dependencies</property>
+            <property name="label" translatable="yes">Dependencies</property>
           </object>
         </child>
       </object>
@@ -511,6 +541,9 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
+    <style>
+      <class name="card"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -531,6 +564,9 @@
           <object class="GtkImage" id="signature_indicator">
             <property name="css-classes">success</property>
             <property name="icon-name">security-high-symbolic</property>
+            <accessibility>
+              <property name="label">Signature verification indicator</property>
+            </accessibility>
           </object>
         </child>
       </object>
@@ -550,17 +586,17 @@
           <object class="GtkButton" id="install_button">
             <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
-            <property name="label">Install</property>
+            <property name="label" translatable="yes">Install</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="info_button">
-            <property name="label">Info</property>
+            <property name="label" translatable="yes">Info</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="verify_button">
-            <property name="label">Verify</property>
+            <property name="label" translatable="yes">Verify</property>
           </object>
         </child>
       </object>
@@ -573,6 +609,9 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
+    <style>
+      <class name="card"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -607,12 +646,12 @@
           <object class="GtkButton" id="apply_button">
             <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
-            <property name="label">Apply</property>
+            <property name="label" translatable="yes">Apply</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="preview_button">
-            <property name="label">Preview</property>
+            <property name="label" translatable="yes">Preview</property>
           </object>
         </child>
       </object>
@@ -625,6 +664,9 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
+    <style>
+      <class name="card"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -638,7 +680,7 @@
             <property name="css-classes">heading</property>
             <property name="halign">start</property>
             <property name="hexpand">True</property>
-            <property name="label">Advanced Mode</property>
+            <property name="label" translatable="yes">Advanced Mode</property>
           </object>
         </child>
       </object>
@@ -647,7 +689,7 @@
       <object class="GtkLabel" id="advanced_description">
         <property name="css-classes">caption</property>
         <property name="halign">start</property>
-        <property name="label">Execute custom commands or dry runs</property>
+        <property name="label" translatable="yes">Execute custom commands or dry runs</property>
       </object>
     </child>
     <child>
@@ -658,17 +700,17 @@
           <object class="GtkButton" id="command_button">
             <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
-            <property name="label">Run Command</property>
+            <property name="label" translatable="yes">Run Command</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="dryrun_button">
-            <property name="label">Dry Run</property>
+            <property name="label" translatable="yes">Dry Run</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="docs_button">
-            <property name="label">Documentation</property>
+            <property name="label" translatable="yes">Documentation</property>
           </object>
         </child>
       </object>
@@ -683,6 +725,9 @@
     <property name="orientation">vertical</property>
     <property name="spacing">12</property>
     <property name="valign">center</property>
+    <style>
+      <class name="card"/>
+    </style>
     <child>
       <object class="GtkImage">
         <property name="css-classes">dim-label</property>
@@ -693,26 +738,28 @@
     <child>
       <object class="GtkLabel">
         <property name="css-classes">heading</property>
-        <property name="label">Empty Directory</property>
+        <property name="label" translatable="yes">Empty Directory</property>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="css-classes">dim-label</property>
-        <property name="label">Download a PKGBUILD from AUR to get started</property>
+        <property name="label" translatable="yes">Download a PKGBUILD from AUR to get started</property>
       </object>
     </child>
     <child>
       <object class="GtkButton" id="download_button">
         <property name="css-classes">suggested-action</property>
         <property name="halign">center</property>
-        <property name="label">Download PKGBUILD</property>
+        <property name="label" translatable="yes">Download PKGBUILD</property>
       </object>
     </child>
   </object>
   <!-- Error Dialog -->
   <object class="GtkDialog" id="error_dialog">
-    <property name="title">Error</property>
+    <property name="title" translatable="yes">Error</property>
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <child internal-child="content_area">
       <object class="GtkBox">
         <property name="margin-bottom">18</property>
@@ -736,7 +783,7 @@
                 <property name="css-classes">title-2</property>
                 <property name="halign">start</property>
                 <property name="hexpand">True</property>
-                <property name="label">Operation Failed</property>
+                <property name="label" translatable="yes">Operation Failed</property>
               </object>
             </child>
           </object>
@@ -744,7 +791,7 @@
         <child>
           <object class="GtkLabel" id="error_message">
             <property name="halign">start</property>
-            <property name="label">An error occurred during the operation.</property>
+            <property name="label" translatable="yes">An error occurred during the operation.</property>
             <property name="wrap">True</property>
           </object>
         </child>
@@ -755,6 +802,9 @@
               <object class="GtkTextView" id="error_details">
                 <property name="editable">False</property>
                 <property name="monospace">True</property>
+                <accessibility>
+                  <property name="label">Error details and log</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -765,13 +815,13 @@
             <property name="spacing">6</property>
             <child>
               <object class="GtkButton" id="copy_log_button">
-                <property name="label">Copy Log</property>
+                <property name="label" translatable="yes">Copy Log</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="close_error_button">
                 <property name="css-classes">suggested-action</property>
-                <property name="label">Close</property>
+                <property name="label" translatable="yes">Close</property>
               </object>
             </child>
           </object>
@@ -781,7 +831,9 @@
   </object>
   <!-- Preferences Dialog -->
   <object class="GtkDialog" id="preferences_dialog">
-    <property name="title">Preferences</property>
+    <property name="title" translatable="yes">Preferences</property>
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <child internal-child="content_area">
       <object class="GtkBox">
         <property name="margin-bottom">18</property>
@@ -798,7 +850,7 @@
               <object class="GtkLabel">
                 <property name="css-classes">heading</property>
                 <property name="halign">start</property>
-                <property name="label">General Settings</property>
+                <property name="label" translatable="yes">General Settings</property>
               </object>
             </child>
             <child>
@@ -808,16 +860,16 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Default Editor:</property>
+                    <property name="label" translatable="yes">Default Editor:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkComboBoxText" id="editor_combo">
                     <items>
-                      <item id="gedit">Gedit</item>
-                      <item id="vscode">VS Code</item>
-                      <item id="nano">Nano</item>
-                      <item id="vim">Vim</item>
+                      <item id="gedit" translatable="yes">Gedit</item>
+                      <item id="vscode" translatable="yes">VS Code</item>
+                      <item id="nano" translatable="yes">Nano</item>
+                      <item id="vim" translatable="yes">Vim</item>
                     </items>
                   </object>
                 </child>
@@ -830,7 +882,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Simplified Mode:</property>
+                    <property name="label" translatable="yes">Simplified Mode:</property>
                   </object>
                 </child>
                 <child>
@@ -850,7 +902,7 @@
               <object class="GtkLabel">
                 <property name="css-classes">heading</property>
                 <property name="halign">start</property>
-                <property name="label">Trust Settings</property>
+                <property name="label" translatable="yes">Trust Settings</property>
               </object>
             </child>
             <child>
@@ -860,7 +912,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Show Trust Icons:</property>
+                    <property name="label" translatable="yes">Show Trust Icons:</property>
                   </object>
                 </child>
                 <child>
@@ -877,7 +929,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Block Unvoted Packages:</property>
+                    <property name="label" translatable="yes">Block Unvoted Packages:</property>
                   </object>
                 </child>
                 <child>
@@ -897,7 +949,7 @@
               <object class="GtkLabel">
                 <property name="css-classes">heading</property>
                 <property name="halign">start</property>
-                <property name="label">Developer Settings</property>
+                <property name="label" translatable="yes">Developer Settings</property>
               </object>
             </child>
             <child>
@@ -907,7 +959,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Clean After Build:</property>
+                    <property name="label" translatable="yes">Clean After Build:</property>
                   </object>
                 </child>
                 <child>
@@ -924,7 +976,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label">Show Real-time Terminal:</property>
+                    <property name="label" translatable="yes">Show Real-time Terminal:</property>
                   </object>
                 </child>
                 <child>
@@ -940,9 +992,8 @@
     </child>
     <child type="action">
       <object class="GtkButton" id="prefs_close_button">
-        <property name="label">Close</property>
+        <property name="label" translatable="yes">Close</property>
       </object>
     </child>
   </object>
 </interface>
-

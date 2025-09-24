@@ -1,14 +1,3 @@
-/* =============================================================================
-   Arquivo: src/ui/style.css
-   Descrição: Estilos principais da aplicação Paru GUI compatíveis com GTK 4.
-   Versão Minimalista: Remove todas as propriedades potencialmente problemáticas.
-============================================================================= */
-
-/* --- Estilos Gerais --- */
-
-
-/* --- Estilos para Componentes --- */
-
 /* Search Bar */
 ParuSearchBar {
     padding: 6px 12px;
@@ -47,7 +36,6 @@ FileChooserDialog .file-item:selected {
     background-color: @theme_selected_bg_color;
     color: @theme_selected_fg_color;
 }
-
 
 /* --- Estilos para Telas --- */
 
@@ -139,28 +127,33 @@ PkgbuildReviewDialog .risk-section {
 }
 
 PkgbuildReviewDialog .risk-critical {
-    background-color: @error_color;
-    color: @theme_selected_fg_color;
+    background-color: alpha(@error_color, 0.2);
+    color: @theme_fg_color;
+    border-color: @error_color;
 }
 
 PkgbuildReviewDialog .risk-high {
-    background-color: mix(@error_color, @theme_bg_color, 0.3);
+    background-color: alpha(@error_color, 0.1);
     color: @theme_fg_color;
+    border-color: alpha(@error_color, 0.5);
 }
 
 PkgbuildReviewDialog .risk-medium {
-    background-color: mix(@warning_color, @theme_bg_color, 0.3);
+    background-color: alpha(@warning_color, 0.1);
     color: @theme_fg_color;
+    border-color: alpha(@warning_color, 0.5);
 }
 
 PkgbuildReviewDialog .risk-low {
-    background-color: mix(@success_color, @theme_bg_color, 0.3);
+    background-color: alpha(@success_color, 0.1);
     color: @theme_fg_color;
+    border-color: alpha(@success_color, 0.5);
 }
 
 PkgbuildReviewDialog .risk-info {
-    background-color: mix(@theme_selected_bg_color, @theme_bg_color, 0.1);
+    background-color: alpha(@theme_selected_bg_color, 0.1);
     color: @theme_fg_color;
+    border-color: alpha(@theme_selected_bg_color, 0.5);
 }
 
 PkgbuildReviewDialog .risk-line {
@@ -257,17 +250,38 @@ UpstreamUpdateScreen .patch-content {
     background-color: alpha(@theme_fg_color, 0.05);
 }
 
-/* Error Dialog */
+/* Error Dialog - VERSÃO CORRIGIDA */
+#ErrorDialog {
+    background-color: @theme_bg_color;
+}
+
+/* Remove espaços indesejados */
+#ErrorDialog .dialog-content-area {
+    padding: 0;
+    margin: 0;
+}
+
+#ErrorDialog .dialog-action-area {
+    padding: 12px;
+    margin: 0;
+    border-top: 1px solid @borders;
+    background-color: @theme_bg_color;
+}
+
 .error-dialog-content {
-    padding: 18px;
+    padding: 0;
+    margin: 0;
 }
 
 .error-dialog-content .error-header {
-    margin-bottom: 18px;
+    padding: 16px;
+    margin: 0;
+    border-bottom: 1px solid @borders;
+    background-color: shade(@theme_bg_color, 0.98);
 }
 
 .error-dialog-content .error-icon {
-    margin-right: 18px;
+    margin-right: 12px;
     color: @error_color;
 }
 
@@ -287,7 +301,7 @@ UpstreamUpdateScreen .patch-content {
 .error-dialog-content .error-message {
     font-size: 10pt;
     color: @theme_fg_color;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
 }
 
 .error-dialog-content .error-details {
@@ -296,7 +310,7 @@ UpstreamUpdateScreen .patch-content {
     background-color: @theme_base_color;
     border: 1px solid @borders;
     padding: 12px;
-    margin-top: 12px;
+    margin: 12px 0;
 }
 
 /* --- Estilos para Cards --- */
@@ -322,11 +336,25 @@ UpstreamUpdateScreen .patch-content {
     margin: 8px;
 }
 
+.pkgbuild-card {
+    border-color: alpha(@theme_selected_bg_color, 0.3);
+}
+
+.patch-card {
+    border-color: alpha(@warning_color, 0.3);
+}
+
 .advanced-card {
     padding: 16px;
     margin: 8px;
-    background-color: mix(@theme_selected_bg_color, @theme_bg_color, 0.05);
+    background-color: alpha(@theme_selected_bg_color, 0.05);
     border-color: alpha(@theme_selected_bg_color, 0.3);
+}
+
+.empty-card {
+    background-color: alpha(@theme_fg_color, 0.02);
+    border-style: dashed;
+    border-color: alpha(@theme_fg_color, 0.2);
 }
 
 /* --- Estilos para Botões --- */
@@ -338,9 +366,12 @@ UpstreamUpdateScreen .patch-content {
 }
 
 .pill {
-    border-radius: 9999px;
-    padding-left: 18px;
-    padding-right: 18px;
+    border-radius: 20px;
+    padding: 8px 16px;
+}
+
+.flat.pill {
+    border: 1px solid transparent;
 }
 
 /* --- Estilos para Labels --- */
@@ -354,7 +385,7 @@ UpstreamUpdateScreen .patch-content {
 }
 
 .dim-label {
-    opacity: 0.55;
+    opacity: 0.7;
 }
 
 .error-color {
@@ -369,6 +400,10 @@ UpstreamUpdateScreen .patch-content {
     color: @success_color;
 }
 
+.monospace {
+    font-family: monospace;
+}
+
 /* --- Estilos para Terminal --- */
 
 .terminal-view {
@@ -377,6 +412,13 @@ UpstreamUpdateScreen .patch-content {
     color: @theme_fg_color;
     padding: 8px;
     border: 1px solid @borders;
+    border-radius: 6px;
+}
+
+.terminal-box {
+    background-color: alpha(@theme_fg_color, 0.02);
+    border: 1px solid @borders;
+    border-radius: 8px;
 }
 
 /* --- Estilos para Heatmap --- */
@@ -387,25 +429,46 @@ UpstreamUpdateScreen .patch-content {
     background-color: @theme_base_color;
     padding: 8px;
     border: 1px solid @borders;
+    border-radius: 6px;
 }
 
 .heatmap-critical {
     background-color: alpha(@error_color, 0.4);
+    color: @theme_fg_color;
 }
 
 .heatmap-high {
     background-color: alpha(@warning_color, 0.4);
+    color: @theme_fg_color;
 }
 
 .heatmap-medium {
     background-color: alpha(@theme_selected_bg_color, 0.3);
+    color: @theme_fg_color;
 }
 
 .heatmap-low {
     background-color: alpha(@success_color, 0.3);
+    color: @theme_fg_color;
 }
 
 .heatmap-info {
     background-color: alpha(@theme_fg_color, 0.1);
+    color: @theme_fg_color;
 }
 
+/* --- Correções Gerais --- */
+
+/* Remove espaços em branco indesejados */
+.dialog-vbox,
+.dialog-hbox {
+    margin: 0;
+    padding: 0;
+}
+
+/* Garante que não há elementos vazios criando espaços */
+.empty-box,
+.placeholder,
+.spacer {
+    display: none;
+}

@@ -1,17 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
+  <requires lib="gio" version="2.0"/>
   <template class="UpstreamUpdateCard" parent="GtkFrame">
-    <property name="css-classes">
-      <item>card</item>
-      <item>upstream-update-card</item>
-    </property>
+    <property name="css-classes">card upstream-update-card</property>
     <property name="margin-bottom">4</property>
     <property name="margin-end">4</property>
     <property name="margin-start">4</property>
     <property name="margin-top">4</property>
     <property name="width-request">220</property>
     <property name="height-request">300</property>
+    <accessibility>
+      <property name="label">Upstream package update card</property>
+    </accessibility>
     <property name="child">
       <object class="GtkBox">
         <property name="margin-bottom">12</property>
@@ -30,17 +31,22 @@
                 <style>
                   <class name="success-color"/>
                 </style>
+                <accessibility>
+                  <property name="label">Update available icon</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
-                <property name="hexpand">true</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">New Upstream Version!</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
-                <style><class name="heading"/></style>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
           </object>
@@ -50,69 +56,86 @@
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
             <property name="max-width-chars">20</property>
-            <property name="wrap">true</property>
+            <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
-            <style><class name="heading"/></style>
+            <style>
+              <class name="heading"/>
+            </style>
+            <accessibility>
+              <property name="label">Package name</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="aur_version_label">
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
-            <property name="wrap">false</property>
+            <property name="wrap">False</property>
             <style>
               <class name="caption"/>
               <class name="dim-label"/>
             </style>
             <property name="label" translatable="yes">AUR: N/A</property>
+            <accessibility>
+              <property name="label">Current AUR version</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="upstream_version_label">
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
-            <property name="wrap">false</property>
+            <property name="wrap">False</property>
             <style>
               <class name="caption"/>
               <class name="success-color"/>
               <class name="bold"/>
             </style>
             <property name="label" translatable="yes">Upstream: N/A</property>
+            <accessibility>
+              <property name="label">New upstream version available</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="source_url_label">
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
-            <property name="wrap">true</property>
+            <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <style>
               <class name="caption"/>
               <class name="dim-label"/>
             </style>
             <property name="label" translatable="yes">Source: N/A</property>
+            <accessibility>
+              <property name="label">Package source repository</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="release_info_label">
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
-            <property name="wrap">false</property>
+            <property name="wrap">False</property>
             <style>
               <class name="caption"/>
               <class name="dim-label"/>
             </style>
             <property name="label" translatable="yes">Released: N/A</property>
+            <accessibility>
+              <property name="label">Release date information</property>
+            </accessibility>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="cve_fix_label">
             <property name="ellipsize">end</property>
             <property name="justify">center</property>
-            <property name="wrap">true</property>
+            <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <style>
               <class name="caption"/>
@@ -120,6 +143,9 @@
               <class name="bold"/>
             </style>
             <property name="label" translatable="yes">CVE Fix: N/A</property>
+            <accessibility>
+              <property name="label">Security vulnerability fixes</property>
+            </accessibility>
           </object>
         </child>
         <child>
@@ -130,12 +156,12 @@
             <!-- Botão de atualização principal -->
             <child>
               <object class="GtkButton" id="update_button">
-                <property name="css-classes">
-                  <item>suggested-action</item>
-                  <item>pill</item>
-                </property>
+                <property name="css-classes">suggested-action pill</property>
                 <property name="label" translatable="yes">Update Now</property>
                 <property name="tooltip-text" translatable="yes">Update to the new upstream version directly.</property>
+                <accessibility>
+                  <property name="label">Update package to new version</property>
+                </accessibility>
               </object>
             </child>
 
@@ -144,6 +170,9 @@
               <object class="GtkExpander" id="sandbox_expander">
                 <property name="label" translatable="yes">Sandbox Settings for Update</property>
                 <property name="expanded">False</property>
+                <accessibility>
+                  <property name="label">Sandbox configuration options</property>
+                </accessibility>
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -157,6 +186,9 @@
                       <object class="GtkCheckButton" id="enable_sandbox_check">
                         <property name="label" translatable="yes">Run in sandboxed environment</property>
                         <property name="active">True</property>
+                        <accessibility>
+                          <property name="label">Enable sandbox isolation for update process</property>
+                        </accessibility>
                         <!-- <signal name="toggled" handler="on_sandbox_toggled"/> -->
                       </object>
                     </child>
@@ -190,6 +222,9 @@
                                   <item translatable="yes" id="minimal">Minimal</item>
                                 </items>
                                 <property name="active">0</property>
+                                <accessibility>
+                                  <property name="label">Select sandbox isolation level</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -200,6 +235,9 @@
                           <object class="GtkCheckButton" id="sandbox_network_check">
                             <property name="label" translatable="yes">Allow network access</property>
                             <property name="active">False</property>
+                            <accessibility>
+                              <property name="label">Allow sandbox to access network</property>
+                            </accessibility>
                           </object>
                         </child>
 
@@ -208,6 +246,9 @@
                           <object class="GtkCheckButton" id="sandbox_home_check">
                             <property name="label" translatable="yes">Allow access to home directory</property>
                             <property name="active">False</property>
+                            <accessibility>
+                              <property name="label">Allow sandbox to access home directory</property>
+                            </accessibility>
                           </object>
                         </child>
 
@@ -231,6 +272,9 @@
                               <class name="pill"/>
                               <class name="small-button"/>
                             </style>
+                            <accessibility>
+                              <property name="label">Execute update with configured sandbox settings</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -249,6 +293,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Open the upstream changelog for details.</property>
+                <accessibility>
+                  <property name="label">View detailed changelog for this update</property>
+                </accessibility>
               </object>
             </child>
             <!-- Botão para ignorar versão -->
@@ -260,6 +307,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Do not show alerts for this specific upstream version.</property>
+                <accessibility>
+                  <property name="label">Ignore notifications for this version</property>
+                </accessibility>
               </object>
             </child>
           </object>

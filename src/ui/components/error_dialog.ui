@@ -1,440 +1,512 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.97.8 -->
+<interface domain="paru-gui">
+  <!-- interface-name error_dialog.ui -->
   <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
-  <!-- As propriedades de janela (modal, default-width, etc.) serão definidas no código Python para AdwDialog,
-       já que Cambalache/Gtk.Builder pode ter problemas com elas no template diretamente. -->
-  <template class="ErrorDialog" parent="AdwDialog">
-
-    <!-- Conteúdo principal do diálogo, dentro de um único 'child' -->
-    <child>
+  <requires lib="gio" version="2.0"/>
+  <object class="GtkDialog" id="ErrorDialog">
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="title" translatable="yes">Security Risk Detected</property>
+    <property name="default-width">700</property>
+    <property name="default-height">500</property>
+    <accessibility>
+      <property name="label" translatable="yes">Error dialog for package risk warnings</property>
+    </accessibility>
+    <child internal-child="content_area">
       <object class="GtkBox" id="main_dialog_content_box">
+        <property name="height-request">500</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">0</property>
         <property name="vexpand">True</property>
-        <property name="hexpand">True</property> <!-- Adicionado hexpand para o box principal -->
-
-        <!-- Header do Erro (integrado ao conteúdo, não como titlebar do AdwDialog) -->
-        <!-- O AdwDialog cria seu próprio AdwHeaderBar por padrão.
-             Este é um "header" visual DENTRO do conteúdo do diálogo. -->
+        <property name="width-request">700</property>
+        <accessibility>
+          <property name="label" translatable="yes">Main dialog content container</property>
+        </accessibility>
         <child>
           <object class="GtkBox" id="error_header">
+            <property name="halign">fill</property>
+            <property name="height-request">80</property>
+            <property name="hexpand">True</property>
+            <property name="margin-bottom">12</property>
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="margin-bottom">12</property>
-            <property name="css-classes">
-              <item>error-header</item>
-              <item>large-padding</item>
-            </property>
-            <property name="halign">fill</property>
-            <property name="hexpand">True</property>
-
+            <accessibility>
+              <property name="label" translatable="yes">Error header with icon and package information</property>
+            </accessibility>
             <child>
               <object class="GtkBox">
+                <!-- Adicionado margens para espaçamento -->
+                <property name="margin-end">16</property>
+                <property name="margin-start">16</property>
                 <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
-                <property name="margin-start">16</property> <!-- Adicionado margens para espaçamento -->
-                <property name="margin-end">16</property>
-
                 <child>
                   <object class="GtkImage" id="error_icon_header">
                     <property name="icon-name">dialog-error-symbolic</property>
-                    <property name="pixel-size">32</property> <!-- Aumentado para mais destaque -->
-                    <property name="css-classes">
-                      <item>error-color</item>
-                    </property>
+                    <property name="pixel-size">32</property>
+                    <style>
+                      <class name="error-color"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Error warning icon</property>
+                    </accessibility>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel" id="error_type_label">
-                    <property name="label" translatable="yes">ERROR: RISK_DETECTED</property>
                     <property name="halign">start</property>
-                    <property name="valign">center</property>
                     <property name="hexpand">True</property>
-                    <property name="css-classes">
-                      <item>title-3</item>
-                      <item>bold</item> <!-- Adicionado bold para o tipo de erro -->
-                    </property>
+                    <property name="label" translatable="yes">ERROR: RISK_DETECTED</property>
+                    <property name="valign">center</property>
+                    <style>
+                      <class name="title-3"/>
+                      <class name="bold"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Error type and severity</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
             </child>
-
             <child>
               <object class="GtkLabel" id="error_package_label">
-                <property name="label" translatable="yes">Package: suspicious-package-git (AUR)</property>
                 <property name="halign">start</property>
-                <property name="margin-start">16</property> <!-- Alinhamento com o ícone acima -->
+                <property name="label" translatable="yes">Package: suspicious-package-git (AUR)</property>
+                <!-- Alinhamento com o ícone acima -->
                 <property name="margin-end">16</property>
-                <property name="css-classes">
-                  <item>title-2</item>
-                  <item>bold</item>
-                </property>
+                <property name="margin-start">16</property>
+                <style>
+                  <class name="title-2"/>
+                  <class name="bold"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Package name and source information</property>
+                </accessibility>
               </object>
             </child>
+            <style>
+              <class name="error-header"/>
+              <class name="large-padding"/>
+            </style>
           </object>
         </child>
-
-        <!-- Scrollable Error Content -->
         <child>
           <object class="GtkScrolledWindow" id="error_scrolled_window">
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="hscrollbar-policy">automatic</property>
-            <property name="vexpand">True</property>
+            <property name="height-request">300</property>
             <property name="hexpand">True</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
-            <property name="margin-top">12</property>
+            <property name="hscrollbar-policy">automatic</property>
             <property name="margin-bottom">12</property>
-            <property name="css-classes">
-              <item>error-content</item>
-            </property>
-
+            <property name="margin-end">16</property>
+            <property name="margin-start">16</property>
+            <property name="margin-top">12</property>
+            <property name="vexpand">True</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="width-request">550</property>
+            <accessibility>
+              <property name="label" translatable="yes">Scrollable error details content</property>
+            </accessibility>
             <child>
               <object class="GtkViewport">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkBox" id="error_content_box">
+                    <property name="hexpand">True</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="margin-end">16</property>
+                    <property name="margin-start">16</property>
+                    <property name="margin-top">12</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">24</property>
-                    <property name="margin-top">12</property>
-                    <property name="margin-bottom">12</property>
-                    <property name="margin-start">16</property>
-                    <property name="margin-end">16</property>
-
-                    <!-- Detected Problems Section -->
+                    <property name="vexpand">True</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Error details content sections</property>
+                    </accessibility>
                     <child>
                       <object class="GtkBox" id="problems_section">
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
-
+                        <accessibility>
+                          <property name="label" translatable="yes">Detected problems section</property>
+                        </accessibility>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Detected Problems:</property>
                             <property name="halign">start</property>
-                            <property name="css-classes">
-                              <item>heading</item>
-                              <item>title-4</item>
-                            </property>
+                            <property name="label" translatable="yes">Detected Problems:</property>
+                            <style>
+                              <class name="heading"/>
+                              <class name="title-4"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Detected problems section title</property>
+                            </accessibility>
                           </object>
                         </child>
-
                         <child>
                           <object class="GtkBox" id="problems_list">
                             <property name="orientation">vertical</property>
                             <property name="spacing">6</property>
-
+                            <accessibility>
+                              <property name="label" translatable="yes">List of detected security problems</property>
+                            </accessibility>
                             <child>
                               <object class="GtkLabel" id="problem_1">
-                                <property name="label" translatable="yes">• Less than 10 votes + 5 recent negative comments</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">• Less than 10 votes + 5 recent negative comments</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Problem: Low community trust indicators</property>
+                                </accessibility>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkLabel" id="problem_2">
-                                <property name="label" translatable="yes">• Maintainer without verified PGP keys</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">• Maintainer without verified PGP keys</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Problem: Unverified maintainer identity</property>
+                                </accessibility>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkLabel" id="problem_3">
-                                <property name="label" translatable="yes">• Unjustified &#96;sudo&#96; commands in PKGBUILD</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">• Unjustified `sudo` commands in PKGBUILD</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Problem: Suspicious privileged commands</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
                         </child>
                       </object>
                     </child>
-
-                    <!-- Recommended Actions Section -->
                     <child>
                       <object class="GtkBox" id="actions_section">
                         <property name="orientation">vertical</property>
                         <property name="spacing">12</property>
-
+                        <accessibility>
+                          <property name="label" translatable="yes">Recommended actions section</property>
+                        </accessibility>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Recommended Actions:</property>
                             <property name="halign">start</property>
-                            <property name="css-classes">
-                              <item>heading</item>
-                              <item>title-4</item>
-                            </property>
+                            <property name="label" translatable="yes">Recommended Actions:</property>
+                            <style>
+                              <class name="heading"/>
+                              <class name="title-4"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Recommended actions section title</property>
+                            </accessibility>
                           </object>
                         </child>
-
                         <child>
                           <object class="GtkBox" id="actions_buttons">
                             <property name="orientation">vertical</property>
                             <property name="spacing">8</property>
-
+                            <accessibility>
+                              <property name="label" translatable="yes">Action buttons for handling the risk</property>
+                            </accessibility>
                             <child>
                               <object class="GtkButton" id="ignore_risk_button">
                                 <property name="halign">fill</property>
                                 <property name="hexpand">True</property>
-                                <property name="css-classes">
-                                  <item>flat</item>
-                                  <item>error-color</item>
-                                  <item>pill</item>
-                                </property>
                                 <property name="tooltip-text" translatable="yes">Proceed with installation despite detected risks. Use with caution.</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Ignore risk and proceed - advanced users only</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
-
                                     <child>
                                       <object class="GtkImage">
                                         <property name="icon-name">dialog-warning-symbolic</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Warning icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Ignore Risk</property>
                                         <property name="halign">start</property>
-                                        <style><class name="bold"/></style>
+                                        <property name="label" translatable="yes">Ignore Risk</property>
+                                        <style>
+                                          <class name="bold"/>
+                                        </style>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Only for experienced users</property>
                                         <property name="halign">end</property>
                                         <property name="hexpand">True</property>
-                                        <property name="css-classes">
-                                          <item>caption</item>
-                                          <item>dim-label</item>
-                                        </property>
+                                        <property name="label" translatable="yes">Only for experienced users</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="error-color"/>
+                                  <class name="pill"/>
+                                </style>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkButton" id="view_analysis_button">
                                 <property name="halign">fill</property>
                                 <property name="hexpand">True</property>
-                                <property name="css-classes">
-                                  <item>flat</item>
-                                  <item>warning-color</item>
-                                  <item>pill</item>
-                                </property>
                                 <property name="tooltip-text" translatable="yes">Open the PKGBUILD review screen with heatmap analysis.</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">View complete security analysis with PKGBUILD heatmap</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
-
                                     <child>
                                       <object class="GtkImage">
                                         <property name="icon-name">system-search-symbolic</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Analysis search icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">View Complete Analysis</property>
                                         <property name="halign">start</property>
-                                        <style><class name="bold"/></style>
+                                        <property name="label" translatable="yes">View Complete Analysis</property>
+                                        <style>
+                                          <class name="bold"/>
+                                        </style>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Show PKGBUILD heatmap</property>
                                         <property name="halign">end</property>
                                         <property name="hexpand">True</property>
-                                        <property name="css-classes">
-                                          <item>caption</item>
-                                          <item>dim-label</item>
-                                        </property>
+                                        <property name="label" translatable="yes">Show PKGBUILD heatmap</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="warning-color"/>
+                                  <class name="pill"/>
+                                </style>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkButton" id="report_aur_button">
                                 <property name="halign">fill</property>
                                 <property name="hexpand">True</property>
-                                <property name="css-classes">
-                                  <item>flat</item>
-                                  <item>success-color</item>
-                                  <item>pill</item>
-                                </property>
                                 <property name="tooltip-text" translatable="yes">Report this package's issues to the AUR maintainer and community.</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Report package issues to AUR community</property>
+                                </accessibility>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
-
                                     <child>
                                       <object class="GtkImage">
                                         <property name="icon-name">dialog-information-symbolic</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Information report icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Report to AUR</property>
                                         <property name="halign">start</property>
-                                        <style><class name="bold"/></style>
+                                        <property name="label" translatable="yes">Report to AUR</property>
+                                        <style>
+                                          <class name="bold"/>
+                                        </style>
                                       </object>
                                     </child>
-
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Send warning to community</property>
                                         <property name="halign">end</property>
                                         <property name="hexpand">True</property>
-                                        <property name="css-classes">
-                                          <item>caption</item>
-                                          <item>dim-label</item>
-                                        </property>
+                                        <property name="label" translatable="yes">Send warning to community</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="success-color"/>
+                                  <class name="pill"/>
+                                </style>
                               </object>
                             </child>
                           </object>
                         </child>
                       </object>
                     </child>
-
-                    <!-- Critical Lines Section -->
                     <child>
                       <object class="GtkBox" id="critical_lines_section">
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
-
+                        <accessibility>
+                          <property name="label" translatable="yes">Critical PKGBUILD lines section</property>
+                        </accessibility>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Critical Lines:</property>
                             <property name="halign">start</property>
-                            <property name="css-classes">
-                              <item>heading</item>
-                              <item>title-4</item>
-                            </property>
+                            <property name="label" translatable="yes">Critical Lines:</property>
+                            <style>
+                              <class name="heading"/>
+                              <class name="title-4"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Critical lines section title</property>
+                            </accessibility>
                           </object>
                         </child>
-
                         <child>
                           <object class="GtkBox" id="critical_lines_content">
                             <property name="orientation">vertical</property>
                             <property name="spacing">4</property>
-
+                            <accessibility>
+                              <property name="label" translatable="yes">Code snippet showing dangerous operations</property>
+                            </accessibility>
                             <child>
                               <object class="GtkLabel">
-                                <property name="label" translatable="yes">prepare() {</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">prepare() {</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                  <item>monospace</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                  <class name="monospace"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Function definition start</property>
+                                </accessibility>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkLabel" id="critical_line">
-                                <property name="label" translatable="yes">  sudo rm -rf /usr/bin/*  # ⚠️ DANGEROUS OPERATION</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">  sudo rm -rf /usr/bin/*  # ⚠️ DANGEROUS OPERATION</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                  <item>monospace</item>
-                                  <item>error-color</item>
-                                  <item>bold</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                  <class name="monospace"/>
+                                  <class name="error-color"/>
+                                  <class name="bold"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Critical dangerous command: sudo rm -rf /usr/bin/* - WARNING</property>
+                                </accessibility>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkLabel">
-                                <property name="label" translatable="yes">}</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">}</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                  <item>monospace</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                  <class name="monospace"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Function definition end</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
                         </child>
                       </object>
                     </child>
-
-                    <!-- Additional Context Section -->
                     <child>
                       <object class="GtkBox" id="context_section">
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
-
+                        <accessibility>
+                          <property name="label" translatable="yes">Additional context section</property>
+                        </accessibility>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Additional Context:</property>
                             <property name="halign">start</property>
-                            <property name="css-classes">
-                              <item>heading</item>
-                              <item>title-4</item>
-                            </property>
+                            <property name="label" translatable="yes">Additional Context:</property>
+                            <style>
+                              <class name="heading"/>
+                              <class name="title-4"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Additional context section title</property>
+                            </accessibility>
                           </object>
                         </child>
-
                         <child>
                           <object class="GtkBox" id="context_list">
                             <property name="orientation">vertical</property>
                             <property name="spacing">4</property>
-
+                            <accessibility>
+                              <property name="label" translatable="yes">List of contextual information</property>
+                            </accessibility>
                             <child>
                               <object class="GtkLabel" id="context_1">
-                                <property name="label" translatable="yes">- Last update: 2 hours ago (unusual for stable package)</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">- Last update: 2 hours ago (unusual for stable package)</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Context: Suspicious recent update timing</property>
+                                </accessibility>
                               </object>
                             </child>
-
                             <child>
                               <object class="GtkLabel" id="context_2">
-                                <property name="label" translatable="yes">- Maintainer: "user123" (no verifiable history)</property>
                                 <property name="halign">start</property>
+                                <property name="label" translatable="yes">- Maintainer: "user123" (no verifiable history)</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
-                                <property name="css-classes">
-                                  <item>body</item>
-                                </property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Context: Unverified maintainer information</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -445,59 +517,70 @@
                 </child>
               </object>
             </child>
-
-            <!-- Action Area: No longer internal-child, placed at the end of main_dialog_content_box -->
-            <child>
-              <object class="GtkBox" id="action_area">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">12</property>
-                <property name="margin-bottom">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-start">12</property>
-                <property name="margin-top">12</property> <!-- Adicionado margem superior para espaçamento -->
-                <property name="css-classes">
-                  <item>error-footer</item>
-                </property>
-                <property name="halign">end</property>
-
-                <child>
-                  <object class="GtkButton" id="close_button">
-                    <property name="label" translatable="yes">Close</property>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="copy_log_button">
-                    <property name="label" translatable="yes">Copy Log</property>
-                    <property name="css-classes">
-                      <item>suggested-action</item>
-                      <item>pill</item>
-                    </property>
-                    <property name="tooltip-text" translatable="yes">Copy the full error log and context to clipboard.</property>
-                  </object>
-                </child>
-              </object>
-            </child>
+            <style>
+              <class name="error-content"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
-  </template>
-
+    <child internal-child="action_area">
+      <object class="GtkBox" id="dialog_action_area">
+        <property name="halign">end</property>
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <accessibility>
+          <property name="label" translatable="yes">Dialog action buttons area</property>
+        </accessibility>
+        <child>
+          <object class="GtkButton" id="close_button">
+            <property name="label" translatable="yes">Close</property>
+            <accessibility>
+              <property name="label" translatable="yes">Close error dialog</property>
+            </accessibility>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="copy_log_button">
+            <property name="label" translatable="yes">Copy Log</property>
+            <property name="tooltip-text" translatable="yes">Copy the full error log and context to clipboard.</property>
+            <style>
+              <class name="suggested-action"/>
+              <class name="pill"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Copy error log to clipboard</property>
+            </accessibility>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
   <!-- Template for risk level indicator -->
   <template class="RiskLevelIndicator" parent="GtkBox">
     <property name="orientation">horizontal</property>
     <property name="spacing">4</property>
-
+    <accessibility>
+      <property name="label" translatable="yes">Risk level indicator with icon and text</property>
+    </accessibility>
     <child>
       <object class="GtkImage" id="risk_icon">
         <property name="pixel-size">18</property>
+        <accessibility>
+          <property name="label" translatable="yes">Risk level icon</property>
+        </accessibility>
       </object>
     </child>
-
     <child>
       <object class="GtkLabel" id="risk_label">
         <property name="halign">start</property>
+        <accessibility>
+          <property name="label" translatable="yes">Risk level text description</property>
+        </accessibility>
       </object>
     </child>
   </template>
