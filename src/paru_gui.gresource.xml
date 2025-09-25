@@ -20,6 +20,7 @@
     <!-- Style files (paths relative to 'src' directory) -->
     <file>ui/style.css</file>
     <file>ui/screens/pkgbuild-review.css</file>
+		<file>ui/image_fixes.css</file>
   </gresource>
 </gresources>
 

@@ -1,0 +1,52 @@
+/* ===========================================
+   PARU GUI - CORREÇÕES GDKPIXBUF COMPATÍVEIS GTK
+   Apenas propriedades CSS válidas do GTK para manter aparência nativa GNOME
+   Autor: MiniMax Agent
+   =========================================== */
+
+/* ===== CORREÇÕES MÍNIMAS PARA GDKPIXBUF ===== */
+
+/* Garantir tamanhos mínimos para evitar erro de assertion width/height >= 0 */
+image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções específicas para spinners */
+spinner {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções para ícones em botões */
+button image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções para ícones no HeaderBar */
+headerbar image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções para cards - sem customizações visuais */
+.card image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções para FlowBox children */
+flowbox flowboxchild image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correções para ListBox rows */
+listbox row image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* ===== FIM - APENAS CORREÇÕES ESSENCIAIS ===== */
+/* Sem customizações visuais - 100% aparência nativa GNOME */
