@@ -1,11 +1,12 @@
-from gi.repository import Gtk, Adw, GLib, Gio, GObject
+from gi.repository import Gtk, Adw, GLib, Gio, GObject, Gdk
 from typing import Optional, List, Dict, Any
 import os
 
 @Gtk.Template(resource_path='/org/gnome/paru-gui/window.ui')
 class ParuGuiWindow(Gtk.ApplicationWindow):
-    __gtype_name__ = 'main_window'
+    __gtype_name__ = 'ParuGuiWindow'
 
+    # Template Children - Definições básicas
     header_bar = Gtk.Template.Child()
     app_menu_button = Gtk.Template.Child()
     search_entry = Gtk.Template.Child()
@@ -21,288 +22,302 @@ class ParuGuiWindow(Gtk.ApplicationWindow):
     action_bar = Gtk.Template.Child()
     back_button = Gtk.Template.Child()
     status_label = Gtk.Template.Child()
-    action_button = Gtk.Template.Child()
     processing_screen = Gtk.Template.Child()
-    processing_spinner = Gtk.Template.Child()
     processing_label = Gtk.Template.Child()
-    processing_progress = Gtk.Template.Child()
-    log_textview = Gtk.Template.Child()
-    cancel_button = Gtk.Template.Child()
-    details_button = Gtk.Template.Child()
-    upstream_updates_view = Gtk.Template.Child()
-    upstream_update_cards = Gtk.Template.Child()
-    upstream_action_bar = Gtk.Template.Child()
-    refresh_updates_button = Gtk.Template.Child()
-
-    __gsignals__ = {
-        'file-selected': (GObject.SignalFlags.RUN_LAST, None, (str,)),
-        'folder-selected': (GObject.SignalFlags.RUN_LAST, None, (str,)),
-        'action-requested': (GObject.SignalFlags.RUN_LAST, None, (str, object)),
-    }
+    processing_spinner = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        print("🚀 Inicializando ParuGuiWindow...")
+
+        # Estado da aplicação
         self.current_view = "welcome"
         self.current_folder = None
-        self.file_items = []
+        self.content_manager = None
+
+        # Configuração inicial
         self._setup_window()
+        self._setup_theme()
         self._connect_signals()
         self._setup_actions()
-        self._initialize_components()
+        self._init_components()
+
+        # Mostrar tela inicial
+        self.show_welcome_screen()
+
+        print("✅ ParuGuiWindow inicializada com sucesso!")
 
     def _setup_window(self):
-        self.set_title("Paru GUI")
-        self.set_default_size(1000, 700)
-        self._load_custom_css()
+        """Configuração básica da janela"""
+        try:
+            print("🔧 Configurando janela...")
+
+            # Título da janela
+            self.set_title("Paru GUI")
+
+            # Tamanho inicial
+            self.set_default_size(1200, 800)
+
+            # Permitir redimensionamento
+            self.set_resizable(True)
+
+            print("✅ Janela configurada")
+
+        except Exception as e:
+            print(f"❌ Erro ao configurar janela: {e}")
+
+    def _setup_theme(self):
+        """Configura tema padrão do sistema sem CSS customizado"""
+        try:
+            print("🎨 Configurando tema padrão do sistema...")
+
+            # Usar o tema padrão do sistema
+            style_manager = Adw.StyleManager.get_default()
+
+            # Detectar preferência do sistema (claro/escuro)
+            # Deixar o sistema decidir automaticamente
+            style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+
+            print("✅ Tema padrão do sistema aplicado")
+
+        except Exception as e:
+            print(f"⚠️ Aviso: Erro ao configurar tema: {e}")
+            # Continua mesmo sem configuração de tema
 
     def _connect_signals(self):
-        self.select_file_button.connect("clicked", self._on_select_file_clicked)
-        self.select_folder_button.connect("clicked", self._on_select_folder_clicked)
-        self.recent_dirs_flowbox.connect("child-activated", self._on_recent_dir_activated)
-        self.back_button.connect("clicked", self._on_back_clicked)
-        self.action_button.connect("clicked", self._on_action_clicked)
-        self.content_cards.connect("child-activated", self._on_content_card_activated)
-        self.cancel_button.connect("clicked", self._on_cancel_clicked)
-        self.details_button.connect("clicked", self._on_details_clicked)
-        self.refresh_updates_button.connect("clicked", self._on_refresh_updates_clicked)
-        self.upstream_update_cards.connect("child-activated", self._on_upstream_card_activated)
-        self.help_button.connect("clicked", self._on_help_clicked)
-        self.search_entry.connect("search-changed", self._on_search_changed)
-        self.connect("close-request", self._on_close_request)
+        """Conecta sinais dos widgets"""
+        try:
+            print("🔧 Conectando sinais...")
+
+            # Botões principais
+            if self.select_file_button:
+                self.select_file_button.connect('clicked', self.on_select_file_clicked)
+
+            if self.select_folder_button:
+                self.select_folder_button.connect('clicked', self.on_select_folder_clicked)
+
+            if self.back_button:
+                self.back_button.connect('clicked', self.on_back_button_clicked)
+
+            # Entrada de pesquisa
+            if self.search_entry:
+                self.search_entry.connect('search-changed', self.on_search_changed)
+
+            # Botão de ajuda
+            if self.help_button:
+                self.help_button.connect('clicked', self.on_help_button_clicked)
+
+            # Sinal de fechamento da janela
+            self.connect('close-request', self.on_close_request)
+
+            print("✅ Sinais conectados com sucesso")
+
+        except Exception as e:
+            print(f"❌ Erro ao conectar sinais: {e}")
 
     def _setup_actions(self):
-        actions = {
-            'system': self._on_system_action,
-            'statistics': self._on_statistics_action,
-            'arch-news': self._on_arch_news_action,
-            'clean-cache': self._on_clean_cache_action,
-            'update-system': self._on_update_system_action,
-            'initial-tour': self._on_initial_tour_action,
-            'show-upstream-updates': self._on_show_upstream_updates_action,
-            'preferences': self._on_preferences_action,
-            'show-trust-icons': self._on_show_trust_icons_action,
-            'block-unvoted': self._on_block_unvoted_action,
-            'consider-update-time': self._on_consider_update_time_action,
-            'check-comments': self._on_check_comments_action,
-            'hide-advanced': self._on_hide_advanced_action,
-            'go-home': self._on_go_home_action,
-            'action-history': self._on_action_history_action,
-            'go-back': self._on_go_back_action,
-            'go-forward': self._on_go_forward_action,
-            'search-packages': self._on_search_packages_action,
-            'select-file': self._on_select_file_action,
-            'select-folder': self._on_select_folder_action,
-            'refresh-view': self._on_refresh_view_action,
-            'download-sources': self._on_download_sources_action,
-            'build-package': self._on_build_package_action,
-            'edit-pkgbuild': self._on_edit_pkgbuild_action,
-            'view-analysis': self._on_view_analysis_action,
-            'install-package': self._on_install_package_action,
-            'verify-signature': self._on_verify_signature_action,
-            'apply-patch': self._on_apply_patch_action,
-            'view-diff': self._on_view_diff_action,
-            'execute-custom-command': self._on_execute_custom_command_action,
-            'dry-run': self._on_dry_run_action,
-            'consult-docs': self._on_consult_docs_action,
-            'show-help-overlay': self._on_show_help_overlay,
-        }
-
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            action.connect('activate', callback)
-            self.add_action(action)
-
-    def _initialize_components(self):
-        self.show_welcome_screen()
-        self.status_label.set_text("Ready")
-        self._setup_content_cards()
-        self._setup_recent_dirs()
-
-    def _load_custom_css(self):
+        """Configura ações da aplicação"""
         try:
-            css_provider = Gtk.CssProvider()
-            css_provider.load_from_resource("/org/gnome/paru-gui/ui/style.css")
-            Gtk.StyleContext.add_provider_for_display(
-                self.get_display(),
-                css_provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-            )
+            print("🔧 Configurando ações...")
+
+            # Ação de preferências
+            preferences_action = Gio.SimpleAction.new("preferences", None)
+            preferences_action.connect("activate", self.on_preferences_action)
+            self.add_action(preferences_action)
+
+            # Ação de sobre
+            about_action = Gio.SimpleAction.new("about", None)
+            about_action.connect("activate", self.on_about_action)
+            self.add_action(about_action)
+
+            # Ação de sair
+            quit_action = Gio.SimpleAction.new("quit", None)
+            quit_action.connect("activate", self.on_quit_action)
+            self.add_action(quit_action)
+
+            print("✅ Ações configuradas")
+
         except Exception as e:
-            pass
+            print(f"❌ Erro ao configurar ações: {e}")
+
+    def _init_components(self):
+        """Inicializa componentes da interface"""
+        try:
+            print("🔧 Inicializando componentes...")
+
+            # Verificar disponibilidade dos widgets
+            self._debug_widgets()
+
+            # Inicializar manager de conteúdo se existir
+            try:
+                from .ui.managers.content_view_manager import ContentViewManager
+                self.content_manager = ContentViewManager(self)
+            except ImportError:
+                print("⚠️ ContentViewManager não encontrado - usando implementação básica")
+
+            print("✅ Componentes inicializados")
+
+        except Exception as e:
+            print(f"❌ Erro ao inicializar componentes: {e}")
 
     def show_welcome_screen(self):
-        self.main_stack.set_visible_child_name("welcome")
-        self.current_view = "welcome"
+        """Mostra a tela de boas-vindas"""
+        try:
+            print("🏠 Mostrando tela de boas-vindas...")
+
+            if self.main_stack and self.welcome_screen:
+                self.welcome_screen.set_visible(True)
+                self.main_stack.set_visible_child(self.welcome_screen)
+                self.current_view = "welcome"
+
+                # Configurar componentes da tela de boas-vindas
+                self._setup_welcome_components()
+
+                print("✅ Tela de boas-vindas ativa")
+            else:
+                print("❌ ERRO: main_stack ou welcome_screen é nulo!")
+
+        except Exception as e:
+            print(f"❌ Erro ao mostrar tela de boas-vindas: {e}")
+
+    def _setup_welcome_components(self):
+        """Configura componentes da tela de boas-vindas"""
+        try:
+            # Configurar botões com estilo padrão
+            if self.select_file_button:
+                self.select_file_button.add_css_class("pill")
+                self.select_file_button.add_css_class("suggested-action")
+
+            if self.select_folder_button:
+                self.select_folder_button.add_css_class("pill")
+
+            print("✅ Componentes de boas-vindas configurados")
+
+        except Exception as e:
+            print(f"❌ Erro ao configurar componentes de boas-vindas: {e}")
 
     def show_content_view(self, folder_path: Optional[str] = None):
-        self.main_stack.set_visible_child_name("content")
-        self.current_view = "content"
-        if folder_path:
-            self.current_folder = folder_path
-            self._update_content_view(folder_path)
+        """Mostra a visualização de conteúdo"""
+        try:
+            print("📁 Mostrando visualização de conteúdo...")
+
+            if self.main_stack and self.content_view:
+                self.content_view.set_visible(True)
+                self.main_stack.set_visible_child(self.content_view)
+                self.current_view = "content"
+
+                if folder_path:
+                    self.current_folder = folder_path
+                    self._update_content_view(folder_path)
+
+                print("✅ Visualização de conteúdo ativa")
+            else:
+                print("❌ ERRO: main_stack ou content_view é nulo!")
+
+        except Exception as e:
+            print(f"❌ Erro ao mostrar visualização de conteúdo: {e}")
 
     def show_processing_screen(self, message: str = "Processing..."):
-        self.main_stack.set_visible_child_name("processing")
-        self.current_view = "processing"
-        self.processing_label.set_text(message)
-        self.processing_spinner.set_spinning(True)
+        """Mostra a tela de processamento"""
+        try:
+            print(f"⚙️ Mostrando tela de processamento: {message}")
 
-    def show_upstream_updates_view(self):
-        self.main_stack.set_visible_child_name("upstream_updates")
-        self.current_view = "upstream_updates"
+            if self.main_stack and self.processing_screen:
+                self.processing_screen.set_visible(True)
+                self.main_stack.set_visible_child(self.processing_screen)
+                self.current_view = "processing"
 
-    def _on_select_file_clicked(self, button):
-        pass
+                if self.processing_label:
+                    self.processing_label.set_text(message)
 
-    def _on_select_folder_clicked(self, button):
-        pass
+                if self.processing_spinner:
+                    self.processing_spinner.start()
 
-    def _on_recent_dir_activated(self, flowbox, child):
-        pass
+                print("✅ Tela de processamento ativa")
+            else:
+                print("❌ ERRO: main_stack ou processing_screen é nulo!")
 
-    def _on_back_clicked(self, button):
-        self.show_welcome_screen()
-
-    def _on_action_clicked(self, button):
-        pass
-
-    def _on_content_card_activated(self, flowbox, child):
-        pass
-
-    def _on_cancel_clicked(self, button):
-        self.show_welcome_screen()
-
-    def _on_details_clicked(self, button):
-        pass
-
-    def _on_refresh_updates_clicked(self, button):
-        pass
-
-    def _on_upstream_card_activated(self, flowbox, child):
-        pass
-
-    def _on_help_clicked(self, button):
-        self._on_show_help_overlay(None, None)
-
-    def _on_search_changed(self, search_entry):
-        search_text = search_entry.get_text()
-
-    def _on_close_request(self, window):
-        return False
-
-    def _on_system_action(self, action, param):
-        pass
-
-    def _on_statistics_action(self, action, param):
-        pass
-
-    def _on_arch_news_action(self, action, param):
-        pass
-
-    def _on_clean_cache_action(self, action, param):
-        pass
-
-    def _on_update_system_action(self, action, param):
-        pass
-
-    def _on_initial_tour_action(self, action, param):
-        pass
-
-    def _on_show_upstream_updates_action(self, action, param):
-        self.show_upstream_updates_view()
-
-    def _on_preferences_action(self, action, param):
-        pass
-
-    def _on_show_trust_icons_action(self, action, param):
-        pass
-
-    def _on_block_unvoted_action(self, action, param):
-        pass
-
-    def _on_consider_update_time_action(self, action, param):
-        pass
-
-    def _on_check_comments_action(self, action, param):
-        pass
-
-    def _on_hide_advanced_action(self, action, param):
-        pass
-
-    def _on_go_home_action(self, action, param):
-        self.show_welcome_screen()
-
-    def _on_action_history_action(self, action, param):
-        pass
-
-    def _on_go_back_action(self, action, param):
-        pass
-
-    def _on_go_forward_action(self, action, param):
-        pass
-
-    def _on_search_packages_action(self, action, param):
-        self.search_entry.grab_focus()
-
-    def _on_select_file_action(self, action, param):
-        self._on_select_file_clicked(None)
-
-    def _on_select_folder_action(self, action, param):
-        self._on_select_folder_clicked(None)
-
-    def _on_refresh_view_action(self, action, param):
-        pass
-
-    def _on_download_sources_action(self, action, param):
-        pass
-
-    def _on_build_package_action(self, action, param):
-        pass
-
-    def _on_edit_pkgbuild_action(self, action, param):
-        pass
-
-    def _on_view_analysis_action(self, action, param):
-        pass
-
-    def _on_install_package_action(self, action, param):
-        pass
-
-    def _on_verify_signature_action(self, action, param):
-        pass
-
-    def _on_apply_patch_action(self, action, param):
-        pass
-
-    def _on_view_diff_action(self, action, param):
-        pass
-
-    def _on_execute_custom_command_action(self, action, param):
-        pass
-
-    def _on_dry_run_action(self, action, param):
-        pass
-
-    def _on_consult_docs_action(self, action, param):
-        pass
-
-    def _on_show_help_overlay(self, action, param):
-        pass
-
-    def _setup_content_cards(self):
-        self.content_cards.set_selection_mode(Gtk.SelectionMode.NONE)
-        self.content_cards.set_activate_on_single_click(True)
-
-    def _setup_recent_dirs(self):
-        self.recent_dirs_flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        self.recent_dirs_flowbox.set_activate_on_single_click(True)
+        except Exception as e:
+            print(f"❌ Erro ao mostrar tela de processamento: {e}")
 
     def _update_content_view(self, folder_path: str):
-        pass
+        """Atualiza a visualização de conteúdo"""
+        try:
+            print(f"🔄 Atualizando visualização de conteúdo: {folder_path}")
 
-    def update_status(self, message: str):
-        self.status_label.set_text(message)
+            # Usar content manager se disponível
+            if self.content_manager:
+                self.content_manager.load_folder_content(folder_path)
+            else:
+                print("⚠️ Content manager não disponível")
 
-    def present(self):
-        super().present()
+            # Atualizar status
+            if self.status_label:
+                self.status_label.set_text(f"Pasta: {folder_path}")
+
+        except Exception as e:
+            print(f"❌ Erro ao atualizar visualização: {e}")
+
+    def _debug_widgets(self):
+        """Debug dos widgets principais"""
+        print("👀 Verificando widgets...")
+
+        widgets = [
+            'main_stack', 'welcome_screen', 'header_bar',
+            'select_file_button', 'select_folder_button'
+        ]
+
+        for widget_name in widgets:
+            widget = getattr(self, widget_name, None)
+            if widget:
+                print(f"  ✅ {widget_name}: OK")
+            else:
+                print(f"  ❌ {widget_name}: não encontrado")
+
+    # ===== HANDLERS DE EVENTOS =====
+
+    def on_select_file_clicked(self, button):
+        """Handler para seleção de arquivo"""
+        print("📄 Seleção de arquivo solicitada")
+        # Implementar seleção de arquivo
+
+    def on_select_folder_clicked(self, button):
+        """Handler para seleção de pasta"""
+        print("📂 Seleção de pasta solicitada")
+        # Implementar seleção de pasta
+
+    def on_back_button_clicked(self, button):
+        """Handler para botão voltar"""
+        print("◀️ Botão voltar pressionado")
+        self.show_welcome_screen()
+
+    def on_search_changed(self, search_entry):
+        """Handler para mudanças na pesquisa"""
+        query = search_entry.get_text()
+        print(f"🔍 Pesquisa alterada: {query}")
+        # Implementar lógica de pesquisa
+
+    def on_help_button_clicked(self, button):
+        """Handler para botão de ajuda"""
+        print("❓ Ajuda solicitada")
+        # Implementar diálogo de ajuda
+
+    def on_preferences_action(self, action, parameter):
+        """Handler para ação de preferências"""
+        print("⚙️ Preferências solicitadas")
+        # Implementar diálogo de preferências
+
+    def on_about_action(self, action, parameter):
+        """Handler para ação sobre"""
+        print("ℹ️ Sobre solicitado")
+        # Implementar diálogo sobre
+
+    def on_quit_action(self, action, parameter):
+        """Handler para ação sair"""
+        print("🚪 Sair solicitado")
+        self.close()
+
+    def on_close_request(self, window):
+        """Handler para fechamento da janela"""
+        print("🚪 Solicitação de fechamento da janela")
+        return False  # Permite o fechamento

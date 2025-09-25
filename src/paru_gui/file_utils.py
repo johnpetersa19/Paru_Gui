@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GObject, Adw, Pango
+from gi.repository import Gtk, GObject, Adw, Pango, Gio, Gdk
 from typing import Optional, List, Dict, Any, Callable, Tuple
 import os
 from enum import Enum
@@ -25,14 +25,48 @@ class FileItem:
         self.modified_time = modified_time
 
     def get_icon_name(self) -> str:
+        """Retorna nome do ícone de forma segura, usando ícones mais básicos"""
         if self.is_dir:
-            return "folder-symbolic"
-        return {
-            "PKGBUILD": "text-x-script-symbolic",
-            "PACKAGE": "package-x-generic-symbolic",
-            "PATCH": "text-x-patch-symbolic",
-            "ADVANCED": "text-x-generic-symbolic"
-        }.get(self.file_type, "text-x-generic-symbolic")
+            return "folder"  # Remove o "-symbolic" problemático
+
+        # Ícones mais básicos e compatíveis - sem "-symbolic"
+        icon_map = {
+            "PKGBUILD": "text-x-generic",           # Em vez de text-x-script-symbolic
+            "PACKAGE": "package-x-generic",         # Remove -symbolic
+            "PATCH": "text-x-generic",              # Em vez de text-x-patch-symbolic
+            "ADVANCED": "text-x-generic"            # Mantém genérico
+        }
+        return icon_map.get(self.file_type, "text-x-generic")
+
+def safe_load_icon(icon_name: str, size: int = 48) -> Gtk.Image:
+    """Carrega ícone de forma segura com fallback para evitar erros de GdkPixbuf"""
+    try:
+        # Primeiro, verifica se o ícone existe no tema atual
+        theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+
+        if theme.has_icon(icon_name):
+            icon = Gtk.Image.new_from_icon_name(icon_name)
+            icon.set_pixel_size(size)
+            return icon
+        else:
+            print(f"⚠️  Ícone '{icon_name}' não encontrado, usando fallback")
+            # Tenta ícones de fallback básicos
+            fallback_icons = ["text-x-generic", "application-x-executable", "text-plain"]
+            for fallback in fallback_icons:
+                if theme.has_icon(fallback):
+                    icon = Gtk.Image.new_from_icon_name(fallback)
+                    icon.set_pixel_size(size)
+                    return icon
+
+            # Último recurso: ícone vazio
+            return Gtk.Image()
+
+    except Exception as e:
+        print(f"❌ Erro ao carregar ícone '{icon_name}': {e}")
+        # Cria um ícone vazio como último recurso
+        empty_icon = Gtk.Image()
+        empty_icon.set_pixel_size(size)
+        return empty_icon
 
 @Gtk.Template(resource_path="/org/gnome/paru-gui/ui/screens/content_view.ui")
 class ContentView(Gtk.Box):
@@ -136,11 +170,13 @@ class ContentView(Gtk.Box):
             'sort-descending': lambda a, p: self.set_sort_direction(False),
         }
 
+        action_group = Gio.SimpleActionGroup()
         for name, callback in actions.items():
             action = Gio.SimpleAction.new(name, None)
             action.connect('activate', callback)
-            self.insert_action_group('content', Gio.SimpleActionGroup())
-            self.get_action_group('content').add_action(action)
+            action_group.add_action(action)
+
+        self.insert_action_group('content', action_group)
 
     def load_content(self, path: str, items: Optional[List[FileItem]] = None):
         self._current_path = path
@@ -313,8 +349,8 @@ class ContentView(Gtk.Box):
             margin_top=12, margin_bottom=12
         )
 
-        icon = Gtk.Image.new_from_icon_name(item.get_icon_name())
-        icon.set_pixel_size(48)
+        # ✅ CORREÇÃO APLICADA: Usar carregamento seguro de ícones
+        icon = safe_load_icon(item.get_icon_name(), 48)
 
         name_label = Gtk.Label(
             label=item.name,
@@ -357,8 +393,8 @@ class ContentView(Gtk.Box):
             margin_top=8, margin_bottom=8
         )
 
-        icon = Gtk.Image.new_from_icon_name(item.get_icon_name())
-        icon.set_pixel_size(32)
+        # ✅ CORREÇÃO APLICADA: Usar carregamento seguro de ícones
+        icon = safe_load_icon(item.get_icon_name(), 32)
 
         info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         info_box.set_hexpand(True)
@@ -440,13 +476,84 @@ class ContentView(Gtk.Box):
         self.emit("action-requested", "default", self._selected_items)
 
     def _on_flowbox_item_activated(self, flowbox: Gtk.FlowBox, child: Gtk.FlowBoxChild):
-        pass
+        """Callback para quando um item é ativado no grid view"""
+        try:
+            # Encontra o índice do item baseado no child
+            index = -1
+            current_child = flowbox.get_first_child()
+            current_index = 0
+
+            while current_child:
+                if current_child == child:
+                    index = current_index
+                    break
+                current_child = current_child.get_next_sibling()
+                current_index += 1
+
+            if 0 <= index < len(self._filtered_items):
+                item = self._filtered_items[index]
+                self.emit("item-activated", item)
+                print(f"🖱️  Item ativado: {item.name}")
+
+        except Exception as e:
+            print(f"❌ Erro ao processar ativação do item: {e}")
 
     def _on_flowbox_selection_changed(self, flowbox: Gtk.FlowBox):
-        pass
+        """Callback para mudanças de seleção no grid view"""
+        try:
+            # Atualiza lista de itens selecionados
+            self._selected_items.clear()
+            selected_children = flowbox.get_selected_children()
+
+            for child in selected_children:
+                # Encontra o índice do item baseado no child
+                current_child = flowbox.get_first_child()
+                current_index = 0
+
+                while current_child:
+                    if current_child == child:
+                        if 0 <= current_index < len(self._filtered_items):
+                            item = self._filtered_items[current_index]
+                            self._selected_items.append(item)
+                            self.emit("item-selected", item)
+                        break
+                    current_child = current_child.get_next_sibling()
+                    current_index += 1
+
+            self._update_status_bar()
+            print(f"📋 Seleção atualizada: {len(self._selected_items)} itens")
+
+        except Exception as e:
+            print(f"❌ Erro ao processar mudança de seleção: {e}")
 
     def _on_listbox_item_activated(self, listbox: Gtk.ListBox, row: Gtk.ListBoxRow):
-        pass
+        """Callback para quando um item é ativado no list view"""
+        try:
+            index = row.get_index()
+            if 0 <= index < len(self._filtered_items):
+                item = self._filtered_items[index]
+                self.emit("item-activated", item)
+                print(f"🖱️  Item ativado: {item.name}")
+
+        except Exception as e:
+            print(f"❌ Erro ao processar ativação do item: {e}")
 
     def _on_listbox_selection_changed(self, listbox: Gtk.ListBox):
-        pass
+        """Callback para mudanças de seleção no list view"""
+        try:
+            # Atualiza lista de itens selecionados
+            self._selected_items.clear()
+            selected_rows = listbox.get_selected_rows()
+
+            for row in selected_rows:
+                index = row.get_index()
+                if 0 <= index < len(self._filtered_items):
+                    item = self._filtered_items[index]
+                    self._selected_items.append(item)
+                    self.emit("item-selected", item)
+
+            self._update_status_bar()
+            print(f"📋 Seleção atualizada: {len(self._selected_items)} itens")
+
+        except Exception as e:
+            print(f"❌ Erro ao processar mudança de seleção: {e}")

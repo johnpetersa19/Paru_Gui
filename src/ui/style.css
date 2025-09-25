@@ -1,508 +1,351 @@
-/* Search Bar */
-ParuSearchBar {
-    padding: 6px 12px;
-    border-bottom: 1px solid alpha(@borders, 0.8);
-    background-color: @theme_base_color;
+/* ===========================================
+   PARU GUI - TEMAS PADRÃO DO SISTEMA
+   Versão limpa com estilos básicos
+   =========================================== */
+
+/* ===== CONFIGURAÇÕES BÁSICAS ===== */
+
+/* Janela principal - usa cores padrão do sistema */
+window {
+    background-color: @window_bg_color;
+    color: @window_fg_color;
 }
 
-/* File Chooser Dialog */
-FileChooserDialog .dialog-content-area {
-    padding: 12px;
+/* Headers e barras de título */
+headerbar {
+    background-color: @headerbar_bg_color;
+    color: @headerbar_fg_color;
 }
 
-FileChooserDialog .location-entry {
-    margin-bottom: 6px;
+/* ===== BOTÕES COM CLASSES PADRÃO ===== */
+
+/* Botão de ação sugerida (azul) */
+.suggested-action {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
 }
 
-FileChooserDialog .sidebar {
-    background-color: @theme_bg_color;
-    border-right: 1px solid @borders;
+.suggested-action:hover {
+    background-color: mix(@accent_bg_color, @headerbar_bg_color, 0.8);
 }
 
-FileChooserDialog .file-list {
-    background-color: @theme_base_color;
+/* Botão destrutivo (vermelho) */
+.destructive-action {
+    background-color: @error_color;
+    color: @window_bg_color;
 }
 
-FileChooserDialog .file-item {
-    padding: 6px;
-    border-radius: 6px;
+.destructive-action:hover {
+    background-color: mix(@error_color, @headerbar_bg_color, 0.8);
 }
 
-FileChooserDialog .file-item:hover {
-    background-color: alpha(@theme_fg_color, 0.1);
+/* Botões com aparência plana */
+.flat {
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
-FileChooserDialog .file-item:selected {
-    background-color: @theme_selected_bg_color;
-    color: @theme_selected_fg_color;
+/* Botões circulares */
+.circular {
+    border-radius: 50%;
 }
 
-/* --- Estilos para Telas --- */
-
-/* Welcome Screen */
-WelcomeScreen {
-    background-color: @theme_bg_color;
+/* Botões em formato pílula */
+.pill {
+    border-radius: 9999px;
 }
 
-WelcomeScreen .app-title {
-    font-size: 24pt;
-    font-weight: bold;
-    color: @theme_fg_color;
-}
+/* ===== CARDS E CONTÊINERES ===== */
 
-WelcomeScreen .app-description {
-    font-size: 12pt;
-    color: alpha(@theme_fg_color, 0.7);
-}
-
-/* Content View */
-ContentView {
-    background-color: @theme_bg_color;
-}
-
-ContentView .content-header {
-    padding: 12px;
-    border-bottom: 1px solid @borders;
-    background-color: shade(@theme_bg_color, 0.95);
-}
-
-ContentView .path-label {
-    font-family: monospace;
-    color: @theme_fg_color;
-}
-
-ContentView .file-grid {
-    padding: 12px;
-    background-color: @theme_base_color;
-}
-
-ContentView .package-card {
-    padding: 12px;
-    border-radius: 12px;
-    background-color: @theme_base_color;
-    border: 1px solid @borders;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-ContentView .package-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border-color: @theme_selected_bg_color;
-}
-
-ContentView .package-card .card-header {
-    margin-bottom: 8px;
-}
-
-ContentView .package-card .package-name {
-    font-weight: bold;
-    color: @theme_fg_color;
-}
-
-ContentView .package-card .package-meta {
-    font-size: smaller;
-    color: alpha(@theme_fg_color, 0.7);
-}
-
-/* PKGBUILD Review Screen */
-PkgbuildReviewDialog {
-    background-color: @theme_bg_color;
-}
-
-PkgbuildReviewDialog .pkgbuild-header {
-    padding: 16px;
-    border-bottom: 1px solid @borders;
-    background-color: shade(@theme_bg_color, 0.95);
-}
-
-PkgbuildReviewDialog .package-info-box {
-    padding: 12px;
-    border-bottom: 1px solid @borders;
-}
-
-PkgbuildReviewDialog .risk-section {
-    margin: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid @borders;
-}
-
-PkgbuildReviewDialog .risk-critical {
-    background-color: alpha(@error_color, 0.2);
-    color: @theme_fg_color;
-    border-color: @error_color;
-}
-
-PkgbuildReviewDialog .risk-high {
-    background-color: alpha(@error_color, 0.1);
-    color: @theme_fg_color;
-    border-color: alpha(@error_color, 0.5);
-}
-
-PkgbuildReviewDialog .risk-medium {
-    background-color: alpha(@warning_color, 0.1);
-    color: @theme_fg_color;
-    border-color: alpha(@warning_color, 0.5);
-}
-
-PkgbuildReviewDialog .risk-low {
-    background-color: alpha(@success_color, 0.1);
-    color: @theme_fg_color;
-    border-color: alpha(@success_color, 0.5);
-}
-
-PkgbuildReviewDialog .risk-info {
-    background-color: alpha(@theme_selected_bg_color, 0.1);
-    color: @theme_fg_color;
-    border-color: alpha(@theme_selected_bg_color, 0.5);
-}
-
-PkgbuildReviewDialog .risk-line {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: smaller;
-}
-
-PkgbuildReviewDialog .risk-line.critical {
-    background-color: alpha(@error_color, 0.3);
-}
-
-PkgbuildReviewDialog .risk-line.high {
-    background-color: alpha(@warning_color, 0.3);
-}
-
-PkgbuildReviewDialog .risk-line.medium {
-    background-color: alpha(@theme_selected_bg_color, 0.2);
-}
-
-PkgbuildReviewDialog .analysis-content {
-    padding: 12px;
-    background-color: @theme_base_color;
-    font-family: monospace;
-    font-size: smaller;
-}
-
-/* Upstream Update Screen */
-UpstreamUpdateScreen {
-    padding: 12px;
-    background-color: @theme_bg_color;
-}
-
-UpstreamUpdateScreen .update-info {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid @borders;
-    background-color: @theme_base_color;
-    margin-bottom: 12px;
-}
-
-UpstreamUpdateScreen .patch-content {
-    font-family: monospace;
-    font-size: smaller;
-    background-color: @theme_base_color;
-    border: 1px solid @borders;
-    padding: 8px;
-    margin-top: 6px;
-    margin-bottom: 12px;
-}
-
-/* --- Estilos para Estados e Widgets Genéricos --- */
-
-/* Empty State */
-.empty-state {
-    padding: 24px;
-}
-
-.empty-state .empty-icon {
-    margin-bottom: 18px;
-    color: alpha(@theme_fg_color, 0.5);
-}
-
-.empty-state .empty-title {
-    font-size: 18pt;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: @theme_fg_color;
-}
-
-.empty-state .empty-description {
-    font-size: 11pt;
-    color: alpha(@theme_fg_color, 0.7);
-}
-
-/* Error State */
-.error-state {
-    background-color: alpha(@error_color, 0.1);
-    color: @error_color;
-}
-
-.warning-state {
-    background-color: alpha(@warning_color, 0.1);
-    color: @warning_color;
-}
-
-.info-state {
-    background-color: alpha(@theme_selected_bg_color, 0.1);
-    color: @theme_selected_bg_color;
-}
-
-.loading-state {
-    background-color: alpha(@theme_fg_color, 0.05);
-}
-
-/* Error Dialog - VERSÃO CORRIGIDA */
-#ErrorDialog {
-    background-color: @theme_bg_color;
-}
-
-/* Remove espaços indesejados */
-#ErrorDialog .dialog-content-area {
-    padding: 0;
-    margin: 0;
-}
-
-#ErrorDialog .dialog-action-area {
-    padding: 12px;
-    margin: 0;
-    border-top: 1px solid @borders;
-    background-color: @theme_bg_color;
-}
-
-.error-dialog-content {
-    padding: 0;
-    margin: 0;
-}
-
-.error-dialog-content .error-header {
-    padding: 16px;
-    margin: 0;
-    border-bottom: 1px solid @borders;
-    background-color: shade(@theme_bg_color, 0.98);
-}
-
-.error-dialog-content .error-icon {
-    margin-right: 12px;
-    color: @error_color;
-}
-
-.error-dialog-content .error-type {
-    font-size: 14pt;
-    font-weight: bold;
-    color: @error_color;
-    margin-bottom: 6px;
-}
-
-.error-dialog-content .error-package {
-    font-size: 11pt;
-    font-weight: bold;
-    margin-bottom: 12px;
-}
-
-.error-dialog-content .error-message {
-    font-size: 10pt;
-    color: @theme_fg_color;
-    margin-bottom: 12px;
-}
-
-.error-dialog-content .error-details {
-    font-family: monospace;
-    font-size: 9pt;
-    background-color: @theme_base_color;
-    border: 1px solid @borders;
-    padding: 12px;
-    margin: 12px 0;
-}
-
-/* --- Estilos para Cards --- */
-
+/* Cards básicos */
 .card {
-    border-radius: 12px;
+    background-color: @card_bg_color;
+    color: @card_fg_color;
     border: 1px solid @borders;
-    background-color: @theme_base_color;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
 }
 
-.content-card {
-    padding: 16px;
-    margin: 8px;
+/* ===== TEXTO E TIPOGRAFIA ===== */
+
+/* Títulos */
+.title-1 {
+    font-size: 2em;
+    font-weight: 800;
+    line-height: 1.2;
 }
 
-.package-card {
-    padding: 16px;
-    margin: 8px;
+.title-2 {
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 1.3;
 }
 
-.pkgbuild-card {
-    border-color: alpha(@theme_selected_bg_color, 0.3);
+.title-3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-.patch-card {
-    border-color: alpha(@warning_color, 0.3);
+.title-4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-.advanced-card {
-    padding: 16px;
-    margin: 8px;
-    background-color: alpha(@theme_selected_bg_color, 0.05);
-    border-color: alpha(@theme_selected_bg_color, 0.3);
+/* Cabeçalhos */
+.heading {
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-.empty-card {
-    background-color: alpha(@theme_fg_color, 0.02);
-    border-style: dashed;
-    border-color: alpha(@theme_fg_color, 0.2);
+/* Texto do corpo */
+.body {
+    line-height: 1.5;
 }
 
-/* --- Estilos para Botões --- */
-
-.small-button {
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: smaller;
-}
-
-.pill {
-    border-radius: 20px;
-    padding: 8px 16px;
-}
-
-.flat.pill {
-    border: 1px solid transparent;
-}
-
-/* --- Estilos para Labels --- */
-
-.bold {
-    font-weight: bold;
-}
-
+/* Legendas pequenas */
 .caption {
-    font-size: smaller;
+    font-size: 0.9em;
+    line-height: 1.4;
 }
 
+/* Labels esmaecidos */
 .dim-label {
     opacity: 0.7;
 }
 
-.error-color {
-    color: @error_color;
-}
-
-.warning-color {
-    color: @warning_color;
-}
-
-.success-color {
-    color: @success_color;
-}
-
+/* Texto monoespaçado */
 .monospace {
     font-family: monospace;
 }
 
-/* --- Estilos para Terminal --- */
+/* ===== ESTADOS DE INTERFACE ===== */
 
-.terminal-view {
-    font-family: monospace;
-    background-color: @theme_base_color;
-    color: @theme_fg_color;
-    padding: 8px;
-    border: 1px solid @borders;
-    border-radius: 6px;
+/* Estados vazios */
+.empty-state {
+    padding: 48px 24px;
 }
 
-.terminal-box {
-    background-color: alpha(@theme_fg_color, 0.02);
-    border: 1px solid @borders;
-    border-radius: 8px;
+.empty-state .empty-icon {
+    margin-bottom: 24px;
+    opacity: 0.5;
 }
 
-/* --- Estilos para Heatmap --- */
-
-.heatmap-view {
-    font-family: monospace;
-    font-size: smaller;
-    background-color: @theme_base_color;
-    padding: 8px;
-    border: 1px solid @borders;
-    border-radius: 6px;
+/* Estados de erro */
+.error-state {
+    background-color: @error_bg_color;
+    color: @error_fg_color;
+    border: 1px solid @error_color;
 }
 
-.heatmap-critical {
-    background-color: alpha(@error_color, 0.4);
-    color: @theme_fg_color;
+/* Estados de aviso */
+.warning-state {
+    background-color: @warning_bg_color;
+    color: @warning_fg_color;
+    border: 1px solid @warning_color;
 }
 
-.heatmap-high {
-    background-color: alpha(@warning_color, 0.4);
-    color: @theme_fg_color;
+/* Estados de sucesso */
+.success-state {
+    background-color: @success_bg_color;
+    color: @success_fg_color;
+    border: 1px solid @success_color;
 }
 
-.heatmap-medium {
-    background-color: alpha(@theme_selected_bg_color, 0.3);
-    color: @theme_fg_color;
+/* ===== COMPONENTES ESPECÍFICOS ===== */
+
+/* Barras de pesquisa */
+searchbar {
+    background-color: @headerbar_bg_color;
+    border-bottom: 1px solid @borders;
 }
 
-.heatmap-low {
-    background-color: alpha(@success_color, 0.3);
-    color: @theme_fg_color;
-}
-
-.heatmap-info {
-    background-color: alpha(@theme_fg_color, 0.1);
-    color: @theme_fg_color;
-}
-
-/* --- Correções Gerais --- */
-
-/* Remove espaços em branco indesejados */
-.dialog-vbox,
-.dialog-hbox {
-    margin: 0;
-    padding: 0;
-}
-
-/* ✅ CORREÇÃO APLICADA: Substituindo 'display: none' por alternativas compatíveis com GTK */
-/* Elementos vazios agora são ocultados de forma compatível com GTK4/Libadwaita */
-.empty-box,
-.placeholder,
-.spacer {
-    opacity: 0;
-    margin: 0;
-    padding: 0;
-    min-height: 0;
-    min-width: 0;
-}
-
-/* --- Melhorias Adicionais para Compatibilidade GTK4 --- */
-
-/* Garante compatibilidade com Libadwaita */
-window {
-    background-color: @window_bg_color;
-}
-
-/* Melhora a aparência dos scrollbars */
+/* Barras de rolagem */
 scrollbar {
-    background-color: alpha(@theme_fg_color, 0.1);
-    border-radius: 6px;
+    background-color: transparent;
 }
 
 scrollbar slider {
-    background-color: alpha(@theme_fg_color, 0.3);
+    background-color: alpha(@scrollbar_outline_color, 0.3);
     border-radius: 6px;
+    min-width: 6px;
+    min-height: 6px;
 }
 
 scrollbar slider:hover {
-    background-color: alpha(@theme_fg_color, 0.5);
+    background-color: alpha(@scrollbar_outline_color, 0.5);
 }
 
-/* Melhora a aparência dos separadores */
+/* Separadores */
 separator {
     background-color: @borders;
     min-width: 1px;
     min-height: 1px;
 }
+
+/* ===== LISTAS E VISUALIZAÇÕES ===== */
+
+/* Caixas de lista */
+listbox {
+    background-color: @view_bg_color;
+    color: @view_fg_color;
+}
+
+listbox row {
+    border-bottom: 1px solid alpha(@borders, 0.3);
+}
+
+listbox row:hover {
+    background-color: alpha(@theme_selected_bg_color, 0.1);
+}
+
+listbox row:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+/* FlowBox para grades */
+flowbox {
+    background-color: @view_bg_color;
+}
+
+flowbox flowboxchild {
+    border-radius: 8px;
+}
+
+flowbox flowboxchild:hover {
+    background-color: alpha(@theme_selected_bg_color, 0.1);
+}
+
+flowbox flowboxchild:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+/* ===== DIÁLOGOS E POPOVERS ===== */
+
+/* Diálogos */
+dialog {
+    background-color: @dialog_bg_color;
+    color: @dialog_fg_color;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Popovers */
+popover {
+    background-color: @popover_bg_color;
+    color: @popover_fg_color;
+    border: 1px solid @borders;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== BARRAS DE INFORMAÇÃO ===== */
+
+/* InfoBar genérico */
+infobar {
+    border-radius: 8px;
+    margin: 6px;
+    padding: 12px;
+}
+
+/* InfoBar de informação */
+infobar.info {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* InfoBar de aviso */
+infobar.warning {
+    background-color: @warning_bg_color;
+    color: @warning_fg_color;
+}
+
+/* InfoBar de erro */
+infobar.error {
+    background-color: @error_bg_color;
+    color: @error_fg_color;
+}
+
+/* ===== COMPONENTES DE CARREGAMENTO ===== */
+
+/* Spinners */
+spinner {
+    opacity: 0.8;
+}
+
+/* Barras de progresso */
+progressbar {
+    background-color: alpha(@theme_selected_bg_color, 0.2);
+    border-radius: 4px;
+}
+
+progressbar progress {
+    background-color: @theme_selected_bg_color;
+    border-radius: 4px;
+}
+
+/* ===== COMPONENTES ESPECÍFICOS DO PARU GUI ===== */
+
+/* Cards de pacotes */
+.package-card {
+    padding: 16px;
+    margin: 8px;
+    background-color: @card_bg_color;
+    border: 1px solid @borders;
+    border-radius: 12px;
+}
+
+.package-card:hover {
+    border-color: @theme_selected_bg_color;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards de PKGBUILD */
+.pkgbuild-card {
+    border-left: 4px solid @accent_bg_color;
+}
+
+/* Cards de patch */
+.patch-card {
+    border-left: 4px solid @warning_color;
+}
+
+/* Tela de boas-vindas */
+.welcome-screen {
+    background-color: @view_bg_color;
+    padding: 24px;
+}
+
+/* Visualização de conteúdo */
+.content-view {
+    background-color: @view_bg_color;
+}
+
+/* Botões pequenos */
+.small-button {
+    padding: 4px 12px;
+    font-size: 0.9em;
+}
+
+/* ===== CORREÇÕES DE COMPATIBILIDADE ===== */
+
+/* Remove estilos problemáticos que causavam transparência */
+* {
+    /* Garante que nenhum elemento seja transparente por padrão */
+    opacity: inherit;
+}
+
+/* Garante que containers tenham fundo sólido */
+box, grid, stack {
+    background-color: inherit;
+}
+
+
