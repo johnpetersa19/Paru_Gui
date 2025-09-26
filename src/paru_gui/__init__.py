@@ -1,7 +1,5 @@
 """Paru GUI - Main package initialization."""
 
-__version__ = "0.1.0"
-__author__ = "MiniMax Agent"
 __description__ = "A modern and secure graphical interface for managing Arch User Repository (AUR) packages"
 
 from .error_handler import ErrorHandler
@@ -33,4 +31,3 @@ __all__ = [
     'TourGuide',
     'UpstreamChecker',
 ]
-
