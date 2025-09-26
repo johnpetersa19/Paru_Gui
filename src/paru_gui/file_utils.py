@@ -1,559 +1,552 @@
-from gi.repository import Gtk, GObject, Adw, Pango, Gio, Gdk
-from typing import Optional, List, Dict, Any, Callable, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 import os
+import re
+import subprocess
+import tempfile
+import shutil
+from pathlib import Path
+from dataclasses import dataclass, field
 from enum import Enum
 
-class ViewMode(Enum):
-    GRID = "grid"
-    LIST = "list"
-    DETAILS = "details"
 
-class SortMode(Enum):
-    NAME = "name"
-    TYPE = "type"
-    SIZE = "size"
-    MODIFIED = "modified"
+class PackageType(Enum):
+    BINARY = "binary"
+    SOURCE = "source"
+    SPLIT = "split"
+    GROUP = "group"
 
-class FileItem:
-    def __init__(self, name: str, path: str, is_dir: bool = False,
-                 file_type: str = "UNKNOWN", size: int = 0, modified_time: float = 0.0):
-        self.name = name
-        self.path = path
-        self.is_dir = is_dir
-        self.file_type = file_type
-        self.size = size
-        self.modified_time = modified_time
 
-    def get_icon_name(self) -> str:
-        """Retorna nome do ícone de forma segura, usando ícones mais básicos"""
-        if self.is_dir:
-            return "folder"  # Remove o "-symbolic" problemático
+class SecurityLevel(Enum):
+    SAFE = "safe"
+    CAUTION = "caution"
+    WARNING = "warning"
+    DANGER = "danger"
 
-        # Ícones mais básicos e compatíveis - sem "-symbolic"
-        icon_map = {
-            "PKGBUILD": "text-x-generic",           # Em vez de text-x-script-symbolic
-            "PACKAGE": "package-x-generic",         # Remove -symbolic
-            "PATCH": "text-x-generic",              # Em vez de text-x-patch-symbolic
-            "ADVANCED": "text-x-generic"            # Mantém genérico
+
+@dataclass
+class PKGBUILDInfo:
+    pkgname: str = ""
+    pkgver: str = ""
+    pkgrel: str = ""
+    pkgdesc: str = ""
+    arch: List[str] = field(default_factory=list)
+    url: str = ""
+    license: List[str] = field(default_factory=list)
+    depends: List[str] = field(default_factory=list)
+    makedepends: List[str] = field(default_factory=list)
+    optdepends: List[str] = field(default_factory=list)
+    provides: List[str] = field(default_factory=list)
+    conflicts: List[str] = field(default_factory=list)
+    replaces: List[str] = field(default_factory=list)
+    source: List[str] = field(default_factory=list)
+    sha256sums: List[str] = field(default_factory=list)
+    md5sums: List[str] = field(default_factory=list)
+    sha512sums: List[str] = field(default_factory=list)
+    backup: List[str] = field(default_factory=list)
+    options: List[str] = field(default_factory=list)
+    install: str = ""
+    changelog: str = ""
+    validpgpkeys: List[str] = field(default_factory=list)
+    epoch: str = ""
+    groups: List[str] = field(default_factory=list)
+    has_build_function: bool = False
+    has_package_function: bool = False
+    has_prepare_function: bool = False
+    has_check_function: bool = False
+    is_valid: bool = False
+    errors: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    security_level: SecurityLevel = SecurityLevel.SAFE
+    file_path: str = ""
+
+
+@dataclass
+class PackageInfo:
+    pkgname: str = ""
+    pkgbase: str = ""
+    pkgver: str = ""
+    pkgdesc: str = ""
+    arch: str = ""
+    url: str = ""
+    license: List[str] = field(default_factory=list)
+    groups: List[str] = field(default_factory=list)
+    provides: List[str] = field(default_factory=list)
+    depends: List[str] = field(default_factory=list)
+    optdepends: List[str] = field(default_factory=list)
+    makedepends: List[str] = field(default_factory=list)
+    conflicts: List[str] = field(default_factory=list)
+    replaces: List[str] = field(default_factory=list)
+    backup: List[str] = field(default_factory=list)
+    packager: str = ""
+    builddate: str = ""
+    installdate: str = ""
+    size: int = 0
+    reason: int = 0
+    validation: List[str] = field(default_factory=list)
+    files: List[str] = field(default_factory=list)
+    file_count: int = 0
+    compressed_size: int = 0
+    package_type: PackageType = PackageType.BINARY
+    is_valid: bool = False
+    errors: List[str] = field(default_factory=list)
+    file_path: str = ""
+
+
+class FileUtils:
+
+    def __init__(self):
+        self.temp_dirs: List[str] = []
+        self.supported_compressions = ['.xz', '.zst', '.gz', '.bz2']
+        self.dangerous_commands = [
+            'rm -rf', 'sudo', 'su ', 'wget', 'curl', 'git clone',
+            'chmod +x', 'chown', 'dd ', 'mkfs', 'mount', 'umount'
+        ]
+
+    def __del__(self):
+        self.cleanup_temp_dirs()
+
+    def cleanup_temp_dirs(self):
+        for temp_dir in self.temp_dirs:
+            try:
+                if os.path.exists(temp_dir):
+                    shutil.rmtree(temp_dir)
+            except Exception:
+                pass
+        self.temp_dirs.clear()
+
+    def analyze_pkgbuild(self, pkgbuild_path: str) -> PKGBUILDInfo:
+        info = PKGBUILDInfo(file_path=pkgbuild_path)
+
+        if not os.path.exists(pkgbuild_path):
+            info.errors.append("PKGBUILD file not found")
+            return info
+
+        try:
+            with open(pkgbuild_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            try:
+                with open(pkgbuild_path, 'r', encoding='latin-1') as f:
+                    content = f.read()
+            except Exception as e:
+                info.errors.append(f"Failed to read file: {e}")
+                return info
+        except Exception as e:
+            info.errors.append(f"Failed to read file: {e}")
+            return info
+
+        info = self._parse_pkgbuild_content(content, info)
+        info = self._validate_pkgbuild(info)
+        info = self._analyze_security(content, info)
+
+        return info
+
+    def analyze_package(self, package_path: str) -> PackageInfo:
+        info = PackageInfo(file_path=package_path)
+
+        if not os.path.exists(package_path):
+            info.errors.append("Package file not found")
+            return info
+
+        if not self._is_valid_package_file(package_path):
+            info.errors.append("Invalid package file format")
+            return info
+
+        try:
+            info.compressed_size = os.path.getsize(package_path)
+
+            temp_dir = tempfile.mkdtemp()
+            self.temp_dirs.append(temp_dir)
+
+            pkginfo_content = self._extract_pkginfo(package_path, temp_dir)
+            if pkginfo_content:
+                info = self._parse_pkginfo_content(pkginfo_content, info)
+            else:
+                info.errors.append("Failed to extract .PKGINFO")
+                return info
+
+            file_list = self._extract_file_list(package_path)
+            if file_list:
+                info.files = file_list
+                info.file_count = len(file_list)
+
+            info.is_valid = len(info.errors) == 0
+
+        except Exception as e:
+            info.errors.append(f"Failed to analyze package: {e}")
+
+        return info
+
+    def extract_source_files(self, pkgbuild_path: str, dest_dir: str) -> Tuple[bool, List[str]]:
+        extracted_files = []
+
+        if not os.path.exists(pkgbuild_path):
+            return False, ["PKGBUILD not found"]
+
+        pkgbuild_info = self.analyze_pkgbuild(pkgbuild_path)
+        if not pkgbuild_info.is_valid:
+            return False, pkgbuild_info.errors
+
+        work_dir = os.path.dirname(pkgbuild_path)
+
+        try:
+            for source in pkgbuild_info.source:
+                source_clean = self._clean_source_url(source)
+
+                if self._is_url(source_clean):
+                    filename = self._get_filename_from_url(source_clean)
+                    dest_path = os.path.join(dest_dir, filename)
+
+                    if self._download_file(source_clean, dest_path):
+                        extracted_files.append(dest_path)
+                else:
+                    source_path = os.path.join(work_dir, source_clean)
+                    dest_path = os.path.join(dest_dir, os.path.basename(source_clean))
+
+                    if os.path.exists(source_path):
+                        shutil.copy2(source_path, dest_path)
+                        extracted_files.append(dest_path)
+
+        except Exception as e:
+            return False, [f"Extraction failed: {e}"]
+
+        return len(extracted_files) > 0, extracted_files
+
+    def validate_checksums(self, pkgbuild_path: str) -> Tuple[bool, Dict[str, Any]]:
+        if not os.path.exists(pkgbuild_path):
+            return False, {"error": "PKGBUILD not found"}
+
+        pkgbuild_info = self.analyze_pkgbuild(pkgbuild_path)
+        work_dir = os.path.dirname(pkgbuild_path)
+
+        validation_results = {
+            "valid": True,
+            "results": {},
+            "missing_files": [],
+            "checksum_mismatches": [],
+            "warnings": []
         }
-        return icon_map.get(self.file_type, "text-x-generic")
 
-def safe_load_icon(icon_name: str, size: int = 48) -> Gtk.Image:
-    """Carrega ícone de forma segura com fallback para evitar erros de GdkPixbuf"""
-    try:
-        # Primeiro, verifica se o ícone existe no tema atual
-        theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+        try:
+            for i, source in enumerate(pkgbuild_info.source):
+                source_clean = self._clean_source_url(source)
 
-        if theme.has_icon(icon_name):
-            icon = Gtk.Image.new_from_icon_name(icon_name)
-            icon.set_pixel_size(size)
-            return icon
-        else:
-            print(f"⚠️  Ícone '{icon_name}' não encontrado, usando fallback")
-            # Tenta ícones de fallback básicos
-            fallback_icons = ["text-x-generic", "application-x-executable", "text-plain"]
-            for fallback in fallback_icons:
-                if theme.has_icon(fallback):
-                    icon = Gtk.Image.new_from_icon_name(fallback)
-                    icon.set_pixel_size(size)
-                    return icon
+                if self._is_url(source_clean):
+                    filename = self._get_filename_from_url(source_clean)
+                else:
+                    filename = source_clean
 
-            # Último recurso: ícone vazio
-            return Gtk.Image()
+                file_path = os.path.join(work_dir, filename)
 
-    except Exception as e:
-        print(f"❌ Erro ao carregar ícone '{icon_name}': {e}")
-        # Cria um ícone vazio como último recurso
-        empty_icon = Gtk.Image()
-        empty_icon.set_pixel_size(size)
-        return empty_icon
+                if not os.path.exists(file_path):
+                    validation_results["missing_files"].append(filename)
+                    validation_results["valid"] = False
+                    continue
 
-@Gtk.Template(resource_path="/org/gnome/paru-gui/ui/screens/content_view.ui")
-class ContentView(Gtk.Box):
-    __gtype_name__ = "ContentView"
+                expected_checksums = {
+                    'sha256': pkgbuild_info.sha256sums[i] if i < len(pkgbuild_info.sha256sums) else None,
+                    'md5': pkgbuild_info.md5sums[i] if i < len(pkgbuild_info.md5sums) else None,
+                    'sha512': pkgbuild_info.sha512sums[i] if i < len(pkgbuild_info.sha512sums) else None
+                }
 
-    toolbar = Gtk.Template.Child()
-    path_label = Gtk.Template.Child()
-    view_mode_buttons = Gtk.Template.Child()
-    grid_view_button = Gtk.Template.Child()
-    list_view_button = Gtk.Template.Child()
-    sort_button = Gtk.Template.Child()
-    main_stack = Gtk.Template.Child()
-    grid_scrolled = Gtk.Template.Child()
-    content_flowbox = Gtk.Template.Child()
-    list_scrolled = Gtk.Template.Child()
-    content_listbox = Gtk.Template.Child()
-    status_bar = Gtk.Template.Child()
-    items_count_label = Gtk.Template.Child()
-    selection_info_label = Gtk.Template.Child()
-    action_bar = Gtk.Template.Child()
-    back_button = Gtk.Template.Child()
-    refresh_button = Gtk.Template.Child()
-    action_button = Gtk.Template.Child()
+                file_results = {"filename": filename, "checksums": {}}
 
-    __gsignals__ = {
-        'item-selected': (GObject.SignalFlags.RUN_LAST, None, (object,)),
-        'item-activated': (GObject.SignalFlags.RUN_LAST, None, (object,)),
-        'back-requested': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'refresh-requested': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'action-requested': (GObject.SignalFlags.RUN_LAST, None, (str, object)),
-    }
+                for hash_type, expected in expected_checksums.items():
+                    if expected and expected != 'SKIP':
+                        actual = self._calculate_checksum(file_path, hash_type)
+                        file_results["checksums"][hash_type] = {
+                            "expected": expected,
+                            "actual": actual,
+                            "match": actual == expected
+                        }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._current_path: Optional[str] = None
-        self._all_items: List[FileItem] = []
-        self._filtered_items: List[FileItem] = []
-        self._selected_items: List[FileItem] = []
-        self._view_mode = ViewMode.GRID
-        self._sort_mode = SortMode.NAME
-        self._sort_ascending = True
-        self._filter_text = ""
-        self._loading = False
+                        if actual != expected:
+                            validation_results["checksum_mismatches"].append({
+                                "file": filename,
+                                "hash_type": hash_type,
+                                "expected": expected,
+                                "actual": actual
+                            })
+                            validation_results["valid"] = False
 
-        self.set_orientation(Gtk.Orientation.VERTICAL)
-        self.set_spacing(0)
-        self._connect_signals()
-        self._setup_interface()
+                validation_results["results"][filename] = file_results
 
-    def _connect_signals(self):
-        self.grid_view_button.connect("clicked", lambda btn: self.set_view_mode(ViewMode.GRID))
-        self.list_view_button.connect("clicked", lambda btn: self.set_view_mode(ViewMode.LIST))
-        self.back_button.connect("clicked", self._on_back_clicked)
-        self.refresh_button.connect("clicked", self._on_refresh_clicked)
-        self.action_button.connect("clicked", self._on_action_clicked)
-        self.content_flowbox.connect("child-activated", self._on_flowbox_item_activated)
-        self.content_flowbox.connect("selected-children-changed", self._on_flowbox_selection_changed)
-        self.content_listbox.connect("row-activated", self._on_listbox_item_activated)
-        self.content_listbox.connect("selected-rows-changed", self._on_listbox_selection_changed)
+        except Exception as e:
+            validation_results["error"] = str(e)
+            validation_results["valid"] = False
 
-    def _setup_interface(self):
-        self.content_flowbox.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
-        self.content_flowbox.set_activate_on_single_click(True)
-        self.content_flowbox.set_max_children_per_line(4)
-        self.content_flowbox.set_min_children_per_line(2)
-        self.content_flowbox.set_row_spacing(12)
-        self.content_flowbox.set_column_spacing(12)
+        return validation_results["valid"], validation_results
 
-        self.content_listbox.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
-        self.content_listbox.set_activate_on_single_click(True)
+    def get_package_dependencies(self, pkgbuild_path: str) -> Dict[str, List[str]]:
+        pkgbuild_info = self.analyze_pkgbuild(pkgbuild_path)
 
-        self.main_stack.set_visible_child_name("grid")
-        self._update_view_mode_buttons()
-        self._setup_sort_menu()
-
-    def _setup_sort_menu(self):
-        menu = Gio.Menu()
-
-        sort_section = Gio.Menu()
-        sort_section.append("Name", "content.sort-by-name")
-        sort_section.append("Type", "content.sort-by-type")
-        sort_section.append("Size", "content.sort-by-size")
-        sort_section.append("Modified", "content.sort-by-modified")
-        menu.append_section("Sort by", sort_section)
-
-        direction_section = Gio.Menu()
-        direction_section.append("Ascending", "content.sort-ascending")
-        direction_section.append("Descending", "content.sort-descending")
-        menu.append_section("Direction", direction_section)
-
-        self.sort_button.set_menu_model(menu)
-        self._create_sort_actions()
-
-    def _create_sort_actions(self):
-        actions = {
-            'sort-by-name': lambda a, p: self.set_sort_mode(SortMode.NAME),
-            'sort-by-type': lambda a, p: self.set_sort_mode(SortMode.TYPE),
-            'sort-by-size': lambda a, p: self.set_sort_mode(SortMode.SIZE),
-            'sort-by-modified': lambda a, p: self.set_sort_mode(SortMode.MODIFIED),
-            'sort-ascending': lambda a, p: self.set_sort_direction(True),
-            'sort-descending': lambda a, p: self.set_sort_direction(False),
+        return {
+            "depends": pkgbuild_info.depends,
+            "makedepends": pkgbuild_info.makedepends,
+            "optdepends": pkgbuild_info.optdepends,
+            "conflicts": pkgbuild_info.conflicts,
+            "provides": pkgbuild_info.provides,
+            "replaces": pkgbuild_info.replaces
         }
 
-        action_group = Gio.SimpleActionGroup()
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            action.connect('activate', callback)
-            action_group.add_action(action)
+    def _parse_pkgbuild_content(self, content: str, info: PKGBUILDInfo) -> PKGBUILDInfo:
+        single_patterns = {
+            'pkgname': r'^pkgname=(.+?)$',
+            'pkgver': r'^pkgver=(.+?)$',
+            'pkgrel': r'^pkgrel=(.+?)$',
+            'pkgdesc': r'^pkgdesc=(.+?)$',
+            'url': r'^url=(.+?)$',
+            'install': r'^install=(.+?)$',
+            'changelog': r'^changelog=(.+?)$',
+            'epoch': r'^epoch=(.+?)$',
+            'pkgbase': r'^pkgbase=(.+?)$'
+        }
 
-        self.insert_action_group('content', action_group)
+        array_patterns = {
+            'arch': r'^arch=\(([^)]+)\)$',
+            'license': r'^license=\(([^)]+)\)$',
+            'depends': r'^depends=\(([^)]+)\)$',
+            'makedepends': r'^makedepends=\(([^)]+)\)$',
+            'optdepends': r'^optdepends=\(([^)]+)\)$',
+            'provides': r'^provides=\(([^)]+)\)$',
+            'conflicts': r'^conflicts=\(([^)]+)\)$',
+            'replaces': r'^replaces=\(([^)]+)\)$',
+            'source': r'^source=\(([^)]+)\)$',
+            'sha256sums': r'^sha256sums=\(([^)]+)\)$',
+            'md5sums': r'^md5sums=\(([^)]+)\)$',
+            'sha512sums': r'^sha512sums=\(([^)]+)\)$',
+            'backup': r'^backup=\(([^)]+)\)$',
+            'options': r'^options=\(([^)]+)\)$',
+            'groups': r'^groups=\(([^)]+)\)$',
+            'validpgpkeys': r'^validpgpkeys=\(([^)]+)\)$'
+        }
 
-    def load_content(self, path: str, items: Optional[List[FileItem]] = None):
-        self._current_path = path
-        self.path_label.set_label(path)
-        self.path_label.set_tooltip_text(path)
+        for field, pattern in single_patterns.items():
+            matches = re.findall(pattern, content, re.MULTILINE)
+            if matches:
+                setattr(info, field, self._clean_quoted_string(matches[0]))
 
-        if items is not None:
-            self._all_items = items
+        for field, pattern in array_patterns.items():
+            matches = re.findall(pattern, content, re.MULTILINE)
+            if matches:
+                array_content = matches[0]
+                items = self._parse_bash_array(array_content)
+                setattr(info, field, items)
+
+        info.has_build_function = bool(re.search(r'^build\s*\(\s*\)\s*{', content, re.MULTILINE))
+        info.has_package_function = bool(re.search(r'^package(?:_[\w]+)?\s*\(\s*\)\s*{', content, re.MULTILINE))
+        info.has_prepare_function = bool(re.search(r'^prepare\s*\(\s*\)\s*{', content, re.MULTILINE))
+        info.has_check_function = bool(re.search(r'^check\s*\(\s*\)\s*{', content, re.MULTILINE))
+
+        return info
+
+    def _parse_pkginfo_content(self, content: str, info: PackageInfo) -> PackageInfo:
+        for line in content.split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+
+            if '=' not in line:
+                continue
+
+            key, value = line.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+
+            if key in ['pkgname', 'pkgbase', 'pkgver', 'pkgdesc', 'arch', 'url', 'packager', 'builddate', 'installdate']:
+                setattr(info, key, value)
+            elif key == 'size':
+                info.size = int(value) if value.isdigit() else 0
+            elif key == 'reason':
+                info.reason = int(value) if value.isdigit() else 0
+            elif key in ['license', 'groups', 'provides', 'depends', 'optdepends', 'makedepends', 'conflicts', 'replaces', 'backup', 'validation']:
+                current_list = getattr(info, key, [])
+                current_list.append(value)
+                setattr(info, key, current_list)
+
+        info.is_valid = bool(info.pkgname and info.pkgver)
+        return info
+
+    def _validate_pkgbuild(self, info: PKGBUILDInfo) -> PKGBUILDInfo:
+        required_fields = ['pkgname', 'pkgver', 'pkgrel']
+        missing_required = [field for field in required_fields if not getattr(info, field)]
+
+        if missing_required:
+            info.errors.extend([f"Missing required field: {field}" for field in missing_required])
+
+        if not info.arch:
+            info.warnings.append("No architecture specified")
+        elif 'any' not in info.arch and not any(arch in ['x86_64', 'i686', 'arm', 'armv7h', 'aarch64'] for arch in info.arch):
+            info.warnings.append("Unusual architecture specification")
+
+        if not info.license:
+            info.warnings.append("No license specified")
+
+        if info.source and not (info.sha256sums or info.md5sums or info.sha512sums):
+            info.warnings.append("Source files without checksums")
+
+        if not info.has_build_function and not info.has_package_function:
+            info.warnings.append("No build() or package() function found")
+
+        if info.pkgver and not re.match(r'^[0-9]+(\.[0-9a-zA-Z]+)*$', info.pkgver):
+            info.warnings.append("Unusual version format")
+
+        info.is_valid = len(info.errors) == 0
+        return info
+
+    def _analyze_security(self, content: str, info: PKGBUILDInfo) -> PKGBUILDInfo:
+        security_score = 0
+
+        for dangerous_cmd in self.dangerous_commands:
+            if dangerous_cmd in content:
+                info.warnings.append(f"Contains potentially dangerous command: {dangerous_cmd}")
+                security_score += 2
+
+        if re.search(r'curl.*\|\s*bash', content) or re.search(r'wget.*\|\s*sh', content):
+            info.warnings.append("Downloads and executes scripts directly")
+            security_score += 3
+
+        if 'sudo' in content:
+            info.warnings.append("Uses sudo - requires elevated privileges")
+            security_score += 2
+
+        if not info.validpgpkeys and any('git+' in src or 'svn+' in src for src in info.source):
+            info.warnings.append("VCS sources without PGP verification")
+            security_score += 1
+
+        if any(checksum == 'SKIP' for checksum in info.sha256sums + info.md5sums + info.sha512sums):
+            info.warnings.append("Some sources skip checksum verification")
+            security_score += 1
+
+        if security_score == 0:
+            info.security_level = SecurityLevel.SAFE
+        elif security_score <= 2:
+            info.security_level = SecurityLevel.CAUTION
+        elif security_score <= 4:
+            info.security_level = SecurityLevel.WARNING
         else:
-            self._all_items = self._scan_directory(path)
+            info.security_level = SecurityLevel.DANGER
 
-        self._apply_filters_and_sort()
-        self._update_display()
+        return info
 
-    def set_view_mode(self, mode: ViewMode):
-        if self._view_mode != mode:
-            self._view_mode = mode
-            self._update_view_mode_buttons()
+    def _extract_pkginfo(self, package_path: str, temp_dir: str) -> Optional[str]:
+        try:
+            result = subprocess.run([
+                'tar', '--extract', '--file', package_path,
+                '--directory', temp_dir,
+                '.PKGINFO'
+            ], capture_output=True, text=True, timeout=30)
 
-            if mode == ViewMode.GRID:
-                self.main_stack.set_visible_child_name("grid")
-            elif mode == ViewMode.LIST:
-                self.main_stack.set_visible_child_name("list")
+            if result.returncode == 0:
+                pkginfo_path = os.path.join(temp_dir, '.PKGINFO')
+                if os.path.exists(pkginfo_path):
+                    with open(pkginfo_path, 'r', encoding='utf-8') as f:
+                        return f.read()
+            return None
 
-            self._update_display()
+        except Exception:
+            return None
 
-    def set_sort_mode(self, mode: SortMode):
-        if self._sort_mode != mode:
-            self._sort_mode = mode
-            self._apply_filters_and_sort()
-            self._update_display()
+    def _extract_file_list(self, package_path: str) -> Optional[List[str]]:
+        try:
+            result = subprocess.run([
+                'tar', '--list', '--file', package_path
+            ], capture_output=True, text=True, timeout=30)
 
-    def set_sort_direction(self, ascending: bool):
-        if self._sort_ascending != ascending:
-            self._sort_ascending = ascending
-            self._apply_filters_and_sort()
-            self._update_display()
+            if result.returncode == 0:
+                files = [line.strip() for line in result.stdout.split('\n') if line.strip()]
+                return [f for f in files if not f.startswith('.')]
+            return None
 
-    def set_filter(self, filter_text: str):
-        if self._filter_text != filter_text:
-            self._filter_text = filter_text
-            self._apply_filters_and_sort()
-            self._update_display()
+        except Exception:
+            return None
 
-    def refresh_content(self):
-        if self._current_path:
-            self.load_content(self._current_path)
+    def _is_valid_package_file(self, file_path: str) -> bool:
+        if not os.path.isfile(file_path):
+            return False
 
-    def get_selected_items(self) -> List[FileItem]:
-        return self._selected_items.copy()
+        filename = os.path.basename(file_path)
+        return any(filename.endswith(f'.pkg.tar{ext}') for ext in self.supported_compressions)
 
-    def clear_selection(self):
-        if self._view_mode == ViewMode.GRID:
-            self.content_flowbox.unselect_all()
-        else:
-            for i in range(len(self._filtered_items)):
-                row = self.content_listbox.get_row_at_index(i)
-                if row:
-                    self.content_listbox.unselect_row(row)
+    def _clean_quoted_string(self, s: str) -> str:
+        s = s.strip()
+        if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
+            s = s[1:-1]
+        return s
 
-    def select_all(self):
-        if self._view_mode == ViewMode.GRID:
-            self.content_flowbox.select_all()
-        else:
-            for i in range(len(self._filtered_items)):
-                row = self.content_listbox.get_row_at_index(i)
-                if row:
-                    self.content_listbox.select_row(row)
-
-    def _scan_directory(self, path: str) -> List[FileItem]:
+    def _parse_bash_array(self, array_content: str) -> List[str]:
         items = []
+        current_item = ""
+        in_quotes = False
+        quote_char = None
 
-        if not os.path.exists(path) or not os.path.isdir(path):
-            return items
+        i = 0
+        while i < len(array_content):
+            char = array_content[i]
+
+            if not in_quotes:
+                if char in ['"', "'"]:
+                    in_quotes = True
+                    quote_char = char
+                elif char in [' ', '\t', '\n']:
+                    if current_item.strip():
+                        items.append(current_item.strip())
+                        current_item = ""
+                else:
+                    current_item += char
+            else:
+                if char == quote_char:
+                    in_quotes = False
+                    quote_char = None
+                else:
+                    current_item += char
+
+            i += 1
+
+        if current_item.strip():
+            items.append(current_item.strip())
+
+        return [self._clean_quoted_string(item) for item in items if item.strip()]
+
+    def _clean_source_url(self, source: str) -> str:
+        if '::' in source:
+            return source.split('::', 1)[1]
+        return source
+
+    def _is_url(self, s: str) -> bool:
+        return s.startswith(('http://', 'https://', 'ftp://', 'ftps://'))
+
+    def _get_filename_from_url(self, url: str) -> str:
+        return os.path.basename(url.split('?')[0])
+
+    def _download_file(self, url: str, dest_path: str) -> bool:
+        try:
+            result = subprocess.run([
+                'curl', '-L', '-o', dest_path, url
+            ], capture_output=True, timeout=120)
+            return result.returncode == 0 and os.path.exists(dest_path)
+        except Exception:
+            return False
+
+    def _calculate_checksum(self, file_path: str, hash_type: str) -> Optional[str]:
+        hash_commands = {
+            'md5': ['md5sum'],
+            'sha256': ['sha256sum'],
+            'sha512': ['sha512sum']
+        }
+
+        if hash_type not in hash_commands:
+            return None
 
         try:
-            for entry in os.listdir(path):
-                entry_path = os.path.join(path, entry)
-                is_dir = os.path.isdir(entry_path)
+            result = subprocess.run(
+                hash_commands[hash_type] + [file_path],
+                capture_output=True, text=True, timeout=60
+            )
 
-                file_type = "UNKNOWN"
-                if not is_dir:
-                    if entry == "PKGBUILD":
-                        file_type = "PKGBUILD"
-                    elif entry.endswith(".pkg.tar.zst"):
-                        file_type = "PACKAGE"
-                    elif entry.endswith((".patch", ".diff")):
-                        file_type = "PATCH"
-                    else:
-                        file_type = "ADVANCED"
+            if result.returncode == 0:
+                return result.stdout.split()[0]
+            return None
 
-                try:
-                    stat = os.stat(entry_path)
-                    size = stat.st_size
-                    modified = stat.st_mtime
-                except OSError:
-                    size = 0
-                    modified = 0.0
-
-                items.append(FileItem(entry, entry_path, is_dir, file_type, size, modified))
-
-        except PermissionError:
-            pass
-
-        return items
-
-    def _apply_filters_and_sort(self):
-        if self._filter_text:
-            self._filtered_items = [
-                item for item in self._all_items
-                if self._filter_text.lower() in item.name.lower()
-            ]
-        else:
-            self._filtered_items = self._all_items.copy()
-
-        self._sort_items()
-
-    def _sort_items(self):
-        def sort_key(item: FileItem):
-            if self._sort_mode == SortMode.NAME:
-                return item.name.lower()
-            elif self._sort_mode == SortMode.TYPE:
-                return (0 if item.is_dir else 1, item.file_type, item.name.lower())
-            elif self._sort_mode == SortMode.SIZE:
-                return (0 if item.is_dir else item.size, item.name.lower())
-            elif self._sort_mode == SortMode.MODIFIED:
-                return (item.modified_time, item.name.lower())
-            return item.name.lower()
-
-        self._filtered_items.sort(key=sort_key, reverse=not self._sort_ascending)
-
-    def _update_display(self):
-        if self._view_mode == ViewMode.GRID:
-            self._update_grid_view()
-        else:
-            self._update_list_view()
-
-        self._update_status_bar()
-
-    def _update_grid_view(self):
-        while self.content_flowbox.get_first_child():
-            self.content_flowbox.remove(self.content_flowbox.get_first_child())
-
-        for item in self._filtered_items:
-            card = self._create_grid_card(item)
-            if card:
-                self.content_flowbox.append(card)
-
-    def _update_list_view(self):
-        while self.content_listbox.get_first_child():
-            self.content_listbox.remove(self.content_listbox.get_first_child())
-
-        for item in self._filtered_items:
-            row = self._create_list_row(item)
-            if row:
-                self.content_listbox.append(row)
-
-    def _create_grid_card(self, item: FileItem) -> Optional[Gtk.FlowBoxChild]:
-        child = Gtk.FlowBoxChild()
-
-        frame = Gtk.Frame()
-        frame.add_css_class("card")
-        frame.add_css_class("content-card")
-        frame.set_size_request(200, 160)
-
-        box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=8,
-            margin_start=12, margin_end=12,
-            margin_top=12, margin_bottom=12
-        )
-
-        # ✅ CORREÇÃO APLICADA: Usar carregamento seguro de ícones
-        icon = safe_load_icon(item.get_icon_name(), 48)
-
-        name_label = Gtk.Label(
-            label=item.name,
-            wrap=True,
-            max_width_chars=20,
-            ellipsize=Pango.EllipsizeMode.END
-        )
-        name_label.add_css_class("heading")
-
-        if item.is_dir:
-            info_text = "Directory"
-        else:
-            info_text = f"{item.file_type} • {self._format_size(item.size)}"
-
-        info_label = Gtk.Label(
-            label=info_text,
-            wrap=True,
-            max_width_chars=25
-        )
-        info_label.add_css_class("caption")
-        info_label.add_css_class("dim-label")
-
-        box.append(icon)
-        box.append(name_label)
-        box.append(info_label)
-
-        frame.set_child(box)
-        frame.set_tooltip_text(item.path)
-
-        child.set_child(frame)
-        return child
-
-    def _create_list_row(self, item: FileItem) -> Optional[Gtk.ListBoxRow]:
-        row = Gtk.ListBoxRow()
-
-        box = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=12,
-            margin_start=12, margin_end=12,
-            margin_top=8, margin_bottom=8
-        )
-
-        # ✅ CORREÇÃO APLICADA: Usar carregamento seguro de ícones
-        icon = safe_load_icon(item.get_icon_name(), 32)
-
-        info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        info_box.set_hexpand(True)
-
-        name_label = Gtk.Label(label=item.name, halign=Gtk.Align.START)
-        name_label.add_css_class("heading")
-
-        details_text = f"{item.file_type}" if not item.is_dir else "Directory"
-        details_label = Gtk.Label(label=details_text, halign=Gtk.Align.START)
-        details_label.add_css_class("caption")
-        details_label.add_css_class("dim-label")
-
-        info_box.append(name_label)
-        info_box.append(details_label)
-
-        size_label = Gtk.Label(
-            label=self._format_size(item.size) if not item.is_dir else "",
-            halign=Gtk.Align.END
-        )
-        size_label.add_css_class("caption")
-        size_label.add_css_class("dim-label")
-
-        box.append(icon)
-        box.append(info_box)
-        box.append(size_label)
-
-        row.set_child(box)
-        row.set_tooltip_text(item.path)
-
-        return row
-
-    def _format_size(self, size: int) -> str:
-        if size == 0:
-            return "0 B"
-        elif size < 1024:
-            return f"{size} B"
-        elif size < 1024 * 1024:
-            return f"{size / 1024:.1f} KB"
-        elif size < 1024 * 1024 * 1024:
-            return f"{size / (1024 * 1024):.1f} MB"
-        else:
-            return f"{size / (1024 * 1024 * 1024):.1f} GB"
-
-    def _update_view_mode_buttons(self):
-        self.grid_view_button.remove_css_class("suggested-action")
-        self.list_view_button.remove_css_class("suggested-action")
-
-        if self._view_mode == ViewMode.GRID:
-            self.grid_view_button.add_css_class("suggested-action")
-        else:
-            self.list_view_button.add_css_class("suggested-action")
-
-    def _update_status_bar(self):
-        total_items = len(self._all_items)
-        filtered_items = len(self._filtered_items)
-        selected_items = len(self._selected_items)
-
-        if self._filter_text and filtered_items != total_items:
-            count_text = f"{filtered_items} of {total_items} items"
-        else:
-            count_text = f"{total_items} item{'s' if total_items != 1 else ''}"
-
-        self.items_count_label.set_label(count_text)
-
-        if selected_items > 0:
-            selection_text = f"{selected_items} selected"
-            self.selection_info_label.set_label(selection_text)
-            self.selection_info_label.set_visible(True)
-        else:
-            self.selection_info_label.set_visible(False)
-
-    def _on_back_clicked(self, button: Gtk.Button):
-        self.emit("back-requested")
-
-    def _on_refresh_clicked(self, button: Gtk.Button):
-        self.emit("refresh-requested")
-
-    def _on_action_clicked(self, button: Gtk.Button):
-        self.emit("action-requested", "default", self._selected_items)
-
-    def _on_flowbox_item_activated(self, flowbox: Gtk.FlowBox, child: Gtk.FlowBoxChild):
-        """Callback para quando um item é ativado no grid view"""
-        try:
-            # Encontra o índice do item baseado no child
-            index = -1
-            current_child = flowbox.get_first_child()
-            current_index = 0
-
-            while current_child:
-                if current_child == child:
-                    index = current_index
-                    break
-                current_child = current_child.get_next_sibling()
-                current_index += 1
-
-            if 0 <= index < len(self._filtered_items):
-                item = self._filtered_items[index]
-                self.emit("item-activated", item)
-                print(f"🖱️  Item ativado: {item.name}")
-
-        except Exception as e:
-            print(f"❌ Erro ao processar ativação do item: {e}")
-
-    def _on_flowbox_selection_changed(self, flowbox: Gtk.FlowBox):
-        """Callback para mudanças de seleção no grid view"""
-        try:
-            # Atualiza lista de itens selecionados
-            self._selected_items.clear()
-            selected_children = flowbox.get_selected_children()
-
-            for child in selected_children:
-                # Encontra o índice do item baseado no child
-                current_child = flowbox.get_first_child()
-                current_index = 0
-
-                while current_child:
-                    if current_child == child:
-                        if 0 <= current_index < len(self._filtered_items):
-                            item = self._filtered_items[current_index]
-                            self._selected_items.append(item)
-                            self.emit("item-selected", item)
-                        break
-                    current_child = current_child.get_next_sibling()
-                    current_index += 1
-
-            self._update_status_bar()
-            print(f"📋 Seleção atualizada: {len(self._selected_items)} itens")
-
-        except Exception as e:
-            print(f"❌ Erro ao processar mudança de seleção: {e}")
-
-    def _on_listbox_item_activated(self, listbox: Gtk.ListBox, row: Gtk.ListBoxRow):
-        """Callback para quando um item é ativado no list view"""
-        try:
-            index = row.get_index()
-            if 0 <= index < len(self._filtered_items):
-                item = self._filtered_items[index]
-                self.emit("item-activated", item)
-                print(f"🖱️  Item ativado: {item.name}")
-
-        except Exception as e:
-            print(f"❌ Erro ao processar ativação do item: {e}")
-
-    def _on_listbox_selection_changed(self, listbox: Gtk.ListBox):
-        """Callback para mudanças de seleção no list view"""
-        try:
-            # Atualiza lista de itens selecionados
-            self._selected_items.clear()
-            selected_rows = listbox.get_selected_rows()
-
-            for row in selected_rows:
-                index = row.get_index()
-                if 0 <= index < len(self._filtered_items):
-                    item = self._filtered_items[index]
-                    self._selected_items.append(item)
-                    self.emit("item-selected", item)
-
-            self._update_status_bar()
-            print(f"📋 Seleção atualizada: {len(self._selected_items)} itens")
-
-        except Exception as e:
-            print(f"❌ Erro ao processar mudança de seleção: {e}")
+        except Exception:
+            return None

@@ -1,5 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="paru_gui">
 	<schema id="org.gnome.paru-gui" path="/org/gnome/paru-gui/">
+
+		<!-- Configurações Básicas -->
+		<key name="first-run" type="b">
+			<default>true</default>
+			<summary>First run flag</summary>
+			<description>Whether this is the first time the application is being run</description>
+		</key>
+
+		<key name="simplified-mode" type="b">
+			<default>true</default>
+			<summary>Enable simplified mode</summary>
+			<description>Show simplified interface for basic users</description>
+		</key>
+
+		<key name="default-editor" type="s">
+			<default>'gedit'</default>
+			<summary>Default text editor</summary>
+			<description>Default text editor for editing files</description>
+		</key>
+
+		<!-- Configurações da Janela -->
+		<key name="window-width" type="i">
+			<default>1200</default>
+			<summary>Window width</summary>
+			<description>Width of the main window</description>
+		</key>
+
+		<key name="window-height" type="i">
+			<default>800</default>
+			<summary>Window height</summary>
+			<description>Height of the main window</description>
+		</key>
+
+		<!-- Diretórios Recentes -->
+		<key name="recent-directories" type="as">
+			<default>[]</default>
+			<summary>Recent directories list</summary>
+			<description>List of recently accessed directories</description>
+		</key>
+
+		<key name="max-recent-directories" type="i">
+			<default>10</default>
+			<summary>Maximum number of recent directories</summary>
+			<description>Maximum number of recent directories to remember</description>
+		</key>
+
+		<!-- Configurações de Upstream -->
+		<key name="upstream-check-frequency" type="i">
+			<default>24</default>
+			<summary>Upstream check frequency in hours</summary>
+			<description>How often to check for upstream updates (in hours)</description>
+		</key>
+
+		<key name="ignore-prereleases" type="b">
+			<default>true</default>
+			<summary>Ignore prerelease versions</summary>
+			<description>Whether to ignore prerelease versions when checking updates</description>
+		</key>
+
+		<key name="ignored-upstream-versions" type="as">
+			<default>[]</default>
+			<summary>List of ignored upstream versions</summary>
+			<description>List of package:version pairs to ignore for upstream updates</description>
+		</key>
+
+		<!-- Configurações de Confiança AUR -->
+		<key name="show-trust-icons" type="b">
+			<default>true</default>
+			<summary>Show trust level icons</summary>
+			<description>Whether to show trust level icons for AUR packages</description>
+		</key>
+
+		<key name="min-votes-medium-trust" type="i">
+			<default>10</default>
+			<summary>Minimum votes for medium trust</summary>
+			<description>Minimum number of votes required for medium trust level</description>
+		</key>
+
+		<key name="min-votes-high-trust" type="i">
+			<default>50</default>
+			<summary>Minimum votes for high trust</summary>
+			<description>Minimum number of votes required for high trust level</description>
+		</key>
+
+		<key name="block-unvoted-packages" type="b">
+			<default>false</default>
+			<summary>Block unvoted packages</summary>
+			<description>Whether to block installation of packages with no votes</description>
+		</key>
+
+		<!-- Configurações de Desenvolvedor -->
+		<key name="developer-mode" type="b">
+			<default>false</default>
+			<summary>Enable developer mode</summary>
+			<description>Enable advanced features for developers</description>
+		</key>
+
+		<key name="show-realtime-terminal" type="b">
+			<default>false</default>
+			<summary>Show real-time terminal output</summary>
+			<description>Whether to show real-time terminal output during operations</description>
+		</key>
+
+		<key name="check-devel-updates" type="b">
+			<default>false</default>
+			<summary>Check for development package updates</summary>
+			<description>Whether to check for updates of development packages</description>
+		</key>
+
+		<key name="install-debug-packages" type="b">
+			<default>false</default>
+			<summary>Install debug packages</summary>
+			<description>Whether to automatically install debug symbol packages</description>
+		</key>
+
+		<key name="show-detailed-warnings" type="b">
+			<default>false</default>
+			<summary>Show detailed security warnings</summary>
+			<description>Whether to show detailed security analysis warnings</description>
+		</key>
+
 	</schema>
 </schemalist>
+

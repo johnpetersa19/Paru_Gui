@@ -1,52 +1,174 @@
-/* ===========================================
-   PARU GUI - CORREÇÕES GDKPIXBUF COMPATÍVEIS GTK
-   Apenas propriedades CSS válidas do GTK para manter aparência nativa GNOME
-   Autor: MiniMax Agent
-   =========================================== */
+/* CSS ADICIONAL PARA CORRIGIR PROBLEMAS DE IMAGENS - image_fixes.css */
+/* Author: MiniMax Agent */
+/* Date: 2025-09-25 */
 
-/* ===== CORREÇÕES MÍNIMAS PARA GDKPIXBUF ===== */
+/* ===== CORREÇÕES PARA PROBLEMAS GDKPIXBUF ===== */
 
-/* Garantir tamanhos mínimos para evitar erro de assertion width/height >= 0 */
+/* Garantir dimensões mínimas válidas para todas as imagens */
 image {
+    min-width: 1px;
+    min-height: 1px;
+}
+
+/* Correção específica para ícones */
+.icon,
+image.icon {
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 64px;
+    max-height: 64px;
+}
+
+/* Fallback para imagens que falharam ao carregar */
+image:not(:defined),
+.icon-fallback {
+    min-width: 16px;
+    min-height: 16px;
+    background: rgba(128, 128, 128, 0.2);
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 3px;
+}
+
+/* Correção para botões com ícones */
+button image,
+menubutton image {
     min-width: 16px;
     min-height: 16px;
 }
 
-/* Correções específicas para spinners */
+/* Correção para imagens em listas */
+listbox image,
+row image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Correção para avatares e imagens circulares */
+.avatar,
+image.avatar {
+    min-width: 32px;
+    min-height: 32px;
+}
+
+/* ===== CORREÇÕES ESPECÍFICAS PARA PARU GUI ===== */
+
+/* Ícones de pacotes */
+.package-icon {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+/* Ícones de status */
+.status-icon {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Prevenção de overflow em containers de imagem */
+.image-container {
+    overflow: hidden;
+}
+
+.image-container image {
+    min-width: 1px;
+    min-height: 1px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Correções para spinners e indicadores de carregamento */
 spinner {
     min-width: 16px;
     min-height: 16px;
 }
 
-/* Correções para ícones em botões */
-button image {
-    min-width: 16px;
-    min-height: 16px;
+/* ===== CORREÇÕES PARA TEMAS ESCUROS ===== */
+
+@media (prefers-color-scheme: dark) {
+    .icon-fallback {
+        background: rgba(200, 200, 200, 0.1);
+        border-color: rgba(200, 200, 200, 0.2);
+    }
 }
 
-/* Correções para ícones no HeaderBar */
+/* ===== UTILITÁRIOS PARA DEBUGGING ===== */
+
+/* Classe para debug - mostra bordas de todas as imagens */
+.debug-images image {
+    border: 1px solid red !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Classe para forçar dimensões seguras */
+.safe-image {
+    min-width: 16px !important;
+    min-height: 16px !important;
+    width: auto;
+    height: auto;
+}
+
+/* ===== ANIMAÇÕES SEGURAS ===== */
+
+/* Animação suave para mudanças de tamanho */
+image {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Evitar animações em imagens muito pequenas */
+image[width="1"],
+image[height="1"] {
+    transition: none;
+}
+
+/* ===== CORREÇÕES PARA COMPONENTES ESPECÍFICOS ===== */
+
+/* HeaderBar icons */
 headerbar image {
     min-width: 16px;
     min-height: 16px;
 }
 
-/* Correções para cards - sem customizações visuais */
-.card image {
+/* Toolbar icons */
+toolbar image {
+    min-width: 18px;
+    min-height: 18px;
+}
+
+/* Menu icons */
+menu image,
+popover image {
     min-width: 16px;
     min-height: 16px;
 }
 
-/* Correções para FlowBox children */
-flowbox flowboxchild image {
-    min-width: 16px;
-    min-height: 16px;
+/* Dialog icons */
+dialog image {
+    min-width: 32px;
+    min-height: 32px;
 }
 
-/* Correções para ListBox rows */
-listbox row image {
-    min-width: 16px;
-    min-height: 16px;
+/* ===== RESPONSIVIDADE ===== */
+
+/* Ajustes para telas pequenas */
+@media (max-width: 768px) {
+    .icon {
+        min-width: 14px;
+        min-height: 14px;
+    }
+    
+    .package-icon {
+        min-width: 20px;
+        min-height: 20px;
+    }
 }
 
-/* ===== FIM - APENAS CORREÇÕES ESSENCIAIS ===== */
-/* Sem customizações visuais - 100% aparência nativa GNOME */
+/* Ajustes para telas grandes */
+@media (min-width: 1200px) {
+    .package-icon {
+        min-width: 28px;
+        min-height: 28px;
+    }
+}
+
+/* ===== FIM DAS CORREÇÕES ===== */

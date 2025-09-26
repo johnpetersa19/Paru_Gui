@@ -1,293 +1,686 @@
-# src/ui/action_handlers.py
-#
-# Copyright 2025 Unknown
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 import os
 import shlex
-from typing import Optional, List
-from gi.repository import Gtk
+import subprocess
+import tempfile
+import shutil
+from typing import Optional, List, Dict, Any, Callable, Tuple
+from gi.repository import Gtk, GLib, Gio
 from datetime import datetime
+from pathlib import Path
+from enum import Enum
 
-from ...history_manager import HistoryManager, ActionType, ActionStatus, HistoryEntry
-from ...terminal_manager import TerminalManager
-from ...sandboxing import SandboxManager, SandboxOptions, IsolationLevel
-from ...error_handler import ErrorHandler, ErrorContext, ErrorCategory, SuggestedAction
 
+class ActionResult(Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+    CANCELLED = "cancelled"
+    IN_PROGRESS = "in_progress"
+
+
+class BuildMode(Enum):
+    STANDARD = "standard"
+    SANDBOXED = "sandboxed"
+    CLEAN = "clean"
+    FORCE = "force"
 
 
 class ActionHandlers:
-    """Handles all user action callbacks and command executions."""
 
-    def __init__(self, window, builder, preferences_manager, history_manager,
-                 terminal_manager, sandbox_manager, error_handler):
+    def __init__(self, window=None):
         self.window = window
-        self.builder = builder
-        self.preferences_manager = preferences_manager
-        self.history_manager = history_manager
-        self.terminal_manager = terminal_manager
-        self.sandbox_manager = sandbox_manager
-        self.error_handler = error_handler
+        self.builder = None
+        self.preferences_manager = None
+        self.history_manager = None
+        self.terminal_manager = None
+        self.sandbox_manager = None
+        self.security_analyzer = None
+        self.file_utils = None
+        self.error_handler = None
 
-    def on_build_package(self, button_or_action, pkgbuild_path: str):
-        """Handles building a package from PKGBUILD."""
-        command = ['makepkg', '-si']
-        working_dir = os.path.dirname(pkgbuild_path)
+        self._handlers: Dict[str, Callable] = {}
+        self._running_processes: Dict[str, subprocess.Popen] = {}
+        self._temp_dirs: List[str] = []
 
-        self.terminal_manager.execute_command_in_system_terminal(
-            command, cwd=working_dir
-        )
+        self._initialize_handlers()
 
-        self.history_manager.add_action(HistoryEntry(
-            id=None, timestamp=datetime.utcnow(),
-            action_type=ActionType.PACKAGE_BUILD,
-            summary=f"Built package: {os.path.basename(pkgbuild_path)}",
-            status=ActionStatus.INFO,
-            details={"pkgbuild_path": pkgbuild_path, "command": " ".join(command)}
-        ))
+    def __del__(self):
+        self.cleanup_resources()
 
-    def on_build_package_sandboxed(self, button, pkgbuild_path: str, isolation_level: str,
-                                   allow_network: bool, allow_home: bool):
-        """Handles sandboxed package building."""
-        if not self.sandbox_manager:
-            self.error_handler.show_error_dialog(ErrorContext(
-                category=ErrorCategory.DEPENDENCY_ERROR,
-                summary="Sandboxing not available",
-                details="Bubblewrap (bwrap) is not installed or configured.",
-                suggested_actions=[SuggestedAction.INSTALL_DEPENDENCY]
-            ))
-            return
+    def set_dependencies(self, **dependencies):
+        for key, value in dependencies.items():
+            setattr(self, key, value)
 
+    def cleanup_resources(self):
+        for process in self._running_processes.values():
+            try:
+                process.terminate()
+                process.wait(timeout=5)
+            except:
+                try:
+                    process.kill()
+                except:
+                    pass
+
+        for temp_dir in self._temp_dirs:
+            try:
+                if os.path.exists(temp_dir):
+                    shutil.rmtree(temp_dir)
+            except:
+                pass
+
+        self._running_processes.clear()
+        self._temp_dirs.clear()
+
+    def _initialize_handlers(self):
+        self._handlers = {
+            'refresh': self._handle_refresh,
+            'back': self._handle_back,
+            'search': self._handle_search,
+            'build': self._handle_build,
+            'install': self._handle_install,
+            'uninstall': self._handle_uninstall,
+            'update': self._handle_update,
+            'edit_pkgbuild': self._handle_edit_pkgbuild,
+            'view_files': self._handle_view_files,
+            'view_dependencies': self._handle_view_dependencies,
+            'download_sources': self._handle_download_sources,
+            'clean_build': self._handle_clean_build,
+            'validate_checksums': self._handle_validate_checksums,
+            'show_package_info': self._handle_show_package_info,
+            'open_terminal': self._handle_open_terminal,
+            'open_file_manager': self._handle_open_file_manager,
+            'copy_to_clipboard': self._handle_copy_to_clipboard,
+            'export_package_list': self._handle_export_package_list,
+            'import_package_list': self._handle_import_package_list
+        }
+
+    def register_handler(self, action_name: str, handler_func: Callable):
+        self._handlers[action_name] = handler_func
+
+    def handle_action(self, action_name: str, *args, **kwargs) -> ActionResult:
         try:
-            isolation = IsolationLevel[isolation_level.upper()]
-        except KeyError:
-            isolation = IsolationLevel.MEDIUM
-
-        options = SandboxOptions(
-            isolation_level=isolation,
-            allow_network=allow_network,
-            allow_home_access=allow_home
-        )
-
-        command = ['makepkg', '-si']
-        working_dir = os.path.dirname(pkgbuild_path)
-
-        try:
-            self.sandbox_manager.execute_sandboxed(
-                command, options, cwd=working_dir
-            )
-
-            self.history_manager.add_action(HistoryEntry(
-                id=None, timestamp=datetime.utcnow(),
-                action_type=ActionType.PACKAGE_BUILD,
-                summary=f"Built package (sandboxed): {os.path.basename(pkgbuild_path)}",
-                status=ActionStatus.SUCCESS,
-                details={
-                    "pkgbuild_path": pkgbuild_path,
-                    "sandboxed": True,
-                    "isolation_level": isolation_level
-                }
-            ))
+            if action_name in self._handlers:
+                result = self._handlers[action_name](*args, **kwargs)
+                return result if isinstance(result, ActionResult) else ActionResult.SUCCESS
+            else:
+                return self._handle_unknown_action(action_name, *args, **kwargs)
         except Exception as e:
-            self.error_handler.show_error_dialog(ErrorContext(
-                category=ErrorCategory.SANDBOX_ERROR,
-                summary="Sandboxed build failed",
-                details=str(e),
-                file_path=pkgbuild_path
-            ))
+            self._log_error(f"Action {action_name} failed: {e}")
+            return ActionResult.FAILURE
 
-    def on_edit_pkgbuild(self, button_or_action, pkgbuild_path: str):
-        """Handles editing a PKGBUILD file."""
-        editor = self.preferences_manager.get_default_editor()
-        command = [editor, pkgbuild_path]
+    def get_available_actions(self) -> List[str]:
+        return list(self._handlers.keys())
 
-        self.terminal_manager.execute_command_in_system_terminal(command)
+    def is_action_available(self, action_name: str) -> bool:
+        return action_name in self._handlers
 
-        self.history_manager.add_action(HistoryEntry(
-            id=None, timestamp=datetime.utcnow(),
-            action_type=ActionType.FILE_EDIT,
-            summary=f"Opened PKGBUILD for editing: {os.path.basename(pkgbuild_path)}",
-            status=ActionStatus.INFO,
-            details={"file_path": pkgbuild_path, "editor": editor}
-        ))
+    def _handle_refresh(self, *args, **kwargs) -> ActionResult:
+        try:
+            if self.window and hasattr(self.window, 'refresh_current_view'):
+                self.window.refresh_current_view()
+            return ActionResult.SUCCESS
+        except Exception as e:
+            self._log_error(f"Refresh failed: {e}")
+            return ActionResult.FAILURE
 
-    def on_view_dependencies(self, button_or_action, pkgbuild_path: str):
-        """Handles viewing package dependencies."""
-        command = ['makepkg', '--printsrcinfo']
-        working_dir = os.path.dirname(pkgbuild_path)
+    def _handle_back(self, *args, **kwargs) -> ActionResult:
+        try:
+            if self.window and hasattr(self.window, 'navigate_back'):
+                self.window.navigate_back()
+            return ActionResult.SUCCESS
+        except Exception as e:
+            self._log_error(f"Back navigation failed: {e}")
+            return ActionResult.FAILURE
 
-        self.terminal_manager.execute_command_in_system_terminal(
-            command, cwd=working_dir
-        )
+    def _handle_search(self, query: str = "", search_type: str = "packages", **kwargs) -> ActionResult:
+        if not query.strip():
+            return ActionResult.CANCELLED
 
-    def on_download_sources(self, button_or_action, pkgbuild_path: str = None):
-        """Handles downloading package sources."""
-        if pkgbuild_path:
-            command = ['makepkg', '-o']  # Download sources only
-            working_dir = os.path.dirname(pkgbuild_path)
+        try:
+            search_command = self._build_search_command(query, search_type)
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command_async(
+                    search_command,
+                    title=f"Search: {query}",
+                    callback=self._on_search_completed
+                )
+                return ActionResult.IN_PROGRESS if success else ActionResult.FAILURE
+            return ActionResult.FAILURE
+        except Exception as e:
+            self._log_error(f"Search failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_build(self, pkgbuild_path: str = None, build_mode: BuildMode = BuildMode.STANDARD, **kwargs) -> ActionResult:
+        if not pkgbuild_path or not os.path.exists(pkgbuild_path):
+            return ActionResult.FAILURE
+
+        try:
+            if self.security_analyzer:
+                security_result = self.security_analyzer.analyze_pkgbuild(pkgbuild_path)
+                if not self._confirm_security_risk(security_result):
+                    return ActionResult.CANCELLED
+
+            work_dir = os.path.dirname(pkgbuild_path)
+
+            if self.preferences_manager:
+                use_sandbox = self.preferences_manager.get_preference("use_sandbox", True)
+                clean_build = self.preferences_manager.get_preference("clean_build", False)
+            else:
+                use_sandbox = build_mode == BuildMode.SANDBOXED
+                clean_build = build_mode == BuildMode.CLEAN
+
+            if clean_build:
+                self._clean_build_directory(work_dir)
+
+            success = False
+            if use_sandbox and self.sandbox_manager:
+                success = self.sandbox_manager.execute_sandboxed_makepkg(work_dir)
+            elif self.terminal_manager:
+                success = self.terminal_manager.run_makepkg(
+                    work_dir,
+                    force=build_mode == BuildMode.FORCE
+                )
+
+            if success and self.history_manager:
+                self.history_manager.add_build_entry(pkgbuild_path, success)
+
+            return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Build failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_install(self, package: str = None, package_path: str = None, **kwargs) -> ActionResult:
+        if not package and not package_path:
+            return ActionResult.FAILURE
+
+        try:
+            if package_path and os.path.exists(package_path):
+                install_cmd = ['pacman', '-U', package_path]
+            elif package:
+                install_cmd = ['paru', '-S', package]
+            else:
+                return ActionResult.FAILURE
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command_with_sudo(
+                    install_cmd,
+                    title=f"Installing: {package or os.path.basename(package_path)}"
+                )
+
+                if success and self.history_manager:
+                    self.history_manager.add_install_entry(package or package_path, success)
+
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Install failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_uninstall(self, package: str = None, **kwargs) -> ActionResult:
+        if not package:
+            return ActionResult.FAILURE
+
+        try:
+            if not self._confirm_uninstall(package):
+                return ActionResult.CANCELLED
+
+            uninstall_cmd = ['pacman', '-R', package]
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command_with_sudo(
+                    uninstall_cmd,
+                    title=f"Uninstalling: {package}"
+                )
+
+                if success and self.history_manager:
+                    self.history_manager.add_uninstall_entry(package, success)
+
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Uninstall failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_update(self, packages: List[str] = None, **kwargs) -> ActionResult:
+        try:
+            if packages:
+                update_cmd = ['paru', '-S'] + packages
+            else:
+                update_cmd = ['paru', '-Syu']
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command_with_sudo(
+                    update_cmd,
+                    title="System Update"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Update failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_edit_pkgbuild(self, pkgbuild_path: str = None, **kwargs) -> ActionResult:
+        if not pkgbuild_path or not os.path.exists(pkgbuild_path):
+            return ActionResult.FAILURE
+
+        try:
+            editor = self._get_preferred_editor()
+            edit_cmd = [editor, pkgbuild_path]
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command(
+                    edit_cmd,
+                    title=f"Editing: {os.path.basename(pkgbuild_path)}"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Edit failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_view_files(self, package_path: str = None, **kwargs) -> ActionResult:
+        if not package_path or not os.path.exists(package_path):
+            return ActionResult.FAILURE
+
+        try:
+            if self.file_utils:
+                package_info = self.file_utils.analyze_package(package_path)
+                if package_info.is_valid:
+                    self._show_file_list_dialog(package_info.files, package_path)
+                    return ActionResult.SUCCESS
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"View files failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_view_dependencies(self, pkgbuild_path: str = None, **kwargs) -> ActionResult:
+        if not pkgbuild_path or not os.path.exists(pkgbuild_path):
+            return ActionResult.FAILURE
+
+        try:
+            if self.file_utils:
+                dependencies = self.file_utils.get_package_dependencies(pkgbuild_path)
+                self._show_dependencies_dialog(dependencies, pkgbuild_path)
+                return ActionResult.SUCCESS
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"View dependencies failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_download_sources(self, pkgbuild_path: str = None, **kwargs) -> ActionResult:
+        if not pkgbuild_path or not os.path.exists(pkgbuild_path):
+            return ActionResult.FAILURE
+
+        try:
+            work_dir = os.path.dirname(pkgbuild_path)
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command(
+                    ['makepkg', '-o'],
+                    working_dir=work_dir,
+                    title="Downloading Sources"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Download sources failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_clean_build(self, build_dir: str = None, **kwargs) -> ActionResult:
+        if not build_dir or not os.path.exists(build_dir):
+            return ActionResult.FAILURE
+
+        try:
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command(
+                    ['makepkg', '-c'],
+                    working_dir=build_dir,
+                    title="Cleaning Build Directory"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Clean build failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_validate_checksums(self, pkgbuild_path: str = None, **kwargs) -> ActionResult:
+        if not pkgbuild_path or not os.path.exists(pkgbuild_path):
+            return ActionResult.FAILURE
+
+        try:
+            if self.file_utils:
+                is_valid, results = self.file_utils.validate_checksums(pkgbuild_path)
+                self._show_checksum_validation_dialog(is_valid, results)
+                return ActionResult.SUCCESS
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Checksum validation failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_show_package_info(self, package: str = None, **kwargs) -> ActionResult:
+        if not package:
+            return ActionResult.FAILURE
+
+        try:
+            info_cmd = ['paru', '-Si', package]
+
+            if self.terminal_manager:
+                success = self.terminal_manager.run_command(
+                    info_cmd,
+                    title=f"Package Info: {package}"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Show package info failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_open_terminal(self, working_dir: str = None, **kwargs) -> ActionResult:
+        try:
+            if self.terminal_manager:
+                success = self.terminal_manager.open_terminal(working_dir)
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Open terminal failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_open_file_manager(self, path: str = None, **kwargs) -> ActionResult:
+        if not path:
+            path = os.path.expanduser("~")
+
+        try:
+            subprocess.run(['xdg-open', path], check=False)
+            return ActionResult.SUCCESS
+
+        except Exception as e:
+            self._log_error(f"Open file manager failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_copy_to_clipboard(self, text: str = None, **kwargs) -> ActionResult:
+        if not text:
+            return ActionResult.FAILURE
+
+        try:
+            clipboard = Gtk.Clipboard.get(Gtk.SELECTION_CLIPBOARD)
+            clipboard.set_text(text, -1)
+            return ActionResult.SUCCESS
+
+        except Exception as e:
+            self._log_error(f"Copy to clipboard failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_export_package_list(self, file_path: str = None, **kwargs) -> ActionResult:
+        try:
+            if not file_path:
+                file_path = self._get_save_file_path("package_list.txt")
+
+            if not file_path:
+                return ActionResult.CANCELLED
+
+            result = subprocess.run(['pacman', '-Q'], capture_output=True, text=True)
+            if result.returncode == 0:
+                with open(file_path, 'w') as f:
+                    f.write(result.stdout)
+                return ActionResult.SUCCESS
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Export package list failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_import_package_list(self, file_path: str = None, **kwargs) -> ActionResult:
+        try:
+            if not file_path:
+                file_path = self._get_open_file_path()
+
+            if not file_path or not os.path.exists(file_path):
+                return ActionResult.CANCELLED
+
+            with open(file_path, 'r') as f:
+                packages = [line.split()[0] for line in f if line.strip()]
+
+            if packages and self.terminal_manager:
+                success = self.terminal_manager.run_command_with_sudo(
+                    ['paru', '-S'] + packages,
+                    title="Installing Package List"
+                )
+                return ActionResult.SUCCESS if success else ActionResult.FAILURE
+
+            return ActionResult.FAILURE
+
+        except Exception as e:
+            self._log_error(f"Import package list failed: {e}")
+            return ActionResult.FAILURE
+
+    def _handle_unknown_action(self, action_name: str, *args, **kwargs) -> ActionResult:
+        self._log_error(f"Unknown action requested: {action_name}")
+        return ActionResult.FAILURE
+
+    def _build_search_command(self, query: str, search_type: str) -> List[str]:
+        if search_type == "aur":
+            return ['paru', '-Ss', query]
+        elif search_type == "installed":
+            return ['pacman', '-Qs', query]
         else:
-            command = ['paru', '-G']  # Generic download
-            working_dir = self.window.current_path
+            return ['paru', '-Ss', query]
 
-        self.terminal_manager.execute_command_in_system_terminal(
-            command, cwd=working_dir
-        )
+    def _clean_build_directory(self, build_dir: str):
+        patterns_to_remove = ['*.pkg.tar.*', 'src/', 'pkg/']
 
-    def on_install_package(self, button_or_action, package_path: str):
-        """Handles installing a package file."""
-        command = ['sudo', 'pacman', '-U', package_path]
+        for pattern in patterns_to_remove:
+            try:
+                if pattern.endswith('/'):
+                    full_path = os.path.join(build_dir, pattern.rstrip('/'))
+                    if os.path.exists(full_path):
+                        shutil.rmtree(full_path)
+                else:
+                    import glob
+                    files = glob.glob(os.path.join(build_dir, pattern))
+                    for file_path in files:
+                        os.remove(file_path)
+            except:
+                pass
 
-        self.terminal_manager.execute_command_in_system_terminal(command)
+    def _get_preferred_editor(self) -> str:
+        if self.preferences_manager:
+            editor = self.preferences_manager.get_preference("preferred_editor", "")
+            if editor and shutil.which(editor):
+                return editor
 
-        self.history_manager.add_action(HistoryEntry(
-            id=None, timestamp=datetime.utcnow(),
-            action_type=ActionType.PACKAGE_INSTALL,
-            summary=f"Installed package: {os.path.basename(package_path)}",
-            status=ActionStatus.INFO,
-            details={"package_path": package_path}
-        ))
+        for editor in ['nano', 'vim', 'gedit', 'code', 'mousepad']:
+            if shutil.which(editor):
+                return editor
 
-    def on_install_package_sandboxed(self, button, package_path: str, isolation_level: str,
-                                     allow_network: bool, allow_home: bool):
-        """Handles sandboxed package installation."""
-        # Similar to sandboxed build but for installation
-        command = ['sudo', 'pacman', '-U', package_path]
+        return 'nano'
 
-        # Note: Sandboxed sudo operations require special handling
-        # This is a simplified implementation
-        self.on_install_package(button, package_path)
+    def _confirm_security_risk(self, security_result) -> bool:
+        if not security_result or not hasattr(security_result, 'security_level'):
+            return True
 
-    def on_verify_signature(self, button_or_action, package_path: str):
-        """Handles verifying package signature."""
-        command = ['pacman', '-Qkk', os.path.basename(package_path).split('-')[0]]
+        from ..file_utils import SecurityLevel
 
-        self.terminal_manager.execute_command_in_system_terminal(command)
-
-    def on_view_package_info(self, button_or_action, package_path: str):
-        """Handles viewing package information."""
-        command = ['pacman', '-Qip', package_path]
-
-        self.terminal_manager.execute_command_in_system_terminal(command)
-
-    def on_apply_patch(self, button_or_action, patch_path: str):
-        """Handles applying a patch file."""
-        command = ['patch', '-p1', '-i', patch_path]
-        working_dir = os.path.dirname(patch_path)
-
-        self.terminal_manager.execute_command_in_system_terminal(
-            command, cwd=working_dir
-        )
-
-    def on_view_diff(self, button_or_action, patch_path: str):
-        """Handles viewing a diff/patch file."""
-        editor = self.preferences_manager.get_default_editor()
-        command = [editor, patch_path]
-
-        self.terminal_manager.execute_command_in_system_terminal(command)
-
-    def on_execute_custom_command(self, button_or_action):
-        """Handles executing a custom command."""
-        # This would open a dialog to input custom command
-        # For now, just show a placeholder
-        from .ui_manager import UIManager
-        if hasattr(self.window, 'ui_manager'):
-            self.window.ui_manager.show_info_dialog(
-                "Custom Command",
-                "Custom command execution will be implemented here.",
-                "utilities-terminal-symbolic"
+        if security_result.security_level in [SecurityLevel.WARNING, SecurityLevel.DANGER]:
+            dialog = Gtk.MessageDialog(
+                transient_for=self.window,
+                modal=True,
+                message_type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.YES_NO,
+                text="Security Warning"
             )
+            dialog.format_secondary_text(
+                f"This PKGBUILD has security concerns. Continue anyway?"
+            )
+            response = dialog.run()
+            dialog.destroy()
+            return response == Gtk.ResponseType.YES
 
-    def on_dry_run_command(self, button_or_action):
-        """Handles dry-run simulation of commands."""
-        # Placeholder for dry-run functionality
-        pass
+        return True
 
-    def on_consult_documentation(self, button_or_action):
-        """Handles opening documentation."""
-        command = ['xdg-open', 'https://wiki.archlinux.org/title/Arch_User_Repository']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+    def _confirm_uninstall(self, package: str) -> bool:
+        dialog = Gtk.MessageDialog(
+            transient_for=self.window,
+            modal=True,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text=f"Uninstall {package}?"
+        )
+        dialog.format_secondary_text("This action cannot be undone.")
+        response = dialog.run()
+        dialog.destroy()
+        return response == Gtk.ResponseType.YES
 
-    # System-level actions
-    def on_system_action(self, action, param):
-        """General system action handler."""
-        pass
+    def _show_file_list_dialog(self, files: List[str], package_path: str):
+        dialog = Gtk.Dialog(
+            title=f"Files in {os.path.basename(package_path)}",
+            transient_for=self.window,
+            modal=True
+        )
+        dialog.add_button("Close", Gtk.ResponseType.CLOSE)
+        dialog.set_default_size(600, 400)
 
-    def on_statistics_action(self, action, param):
-        """Shows system statistics."""
-        command = ['paru', '-Ps']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
-    def on_arch_news_action(self, action, param):
-        """Shows Arch Linux news."""
-        command = ['paru', '--news']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+        listbox = Gtk.ListBox()
+        scrolled.add(listbox)
 
-    def on_clean_cache_action(self, action, param):
-        """Cleans package cache."""
-        command = ['sudo', 'paru', '-Scc']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+        for file_path in files:
+            row = Gtk.ListBoxRow()
+            label = Gtk.Label(label=file_path, halign=Gtk.Align.START)
+            label.set_margin_start(12)
+            label.set_margin_end(12)
+            label.set_margin_top(6)
+            label.set_margin_bottom(6)
+            row.add(label)
+            listbox.add(row)
 
-    def on_update_system_action(self, action, param):
-        """Updates the system."""
-        command = ['paru', '-Syu']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+        dialog.get_content_area().pack_start(scrolled, True, True, 0)
+        dialog.show_all()
+        dialog.run()
+        dialog.destroy()
 
-    def on_action_history_action(self, action, param):
-        """Shows action history."""
-        # This would open the history dialog
-        pass
+    def _show_dependencies_dialog(self, dependencies: Dict[str, List[str]], pkgbuild_path: str):
+        dialog = Gtk.Dialog(
+            title=f"Dependencies - {os.path.basename(pkgbuild_path)}",
+            transient_for=self.window,
+            modal=True
+        )
+        dialog.add_button("Close", Gtk.ResponseType.CLOSE)
+        dialog.set_default_size(500, 400)
 
-    def on_show_upstream_updates(self, action, param):
-        """Shows upstream updates."""
-        pass
+        notebook = Gtk.Notebook()
 
-    def on_refresh_upstream_updates_action(self, action, param):
-        """Refreshes upstream updates."""
-        pass
+        for dep_type, deps in dependencies.items():
+            if deps:
+                scrolled = Gtk.ScrolledWindow()
+                scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
-    def on_hide_advanced_action(self, action, param):
-        """Toggles simplified mode."""
-        current = self.preferences_manager.get_simplified_mode()
-        self.preferences_manager.set_simplified_mode(not current)
+                listbox = Gtk.ListBox()
+                scrolled.add(listbox)
 
-    def on_check_devel_action(self, action, param):
-        """Checks for devel updates."""
-        command = ['paru', '-Sua']
-        self.terminal_manager.execute_command_in_system_terminal(command)
+                for dep in deps:
+                    row = Gtk.ListBoxRow()
+                    label = Gtk.Label(label=dep, halign=Gtk.Align.START)
+                    label.set_margin_start(12)
+                    label.set_margin_end(12)
+                    label.set_margin_top(6)
+                    label.set_margin_bottom(6)
+                    row.add(label)
+                    listbox.add(row)
 
-    def on_install_debug_action(self, action, param):
-        """Installs debug packages."""
-        pass
+                notebook.append_page(scrolled, Gtk.Label(label=dep_type.title()))
 
-    def on_show_warnings_action(self, action, param):
-        """Shows detailed warnings."""
-        pass
+        dialog.get_content_area().pack_start(notebook, True, True, 0)
+        dialog.show_all()
+        dialog.run()
+        dialog.destroy()
 
-    def on_show_terminal_panel_action(self, action, param):
-        """Toggles terminal panel visibility."""
-        current = self.preferences_manager.get_show_realtime_terminal()
-        self.preferences_manager.set_show_realtime_terminal(not current)
+    def _show_checksum_validation_dialog(self, is_valid: bool, results: Dict[str, Any]):
+        title = "Checksum Validation - " + ("Valid" if is_valid else "Invalid")
+        dialog = Gtk.MessageDialog(
+            transient_for=self.window,
+            modal=True,
+            message_type=Gtk.MessageType.INFO if is_valid else Gtk.MessageType.WARNING,
+            buttons=Gtk.ButtonsType.OK,
+            text=title
+        )
 
-        if not current:
-            self.terminal_manager.show_terminal_panel()
+        if "error" in results:
+            dialog.format_secondary_text(results["error"])
         else:
-            self.terminal_manager.hide_terminal_panel()
+            details = f"Files checked: {len(results.get('results', {}))}\n"
+            details += f"Missing files: {len(results.get('missing_files', []))}\n"
+            details += f"Checksum mismatches: {len(results.get('checksum_mismatches', []))}"
+            dialog.format_secondary_text(details)
 
-    def on_review_pkgbuild_action(self, action, param):
-        """Opens PKGBUILD review dialog."""
-        # This would open the review dialog
-        pass
+        dialog.run()
+        dialog.destroy()
+
+    def _get_save_file_path(self, default_name: str) -> Optional[str]:
+        dialog = Gtk.FileChooserDialog(
+            title="Save File",
+            parent=self.window,
+            action=Gtk.FileChooserAction.SAVE
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_SAVE, Gtk.ResponseType.OK
+        )
+        dialog.set_current_name(default_name)
+
+        response = dialog.run()
+        file_path = dialog.get_filename() if response == Gtk.ResponseType.OK else None
+        dialog.destroy()
+        return file_path
+
+    def _get_open_file_path(self) -> Optional[str]:
+        dialog = Gtk.FileChooserDialog(
+            title="Open File",
+            parent=self.window,
+            action=Gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN, Gtk.ResponseType.OK
+        )
+
+        response = dialog.run()
+        file_path = dialog.get_filename() if response == Gtk.ResponseType.OK else None
+        dialog.destroy()
+        return file_path
+
+    def _on_search_completed(self, success: bool, output: str = ""):
+        if success and self.window:
+            if hasattr(self.window, 'show_search_results'):
+                self.window.show_search_results(output)
+
+    def _log_error(self, message: str):
+        if self.error_handler:
+            self.error_handler.log_error(message)
+        else:
+            print(f"ERROR: {message}")

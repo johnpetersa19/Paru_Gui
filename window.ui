@@ -2,8 +2,8 @@
 <!-- Created with Cambalache 0.97.8 -->
 <interface domain="paru-gui">
   <!-- interface-name window.ui -->
-  <requires lib="gtk" version="4.0"/>
   <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.0"/>
   <!-- Main Application Window -->
   <template class="ParuGuiWindow" parent="GtkApplicationWindow">
     <property name="default-height">700</property>
@@ -20,27 +20,18 @@
               <object class="GtkMenuButton" id="app_menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">primary_menu</property>
-                <accessibility>
-                  <property name="label">Application menu</property>
-                </accessibility>
               </object>
             </child>
             <child type="title">
               <object class="GtkSearchEntry" id="search_entry">
                 <property name="placeholder-text">Search packages...</property>
                 <property name="width-request">400</property>
-                <accessibility>
-                  <property name="label">Search packages</property>
-                </accessibility>
               </object>
             </child>
             <child type="end">
               <object class="GtkButton" id="help_button">
                 <property name="icon-name">help-about-symbolic</property>
                 <property name="tooltip-text">Help</property>
-                <accessibility>
-                  <property name="label">Help and About</property>
-                </accessibility>
               </object>
             </child>
           </object>
@@ -65,7 +56,8 @@
                       <object class="GtkImage">
                         <property name="css-classes">dim-label</property>
                         <property name="icon-name">system-software-install-symbolic</property>
-                        <property name="pixel-size">128</property>
+                        <property name="icon-size">inherit</property>
+                        <property name="pixel-size">150</property>
                       </object>
                     </child>
                     <child>
@@ -88,18 +80,12 @@
                           <object class="GtkButton" id="select_file_button">
                             <property name="css-classes">suggested-action</property>
                             <property name="label" translatable="yes">Select File</property>
-                            <accessibility>
-                              <property name="label">Select PKGBUILD file</property>
-                            </accessibility>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="select_folder_button">
                             <property name="css-classes">suggested-action</property>
                             <property name="label" translatable="yes">Select Folder</property>
-                            <accessibility>
-                              <property name="label">Select directory containing PKGBUILD</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -116,9 +102,6 @@
                         <property name="halign">center</property>
                         <property name="max-children-per-line">3</property>
                         <property name="selection-mode">none</property>
-                        <accessibility>
-                          <property name="label">Recent directories list</property>
-                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -147,9 +130,6 @@
                             <property name="max-children-per-line">3</property>
                             <property name="row-spacing">12</property>
                             <property name="selection-mode">none</property>
-                            <accessibility>
-                              <property name="label">Package content cards</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -166,9 +146,6 @@
                           <object class="GtkButton" id="back_button">
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Back</property>
-                            <accessibility>
-                              <property name="label">Go back to previous screen</property>
-                            </accessibility>
                           </object>
                         </child>
                         <child>
@@ -188,9 +165,6 @@
                             <property name="css-classes">suggested-action</property>
                             <property name="halign">end</property>
                             <property name="label" translatable="yes">Action</property>
-                            <accessibility>
-                              <property name="label">Execute primary action</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -226,9 +200,6 @@
                       <object class="GtkProgressBar" id="processing_progress">
                         <property name="show-text">True</property>
                         <property name="width-request">400</property>
-                        <accessibility>
-                          <property name="label">Processing progress</property>
-                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -240,9 +211,6 @@
                             <property name="editable">False</property>
                             <property name="monospace">True</property>
                             <property name="wrap-mode">word</property>
-                            <accessibility>
-                              <property name="label">Processing log output</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -254,43 +222,36 @@
                         <child>
                           <object class="GtkButton" id="cancel_button">
                             <property name="label" translatable="yes">Cancel</property>
-                            <accessibility>
-                              <property name="label">Cancel current operation</property>
-                            </accessibility>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="details_button">
                             <property name="label" translatable="yes">Details</property>
-                            <accessibility>
-                              <property name="label">Show operation details</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
                     </child>
                   </object>
-                  </property>
+                </property>
                 <property name="name">processing</property>
                 <property name="title" translatable="yes">Processing</property>
               </object>
             </child>
-            <!-- NEW STACK PAGE FOR UPSTREAM UPDATES -->
             <child>
               <object class="GtkStackPage">
                 <property name="child">
                   <object class="GtkBox" id="upstream_updates_view">
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-top">24</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">12</property>
-                    <property name="margin-top">24</property>
-                    <property name="margin-bottom">24</property>
-                    <property name="margin-start">24</property>
-                    <property name="margin-end">24</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="css-classes">title-2</property>
-                        <property name="label" translatable="yes">Upstream Updates</property>
                         <property name="halign">start</property>
+                        <property name="label" translatable="yes">Upstream Updates</property>
                         <property name="margin-bottom">12</property>
                       </object>
                     </child>
@@ -310,25 +271,19 @@
                             <property name="row-spacing">18</property>
                             <property name="selection-mode">none</property>
                             <property name="valign">start</property>
-                            <accessibility>
-                              <property name="label">Upstream package updates list</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
                     </child>
                     <child>
                       <object class="GtkBox" id="upstream_action_bar">
+                        <property name="halign">end</property>
                         <property name="margin-top">12</property>
                         <property name="spacing">6</property>
-                        <property name="halign">end</property>
                         <child>
                           <object class="GtkButton" id="refresh_updates_button">
-                            <property name="label" translatable="yes">Refresh Updates</property>
                             <property name="icon-name">view-refresh-symbolic</property>
-                            <accessibility>
-                              <property name="label">Refresh upstream updates list</property>
-                            </accessibility>
+                            <property name="label" translatable="yes">Refresh Updates</property>
                           </object>
                         </child>
                       </object>
@@ -401,7 +356,7 @@
         </item>
       </submenu>
       <submenu>
-          <attribute name="label" translatable="yes">Simplified Mode</attribute>
+        <attribute name="label" translatable="yes">Simplified Mode</attribute>
         <item>
           <attribute name="action">app.hide-advanced</attribute>
           <attribute name="label" translatable="yes">Hide Advanced Options</attribute>
@@ -466,9 +421,6 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
-    <style>
-      <class name="card"/>
-    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -489,9 +441,6 @@
           <object class="GtkImage" id="trust_indicator">
             <property name="css-classes">success</property>
             <property name="icon-name">security-high-symbolic</property>
-            <accessibility>
-              <property name="label">Trust level indicator</property>
-            </accessibility>
           </object>
         </child>
       </object>
@@ -533,6 +482,9 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="card"/>
+    </style>
   </object>
   <object class="GtkBox" id="package_card_template">
     <property name="margin-bottom">12</property>
@@ -541,9 +493,6 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
-    <style>
-      <class name="card"/>
-    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -564,9 +513,6 @@
           <object class="GtkImage" id="signature_indicator">
             <property name="css-classes">success</property>
             <property name="icon-name">security-high-symbolic</property>
-            <accessibility>
-              <property name="label">Signature verification indicator</property>
-            </accessibility>
           </object>
         </child>
       </object>
@@ -601,6 +547,9 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="card"/>
+    </style>
   </object>
   <object class="GtkBox" id="patch_card_template">
     <property name="margin-bottom">12</property>
@@ -609,9 +558,6 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
-    <style>
-      <class name="card"/>
-    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -656,6 +602,9 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="card"/>
+    </style>
   </object>
   <object class="GtkBox" id="advanced_card_template">
     <property name="margin-bottom">12</property>
@@ -664,9 +613,6 @@
     <property name="margin-top">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
-    <style>
-      <class name="card"/>
-    </style>
     <child>
       <object class="GtkBox">
         <property name="spacing">6</property>
@@ -715,6 +661,9 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="card"/>
+    </style>
   </object>
   <object class="GtkBox" id="empty_card_template">
     <property name="halign">center</property>
@@ -725,9 +674,6 @@
     <property name="orientation">vertical</property>
     <property name="spacing">12</property>
     <property name="valign">center</property>
-    <style>
-      <class name="card"/>
-    </style>
     <child>
       <object class="GtkImage">
         <property name="css-classes">dim-label</property>
@@ -754,12 +700,15 @@
         <property name="label" translatable="yes">Download PKGBUILD</property>
       </object>
     </child>
+    <style>
+      <class name="card"/>
+    </style>
   </object>
   <!-- Error Dialog -->
   <object class="GtkDialog" id="error_dialog">
-    <property name="title" translatable="yes">Error</property>
-    <property name="modal">True</property>
     <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">Error</property>
     <child internal-child="content_area">
       <object class="GtkBox">
         <property name="margin-bottom">18</property>
@@ -802,9 +751,6 @@
               <object class="GtkTextView" id="error_details">
                 <property name="editable">False</property>
                 <property name="monospace">True</property>
-                <accessibility>
-                  <property name="label">Error details and log</property>
-                </accessibility>
               </object>
             </child>
           </object>
@@ -831,9 +777,9 @@
   </object>
   <!-- Preferences Dialog -->
   <object class="GtkDialog" id="preferences_dialog">
-    <property name="title" translatable="yes">Preferences</property>
-    <property name="modal">True</property>
     <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">Preferences</property>
     <child internal-child="content_area">
       <object class="GtkBox">
         <property name="margin-bottom">18</property>

@@ -1,353 +1,520 @@
 import os
 import subprocess
-import logging
 import shlex
-import threading # Still useful for managing potential cancellation events for the external terminal
-import time
+import shutil
 from enum import Enum
-from typing import List, Dict, Any, Optional, Tuple, Callable
-import concurrent.futures # For ThreadPoolExecutor, if still using for background tasks
+from typing import List, Dict, Any, Optional, Tuple, Callable, Union
+from gi.repository import Gtk, GLib
+from pathlib import Path
 
-from gi.repository import Gtk, GLib # Gtk.TextBuffer, GLib.idle_add, Pango for attributes
 
-# Basic logging configuration for this module
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("terminal_manager")
+class TerminalType(Enum):
+    GNOME_TERMINAL = "gnome-terminal"
+    KONSOLE = "konsole"
+    XTERM = "xterm"
+    ALACRITTY = "alacritty"
+    KITTY = "kitty"
+    TERMINATOR = "terminator"
+    TILIX = "tilix"
+    MATE_TERMINAL = "mate-terminal"
+    XFCE_TERMINAL = "xfce4-terminal"
 
-# No longer needed as output goes to system terminal
-# class LogLevel(Enum):
-#     MINIMUM = "min"
-#     STANDARD = "std"
-#     MAXIMUM = "max"
+
+class ExecutionMode(Enum):
+    NORMAL = "normal"
+    SANDBOXED = "sandboxed"
+    PERSISTENT = "persistent"
+    DETACHED = "detached"
+
 
 class TerminalManager:
-    """
-    Manages the execution of commands in the system's default terminal.
-    It encapsulates logic for determining the user's preferred terminal,
-    launching commands within it, and managing the visibility of the GUI's
-    internal terminal control panel.
-    """
-
-    DEFAULT_TERMINAL_EMULATORS = ["gnome-terminal", "konsole", "xterm", "alacritty", "kitty", "terminator"]
-
-    def __init__(self,
-                 terminal_area_box: Gtk.Box, # The parent box containing the terminal controls
-                 preferences_manager: Optional[Any] = None # For GSettings for preferred terminal
-                ):
-
+    
+    def __init__(self, terminal_area_box: Optional[Gtk.Box] = None, preferences_manager: Optional[Any] = None):
         self.terminal_area_box = terminal_area_box
         self.preferences_manager = preferences_manager
-
-        self._find_default_terminal_emulator()
-        self._connect_ui_signals() # Connects Hide/Show buttons
-        self._load_preferences() # Load visibility preference
-
-        logger.info(f"TerminalManager initialized. Default emulator: {self.system_terminal_emulator}")
-
-    def _find_default_terminal_emulator(self):
-        """
-        Attempts to find the user's preferred terminal emulator.
-        Checks XDG_TERMINAL_EMULATOR, then common emulators in PATH.
-        """
-        # Try XDG_TERMINAL_EMULATOR (if set by desktop environment)
+        self.system_terminal_emulator = None
+        self.terminal_type = None
+        
+        self._running_processes: Dict[str, subprocess.Popen] = {}
+        self._terminal_commands: Dict[TerminalType, Dict[str, List[str]]] = {}
+        
+        self._initialize_terminal_commands()
+        self._detect_system_terminal()
+        self._setup_ui_components()
+        self._load_preferences()
+    
+    def _initialize_terminal_commands(self):
+        self._terminal_commands = {
+            TerminalType.GNOME_TERMINAL: {
+                'execute': ['--', 'bash', '-c'],
+                'title': ['--title'],
+                'working_dir': ['--working-directory'],
+                'hold': [],
+                'new_window': ['--window'],
+                'new_tab': ['--tab']
+            },
+            TerminalType.KONSOLE: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-p', 'tabtitle'],
+                'working_dir': ['--workdir'],
+                'hold': ['--hold'],
+                'new_window': ['--new-window'],
+                'new_tab': ['--new-tab']
+            },
+            TerminalType.XTERM: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-T'],
+                'working_dir': ['-cd'],
+                'hold': ['-hold'],
+                'new_window': [],
+                'new_tab': []
+            },
+            TerminalType.ALACRITTY: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-t'],
+                'working_dir': ['--working-directory'],
+                'hold': [],
+                'new_window': ['--class'],
+                'new_tab': []
+            },
+            TerminalType.KITTY: {
+                'execute': ['bash', '-c'],
+                'title': ['--title'],
+                'working_dir': ['--directory'],
+                'hold': [],
+                'new_window': ['--new-window'],
+                'new_tab': ['--new-tab']
+            },
+            TerminalType.TERMINATOR: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-T'],
+                'working_dir': ['--working-directory'],
+                'hold': ['-H'],
+                'new_window': ['--new-window'],
+                'new_tab': ['--new-tab']
+            },
+            TerminalType.TILIX: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-t'],
+                'working_dir': ['--working-directory'],
+                'hold': [],
+                'new_window': ['--new-window'],
+                'new_tab': ['--new-tab']
+            },
+            TerminalType.MATE_TERMINAL: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-t'],
+                'working_dir': ['--working-directory'],
+                'hold': [],
+                'new_window': ['--window'],
+                'new_tab': ['--tab']
+            },
+            TerminalType.XFCE_TERMINAL: {
+                'execute': ['-e', 'bash', '-c'],
+                'title': ['-T'],
+                'working_dir': ['--working-directory'],
+                'hold': ['--hold'],
+                'new_window': ['--window'],
+                'new_tab': ['--tab']
+            }
+        }
+    
+    def _detect_system_terminal(self):
         xdg_terminal = os.environ.get('XDG_TERMINAL_EMULATOR')
         if xdg_terminal and self._is_command_available(xdg_terminal):
             self.system_terminal_emulator = xdg_terminal
-            logger.debug(f"Using XDG_TERMINAL_EMULATOR: {self.system_terminal_emulator}")
+            self.terminal_type = self._get_terminal_type(xdg_terminal)
             return
-
-        # Try common desktop-specific defaults
+        
         desktop_session = os.environ.get('XDG_CURRENT_DESKTOP', '').lower()
-        if 'gnome' in desktop_session and self._is_command_available('gnome-terminal'):
-            self.system_terminal_emulator = 'gnome-terminal'
-        elif 'kde' in desktop_session and self._is_command_available('konsole'):
-            self.system_terminal_emulator = 'konsole'
-        elif self._is_command_available('alacritty'):
-            self.system_terminal_emulator = 'alacritty'
-        elif self._is_command_available('kitty'):
-            self.system_terminal_emulator = 'kitty'
-        elif self._is_command_available('terminator'):
-            self.system_terminal_emulator = 'terminator'
-        elif self._is_command_available('xterm'):
-            self.system_terminal_emulator = 'xterm'
-        else:
-            # Fallback to the first available from a general list
-            for term in self.DEFAULT_TERMINAL_EMULATORS:
-                if self._is_command_available(term):
-                    self.system_terminal_emulator = term
-                    break
-            else:
-                self.system_terminal_emulator = 'xterm' # Absolute fallback
-                logger.warning("No preferred terminal emulator found, falling back to 'xterm'.")
-
-        logger.debug(f"Determined system terminal emulator: {self.system_terminal_emulator}")
-
-
+        desktop_priorities = {
+            'gnome': [TerminalType.GNOME_TERMINAL, TerminalType.TILIX],
+            'kde': [TerminalType.KONSOLE],
+            'xfce': [TerminalType.XFCE_TERMINAL, TerminalType.XTERM],
+            'mate': [TerminalType.MATE_TERMINAL, TerminalType.XTERM],
+            'unity': [TerminalType.GNOME_TERMINAL, TerminalType.XTERM]
+        }
+        
+        for de_name, terminals in desktop_priorities.items():
+            if de_name in desktop_session:
+                for terminal_type in terminals:
+                    if self._is_command_available(terminal_type.value):
+                        self.system_terminal_emulator = terminal_type.value
+                        self.terminal_type = terminal_type
+                        return
+        
+        fallback_order = [
+            TerminalType.ALACRITTY,
+            TerminalType.KITTY,
+            TerminalType.GNOME_TERMINAL,
+            TerminalType.KONSOLE,
+            TerminalType.TERMINATOR,
+            TerminalType.TILIX,
+            TerminalType.MATE_TERMINAL,
+            TerminalType.XFCE_TERMINAL,
+            TerminalType.XTERM
+        ]
+        
+        for terminal_type in fallback_order:
+            if self._is_command_available(terminal_type.value):
+                self.system_terminal_emulator = terminal_type.value
+                self.terminal_type = terminal_type
+                return
+        
+        self.system_terminal_emulator = 'xterm'
+        self.terminal_type = TerminalType.XTERM
+    
+    def _get_terminal_type(self, terminal_name: str) -> TerminalType:
+        for terminal_type in TerminalType:
+            if terminal_type.value in terminal_name:
+                return terminal_type
+        return TerminalType.XTERM
+    
     def _is_command_available(self, command: str) -> bool:
-        """Checks if a command is available in the system's PATH."""
-        return shutil.which(command) is not None # Using shutil.which for robust path checking
-
-    def _connect_ui_signals(self):
-        """Connects signals from UI widgets to manager methods."""
-        # Assuming these buttons are obtained from the builder in window.py
-        # and passed to TerminalManager init.
-        # For this simplified version, we only need the hide/show functionality
-        # controlled by the main window, not intricate terminal controls.
-        pass # UI interactions are now handled directly by window.py and simple callbacks
-
+        return shutil.which(command) is not None
+    
+    def _setup_ui_components(self):
+        if self.terminal_area_box:
+            self.terminal_area_box.set_visible(False)
+    
     def _load_preferences(self):
-        """Loads terminal preferences from GSettings (or PreferencesManager)."""
         if self.preferences_manager:
-            # Assume a preference for initial visibility
-            self.terminal_area_box.set_visible(self.preferences_manager.get_show_realtime_terminal())
-            logger.debug(f"Terminal panel visibility loaded: {self.terminal_area_box.get_visible()}")
-        else:
-            logger.warning("PreferencesManager not provided. Using default terminal panel visibility (hidden).")
-            self.terminal_area_box.set_visible(False) # Default to hidden if no preferences manager
-
+            show_terminal = self.preferences_manager.get_preference("show_terminal_panel", False)
+            if self.terminal_area_box:
+                self.terminal_area_box.set_visible(show_terminal)
+    
+    def get_available_terminals(self) -> List[str]:
+        available = []
+        for terminal_type in TerminalType:
+            if self._is_command_available(terminal_type.value):
+                available.append(terminal_type.value)
+        return available
+    
+    def set_preferred_terminal(self, terminal_name: str) -> bool:
+        if self._is_command_available(terminal_name):
+            self.system_terminal_emulator = terminal_name
+            self.terminal_type = self._get_terminal_type(terminal_name)
+            if self.preferences_manager:
+                self.preferences_manager.set_preference("preferred_terminal", terminal_name)
+            return True
+        return False
+    
     def show_terminal_panel(self):
-        """Makes the GUI's terminal control panel visible."""
-        self.terminal_area_box.set_visible(True)
-        logger.debug("Terminal panel made visible.")
-        if self.preferences_manager:
-            self.preferences_manager.set_show_realtime_terminal(True)
-
+        if self.terminal_area_box:
+            self.terminal_area_box.set_visible(True)
+            if self.preferences_manager:
+                self.preferences_manager.set_preference("show_terminal_panel", True)
+    
     def hide_terminal_panel(self):
-        """Hides the GUI's terminal control panel."""
-        self.terminal_area_box.set_visible(False)
-        logger.debug("Terminal panel hidden.")
-        if self.preferences_manager:
-            self.preferences_manager.set_show_realtime_terminal(False)
-
-    def execute_command_in_system_terminal(self,
-                                           command: List[str],
-                                           cwd: Optional[str] = None,
-                                           is_sandboxed: bool = False,
-                                           sandbox_options: Optional[Any] = None # Expects SandboxOptions from sandboxing.py
-                                          ) -> subprocess.Popen:
-        """
-        [ ] Launch commands in the system's standard terminal.
-        Launches a command in the system's default terminal emulator.
-
-        Args:
-            command: The command and its arguments as a list of strings.
-            cwd: The working directory for the command.
-            is_sandboxed: True if the command should be executed within a sandbox.
-            sandbox_options: SandboxOptions object if `is_sandboxed` is True.
-
-        Returns:
-            The Popen object of the launched terminal process.
-        """
-        full_command_str = " ".join(shlex.quote(arg) for arg in command)
-
-        # Build the command to run INSIDE the terminal
-        # This differs per terminal emulator. Often, `--command` or `-e` is used.
-        terminal_cmd_args: List[str] = []
-        if self.system_terminal_emulator == 'gnome-terminal':
-            terminal_cmd_args.extend(['--', 'bash', '-c', f'{full_command_str}; exec bash']) # `exec bash` keeps terminal open
-        elif self.system_terminal_emulator == 'konsole':
-            terminal_cmd_args.extend(['-e', 'bash', '-c', f'{full_command_str}; exec bash'])
-        elif self.system_terminal_emulator == 'alacritty':
-            terminal_cmd_args.extend(['-e', 'bash', '-c', f'{full_command_str}; read -p "Press Enter to close..."']) # Keep open until user input
-        elif self.system_terminal_emulator == 'kitty':
-             terminal_cmd_args.extend(['bash', '-c', f'{full_command_str}; exec bash'])
-        elif self.system_terminal_emulator == 'terminator':
-            terminal_cmd_args.extend(['-e', 'bash', '-c', f'{full_command_str}; exec bash'])
-        elif self.system_terminal_emulator == 'xterm':
-            terminal_cmd_args.extend(['-e', 'bash', '-c', f'{full_command_str}; read -p "Press Enter to close..."'])
-        else: # Generic fallback, might not keep open
-            terminal_cmd_args.extend(['bash', '-c', f'{full_command_str}'])
-            logger.warning(f"Using generic command invocation for {self.system_terminal_emulator}. Terminal might close immediately.")
-
-        # Prepend the sandboxing command if needed
-        if is_sandboxed:
-            if not sandbox_options:
-                logger.error("Sandboxed execution requested but no SandboxOptions provided.")
-                # Fallback to non-sandboxed or error
-                GLib.idle_add(lambda: self.append_output("Error: Sandboxing requested but no options provided. Running non-sandboxed.\n", "error"))
+        if self.terminal_area_box:
+            self.terminal_area_box.set_visible(False)
+            if self.preferences_manager:
+                self.preferences_manager.set_preference("show_terminal_panel", False)
+    
+    def toggle_terminal_panel(self):
+        if self.terminal_area_box:
+            visible = self.terminal_area_box.get_visible()
+            if visible:
+                self.hide_terminal_panel()
             else:
-                from .sandboxing import SandboxManager # Import here to avoid circular dependency on init
-                sandbox_mgr = SandboxManager()
-                # _build_bwrap_args returns the bwrap command and its arguments up to '--'.
-                bwrap_cmd_prefix = ['bwrap'] + sandbox_mgr._build_bwrap_args(sandbox_options) + ['--']
-
-                # The command passed to the terminal is now the bwrap command
-                # This makes the terminal launch bwrap, which then launches the actual command.
-                final_command_for_terminal = bwrap_cmd_prefix + terminal_cmd_args # This is slightly tricky.
-                                                                                # The `bash -c` is part of `terminal_cmd_args`
-                                                                                # but needs to execute `bwrap ... -- bash -c "..."`
-                                                                                # So the actual command passed to `bwrap` is `bash -c "..."`
-                                                                                # Let's rebuild more robustly:
-
-                # The actual command to be executed by bwrap
-                bwrap_exec_cmd = ['bash', '-c', f'{full_command_str}; read -p "Press Enter to close sandboxed shell..."'] # Keep sandbox shell open
-                full_bwrap_command = ['bwrap'] + sandbox_mgr._build_bwrap_args(sandbox_options) + ['--'] + bwrap_exec_cmd
-
-                # Now, the terminal emulator needs to run this full_bwrap_command
-                if self.system_terminal_emulator == 'gnome-terminal':
-                    launch_cmd = [self.system_terminal_emulator, '--', *full_bwrap_command]
-                elif self.system_terminal_emulator == 'konsole':
-                    launch_cmd = [self.system_terminal_emulator, '-e', *full_bwrap_command]
-                elif self.system_terminal_emulator == 'alacritty':
-                    launch_cmd = [self.system_terminal_emulator, '-e', *full_bwrap_command]
-                elif self.system_terminal_emulator == 'kitty':
-                    launch_cmd = [self.system_terminal_emulator, *full_bwrap_command] # Kitty has flexible arg handling
-                else: # Generic
-                    launch_cmd = [self.system_terminal_emulator, '-e', shlex.join(full_bwrap_command)] # xterm / general expects a single string for -e
-
-                logger.info(f"Launching sandboxed command in system terminal: {' '.join(shlex.quote(arg) for arg in launch_cmd)}")
-                return subprocess.Popen(launch_cmd, cwd=cwd)
-
-        # Non-sandboxed execution
-        launch_cmd = [self.system_terminal_emulator] + terminal_cmd_args
-        logger.info(f"Launching non-sandboxed command in system terminal: {' '.join(shlex.quote(arg) for arg in launch_cmd)}")
-        return subprocess.Popen(launch_cmd, cwd=cwd)
-
-    # The streaming logic for appending output to GtkTextView is now REMOVED.
-    # The responsibility is entirely on the external terminal.
-    # The `append_output` method is now a simplified internal logger/notifier.
-    def append_output(self, line: str, stream_type: str = "stdout", tag_name: Optional[str] = None):
-        """
-        This version of append_output acts as an internal logger/notifier
-        since actual output goes to the system terminal.
-        """
-        log_method = logger.info
-        if stream_type == "error": log_method = logger.error
-        elif stream_type == "warning": log_method = logger.warning
-        elif stream_type == "command": log_method = logger.debug
-        log_method(f"[GUI Log] {stream_type.upper()}: {line.strip()}")
-        # You could also add a temporary Toast or similar for critical messages here.
-        # Adw.Toast.new(line[:100]).set_title(stream_type.upper()).set_timeout(2).set_priority(Adw.ToastPriority.HIGH)
-
-
-    # The following methods related to internal terminal state are also removed
-    # as the content is no longer managed by this class directly.
-    # def _autoscroll_to_end(self): pass
-    # def clear_terminal_output(self, *args): pass
-    # def _on_autoscroll_toggled(self, toggle_button: Gtk.ToggleButton): pass
-    # def _on_detail_level_changed(self, combo_box: Gtk.ComboBoxText): pass
-
-
-# Example Usage (for testing this module directly)
-if __name__ == "__main__":
-    # Ensure gi is initialized for Gtk/GLib
-    try:
-        import gi
-        gi.require_version('Gtk', '4.0')
-        gi.require_version('Adw', '1') # Often Adw is used with Gtk4
-        from gi.repository import Adw
-        import shutil # For shutil.which
-    except ValueError as e:
-        print(f"GI requirements not met for testing: {e}")
-        print("Please ensure you have pygobject installed and GTK/Adwaita libraries are available.")
-        print("Skipping direct test of TerminalManager due to GI environment.")
-        exit(1)
-
-    class MockPreferencesManager:
-        """A simple mock for PreferencesManager for testing."""
-        def get_show_realtime_terminal(self): return True
-        def set_show_realtime_terminal(self, value): pass
-        # Add a mock for get_default_terminal_emulator if you want to set a preference
-        # def get_default_terminal_emulator(self): return "konsole"
-
-    class TestTerminalApp(Adw.Application):
-        def __init__(self):
-            super().__init__(application_id='org.gnome.paru-gui.terminal-test')
-            self.window: Optional[Adw.ApplicationWindow] = None
-            self.terminal_manager: Optional[TerminalManager] = None
-            self.preferences_manager = MockPreferencesManager()
-            self.current_ext_terminal_process: Optional[subprocess.Popen] = None # To keep track
-
-        def do_activate(self):
-            if not self.window:
-                self.window = Adw.ApplicationWindow(application=self, title="Terminal Manager Test")
-                self.window.set_default_size(500, 300)
-
-                main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=10, margin_bottom=10, margin_start=10, margin_end=10)
-                self.window.set_child(main_box)
-
-                # Command input
-                cmd_entry = Gtk.Entry(placeholder_text="Enter command (e.g., ls -l /; sleep 2; echo 'Done')")
-                main_box.append(cmd_entry)
-
-                # Execute button
-                execute_button = Gtk.Button(label="Execute Command in System Terminal")
-                main_box.append(execute_button)
-                execute_button.connect("clicked", self.on_execute_command, cmd_entry)
-
-                # Execute Sandboxed button
-                execute_sandboxed_button = Gtk.Button(label="Execute Sandboxed Command (requires bwrap)", css_classes=['suggested-action'])
-                main_box.append(execute_sandboxed_button)
-                execute_sandboxed_button.connect("clicked", self.on_execute_sandboxed_command, cmd_entry)
-
-                # Hide/Show Panel buttons
-                hide_show_box = Gtk.Box(spacing=5)
-                show_panel_button = Gtk.Button(label="Show Terminal Panel")
-                hide_panel_button = Gtk.Button(label="Close Terminal Panel") # Renamed from Hide
-
-                hide_show_box.append(show_panel_button)
-                hide_show_box.append(hide_panel_button)
-                main_box.append(hide_show_box)
-
-
-                # Terminal Control Panel (this is the Gtk.Box that gets hidden/shown)
-                # It will only contain the hide button for this example,
-                # as other controls (autoscroll, clear, filters) are no longer managed here.
-                terminal_area_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5, margin_top=10)
-                terminal_area_box.add_css_class("terminal-box") # For visual styling
-                terminal_area_box.set_hexpand(True)
-                terminal_area_box.set_vexpand(True) # Allow it to expand if visible
-
-                terminal_panel_label = Gtk.Label(label="System Terminal Panel Controls", hexpand=True, halign=Gtk.Align.START, css_classes=['heading'])
-                terminal_area_box.append(terminal_panel_label)
-                terminal_area_box.append(Gtk.Label(label="Commands will launch in your default system terminal."))
-
-                main_box.append(terminal_area_box)
-
-                self.terminal_manager = TerminalManager(
-                    terminal_area_box,
-                    self.preferences_manager
-                )
-
-                # Connect buttons for showing/hiding the panel
-                show_panel_button.connect("clicked", lambda btn: self.terminal_manager.show_terminal_panel())
-                hide_panel_button.connect("clicked", lambda btn: self.terminal_manager.hide_terminal_panel())
-
-                self.window.present()
-
-        def on_execute_command(self, button: Gtk.Button, cmd_entry: Gtk.Entry):
-            command_str = cmd_entry.get_text().strip()
-            if not command_str: return
-
-            cmd_list = shlex.split(command_str)
-            self.terminal_manager.execute_command_in_system_terminal(cmd_list, cwd=os.path.expanduser("~"))
-            cmd_entry.set_text("")
-
-        def on_execute_sandboxed_command(self, button: Gtk.Button, cmd_entry: Gtk.Entry):
-            command_str = cmd_entry.get_text().strip()
-            if not command_str: return
-
-            cmd_list = shlex.split(command_str)
-
-            # Mock SandboxOptions
-            from .sandboxing import SandboxOptions, IsolationLevel # Import here for test
-            sandbox_opts = SandboxOptions(
-                isolation_level=IsolationLevel.MEDIUM,
-                allow_network=False, # Network access usually restricted in sandbox
-                allow_home=False, # Home access usually restricted
-                working_dir="/tmp" # Sandbox working dir
+                self.show_terminal_panel()
+    
+    def is_terminal_panel_visible(self) -> bool:
+        if self.terminal_area_box:
+            return self.terminal_area_box.get_visible()
+        return False
+    
+    def execute_command(self, command: Union[str, List[str]], 
+                       working_dir: Optional[str] = None,
+                       title: Optional[str] = None,
+                       hold_open: bool = True,
+                       mode: ExecutionMode = ExecutionMode.NORMAL,
+                       new_window: bool = False,
+                       env_vars: Optional[Dict[str, str]] = None) -> Optional[subprocess.Popen]:
+        
+        if isinstance(command, str):
+            command_list = shlex.split(command)
+        else:
+            command_list = command[:]
+        
+        if not command_list:
+            return None
+        
+        try:
+            terminal_cmd = self._build_terminal_command(
+                command_list, working_dir, title, hold_open, new_window
             )
-
-            self.terminal_manager.execute_command_in_system_terminal(
-                cmd_list,
-                cwd="/tmp", # Set cwd for external terminal
-                is_sandboxed=True,
-                sandbox_options=sandbox_opts
+            
+            env = os.environ.copy()
+            if env_vars:
+                env.update(env_vars)
+            
+            process = subprocess.Popen(
+                terminal_cmd,
+                cwd=working_dir,
+                env=env,
+                start_new_session=True
             )
-            cmd_entry.set_text("")
-
-    app = TestTerminalApp()
-    sys.exit(app.run(sys.argv))
+            
+            process_id = f"{title or 'terminal'}_{process.pid}"
+            self._running_processes[process_id] = process
+            
+            return process
+            
+        except Exception as e:
+            return None
+    
+    def execute_sandboxed_command(self, command: Union[str, List[str]],
+                                 working_dir: Optional[str] = None,
+                                 title: Optional[str] = None,
+                                 sandbox_options: Optional[Any] = None) -> Optional[subprocess.Popen]:
+        
+        if isinstance(command, str):
+            command_list = shlex.split(command)
+        else:
+            command_list = command[:]
+        
+        if not sandbox_options:
+            return self.execute_command(command, working_dir, title)
+        
+        try:
+            from ..paru_gui.sandboxing import SandboxManager
+            
+            sandbox_manager = SandboxManager()
+            bwrap_args = sandbox_manager._build_bwrap_args(sandbox_options)
+            
+            sandboxed_command = ['bwrap'] + bwrap_args + ['--'] + command_list
+            
+            return self.execute_command(
+                sandboxed_command,
+                working_dir,
+                title or "Sandboxed Command",
+                hold_open=True,
+                mode=ExecutionMode.SANDBOXED
+            )
+            
+        except ImportError:
+            return self.execute_command(command, working_dir, title)
+        except Exception as e:
+            return None
+    
+    def run_makepkg(self, build_dir: str, flags: Optional[List[str]] = None, title: str = "Building Package") -> bool:
+        makepkg_cmd = ['makepkg']
+        
+        if flags:
+            makepkg_cmd.extend(flags)
+        else:
+            makepkg_cmd.extend(['-s', '-r', '-c'])
+        
+        process = self.execute_command(
+            makepkg_cmd,
+            working_dir=build_dir,
+            title=title,
+            hold_open=True
+        )
+        
+        return process is not None
+    
+    def run_paru_command(self, paru_args: List[str], title: str = "Paru Command") -> bool:
+        paru_cmd = ['paru'] + paru_args
+        
+        process = self.execute_command(
+            paru_cmd,
+            title=title,
+            hold_open=True
+        )
+        
+        return process is not None
+    
+    def run_pacman_command(self, pacman_args: List[str], title: str = "Pacman Command", use_sudo: bool = True) -> bool:
+        if use_sudo:
+            pacman_cmd = ['sudo', 'pacman'] + pacman_args
+        else:
+            pacman_cmd = ['pacman'] + pacman_args
+        
+        process = self.execute_command(
+            pacman_cmd,
+            title=title,
+            hold_open=True
+        )
+        
+        return process is not None
+    
+    def run_command_async(self, command: Union[str, List[str]],
+                         working_dir: Optional[str] = None,
+                         title: Optional[str] = None,
+                         callback: Optional[Callable[[bool, str], None]] = None) -> bool:
+        
+        process = self.execute_command(command, working_dir, title, hold_open=False)
+        
+        if process and callback:
+            def monitor_process():
+                try:
+                    stdout, stderr = process.communicate()
+                    success = process.returncode == 0
+                    output = stdout.decode('utf-8') if stdout else ""
+                    if stderr:
+                        output += "\n" + stderr.decode('utf-8')
+                    
+                    GLib.idle_add(lambda: callback(success, output))
+                except:
+                    GLib.idle_add(lambda: callback(False, "Process execution failed"))
+            
+            import threading
+            thread = threading.Thread(target=monitor_process)
+            thread.daemon = True
+            thread.start()
+        
+        return process is not None
+    
+    def run_command_with_sudo(self, command: Union[str, List[str]],
+                             working_dir: Optional[str] = None,
+                             title: Optional[str] = None) -> bool:
+        
+        if isinstance(command, str):
+            command_list = shlex.split(command)
+        else:
+            command_list = command[:]
+        
+        sudo_command = ['sudo'] + command_list
+        
+        process = self.execute_command(
+            sudo_command,
+            working_dir=working_dir,
+            title=title or "Elevated Command",
+            hold_open=True
+        )
+        
+        return process is not None
+    
+    def open_terminal(self, working_dir: Optional[str] = None, title: Optional[str] = None) -> bool:
+        if not working_dir:
+            working_dir = os.path.expanduser("~")
+        
+        process = self.execute_command(
+            ['bash'],
+            working_dir=working_dir,
+            title=title or "Terminal",
+            hold_open=False,
+            new_window=True
+        )
+        
+        return process is not None
+    
+    def open_file_manager(self, path: str = None) -> bool:
+        if not path:
+            path = os.path.expanduser("~")
+        
+        try:
+            subprocess.Popen(['xdg-open', path], start_new_session=True)
+            return True
+        except:
+            return False
+    
+    def kill_process(self, process_id: str) -> bool:
+        if process_id in self._running_processes:
+            try:
+                process = self._running_processes[process_id]
+                process.terminate()
+                
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                
+                del self._running_processes[process_id]
+                return True
+            except:
+                return False
+        return False
+    
+    def kill_all_processes(self):
+        for process_id in list(self._running_processes.keys()):
+            self.kill_process(process_id)
+    
+    def get_running_processes(self) -> List[str]:
+        alive_processes = []
+        dead_processes = []
+        
+        for process_id, process in self._running_processes.items():
+            if process.poll() is None:
+                alive_processes.append(process_id)
+            else:
+                dead_processes.append(process_id)
+        
+        for dead_id in dead_processes:
+            del self._running_processes[dead_id]
+        
+        return alive_processes
+    
+    def _build_terminal_command(self, command: List[str],
+                               working_dir: Optional[str] = None,
+                               title: Optional[str] = None,
+                               hold_open: bool = True,
+                               new_window: bool = False) -> List[str]:
+        
+        if not self.terminal_type or self.terminal_type not in self._terminal_commands:
+            return [self.system_terminal_emulator] + command
+        
+        term_config = self._terminal_commands[self.terminal_type]
+        terminal_cmd = [self.system_terminal_emulator]
+        
+        if new_window and term_config.get('new_window'):
+            terminal_cmd.extend(term_config['new_window'])
+        
+        if title and term_config.get('title'):
+            terminal_cmd.extend(term_config['title'])
+            terminal_cmd.append(title)
+        
+        if working_dir and term_config.get('working_dir'):
+            terminal_cmd.extend(term_config['working_dir'])
+            terminal_cmd.append(working_dir)
+        
+        if hold_open and term_config.get('hold'):
+            terminal_cmd.extend(term_config['hold'])
+        
+        if term_config.get('execute'):
+            terminal_cmd.extend(term_config['execute'])
+            
+            command_str = ' '.join(shlex.quote(arg) for arg in command)
+            if hold_open:
+                if self.terminal_type in [TerminalType.GNOME_TERMINAL, TerminalType.KONSOLE, TerminalType.TERMINATOR]:
+                    command_str += '; exec bash'
+                elif self.terminal_type in [TerminalType.ALACRITTY, TerminalType.XTERM]:
+                    command_str += '; read -p "Press Enter to close..."'
+                elif self.terminal_type == TerminalType.KITTY:
+                    command_str += '; exec bash'
+            
+            terminal_cmd.append(command_str)
+        else:
+            terminal_cmd.extend(command)
+        
+        return terminal_cmd
+    
+    def get_terminal_info(self) -> Dict[str, Any]:
+        return {
+            'emulator': self.system_terminal_emulator,
+            'type': self.terminal_type.value if self.terminal_type else 'unknown',
+            'available_terminals': self.get_available_terminals(),
+            'panel_visible': self.is_terminal_panel_visible(),
+            'running_processes': len(self._running_processes)
+        }
+    
+    def validate_terminal_setup(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        if not self.system_terminal_emulator:
+            issues.append("No terminal emulator detected")
+        elif not self._is_command_available(self.system_terminal_emulator):
+            issues.append(f"Terminal emulator '{self.system_terminal_emulator}' not found in PATH")
+        
+        if not self.get_available_terminals():
+            issues.append("No terminal emulators available on system")
+        
+        required_commands = ['bash', 'sh']
+        for cmd in required_commands:
+            if not self._is_command_available(cmd):
+                issues.append(f"Required command '{cmd}' not found in PATH")
+        
+        return len(issues) == 0, issues
