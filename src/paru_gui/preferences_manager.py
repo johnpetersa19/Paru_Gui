@@ -79,7 +79,8 @@ class PreferencesManager(GObject.Object):
             return default_value
 
         try:
-            schema_type = self.settings.get_value(key).get_type().get_type_string()
+            value = self.settings.get_value(key)
+            schema_type = value.get_type_string()
             if schema_type == 's':
                 return self.settings.get_string(key)
             elif schema_type == 'b':

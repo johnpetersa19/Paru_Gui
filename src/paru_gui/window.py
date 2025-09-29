@@ -86,13 +86,13 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
 
     def _init_managers(self):
         try:
-            from paru_gui.ui.managers.ui_manager import UIManager
-            from paru_gui.ui.managers.content_view_manager import ContentViewManager
-            from paru_gui.ui.managers.search_manager import SearchManager
-            from paru_gui.ui.managers.file_operations import FileOperationsManager
-            from paru_gui.ui.managers.preferences_dialog_manager import PreferencesDialogManager
-            from paru_gui.ui.components.help_overlay import HelpOverlay
-            from paru_gui.ui.components.file_chooser_dialog import FileChooserDialog
+            from ui.managers.ui_manager import UIManager
+            from ui.managers.content_view_manager import ContentViewManager
+            from ui.managers.search_manager import SearchManager
+            from ui.managers.file_operations import FileOperationsManager
+            from ui.managers.preferences_dialog_manager import PreferencesDialogManager
+            from ui.components.help_overlay import HelpOverlay
+            from ui.components.file_chooser_dialog import FileChooserDialog
 
             builder = Gtk.Builder.new_from_resource('/org/gnome/paru-gui/ui/window.ui')
 
@@ -133,7 +133,7 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
             )
 
             self.help_overlay = HelpOverlay()
-            self.file_chooser = FileChooserDialog(transient_for=self)
+            self.file_chooser = FileChooserDialog(parent=self)
 
         except Exception as e:
             self.logger.error(f"Failed to initialize managers: {e}")
@@ -408,7 +408,7 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
             self.help_overlay.show_help_overlay(self)
 
     def show_pkgbuild_review(self, pkgbuild_path):
-        from paru_gui.ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
+        from ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
 
         dialog = PKGBUILDReviewDialog(
             parent=self,
@@ -418,13 +418,13 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
         dialog.present()
 
     def show_welcome_screen(self):
-        from paru_gui.ui.screens.welcome_screen import WelcomeScreen
+        from ui.screens.welcome_screen import WelcomeScreen
 
         if self.ui_manager:
             self.ui_manager.show_welcome_screen()
 
     def show_content_view(self, directory_path=None):
-        from paru_gui.ui.screens.content_view import ContentView
+        from ui.screens.content_view import ContentView
 
         if directory_path:
             self._load_directory(directory_path)
@@ -478,8 +478,8 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
             self.logger.warning(f"Paste operation failed: {e}")
 
     def show_upstream_updates(self):
-        from paru_gui.ui.screens.upstream_update import UpstreamUpdate
-        from paru_gui.ui.managers.ui_manager import ViewType
+        from ui.screens.upstream_update import UpstreamUpdate
+        from ui.managers.ui_manager import ViewType
 
         if self.ui_manager:
             self.ui_manager.show_view(ViewType.PROCESSING)

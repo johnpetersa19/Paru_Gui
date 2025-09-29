@@ -1,219 +1,310 @@
 from gi.repository import Gtk, GObject, Adw, Pango
 from typing import Optional, List, Dict, Any, Tuple
 
-# SOLUÇÃO ALTERNATIVA: Não usar @Gtk.Template, carregar manualmente
+@Gtk.Template(resource_path="/org/gnome/paru-gui/ui/screens/pkgbuild_review.ui")
 class PkgbuildReviewDialog(Adw.Dialog):
     __gtype_name__ = "PkgbuildReviewDialog"
+
+    package_icon: Gtk.Image = Gtk.Template.Child()
+    package_name: Gtk.Label = Gtk.Template.Child()
+    package_details: Gtk.Label = Gtk.Template.Child()
+
+    step_switcher: Adw.ViewSwitcher = Gtk.Template.Child()
+    review_view_stack: Adw.ViewStack = Gtk.Template.Child()
+
+    source_diff_view: Gtk.TextView = Gtk.Template.Child()
+
+    risk_sudo_row: Adw.SwitchRow = Gtk.Template.Child()
+    risk_unverified_sources_row: Adw.SwitchRow = Gtk.Template.Child()
+    heatmap_view: Gtk.TextView = Gtk.Template.Child()
+
+    sandbox_expander_row: Adw.ExpanderRow = Gtk.Template.Child()
+    sandbox_level_combo: Gtk.DropDown = Gtk.Template.Child()
+
+    cancel_button: Gtk.Button = Gtk.Template.Child()
+    previous_button: Gtk.Button = Gtk.Template.Child()
+    next_button: Gtk.Button = Gtk.Template.Child()
+    build_button: Gtk.Button = Gtk.Template.Child()
+
+    __gsignals__ = {
+        'build-requested': (GObject.SignalFlags.RUN_LAST, None, (object,)),
+        'cancel-requested': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'step-changed': (GObject.SignalFlags.RUN_LAST, None, (str,)),
+    }
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Configurar propriedades do diálogo
-        self.set_title("PKGBUILD Security Review")
-        self.set_default_size(700, 750)
-        self.set_modal(True)
+        self.current_package_data = {}
+        self.current_risks = []
+        self.security_analysis = {}
 
-        # Carregar UI manualmente
-        self._load_ui()
-
-        # Conectar sinais
-        self._connect_signals()
-
-        # Configurar heatmap
-        if hasattr(self, 'heatmap_view'):
+        if self.heatmap_view:
             self.heatmap_text_buffer = self.heatmap_view.get_buffer()
             self._setup_heatmap_tags()
 
-        print("PkgbuildReviewDialog initialized.")
+        if self.source_diff_view:
+            self.source_diff_buffer = self.source_diff_view.get_buffer()
 
-    def _load_ui(self):
-        """Carrega o arquivo UI manualmente"""
-        try:
-            # Tentar carregar do recurso primeiro
-            builder = Gtk.Builder()
-            builder.add_from_resource("/org/gnome/paru-gui/ui/screens/pkgbuild_review.ui")
-            print("✅ UI carregada do recurso")
+        self._setup_initial_state()
 
-        except Exception as e:
-            print(f"❌ Erro ao carregar do recurso: {e}")
-            try:
-                # Fallback: carregar do arquivo local
-                import os
-                ui_file = os.path.join(os.path.dirname(__file__), 'pkgbuild_review.ui')
-                builder = Gtk.Builder()
-                builder.add_from_file(ui_file)
-                print(f"✅ UI carregada do arquivo: {ui_file}")
-
-            except Exception as e2:
-                print(f"❌ Erro ao carregar do arquivo: {e2}")
-                # Criar UI programaticamente como último recurso
-                self._create_ui_programmatically()
-                return
-
-        # Obter o conteúdo principal e definir como child
-        main_content = builder.get_object('main_box')
-        if main_content:
-            self.set_child(main_content)
-
-            # Conectar referências aos elementos
-            self._connect_ui_elements(builder)
-        else:
-            print("❌ Não foi possível encontrar 'main_box' no UI")
-            self._create_ui_programmatically()
-
-    def _connect_ui_elements(self, builder):
-        """Conecta referências aos elementos UI"""
-        # Package Info Box
-        self.package_icon = builder.get_object('package_icon')
-        self.package_name = builder.get_object('package_name')
-        self.package_trust_label = builder.get_object('package_trust_label')
-        self.version_label = builder.get_object('version_label')
-        self.source_label = builder.get_object('source_label')
-        self.votes_label = builder.get_object('votes_label')
-        self.package_path = builder.get_object('package_path')
-
-        # Steps Navigation
-        self.step1_button = builder.get_object('step1_button')
-        self.step2_button = builder.get_object('step2_button')
-
-        # Step 1 Content: Critical Changes
-        self.step1_content = builder.get_object('step1_content')
-        self.source_diff_view = builder.get_object('source_diff_view')
-        self.prepare_diff_view = builder.get_object('prepare_diff_view')
-        self.package_diff_view = builder.get_object('package_diff_view')
-
-        # Step 2 Content: Risk Checklist & Heatmap
-        self.step2_content = builder.get_object('step2_content')
-        self.risk_checklist_box = builder.get_object('risk_checklist_box')
-        self.risk_summary_text = builder.get_object('risk_summary_text')
-        self.heatmap_view = builder.get_object('heatmap_view')
-
-        # Sandboxing Options
-        self.sandbox_expander = builder.get_object('sandbox_expander')
-        self.enable_sandbox_check = builder.get_object('enable_sandbox_check')
-        self.sandbox_options_box = builder.get_object('sandbox_options_box')
-        self.sandbox_level_combo = builder.get_object('sandbox_level_combo')
-        self.sandbox_network_check = builder.get_object('sandbox_network_check')
-        self.sandbox_home_check = builder.get_object('sandbox_home_check')
-
-        # Action Area Buttons
-        self.cancel_button = builder.get_object('cancel_button')
-        self.previous_button = builder.get_object('previous_button')
-        self.next_button = builder.get_object('next_button')
-        self.build_button = builder.get_object('build_button')
-
-    def _create_ui_programmatically(self):
-        """Cria UI programaticamente como último recurso"""
-        print("🔧 Criando UI programaticamente...")
-
-        # Criar container principal
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        main_box.set_margin_top(12)
-        main_box.set_margin_bottom(12)
-        main_box.set_margin_start(12)
-        main_box.set_margin_end(12)
-
-        # Criar elementos básicos
-        self.package_name = Gtk.Label(label="Package Name")
-        self.package_name.add_css_class("title-2")
-        main_box.append(self.package_name)
-
-        # Placeholder para outros elementos
-        placeholder = Gtk.Label(label="UI sendo carregada programaticamente...")
-        placeholder.add_css_class("dim-label")
-        main_box.append(placeholder)
-
-        # Botões de ação
-        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        button_box.set_halign(Gtk.Align.END)
-
-        self.cancel_button = Gtk.Button(label="Cancelar")
-        self.build_button = Gtk.Button(label="Build")
-        self.build_button.add_css_class("suggested-action")
-
-        button_box.append(self.cancel_button)
-        button_box.append(self.build_button)
-        main_box.append(button_box)
-
-        # Definir como conteúdo do diálogo
-        self.set_child(main_box)
-
-        print("✅ UI básica criada programaticamente")
-
-    def _connect_signals(self):
-        """Conecta sinais dos elementos"""
-        if hasattr(self, 'step1_button') and self.step1_button:
-            self.step1_button.connect("toggled", self._on_step_toggled)
-        if hasattr(self, 'step2_button') and self.step2_button:
-            self.step2_button.connect("toggled", self._on_step_toggled)
-        if hasattr(self, 'cancel_button') and self.cancel_button:
-            self.cancel_button.connect("clicked", lambda *args: self.close())
-        if hasattr(self, 'previous_button') and self.previous_button:
-            self.previous_button.connect("clicked", self._on_previous_clicked)
-        if hasattr(self, 'next_button') and self.next_button:
-            self.next_button.connect("clicked", self._on_next_clicked)
+    def _setup_initial_state(self):
+        self.review_view_stack.set_visible_child_name("step1")
+        self._update_button_visibility()
+        self.review_view_stack.connect("notify::visible-child-name", self._on_view_changed)
 
     def _setup_heatmap_tags(self):
-        """Sets up Gtk.TextTag objects for heatmap highlighting."""
         if not hasattr(self, 'heatmap_text_buffer'):
             return
 
         tag_table = self.heatmap_text_buffer.get_tag_table()
 
-        # The CSS file (pkgbuild-review.css) defines colors for these classes
-        # We apply them as tags here.
-        if not tag_table.lookup('risk-critical'):
-            self.heatmap_text_buffer.create_tag('risk-critical', background_set=True)
-        if not tag_table.lookup('risk-high'):
-            self.heatmap_text_buffer.create_tag('risk-high', background_set=True)
-        if not tag_table.lookup('risk-medium'):
-            self.heatmap_text_buffer.create_tag('risk-medium', background_set=True)
-        if not tag_table.lookup('risk-low'):
-            self.heatmap_text_buffer.create_tag('risk-low', background_set=True)
-        if not tag_table.lookup('risk-none'):
-            self.heatmap_text_buffer.create_tag('risk-none', background_set=True)
+        risk_tags = {
+            'risk-critical': {'background': '#e01b24', 'foreground': 'white'},
+            'risk-high': {'background': '#f57c00', 'foreground': 'white'},
+            'risk-medium': {'background': '#f9c23c', 'foreground': 'black'},
+            'risk-low': {'background': '#8ff0a4', 'foreground': 'black'},
+            'risk-none': {'background': '#ffffff', 'foreground': 'black'}
+        }
 
-    def _on_step_toggled(self, button):
-        """Handle step button toggle"""
-        if not button.get_active():
-            return
+        for tag_name, properties in risk_tags.items():
+            if not tag_table.lookup(tag_name):
+                self.heatmap_text_buffer.create_tag(tag_name, **properties)
 
-        if hasattr(self, 'step1_content') and hasattr(self, 'step2_content'):
-            if button == getattr(self, 'step1_button', None):
-                self.step1_content.set_visible(True)
-                self.step2_content.set_visible(False)
-            elif button == getattr(self, 'step2_button', None):
-                self.step1_content.set_visible(False)
-                self.step2_content.set_visible(True)
+    def _update_button_visibility(self):
+        current_page = self.review_view_stack.get_visible_child_name()
 
-    def _on_previous_clicked(self, button):
-        """Handle previous button click"""
-        if hasattr(self, 'step1_button'):
-            self.step1_button.set_active(True)
+        visibility_map = {
+            "step1": {"previous": False, "next": True, "build": False},
+            "step2": {"previous": True, "next": True, "build": False},
+            "step3": {"previous": True, "next": False, "build": True}
+        }
 
-    def _on_next_clicked(self, button):
-        """Handle next button click"""
-        if hasattr(self, 'step2_button'):
-            self.step2_button.set_active(True)
+        if current_page in visibility_map:
+            vis = visibility_map[current_page]
+            self.previous_button.set_visible(vis["previous"])
+            self.next_button.set_visible(vis["next"])
+            self.build_button.set_visible(vis["build"])
 
-    # Métodos existentes da classe original...
+    def _on_view_changed(self, stack, param):
+        self._update_button_visibility()
+        current_step = self.get_current_step()
+        self.emit('step-changed', current_step)
+
+    @Gtk.Template.Callback()
+    def on_cancel_clicked(self, button):
+        self.emit('cancel-requested')
+        self.close()
+
+    @Gtk.Template.Callback()
+    def on_previous_clicked(self, button):
+        current_page = self.review_view_stack.get_visible_child_name()
+
+        navigation_map = {
+            "step2": "step1",
+            "step3": "step2"
+        }
+
+        if current_page in navigation_map:
+            self.review_view_stack.set_visible_child_name(navigation_map[current_page])
+
+    @Gtk.Template.Callback()
+    def on_next_clicked(self, button):
+        current_page = self.review_view_stack.get_visible_child_name()
+
+        navigation_map = {
+            "step1": "step2",
+            "step2": "step3"
+        }
+
+        if current_page in navigation_map:
+            self.review_view_stack.set_visible_child_name(navigation_map[current_page])
+
+    @Gtk.Template.Callback()
+    def on_build_clicked(self, button):
+        build_settings = self._gather_build_settings()
+        self.emit('build-requested', build_settings)
+        self.close()
+
+    def _gather_build_settings(self) -> Dict[str, Any]:
+        return {
+            'package_data': self.current_package_data,
+            'sandbox_enabled': self.sandbox_expander_row.get_enable_expansion(),
+            'sandbox_level': self.sandbox_level_combo.get_selected(),
+            'acknowledged_risks': {
+                'sudo_commands': self.risk_sudo_row.get_active(),
+                'unverified_sources': self.risk_unverified_sources_row.get_active(),
+            },
+            'security_analysis': self.security_analysis,
+            'build_environment': self._get_build_environment_settings()
+        }
+
+    def _get_build_environment_settings(self) -> Dict[str, Any]:
+        sandbox_levels = ["strict", "medium", "minimal"]
+        selected_level = self.sandbox_level_combo.get_selected()
+
+        return {
+            'isolation_level': sandbox_levels[selected_level] if 0 <= selected_level < len(sandbox_levels) else "medium",
+            'network_access': False,
+            'filesystem_access': "restricted",
+            'environment_variables': {}
+        }
+
     def populate_package_info(self, package_data: Dict[str, Any]):
-        """Populates the package information section."""
-        if hasattr(self, 'package_name') and self.package_name:
-            self.package_name.set_text(package_data.get('name', 'Unknown'))
-        # ... resto da implementação
+        self.current_package_data = package_data.copy()
+
+        if self.package_name:
+            self.package_name.set_text(package_data.get('name', 'Unknown Package'))
+
+        if self.package_details:
+            version = package_data.get('version', 'Unknown')
+            votes = package_data.get('votes', 0)
+            source = package_data.get('source', 'Unknown')
+            details_text = f"Version: {version} | Votes: {votes} | Source: {source}"
+            self.package_details.set_text(details_text)
+
+        if self.package_icon:
+            icon_name = package_data.get('icon', 'text-x-generic-symbolic')
+            self.package_icon.set_from_icon_name(icon_name)
 
     def populate_diff_analysis(self, diff_data: Dict[str, str]):
-        """Populates the diff analysis views."""
-        # ... implementação
-        pass
+        if self.source_diff_buffer and 'source_diff' in diff_data:
+            self.source_diff_buffer.set_text(diff_data['source_diff'])
 
     def populate_risk_checklist(self, risks: List[Dict[str, Any]]):
-        """Populates the risk checklist."""
-        # ... implementação
-        pass
+        self.current_risks = risks.copy()
+
+        risk_handlers = {
+            'sudo_commands': (self.risk_sudo_row, "Contains sudo commands"),
+            'unverified_sources': (self.risk_unverified_sources_row, "Contains unverified sources")
+        }
+
+        for risk in risks:
+            risk_type = risk.get('type')
+            detected = risk.get('detected', False)
+
+            if risk_type in risk_handlers:
+                row, default_desc = risk_handlers[risk_type]
+                row.set_active(detected)
+                if detected:
+                    description = risk.get('description', default_desc)
+                    row.set_subtitle(description)
 
     def populate_heatmap(self, heatmap_data: str, risk_ranges: List[Tuple[int, int, str]]):
-        """Populates the heatmap view with syntax highlighting."""
-        # ... implementação
-        pass
+        if not self.heatmap_text_buffer:
+            return
+
+        self.heatmap_text_buffer.set_text(heatmap_data)
+
+        for start_line, end_line, risk_level in risk_ranges:
+            if start_line < 0 or end_line < start_line:
+                continue
+
+            start_iter = self.heatmap_text_buffer.get_iter_at_line(start_line)
+            end_iter = self.heatmap_text_buffer.get_iter_at_line(end_line)
+
+            tag_name = f'risk-{risk_level.lower()}'
+            if self.heatmap_text_buffer.get_tag_table().lookup(tag_name):
+                self.heatmap_text_buffer.apply_tag_by_name(tag_name, start_iter, end_iter)
+
+    def populate_security_analysis(self, analysis: Dict[str, Any]):
+        self.security_analysis = analysis.copy()
+
+        risk_score = analysis.get('risk_score', 0)
+        threats = analysis.get('threats', [])
+        recommendations = analysis.get('recommendations', [])
+
+        self._update_risk_indicators(risk_score, threats)
+        self._apply_security_recommendations(recommendations)
+
+    def _update_risk_indicators(self, risk_score: int, threats: List[Dict[str, Any]]):
+        threat_types = [threat.get('type') for threat in threats]
+
+        self.risk_sudo_row.set_active('sudo_usage' in threat_types)
+        self.risk_unverified_sources_row.set_active('unverified_sources' in threat_types)
+
+    def _apply_security_recommendations(self, recommendations: List[Dict[str, Any]]):
+        for recommendation in recommendations:
+            rec_type = recommendation.get('type')
+            enabled = recommendation.get('enabled', False)
+
+            if rec_type == 'enable_sandbox':
+                self.sandbox_expander_row.set_enable_expansion(enabled)
+            elif rec_type == 'strict_isolation':
+                self.sandbox_level_combo.set_selected(0)
+            elif rec_type == 'medium_isolation':
+                self.sandbox_level_combo.set_selected(1)
+
+    def set_sandbox_settings(self, enabled: bool, level: int = 1):
+        self.sandbox_expander_row.set_enable_expansion(enabled)
+        if 0 <= level < 3:
+            self.sandbox_level_combo.set_selected(level)
+
+    def get_current_step(self) -> str:
+        return self.review_view_stack.get_visible_child_name()
+
+    def set_current_step(self, step_name: str):
+        valid_steps = ["step1", "step2", "step3"]
+        if step_name in valid_steps:
+            self.review_view_stack.set_visible_child_name(step_name)
+
+    def get_risk_assessment(self) -> Dict[str, Any]:
+        return {
+            'acknowledged_risks': {
+                'sudo_commands': self.risk_sudo_row.get_active(),
+                'unverified_sources': self.risk_unverified_sources_row.get_active(),
+            },
+            'security_analysis': self.security_analysis,
+            'risk_level': self._calculate_overall_risk_level()
+        }
+
+    def _calculate_overall_risk_level(self) -> str:
+        risk_factors = []
+
+        if self.risk_sudo_row.get_active():
+            risk_factors.append('high')
+        if self.risk_unverified_sources_row.get_active():
+            risk_factors.append('medium')
+
+        if 'high' in risk_factors:
+            return 'high'
+        elif 'medium' in risk_factors:
+            return 'medium'
+        elif risk_factors:
+            return 'low'
+        else:
+            return 'minimal'
+
+    def reset_dialog(self):
+        self.current_package_data = {}
+        self.current_risks = []
+        self.security_analysis = {}
+
+        self.set_current_step("step1")
+
+        if self.heatmap_text_buffer:
+            self.heatmap_text_buffer.set_text("")
+        if self.source_diff_buffer:
+            self.source_diff_buffer.set_text("")
+
+        self.risk_sudo_row.set_active(False)
+        self.risk_unverified_sources_row.set_active(False)
+
+        self.set_sandbox_settings(False, 1)
+
+    def validate_review_completion(self) -> bool:
+        current_step = self.get_current_step()
+
+        if current_step != "step3":
+            return False
+
+        if not self.current_package_data:
+            return False
+
+        return True
+
+    def get_build_configuration(self) -> Dict[str, Any]:
+        if not self.validate_review_completion():
+            return {}
+
+        return self._gather_build_settings()

@@ -52,7 +52,7 @@ class FileChooserDialog(Adw.Dialog):
         self._active_filters: List[str] = ["PKGBUILD", "PACKAGE", "PATCH", "ADVANCED"]
         self._search_text: str = ""
         self._callback: Optional[Callable] = None
-        self.props.modal = True
+        self.set_modal(True)
 
         if parent:
             self.set_transient_for(parent)
