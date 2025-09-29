@@ -1,10 +1,9 @@
-#!/usr/bin/env python3
-
 import sys
 import os
 import logging
 import signal
 from typing import Optional, List
+from concurrent.futures import ThreadPoolExecutor
 
 def check_dependencies():
     missing_deps = []
@@ -38,18 +37,32 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib
 from pathlib import Path
 
-from .error_handler import ErrorHandler
-from .preferences_manager import PreferencesManager
-from .history_manager import HistoryManager
-from .lazy_cache_manager import LazyCacheManager
-from .sandboxing import SandboxManager
-from .security_analyzer import SecurityAnalyzer
-from .terminal_manager import TerminalManager
-from .tour_guide import TourGuide
+def register_gresource():
+    try:
+        pkgdatadir = Path(__file__).resolve().parent.parent
+        res_path = pkgdatadir / 'paru_gui.gresource'
 
+        if not res_path.exists():
+            res_path = Path(__file__).parent.parent.parent / 'builddir' / 'paru_gui.gresource'
+
+        if res_path.exists():
+            res = Gio.Resource.load(str(res_path))
+            Gio.resources_register(res)
+            logging.getLogger("ParuGUI").info(f"GResource loaded successfully from {res_path}")
+        else:
+            logging.getLogger("ParuGUI").error(f"FATAL: GResource file not found at: {res_path}")
+            raise FileNotFoundError(f"GResource file not found at {res_path}")
+
+    except Exception as e:
+        logging.getLogger("ParuGUI").error(f"FATAL: Failed to register GResource: {e}")
+        raise
+
+try:
+    register_gresource()
+except Exception:
+    sys.exit(1)
 
 class ParuGUIApplication(Adw.Application):
-
     def __init__(self):
         super().__init__(
             application_id="org.gnome.paru-gui",
@@ -65,6 +78,9 @@ class ParuGUIApplication(Adw.Application):
         self.security_analyzer = None
         self.terminal_manager = None
         self.tour_guide = None
+        self.file_utils = None
+        self.pkgbuild_analyzer = None
+        self.thread_pool_executor = None
 
         self._setup_logging()
         self._setup_signal_handlers()
@@ -88,6 +104,17 @@ class ParuGUIApplication(Adw.Application):
 
     def _initialize_managers(self):
         try:
+            from paru_gui.error_handler import ErrorHandler
+            from paru_gui.preferences_manager import PreferencesManager
+            from paru_gui.history_manager import HistoryManager
+            from paru_gui.lazy_cache_manager import LazyCacheManager
+            from paru_gui.sandboxing import SandboxManager
+            from paru_gui.security_analyzer import SecurityAnalyzer
+            from paru_gui.terminal_manager import TerminalManager
+            from paru_gui.file_utils import FileUtils
+            from paru_gui.pkgbuild_analyzer import PkGBUILDAnalyzer
+
+            self.thread_pool_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ParuGUI")
             self.error_handler = ErrorHandler()
             self.preferences_manager = PreferencesManager()
             self.history_manager = HistoryManager()
@@ -95,7 +122,8 @@ class ParuGUIApplication(Adw.Application):
             self.sandbox_manager = SandboxManager()
             self.security_analyzer = SecurityAnalyzer()
             self.terminal_manager = TerminalManager()
-            self.tour_guide = TourGuide()
+            self.file_utils = FileUtils()
+            self.pkgbuild_analyzer = PkGBUILDAnalyzer()
 
             self.logger.info("All managers initialized successfully")
         except Exception as e:
@@ -152,8 +180,8 @@ class ParuGUIApplication(Adw.Application):
     def do_activate(self):
         if self.window is None:
             self._create_main_window()
-
-        self.window.present()
+        if self.window:
+            self.window.present()
 
     def do_startup(self):
         Adw.Application.do_startup(self)
@@ -162,19 +190,26 @@ class ParuGUIApplication(Adw.Application):
     def do_shutdown(self):
         self.logger.info("Application shutdown")
 
-        if self.history_manager:
+        if self.thread_pool_executor:
+            try:
+                self.thread_pool_executor.shutdown(wait=False)
+                self.logger.info("Thread pool executor shutdown completed")
+            except Exception as e:
+                self.logger.error(f"Error during thread pool shutdown: {e}")
+
+        if self.history_manager and hasattr(self.history_manager, 'cleanup'):
             try:
                 self.history_manager.cleanup()
             except Exception as e:
                 self.logger.error(f"Error during history manager cleanup: {e}")
 
-        if self.cache_manager:
+        if self.cache_manager and hasattr(self.cache_manager, 'cleanup'):
             try:
                 self.cache_manager.cleanup()
             except Exception as e:
                 self.logger.error(f"Error during cache manager cleanup: {e}")
 
-        if self.terminal_manager:
+        if self.terminal_manager and hasattr(self.terminal_manager, 'cleanup'):
             try:
                 self.terminal_manager.cleanup()
             except Exception as e:
@@ -183,9 +218,10 @@ class ParuGUIApplication(Adw.Application):
         Adw.Application.do_shutdown(self)
 
     def _create_main_window(self):
-        from .window import ParuGUIWindow
-
         try:
+            from paru_gui.window import ParuGUIWindow
+            from paru_gui.tour_guide import TourGuide
+
             self.window = ParuGUIWindow(
                 application=self,
                 managers={
@@ -196,10 +232,13 @@ class ParuGUIApplication(Adw.Application):
                     'sandbox': self.sandbox_manager,
                     'security': self.security_analyzer,
                     'terminal': self.terminal_manager,
-                    'tour_guide': self.tour_guide,
+                    'file_utils': self.file_utils,
+                    'pkgbuild_analyzer': self.pkgbuild_analyzer,
+                    'thread_pool_executor': self.thread_pool_executor,
                 }
             )
 
+            self.tour_guide = TourGuide(self.window)
             self._setup_css_provider()
             self._connect_window_signals()
 
@@ -254,14 +293,14 @@ class ParuGUIApplication(Adw.Application):
             transient_for=self.window,
             application_name="Paru GUI",
             application_icon="org.gnome.paru-gui",
-            developer_name="Paru GUI Team",
+            developer_name="John Peter",
             version="2.7.0",
-            developers=["Paru GUI Team"],
-            copyright="© 2025 Paru GUI Team",
+            developers=["John Peter"],
+            copyright="© 2025 John Peter",
             license_type=Gtk.License.GPL_3_0,
-            website="https://github.com/paru-gui-project",
-            issue_url="https://github.com/paru-gui-project/paru-gui/issues",
-            support_url="https://github.com/paru-gui-project/paru-gui/discussions",
+            website="https://github.com/johnpetersa19/Paru_Gui",
+            issue_url="https://github.com/johnpetersa19/Paru_Gui/issues",
+            support_url="https://github.com/johnpetersa19/Paru_Gui/discussions",
         )
 
         about_window.set_comments("Manage AUR packages with ease and security")
@@ -272,7 +311,23 @@ class ParuGUIApplication(Adw.Application):
             self.window.show_preferences()
 
     def _on_new_window_action(self, action, param):
-        new_window = ParuGUIWindow(application=self)
+        from paru_gui.window import ParuGUIWindow
+
+        new_window = ParuGUIWindow(
+            application=self,
+            managers={
+                'error_handler': self.error_handler,
+                'preferences': self.preferences_manager,
+                'history': self.history_manager,
+                'cache': self.cache_manager,
+                'sandbox': self.sandbox_manager,
+                'security': self.security_analyzer,
+                'terminal': self.terminal_manager,
+                'file_utils': self.file_utils,
+                'pkgbuild_analyzer': self.pkgbuild_analyzer,
+                'thread_pool_executor': self.thread_pool_executor,
+            }
+        )
         new_window.present()
 
     def _on_close_window_action(self, action, param):
@@ -335,6 +390,9 @@ class ParuGUIApplication(Adw.Application):
             'security': self.security_analyzer,
             'terminal': self.terminal_manager,
             'tour_guide': self.tour_guide,
+            'file_utils': self.file_utils,
+            'pkgbuild_analyzer': self.pkgbuild_analyzer,
+            'thread_pool_executor': self.thread_pool_executor,
         }
         return managers.get(manager_name)
 
@@ -354,7 +412,6 @@ class ParuGUIApplication(Adw.Application):
             self.sandbox_manager.enable_safe_mode()
             self.logger.info("Safe mode enabled")
 
-
 def main():
     app = ParuGUIApplication()
 
@@ -373,7 +430,5 @@ def main():
             print(f"Critical error: {e}", file=sys.stderr)
         return 1
 
-
 if __name__ == "__main__":
     sys.exit(main())
-

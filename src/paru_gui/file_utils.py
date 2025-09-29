@@ -1,9 +1,9 @@
-from typing import List, Dict, Any, Optional, Tuple
 import os
 import re
 import subprocess
 import tempfile
 import shutil
+from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 from dataclasses import dataclass, field
 from enum import Enum
@@ -22,6 +22,27 @@ class SecurityLevel(Enum):
     WARNING = "warning"
     DANGER = "danger"
 
+# --- CRITICAL FIX: FileItem Class Definition MOVED HERE ---
+class FileItem:
+    def __init__(self, name: str, path: str, is_dir: bool = False, file_type: str = "UNKNOWN", size: int = 0, modified_time: float = 0.0):
+        self.name = name
+        self.path = path
+        self.is_dir = is_dir
+        self.file_type = file_type
+        self.size = size
+        self.modified_time = modified_time
+
+    def get_icon_name(self) -> str:
+        if self.is_dir:
+            return "folder-symbolic"
+        return {
+            "PKGBUILD": "text-x-script-symbolic",
+            "PACKAGE": "package-x-generic-symbolic",
+            "PATCH": "text-x-patch-symbolic",
+            "ADVANCED": "text-x-generic-symbolic"
+        }.get(self.file_type, "text-x-generic-symbolic")
+
+# -----------------------------------------------------------
 
 @dataclass
 class PKGBUILDInfo:

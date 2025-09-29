@@ -1,3 +1,5 @@
+# Caminho: /home/john/Projects/Paru_Gui/src/meson.build
+
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 moduledir = pkgdatadir / 'paru_gui'
 gnome = import('gnome')
@@ -20,26 +22,9 @@ resources = gnome.compile_resources('paru_gui',
     'ui/components/help-overlay.ui',
     'ui/components/search_bar.ui',
     'ui/style.css',
+    'ui/image_fixes.css',
     'ui/screens/pkgbuild-review.css'
   )
-)
-
-python = import('python')
-py_path = python.find_installation('python3').full_path()
-
-conf = configuration_data()
-conf.set('PYTHON', py_path)
-conf.set('VERSION', meson.project_version())
-conf.set('localedir', get_option('prefix') / get_option('localedir'))
-conf.set('pkgdatadir', pkgdatadir)
-
-configure_file(
-  input: 'paru_gui.in',
-  output: 'paru_gui',
-  configuration: conf,
-  install: true,
-  install_dir: get_option('bindir'),
-  install_mode: 'r-xr-xr-x'
 )
 
 paru_gui_sources = [
@@ -57,6 +42,7 @@ paru_gui_sources = [
   'paru_gui/terminal_manager.py',
   'paru_gui/tour_guide.py',
   'paru_gui/upstream_checker.py',
+  'paru_gui/window.py',
   'ui/__init__.py',
   'ui/components/__init__.py',
   'ui/components/command_assistant.py',
@@ -65,6 +51,7 @@ paru_gui_sources = [
   'ui/components/file_chooser_dialog.py',
   'ui/components/help_overlay.py',
   'ui/components/search_bar.py',
+  'ui/dialogs/__init__.py',
   'ui/dialogs/conflict_resolver.py',
   'ui/dialogs/pkgbuild_builder.py',
   'ui/managers/__init__.py',
@@ -81,10 +68,7 @@ paru_gui_sources = [
   'ui/screens/welcome_screen.py',
 ]
 
-window_py_source = [
-  '../window.py',
-]
+
 
 install_data(paru_gui_sources, install_dir: moduledir)
-install_data(window_py_source, install_dir: moduledir)
 install_subdir('ui', install_dir: moduledir)

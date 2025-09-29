@@ -5,7 +5,7 @@ from .empty_state import EmptyState
 from .error_dialog import ErrorDialog
 from .file_chooser_dialog import FileChooserDialog
 from .help_overlay import HelpOverlay
-from .search_bar import SearchBar
+from .search_bar import ParuSearchBar
 
 __all__ = [
     'CommandAssistant',
@@ -13,6 +13,5 @@ __all__ = [
     'ErrorDialog',
     'FileChooserDialog',
     'HelpOverlay',
-    'SearchBar',
+    'ParuSearchBar',
 ]
-

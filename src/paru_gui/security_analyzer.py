@@ -47,6 +47,14 @@ class CVEResult:
     affected_versions: List[str] = field(default_factory=list)
 
 @dataclass
+class PGPKeyInfo:
+    key_id: str
+    valid: bool
+    trust_level: str
+    missing: bool
+    imported: bool = False
+
+@dataclass
 class PkgbuildSecurityAnalysisResult:
     pkgname: str
     pkgver: str
@@ -59,6 +67,7 @@ class PkgbuildSecurityAnalysisResult:
     pgp_validation_results: Dict[str, Any] = field(default_factory=dict)
     raw_pkgbuild_content: str = ""
     heatmap_data: str = ""
+    security_suggestions: List[str] = field(default_factory=list)
 
 class SecurityAnalyzer:
     DANGEROUS_COMMAND_PATTERNS = [
@@ -74,22 +83,40 @@ class SecurityAnalyzer:
         re.compile(r'\beval\s+\$\(.*\)', re.IGNORECASE),
         re.compile(r'\b(nc|netcat)\s+.*-e\s+(bash|sh)', re.IGNORECASE),
         re.compile(r'\biptables\s+-F', re.IGNORECASE),
+        re.compile(r'\buseradd\s+.*root', re.IGNORECASE),
+        re.compile(r'\bpasswd\s+root', re.IGNORECASE),
+        re.compile(r'\b(systemctl|service)\s+(disable|stop)\s+firewall', re.IGNORECASE),
+    ]
+
+    INSECURE_PATTERNS = [
+        (r'sha\d+sums=\([^)]*[\'"]SKIP[\'"][^)]*\)', RiskLevel.HIGH, "Checksum verification skipped"),
+        (r'--disable-ssl-verify', RiskLevel.HIGH, "SSL verification disabled"),
+        (r'--no-check-certificate', RiskLevel.HIGH, "Certificate checking disabled"),
+        (r'--insecure', RiskLevel.HIGH, "Insecure connection allowed"),
+        (r'\bsu\s+-\s+root', RiskLevel.MEDIUM, "Direct root access attempted"),
+        (r'\bpkexec\b', RiskLevel.MEDIUM, "PolicyKit execution detected"),
+        (r'PKGEXT=.*\.tar\b', RiskLevel.LOW, "Uncompressed package format"),
+        (r'--ignore-certificate-errors', RiskLevel.HIGH, "Certificate errors ignored"),
+        (r'--disable-web-security', RiskLevel.HIGH, "Web security disabled"),
     ]
 
     TRUSTED_DOMAINS = [
         "github.com", "gitlab.com", "aur.archlinux.org", "archlinux.org",
         "download.mozilla.org", "ftp.gnu.org", "kernel.org", "sourceforge.net",
-        "bitbucket.org", "codeberg.org", "sr.ht", "pypi.org", "npmjs.com"
+        "bitbucket.org", "codeberg.org", "sr.ht", "pypi.org", "npmjs.com",
+        "download.kde.org", "download.gnome.org", "releases.ubuntu.com"
     ]
 
     CVE_API_BASE = "https://cve.circl.lu/api"
     NVD_API_BASE = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 
     def __init__(self):
-        logger.info("SecurityAnalyzer initialized.")
+        logger.info("SecurityAnalyzer initialized")
         self.upstream_checker = None
         self.cve_cache = {}
         self.pgp_keyring_path = os.path.expanduser("~/.gnupg")
+        self.api_rate_limit = 1.0
+        self.max_cve_results = 10
 
     def set_upstream_checker(self, checker):
         self.upstream_checker = checker
@@ -97,7 +124,7 @@ class SecurityAnalyzer:
     def analyze_pkgbuild(self, pkgbuild_path: str) -> PkgbuildSecurityAnalysisResult:
         if not os.path.exists(pkgbuild_path):
             logger.error(f"PKGBUILD not found: {pkgbuild_path}")
-            return self._create_empty_result("N/A", "N/A", "PKGBUILD not found.")
+            return self._create_empty_result("N/A", "N/A", "PKGBUILD not found")
 
         try:
             with open(pkgbuild_path, 'r', encoding='utf-8') as f:
@@ -119,6 +146,7 @@ class SecurityAnalyzer:
             self._validate_pgp_signatures(pkgbuild_content, analysis_result)
             self._calculate_overall_trust(analysis_result)
             self._generate_heatmap_data(pkgbuild_content, analysis_result)
+            self._generate_security_suggestions(analysis_result)
 
             logger.info(f"Completed security analysis for {pkgname} (v{pkgver}). Trust Level: {analysis_result.overall_trust_level.name}")
             return analysis_result
@@ -126,6 +154,50 @@ class SecurityAnalyzer:
         except Exception as e:
             logger.exception(f"Unhandled error during PKGBUILD analysis for {pkgbuild_path}: {e}")
             return self._create_empty_result("N/A", "N/A", f"Analysis failed: {e}")
+
+    def suggest_pgp_keys(self, pkgbuild_path: str) -> List[str]:
+        try:
+            with open(pkgbuild_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            missing_keys = []
+            sig_pattern = re.search(r'validpgpkeys\s*=\s*\(([^)]+)\)', content, re.MULTILINE)
+            
+            if sig_pattern:
+                keys_str = sig_pattern.group(1)
+                keys = [key.strip().strip("'\"") for key in keys_str.split() if key.strip()]
+                
+                for key_id in keys:
+                    key_id = key_id.strip("'\"")
+                    if not self._is_pgp_key_available(key_id):
+                        missing_keys.append(key_id)
+            
+            return missing_keys
+            
+        except Exception as e:
+            logger.error(f"Error suggesting PGP keys for {pkgbuild_path}: {e}")
+            return []
+
+    def fetch_pgp_keys(self, key_ids: List[str]) -> Dict[str, bool]:
+        results = {}
+        
+        for key_id in key_ids:
+            try:
+                fetch_cmd = ['paru', '--pgpfetch', key_id]
+                result = subprocess.run(fetch_cmd, capture_output=True, text=True, timeout=30)
+                
+                if result.returncode == 0:
+                    results[key_id] = True
+                    logger.info(f"Successfully fetched PGP key: {key_id}")
+                else:
+                    success = self._attempt_key_import(key_id)
+                    results[key_id] = success
+                    
+            except Exception as e:
+                logger.error(f"Failed to fetch PGP key {key_id}: {e}")
+                results[key_id] = False
+        
+        return results
 
     def _create_empty_result(self, pkgname: str, pkgver: str, error_msg: str) -> PkgbuildSecurityAnalysisResult:
         return PkgbuildSecurityAnalysisResult(
@@ -148,19 +220,24 @@ class SecurityAnalyzer:
         content_no_comments = re.sub(r'#.*$', '', content, flags=re.MULTILINE)
 
         pkgname_match = re.search(r'^\s*pkgname\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
-        if pkgname_match: pkgname = pkgname_match.group(1)
+        if pkgname_match: 
+            pkgname = pkgname_match.group(1)
 
         pkgver_match = re.search(r'^\s*pkgver\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
-        if pkgver_match: pkgver = pkgver_match.group(1)
+        if pkgver_match: 
+            pkgver = pkgver_match.group(1)
 
         pkgrel_match = re.search(r'^\s*pkgrel\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
-        if pkgrel_match: pkgrel = pkgrel_match.group(1)
+        if pkgrel_match: 
+            pkgrel = pkgrel_match.group(1)
 
         epoch_match = re.search(r'^\s*epoch\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
-        if epoch_match: epoch = epoch_match.group(1)
+        if epoch_match: 
+            epoch = epoch_match.group(1)
 
         url_match = re.search(r'^\s*url\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
-        if url_match: project_url = url_match.group(1)
+        if url_match: 
+            project_url = url_match.group(1)
 
         arch_match = re.search(r'^\s*arch\s*=\s*\(([^)]+)\)', content_no_comments, re.MULTILINE)
         if arch_match:
@@ -172,102 +249,55 @@ class SecurityAnalyzer:
             sources_str = source_match.group(1)
             for line in sources_str.splitlines():
                 line = line.strip()
-                if not line: continue
+                if not line: 
+                    continue
                 line = line.strip("'\"")
                 line = re.sub(r'\$pkgname', pkgname, line)
                 line = re.sub(r'\$pkgver', pkgver, line)
-                if re.match(r'https?://', line): source_urls.append(line)
+                if re.match(r'https?://', line): 
+                    source_urls.append(line)
 
         if not source_urls:
             source_single_match = re.search(r'^\s*source\s*=\s*(?:\'|")?([^\s\'"]+)(?:\'|")?', content_no_comments, re.MULTILINE)
             if source_single_match:
                 source_url = source_single_match.group(1)
                 source_url = source_url.replace('$pkgname', pkgname).replace('$pkgver', pkgver)
-                if re.match(r'https?://', source_url): source_urls.append(source_url)
+                if re.match(r'https?://', source_url): 
+                    source_urls.append(source_url)
 
         return pkgname, pkgver, pkgrel, epoch, source_urls, project_url, arch
 
     def _analyze_static_content(self, pkgbuild_content: str, result: PkgbuildSecurityAnalysisResult):
         lines = pkgbuild_content.splitlines()
-        extracted_sections: Dict[str, PkgbuildSection] = {}
-
-        current_section = None
-        current_section_content_lines = []
-        section_start_line = -1
-
-        for i, line in enumerate(lines):
-            func_match = re.match(r'^\s*(pkgver|prepare|build|check|package)\s*\(\s*\)', line)
-            source_array_match = re.match(r'^\s*source\s*=\s*\(', line)
-
-            if func_match or source_array_match:
-                if current_section:
-                    extracted_sections[current_section.name] = PkgbuildSection(
-                        name=current_section.name,
-                        content="\n".join(current_section_content_lines),
-                        start_line=section_start_line,
-                        end_line=i - 1
-                    )
-                current_section_content_lines = []
-                section_start_line = i + 1
-                if func_match:
-                    current_section = PkgbuildSection(name=func_match.group(1), content="", start_line=-1, end_line=-1)
-                elif source_array_match:
-                    current_section = PkgbuildSection(name="source_array", content="", start_line=-1, end_line=-1)
-                continue
-
-            if current_section and line.strip() == '}':
-                extracted_sections[current_section.name] = PkgbuildSection(
-                    name=current_section.name,
-                    content="\n".join(current_section_content_lines),
-                    start_line=section_start_line,
-                    end_line=i
-                )
-                current_section = None
-                current_section_content_lines = []
-                continue
-
-            if current_section:
-                current_section_content_lines.append(line)
-
-        if current_section and current_section_content_lines:
-            extracted_sections[current_section.name] = PkgbuildSection(
-                name=current_section.name,
-                content="\n".join(current_section_content_lines),
-                start_line=section_start_line,
-                end_line=len(lines)
-            )
-
+        
         for i, line in enumerate(lines):
             line_num = i + 1
+            
             for pattern in self.DANGEROUS_COMMAND_PATTERNS:
-                if pattern.search(line):
-                    if not line.strip().startswith('#'):
-                        risk = DetectedRisk(
-                            level=RiskLevel.CRITICAL,
-                            description=f"Potential dangerous command detected: '{line.strip()}'",
-                            line_number=line_num,
-                            snippet=line.strip(),
-                            category="Command"
-                        )
-                        result.detected_risks.append(risk)
-                        result.heatmap_lines.append((line_num, RiskLevel.CRITICAL, risk.description))
-                        logger.warning(f"Static risk: {risk.description} at line {line_num}")
-                        break
+                if pattern.search(line) and not line.strip().startswith('#'):
+                    risk = DetectedRisk(
+                        level=RiskLevel.CRITICAL,
+                        description=f"Dangerous command detected: '{line.strip()}'",
+                        line_number=line_num,
+                        snippet=line.strip(),
+                        category="Command"
+                    )
+                    result.detected_risks.append(risk)
+                    result.heatmap_lines.append((line_num, RiskLevel.CRITICAL, risk.description))
+                    logger.warning(f"Dangerous command at line {line_num}: {line.strip()}")
+                    break
 
         self._check_insecure_patterns(pkgbuild_content, result)
+        self._analyze_function_sections(pkgbuild_content, result)
 
     def _check_insecure_patterns(self, content: str, result: PkgbuildSecurityAnalysisResult):
-        insecure_patterns = [
-            (r'sha\d+sums=\([^)]*[\'"]SKIP[\'"][^)]*\)', RiskLevel.HIGH, "Checksum verification skipped (SKIP found)"),
-            (r'--disable-ssl-verify', RiskLevel.HIGH, "SSL verification disabled"),
-            (r'--no-check-certificate', RiskLevel.HIGH, "Certificate checking disabled"),
-            (r'\bsu\s+-\s+root', RiskLevel.MEDIUM, "Direct root access attempted"),
-            (r'\bpkexec\b', RiskLevel.MEDIUM, "PolicyKit execution detected"),
-        ]
-
         lines = content.splitlines()
+        
         for i, line in enumerate(lines):
-            for pattern, risk_level, description in insecure_patterns:
+            if line.strip().startswith('#'):
+                continue
+                
+            for pattern, risk_level, description in self.INSECURE_PATTERNS:
                 if re.search(pattern, line, re.IGNORECASE):
                     risk = DetectedRisk(
                         level=risk_level,
@@ -279,20 +309,51 @@ class SecurityAnalyzer:
                     result.detected_risks.append(risk)
                     result.heatmap_lines.append((i + 1, risk_level, description))
 
+    def _analyze_function_sections(self, content: str, result: PkgbuildSecurityAnalysisResult):
+        function_patterns = [
+            ('prepare', RiskLevel.MEDIUM, "Source modification function"),
+            ('build', RiskLevel.LOW, "Build process function"),
+            ('check', RiskLevel.LOW, "Testing function"),
+            ('package', RiskLevel.MEDIUM, "Installation function")
+        ]
+        
+        for func_name, base_risk, description in function_patterns:
+            func_match = re.search(rf'^{func_name}\s*\(\s*\)\s*{{(.*?)^}}', content, re.MULTILINE | re.DOTALL)
+            if func_match:
+                func_content = func_match.group(1)
+                
+                if re.search(r'\bsudo\b', func_content):
+                    risk = DetectedRisk(
+                        level=RiskLevel.HIGH,
+                        description=f"Sudo usage in {func_name}() function",
+                        category="Function"
+                    )
+                    result.detected_risks.append(risk)
+                
+                if re.search(r'\b(curl|wget).*\|\s*(bash|sh)\b', func_content):
+                    risk = DetectedRisk(
+                        level=RiskLevel.CRITICAL,
+                        description=f"Remote code execution in {func_name}() function",
+                        category="Function"
+                    )
+                    result.detected_risks.append(risk)
+
     def _analyze_source_urls(self, source_urls: List[str], project_url: Optional[str], result: PkgbuildSecurityAnalysisResult):
         all_urls = source_urls + ([project_url] if project_url else [])
+        
         for url in all_urls:
-            if not url: continue
+            if not url: 
+                continue
 
             if url.startswith("http://"):
                 risk = DetectedRisk(
                     level=RiskLevel.HIGH,
-                    description=f"Insecure source URL (HTTP) detected: '{url}'. Consider HTTPS.",
+                    description=f"Insecure HTTP source URL: '{url}'",
                     snippet=url,
                     category="Source"
                 )
                 result.detected_risks.append(risk)
-                logger.warning(f"Source risk: {risk.description}")
+                logger.warning(f"Insecure HTTP source: {url}")
 
             parsed_domain = re.match(r'https?://(?:www\.)?([^/]+)/.*', url)
             if parsed_domain:
@@ -300,17 +361,16 @@ class SecurityAnalyzer:
                 if not any(trusted_domain in domain for trusted_domain in self.TRUSTED_DOMAINS):
                     risk = DetectedRisk(
                         level=RiskLevel.MEDIUM,
-                        description=f"Source from potentially untrusted domain: '{domain}' (URL: '{url}').",
+                        description=f"Untrusted source domain: '{domain}'",
                         snippet=url,
                         category="Source"
                     )
                     result.detected_risks.append(risk)
-                    logger.warning(f"Source risk: {risk.description}")
 
             if re.search(r'\.(exe|msi|bat|cmd|scr|vbs)$', url, re.IGNORECASE):
                 risk = DetectedRisk(
                     level=RiskLevel.HIGH,
-                    description=f"Potentially dangerous file type in source: '{url}'",
+                    description=f"Potentially dangerous file type: '{url}'",
                     snippet=url,
                     category="Source"
                 )
@@ -318,10 +378,11 @@ class SecurityAnalyzer:
 
     def _fetch_aur_info(self, pkgname: str, result: PkgbuildSecurityAnalysisResult):
         if pkgname == "unknown":
-            result.detected_risks.append(DetectedRisk(RiskLevel.LOW, "Cannot fetch AUR info: pkgname unknown.", category="AUR"))
+            result.detected_risks.append(DetectedRisk(RiskLevel.LOW, "Cannot fetch AUR info: package name unknown", category="AUR"))
             return
 
-        logger.info(f"Fetching AUR info for {pkgname}...")
+        logger.info(f"Fetching AUR info for {pkgname}")
+        
         try:
             paru_info_output = subprocess.run(
                 ['paru', '-Si', pkgname],
@@ -339,45 +400,61 @@ class SecurityAnalyzer:
                 maintainer = aur_data.get('Maintainer')
                 pgp_verified = self._validate_maintainer_pgp(maintainer) if maintainer else False
                 result.aur_info['maintainer_pgp_verified'] = pgp_verified
+                
                 if not pgp_verified:
                     result.detected_risks.append(DetectedRisk(
-                        RiskLevel.MEDIUM, f"Maintainer '{maintainer}' does not have a verified PGP key or key could not be checked.",
+                        RiskLevel.MEDIUM, 
+                        f"Maintainer '{maintainer}' PGP key not verified",
                         category="PGP"
                     ))
-                    logger.warning(f"PGP risk: Maintainer PGP not verified for {pkgname}")
 
                 votes = aur_data.get('Votes', 0)
                 if isinstance(votes, int) and votes < 5:
                     result.detected_risks.append(DetectedRisk(
-                        RiskLevel.MEDIUM, f"Package has low community support (only {votes} votes)",
+                        RiskLevel.MEDIUM, 
+                        f"Low community support ({votes} votes)",
                         category="AUR"
                     ))
 
                 days_since_update = aur_data.get('Days_Since_Update', -1)
                 if days_since_update > 365:
                     result.detected_risks.append(DetectedRisk(
-                        RiskLevel.MEDIUM, f"Package not updated in {days_since_update} days",
+                        RiskLevel.MEDIUM, 
+                        f"Package outdated ({days_since_update} days)",
                         category="AUR"
                     ))
 
             else:
                 result.aur_info['status'] = 'not_found'
-                result.detected_risks.append(DetectedRisk(RiskLevel.MEDIUM, f"Package '{pkgname}' not found on AUR or paru failed.", category="AUR"))
-                logger.error(f"Failed to get AUR info for {pkgname}: {paru_info_output.stderr.strip()}")
+                result.detected_risks.append(DetectedRisk(
+                    RiskLevel.MEDIUM, 
+                    f"Package '{pkgname}' not found on AUR",
+                    category="AUR"
+                ))
 
         except FileNotFoundError:
-            result.detected_risks.append(DetectedRisk(RiskLevel.CRITICAL, "'paru' command not found. Cannot fetch AUR info.", category="System"))
-            logger.critical("Paru command not found.")
+            result.detected_risks.append(DetectedRisk(
+                RiskLevel.CRITICAL, 
+                "paru command not found",
+                category="System"
+            ))
         except subprocess.TimeoutExpired:
-            result.detected_risks.append(DetectedRisk(RiskLevel.HIGH, f"AUR info fetch timed out for {pkgname}.", category="Network"))
-            logger.error(f"AUR info fetch timed out for {pkgname}.")
+            result.detected_risks.append(DetectedRisk(
+                RiskLevel.HIGH, 
+                f"AUR info fetch timeout for {pkgname}",
+                category="Network"
+            ))
         except Exception as e:
-            result.detected_risks.append(DetectedRisk(RiskLevel.CRITICAL, f"Error fetching AUR info for {pkgname}: {e}", category="AUR"))
-            logger.exception(f"Error fetching AUR info for {pkgname}")
+            result.detected_risks.append(DetectedRisk(
+                RiskLevel.CRITICAL, 
+                f"Error fetching AUR info: {e}",
+                category="AUR"
+            ))
 
     def _parse_paru_si_output(self, output: str) -> Dict[str, Any]:
         data = {}
         lines = output.splitlines()
+        
         for line in lines:
             if ":" in line:
                 key, value = line.split(":", 1)
@@ -385,14 +462,16 @@ class SecurityAnalyzer:
                 data[key] = value.strip()
 
         if "Votes" in data:
-            try: data["Votes"] = int(data["Votes"])
-            except ValueError: pass
+            try: 
+                data["Votes"] = int(data["Votes"])
+            except ValueError: 
+                pass
+                
         if "Last_Update" in data:
             try:
                 data["Last_Update_dt"] = datetime.strptime(data["Last_Update"].replace(" UTC", ""), "%Y-%m-%d %H:%M:%S")
                 data["Days_Since_Update"] = (datetime.utcnow() - data["Last_Update_dt"]).days
             except ValueError:
-                logger.warning(f"Could not parse Last_Update: {data['Last_Update']}")
                 data["Days_Since_Update"] = -1
 
         return data
@@ -408,10 +487,9 @@ class SecurityAnalyzer:
 
         try:
             cve_results = []
-            
             search_terms = [pkgname, pkgname.replace('-', '_'), pkgname.replace('_', '-')]
             
-            for term in search_terms:
+            for term in search_terms[:2]:
                 try:
                     response = requests.get(
                         f"{self.CVE_API_BASE}/search/{term}",
@@ -421,20 +499,14 @@ class SecurityAnalyzer:
                     
                     if response.status_code == 200:
                         data = response.json()
-                        for cve_item in data[:5]:
+                        
+                        for cve_item in data[:self.max_cve_results]:
                             if isinstance(cve_item, dict):
                                 cve_id = cve_item.get('id', 'Unknown')
                                 summary = cve_item.get('summary', 'No description available')
                                 cvss_score = cve_item.get('cvss', 0)
                                 
-                                severity = "LOW"
-                                if cvss_score >= 9.0:
-                                    severity = "CRITICAL"
-                                elif cvss_score >= 7.0:
-                                    severity = "HIGH"
-                                elif cvss_score >= 4.0:
-                                    severity = "MEDIUM"
-                                
+                                severity = self._calculate_cve_severity(cvss_score)
                                 published = cve_item.get('Published', 'Unknown')
                                 
                                 cve_result = CVEResult(
@@ -449,23 +521,20 @@ class SecurityAnalyzer:
                                     risk_level = RiskLevel.HIGH if severity == 'HIGH' else RiskLevel.CRITICAL
                                     result.detected_risks.append(DetectedRisk(
                                         level=risk_level,
-                                        description=f"CVE found: {cve_id} ({severity}) - {summary[:100]}",
+                                        description=f"CVE {cve_id} ({severity}): {summary[:100]}",
                                         category="CVE"
                                     ))
                     
-                    time.sleep(1)
+                    time.sleep(self.api_rate_limit)
                     
                 except requests.RequestException as e:
                     logger.warning(f"Failed to fetch CVE data for {term}: {e}")
                     continue
                     
-            result.cve_results = cve_results
-            self.cve_cache[pkgname] = (time.time(), cve_results)
+            result.cve_results = cve_results[:self.max_cve_results]
+            self.cve_cache[pkgname] = (time.time(), result.cve_results)
             
-            if not cve_results:
-                logger.info(f"No CVE vulnerabilities found for {pkgname}")
-            else:
-                logger.info(f"Found {len(cve_results)} CVE entries for {pkgname}")
+            logger.info(f"Found {len(result.cve_results)} CVE entries for {pkgname}")
                 
         except Exception as e:
             logger.error(f"Error checking CVE vulnerabilities for {pkgname}: {e}")
@@ -475,6 +544,16 @@ class SecurityAnalyzer:
                 category="CVE"
             ))
 
+    def _calculate_cve_severity(self, cvss_score: float) -> str:
+        if cvss_score >= 9.0:
+            return "CRITICAL"
+        elif cvss_score >= 7.0:
+            return "HIGH"
+        elif cvss_score >= 4.0:
+            return "MEDIUM"
+        else:
+            return "LOW"
+
     def _validate_pgp_signatures(self, pkgbuild_content: str, result: PkgbuildSecurityAnalysisResult):
         logger.info("Validating PGP signatures")
         
@@ -483,7 +562,8 @@ class SecurityAnalyzer:
             'valid_signatures': [],
             'invalid_signatures': [],
             'missing_keys': [],
-            'signature_files_found': False
+            'signature_files_found': False,
+            'key_details': []
         }
         
         sig_pattern = re.search(r'validpgpkeys\s*=\s*\(([^)]+)\)', pkgbuild_content, re.MULTILINE)
@@ -494,8 +574,10 @@ class SecurityAnalyzer:
             
             for key_id in keys:
                 key_id = key_id.strip("'\"")
-                if len(key_id) == 16 or len(key_id) == 40:
+                if len(key_id) in [16, 40]:
                     validation_result = self._validate_pgp_key(key_id)
+                    pgp_results['key_details'].append(validation_result)
+                    
                     if validation_result['valid']:
                         pgp_results['valid_signatures'].append(key_id)
                     else:
@@ -513,24 +595,21 @@ class SecurityAnalyzer:
             if pgp_results['invalid_signatures']:
                 result.detected_risks.append(DetectedRisk(
                     RiskLevel.HIGH,
-                    f"Invalid or missing PGP keys found: {', '.join(pgp_results['invalid_signatures'])}",
+                    f"Invalid PGP keys: {', '.join(pgp_results['invalid_signatures'])}",
                     category="PGP"
                 ))
             
             if pgp_results['missing_keys']:
                 result.detected_risks.append(DetectedRisk(
                     RiskLevel.MEDIUM,
-                    f"PGP keys not found in keyring: {', '.join(pgp_results['missing_keys'])}. Consider importing them.",
+                    f"Missing PGP keys: {', '.join(pgp_results['missing_keys'])}",
                     category="PGP"
                 ))
-            
-            if pgp_results['valid_signatures']:
-                logger.info(f"Valid PGP signatures found: {', '.join(pgp_results['valid_signatures'])}")
         else:
             if pgp_results['signature_files_found']:
                 result.detected_risks.append(DetectedRisk(
                     RiskLevel.MEDIUM,
-                    "Signature files found but no validpgpkeys array defined",
+                    "Signature files found but no validpgpkeys defined",
                     category="PGP"
                 ))
             else:
@@ -575,28 +654,27 @@ class SecurityAnalyzer:
                     'key_id': key_id
                 }
             else:
-                try_import = self._attempt_key_import(key_id)
-                if try_import:
-                    return {
-                        'valid': True,
-                        'missing': False,
-                        'trust_level': 'imported',
-                        'key_id': key_id
-                    }
-                else:
-                    return {
-                        'valid': False,
-                        'missing': True,
-                        'trust_level': 'missing',
-                        'key_id': key_id
-                    }
+                return {
+                    'valid': False,
+                    'missing': True,
+                    'trust_level': 'missing',
+                    'key_id': key_id
+                }
                     
         except subprocess.TimeoutExpired:
-            logger.warning(f"PGP key validation timed out for {key_id}")
+            logger.warning(f"PGP key validation timeout for {key_id}")
             return {'valid': False, 'missing': False, 'trust_level': 'timeout', 'key_id': key_id}
         except Exception as e:
             logger.error(f"Error validating PGP key {key_id}: {e}")
             return {'valid': False, 'missing': False, 'trust_level': 'error', 'key_id': key_id}
+
+    def _is_pgp_key_available(self, key_id: str) -> bool:
+        try:
+            check_cmd = ['gpg', '--list-keys', key_id]
+            result = subprocess.run(check_cmd, capture_output=True, text=True, timeout=10)
+            return result.returncode == 0
+        except Exception:
+            return False
 
     def _attempt_key_import(self, key_id: str) -> bool:
         keyservers = [
@@ -615,10 +693,8 @@ class SecurityAnalyzer:
                     return True
                     
             except subprocess.TimeoutExpired:
-                logger.warning(f"Key import timed out for {key_id} from {keyserver}")
                 continue
-            except Exception as e:
-                logger.warning(f"Failed to import key {key_id} from {keyserver}: {e}")
+            except Exception:
                 continue
         
         return False
@@ -658,6 +734,7 @@ class SecurityAnalyzer:
                 score -= 0.1
             elif risk.level == RiskLevel.LOW:
                 score -= 0.05
+                
         score = max(0.0, score)
 
         aur_info = result.aur_info
@@ -733,26 +810,36 @@ class SecurityAnalyzer:
 
         result.heatmap_data = "\n".join(heatmap_text_lines)
 
-    def get_security_suggestions(self, result: PkgbuildSecurityAnalysisResult) -> List[str]:
+    def _generate_security_suggestions(self, result: PkgbuildSecurityAnalysisResult):
         suggestions = []
         
         if result.overall_trust_level in [RiskLevel.CRITICAL, RiskLevel.HIGH]:
-            suggestions.append("Consider reviewing this package manually before installation")
+            suggestions.append("Review this package manually before installation")
             
         if any(risk.category == "Command" for risk in result.detected_risks):
-            suggestions.append("Package contains potentially dangerous commands - verify the maintainer's intentions")
+            suggestions.append("Package contains dangerous commands - verify maintainer intentions")
             
         if any(risk.category == "Source" for risk in result.detected_risks):
-            suggestions.append("Consider verifying source URLs and using HTTPS when possible")
+            suggestions.append("Verify source URLs and prefer HTTPS sources")
             
         if result.pgp_validation_results.get('missing_keys'):
             missing_keys = result.pgp_validation_results['missing_keys']
-            suggestions.append(f"Import missing PGP keys: gpg --recv-keys {' '.join(missing_keys)}")
+            suggestions.append(f"Import missing PGP keys: paru --pgpfetch {' '.join(missing_keys)}")
             
         if result.cve_results:
-            suggestions.append("Review CVE vulnerabilities and check if they affect your use case")
+            critical_cves = [cve for cve in result.cve_results if cve.severity == 'CRITICAL']
+            if critical_cves:
+                suggestions.append("Critical CVE vulnerabilities found - consider alternatives")
+            else:
+                suggestions.append("Review CVE vulnerabilities for applicability")
             
         if result.aur_info.get('Votes', 0) < 10:
-            suggestions.append("Package has low community adoption - consider alternatives")
+            suggestions.append("Low community adoption - consider well-maintained alternatives")
             
-        return suggestions
+        if result.aur_info.get('Days_Since_Update', 0) > 365:
+            suggestions.append("Package not recently updated - check for maintenance status")
+
+        result.security_suggestions = suggestions
+
+    def get_security_suggestions(self, result: PkgbuildSecurityAnalysisResult) -> List[str]:
+        return result.security_suggestions

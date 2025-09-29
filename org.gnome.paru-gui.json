@@ -16,8 +16,6 @@
         "--filesystem=~/.cache/paru:rw",
         "--filesystem=~/.config/paru:rw",
         "--filesystem=/var/cache/pacman:ro",
-        "--filesystem=/etc/pacman.conf:ro",
-        "--filesystem=/etc/pacman.d:ro",
         "--env=PATH=/app/bin:/usr/bin:/bin"
     ],
     "cleanup": [
@@ -32,101 +30,16 @@
         "*.la",
         "*.a"
     ],
+    "build-options": {
+        "env": {
+            "PIP_DISABLE_PIP_VERSION_CHECK": "1"
+        }
+    },
     "modules": [
-        {
-            "name": "python3-pip",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pip setuptools wheel"
-            ],
-            "sources": [
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/94/59/6638090c25e9bc4ce0c42817b5a234e183872a1129735a9330c472cc2056d/pip-24.0-py3-none-any.whl",
-                    "sha256": "ba0d021a166865d2265246961bec0152ff124de910c5cc39f1156ce3fa7c69dc"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/3c/8a/7d6d6bbadcbd8a0e5f1d2267951d1c5d3ff0a1662e0e8e7a8a0b7a2a6a6f/setuptools-69.5.1-py3-none-any.whl",
-                    "sha256": "c636ac361bc47580504644275c9ad802c50415c7522212252c033bd15f301f32e"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/1d/05/59c52954670693c83b18e98c4532e06b06047669b05a5c6a2b90bb33ca6c2/wheel-0.43.0-py3-none-any.whl",
-                    "sha256": "55a0f0a5a84869bce5ba775abfd9c462e3a6b1b7b7ec69d72c0b83d673a5114d"
-                }
-            ]
-        },
-        {
-            "name": "python3-requests",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} requests"
-            ],
-            "sources": [
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4025443383d5b8b3a7/requests-2.31.0-py3-none-any.whl",
-                    "sha256": "58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/63/09/c1bc53dab74b1816a00d8d030de5bf98f724c52c1635e07681d312f20be8/charset_normalizer-3.3.2-cp312-cp312-linux_x86_64.whl",
-                    "sha256": "f30c3cb33b24454a82faecaf01b19c18562b1e89558fb6c56de4d9118a032fd5"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/12/90/3c9ff0512038035f59d279fddeb79f5f1eccd8859f06d6163c58798b9d2dc/idna-3.7-py3-none-any.whl",
-                    "sha256": "82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/ca/91/6d9b8ccacd0412c08820f72cebaa4f0c0441b5cda699c90f618b6f8a1b42c/urllib3-2.2.1-py3-none-any.whl",
-                    "sha256": "450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d"
-                },
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/ba/06/a07f096c664aeb9f01624f858c3add0a4e913d6c96257acb4fce61e7de14b/certifi-2024.2.2-py3-none-any.whl",
-                    "sha256": "dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1"
-                }
-            ]
-        },
-        {
-            "name": "python3-pygobject",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} PyGObject"
-            ],
-            "sources": [
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/d4/45/188b5b5dd6b6e7e2cb50e6455709b1c37a9396b2c01e4c68b30d9c77d5d5/PyGObject-3.48.2.tar.gz",
-                    "sha256": "d0696fded40c5e08bf73d561fa8e180de1e8e90fe99c3b5e1c25dc129ab6e433"
-                }
-            ]
-        },
-        {
-            "name": "paru",
-            "buildsystem": "simple",
-            "build-commands": [
-                "cargo build --release",
-                "install -Dm755 target/release/paru ${FLATPAK_DEST}/bin/paru"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/Morganamilo/paru/archive/refs/tags/v2.0.3.tar.gz",
-                    "sha256": "f43ea4d7842b55b5e4c01e0c92dfa1e02eaef05ea6a4b7e8b6c2c1b2a0e5eb6f"
-                }
-            ]
-        },
         {
             "name": "paru_gui",
             "builddir": true,
             "buildsystem": "meson",
-            "config-opts": [
-                "-Dprofile=default"
-            ],
             "sources": [
                 {
                     "type": "git",

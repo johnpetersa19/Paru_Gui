@@ -1,10 +1,10 @@
 """UI Dialogs package."""
 
-from .conflict_resolver import ConflictResolver
+
+from .conflict_resolver import ConflictManager
 from .pkgbuild_builder import PKGBUILDBuilder
 
 __all__ = [
-    'ConflictResolver',
+    'ConflictManager',
     'PKGBUILDBuilder',
 ]
-

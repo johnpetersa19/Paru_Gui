@@ -1,22 +1,3 @@
-# src/ui/file_operations.py
-#
-# Copyright 2025 Unknown
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 import os
 import concurrent.futures
 from typing import Optional, List, Callable
@@ -25,10 +6,10 @@ from datetime import datetime
 
 from ...file_utils import FileUtils, FileItem
 from ...history_manager import HistoryManager, ActionType, ActionStatus, HistoryEntry
-from ...error_handler import ErrorHandler, ErrorContext, ErrorCategory
+from ...error_handler import ErrorHandler, ErrorCategory, ErrorReport # Mantendo a importação correta
 
 
-class FileOperations:
+class FileOperationsManager: # <--- CLASSE RENOMEADA AQUI
     """Handles file and directory operations, scanning and selection."""
 
     def __init__(self, window, builder, preferences_manager, history_manager,
@@ -49,7 +30,6 @@ class FileOperations:
             action=Gtk.FileChooserAction.OPEN
         )
 
-        # Add file filters
         self._add_file_filters(dialog)
 
         dialog.connect("response", self._on_single_file_response)
@@ -82,21 +62,18 @@ class FileOperations:
 
     def _add_file_filters(self, dialog):
         """Adds file type filters to the file chooser dialog."""
-        # PKGBUILD filter
         filter_pkgbuild = Gtk.FileFilter()
         filter_pkgbuild.set_name("PKGBUILD Files")
         filter_pkgbuild.add_pattern("PKGBUILD")
         filter_pkgbuild.add_mime_type("text/x-pkgbuild")
         dialog.add_filter(filter_pkgbuild)
 
-        # Package filter
         filter_package = Gtk.FileFilter()
         filter_package.set_name("Arch Packages (.pkg.tar.zst)")
         filter_package.add_pattern("*.pkg.tar.zst")
         filter_package.add_mime_type("application/x-arch-package")
         dialog.add_filter(filter_package)
 
-        # Patch filter
         filter_patch = Gtk.FileFilter()
         filter_patch.set_name("Patch Files (.patch, .diff)")
         filter_patch.add_pattern("*.patch")
@@ -104,7 +81,6 @@ class FileOperations:
         filter_patch.add_mime_type("text/x-diff")
         dialog.add_filter(filter_patch)
 
-        # All files filter
         filter_all = Gtk.FileFilter()
         filter_all.set_name("All Files")
         filter_all.add_pattern("*")
@@ -161,7 +137,6 @@ class FileOperations:
         try:
             file_items = future.result()
 
-            # Update content view through the content view manager
             if hasattr(self.window, 'content_view_manager'):
                 self.window.content_view_manager.update_content_view(
                     file_items, folder_path, initial_selection_path
@@ -178,14 +153,8 @@ class FileOperations:
             ))
 
         except Exception as e:
-            error_ctx = ErrorContext(
-                category=ErrorCategory.INTERNAL,
-                summary="File scan callback failed",
-                details=f"An unexpected error occurred after scanning: {e}",
-                file_path=folder_path,
-                original_exception=e
-            )
-            self.error_handler.show_error_dialog(error_ctx)
+            self.error_handler.handle_error(e, context="File Scan Failed", user_action=f"Scanning folder: {folder_path}")
+
             self.window.ui_manager.hide_processing_screen()
 
             self.history_manager.add_action(HistoryEntry(

@@ -11,34 +11,6 @@ python = import('python')
 py_installation = python.find_installation('python3', required: true)
 py_dependency = py_installation.dependency()
 
-required_python_modules = [
-  'requests',
-  'json',
-  'os',
-  'subprocess',
-  'logging',
-  'enum',
-  'typing',
-  'dataclasses',
-  'datetime',
-  're',
-  'time'
-]
-
-foreach module : required_python_modules
-  module_check = run_command(
-    py_installation,
-    '-c',
-    'import @0@'.format(module),
-    check: false
-  )
-  if module_check.returncode() != 0
-    if module == 'requests'
-      error('Missing required Python module: @0@. Install with: pip install @0@ or sudo pacman -S python-@0@'.format(module))
-    endif
-  endif
-endforeach
-
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 
 conf = configuration_data()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/paru-gui">
-    <file preprocess="xml-stripblanks" alias="window.ui">../window.ui</file>
+    <file preprocess="xml-stripblanks" alias="ui/window.ui">../window.ui</file>
 
     <file preprocess="xml-stripblanks">ui/screens/welcome_screen.ui</file>
     <file preprocess="xml-stripblanks">ui/screens/content_view.ui</file>
@@ -14,8 +14,14 @@
     <file preprocess="xml-stripblanks">ui/components/help-overlay.ui</file>
     <file preprocess="xml-stripblanks">ui/components/search_bar.ui</file>
 
+    <file preprocess="xml-stripblanks">ui/components/cards/advanced_card.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/package_card.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/patch_card.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/pkgbuild_card.ui</file>
+
     <file>ui/style.css</file>
     <file>ui/image_fixes.css</file>
     <file>ui/screens/pkgbuild-review.css</file>
   </gresource>
 </gresources>
+

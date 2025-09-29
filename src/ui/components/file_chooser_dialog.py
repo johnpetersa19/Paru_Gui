@@ -42,17 +42,21 @@ class FileChooserDialog(Adw.Dialog):
         'dialog-cancelled': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, parent=None, **kwargs):
+        filtered_kwargs = {k: v for k, v in kwargs.items() if k != 'parent'}
+        super().__init__(**filtered_kwargs)
+
         self._current_folder_path: str = os.path.expanduser("~")
         self._all_file_items: List[FileItem] = []
         self._filtered_file_items: List[FileItem] = []
         self._active_filters: List[str] = ["PKGBUILD", "PACKAGE", "PATCH", "ADVANCED"]
         self._search_text: str = ""
         self._callback: Optional[Callable] = None
+        self.props.modal = True
 
-        self.set_default_size(800, 600)
-        self.set_modal(True)
+        if parent:
+            self.set_transient_for(parent)
+
         self.set_title("Select Folder with Compatible Files")
         self._connect_ui_signals()
         self._initialize_dialog()

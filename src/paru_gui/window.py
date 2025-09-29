@@ -9,17 +9,9 @@ from pathlib import Path
 
 from gi.repository import Gtk, Gio, Adw, GLib, GObject, Pango, Gdk
 
-from .ui.managers.ui_manager import UIManager, ViewType, NotificationType
-from .ui.managers.content_view_manager import ContentViewManager
-from .ui.managers.search_manager import SearchManager
-from .ui.managers.file_operations import FileOperationsManager
-from .ui.managers.preferences_dialog_manager import PreferencesDialogManager
-from .ui.components.help_overlay import HelpOverlay
-from .ui.components.file_chooser_dialog import FileChooserDialog
-
 
 @Gtk.Template(resource_path='/org/gnome/paru-gui/ui/window.ui')
-class ParuGUIWindow(Adw.ApplicationWindow):
+class ParuGUIWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'ParuGUIWindow'
 
     main_stack: Gtk.Stack = Gtk.Template.Child()
@@ -67,6 +59,9 @@ class ParuGUIWindow(Adw.ApplicationWindow):
         self.security_analyzer = managers.get('security')
         self.terminal_manager = managers.get('terminal')
         self.tour_guide = managers.get('tour_guide')
+        self.file_utils = managers.get('file_utils')
+        self.pkgbuild_analyzer = managers.get('pkgbuild_analyzer')
+        self.thread_pool_executor = managers.get('thread_pool_executor')
 
         self.ui_manager = None
         self.content_view_manager = None
@@ -91,6 +86,14 @@ class ParuGUIWindow(Adw.ApplicationWindow):
 
     def _init_managers(self):
         try:
+            from paru_gui.ui.managers.ui_manager import UIManager
+            from paru_gui.ui.managers.content_view_manager import ContentViewManager
+            from paru_gui.ui.managers.search_manager import SearchManager
+            from paru_gui.ui.managers.file_operations import FileOperationsManager
+            from paru_gui.ui.managers.preferences_dialog_manager import PreferencesDialogManager
+            from paru_gui.ui.components.help_overlay import HelpOverlay
+            from paru_gui.ui.components.file_chooser_dialog import FileChooserDialog
+
             builder = Gtk.Builder.new_from_resource('/org/gnome/paru-gui/ui/window.ui')
 
             self.ui_manager = UIManager(
@@ -115,17 +118,22 @@ class ParuGUIWindow(Adw.ApplicationWindow):
 
             self.file_operations = FileOperationsManager(
                 window=self,
-                cache_manager=self.cache_manager,
-                sandbox_manager=self.sandbox_manager
+                builder=builder,
+                preferences_manager=self.preferences_manager,
+                history_manager=self.history_manager,
+                file_utils=self.file_utils,
+                error_handler=self.error_handler,
+                thread_pool_executor=self.thread_pool_executor
             )
 
             self.preferences_dialog_manager = PreferencesDialogManager(
-                parent_window=self,
+                window=self,
+                builder=builder,
                 preferences_manager=self.preferences_manager
             )
 
             self.help_overlay = HelpOverlay()
-            self.file_chooser = FileChooserDialog(parent=self)
+            self.file_chooser = FileChooserDialog(transient_for=self)
 
         except Exception as e:
             self.logger.error(f"Failed to initialize managers: {e}")
@@ -134,8 +142,8 @@ class ParuGUIWindow(Adw.ApplicationWindow):
 
     def _setup_window_properties(self):
         if self.preferences_manager:
-            width = self.preferences_manager.get_preference('window_width', 1200)
-            height = self.preferences_manager.get_preference('window_height', 800)
+            width = self.preferences_manager.get_preference('window-width', 1200)
+            height = self.preferences_manager.get_preference('window-height', 800)
             self.set_default_size(width, height)
 
         self.set_title("Paru GUI")
@@ -156,7 +164,6 @@ class ParuGUIWindow(Adw.ApplicationWindow):
 
         self.search_entry.connect('search-changed', self._on_search_changed)
         self.search_entry.connect('activate', self._on_search_activated)
-        self.search_entry.connect('search-stopped', self._on_search_stopped)
 
         self.recent_dirs_flowbox.connect('child-activated', self._on_recent_dir_activated)
 
@@ -166,7 +173,7 @@ class ParuGUIWindow(Adw.ApplicationWindow):
         if not self.preferences_manager:
             return
 
-        recent_dirs = self.preferences_manager.get_preference('recent_directories', [])
+        recent_dirs = self.preferences_manager.get_preference('recent-directories', [])
 
         if not recent_dirs:
             self.recent_dirs_label.set_visible(False)
@@ -298,17 +305,17 @@ class ParuGUIWindow(Adw.ApplicationWindow):
         if not self.preferences_manager:
             return
 
-        recent_dirs = self.preferences_manager.get_preference('recent_directories', [])
+        recent_dirs = self.preferences_manager.get_preference('recent-directories', [])
 
         if directory_path in recent_dirs:
             recent_dirs.remove(directory_path)
 
         recent_dirs.insert(0, directory_path)
 
-        max_recent = self.preferences_manager.get_preference('max_recent_directories', 10)
+        max_recent = self.preferences_manager.get_preference('max-recent-directories', 10)
         recent_dirs = recent_dirs[:max_recent]
 
-        self.preferences_manager.set_preference('recent_directories', recent_dirs)
+        self.preferences_manager.set_preference('recent-directories', recent_dirs)
 
         self._load_recent_directories()
 
@@ -379,10 +386,6 @@ class ParuGUIWindow(Adw.ApplicationWindow):
         if search_text and self.search_manager:
             self.search_manager.execute_search(search_text)
 
-    def _on_search_stopped(self, search_entry):
-        if self.search_manager:
-            self.search_manager.clear_search()
-
     def _on_recent_dir_activated(self, flowbox, child):
         pass
 
@@ -393,8 +396,8 @@ class ParuGUIWindow(Adw.ApplicationWindow):
     def _save_window_state(self):
         if self.preferences_manager:
             width, height = self.get_default_size()
-            self.preferences_manager.set_preference('window_width', width)
-            self.preferences_manager.set_preference('window_height', height)
+            self.preferences_manager.set_preference('window-width', width)
+            self.preferences_manager.set_preference('window-height', height)
 
     def show_preferences(self):
         if self.preferences_dialog_manager:
@@ -405,7 +408,7 @@ class ParuGUIWindow(Adw.ApplicationWindow):
             self.help_overlay.show_help_overlay(self)
 
     def show_pkgbuild_review(self, pkgbuild_path):
-        from .ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
+        from paru_gui.ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
 
         dialog = PKGBUILDReviewDialog(
             parent=self,
@@ -415,13 +418,13 @@ class ParuGUIWindow(Adw.ApplicationWindow):
         dialog.present()
 
     def show_welcome_screen(self):
-        from .ui.screens.welcome_screen import WelcomeScreen
+        from paru_gui.ui.screens.welcome_screen import WelcomeScreen
 
         if self.ui_manager:
             self.ui_manager.show_welcome_screen()
 
     def show_content_view(self, directory_path=None):
-        from .ui.screens.content_view import ContentView
+        from paru_gui.ui.screens.content_view import ContentView
 
         if directory_path:
             self._load_directory(directory_path)
@@ -475,7 +478,8 @@ class ParuGUIWindow(Adw.ApplicationWindow):
             self.logger.warning(f"Paste operation failed: {e}")
 
     def show_upstream_updates(self):
-        from .ui.screens.upstream_update import UpstreamUpdate
+        from paru_gui.ui.screens.upstream_update import UpstreamUpdate
+        from paru_gui.ui.managers.ui_manager import ViewType
 
         if self.ui_manager:
             self.ui_manager.show_view(ViewType.PROCESSING)

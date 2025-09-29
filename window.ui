@@ -1,11 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.97.8 -->
+<!-- Created with Cambalache 0.97.8 - Corrigido seguindo o gabarito sem alterar o design -->
 <interface domain="paru-gui">
   <!-- interface-name window.ui -->
   <requires lib="gio" version="2.0"/>
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="libadwaita" version="1.4"/>
   <!-- Main Application Window -->
-  <template class="ParuGuiWindow" parent="GtkApplicationWindow">
+  <object class="GtkApplicationWindow" id="window">
     <property name="default-height">700</property>
     <property name="default-width">1000</property>
     <property name="title">Paru GUI</property>
@@ -15,23 +16,32 @@
         <child>
           <!-- Header Bar -->
           <object class="GtkHeaderBar" id="header_bar">
-            <property name="show-title-buttons">False</property>
+            <property name="show-title-buttons">true</property>
             <child type="start">
               <object class="GtkMenuButton" id="app_menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">primary_menu</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Main Menu</property>
+                </accessibility>
               </object>
             </child>
             <child type="title">
               <object class="GtkSearchEntry" id="search_entry">
                 <property name="placeholder-text">Search packages...</property>
                 <property name="width-request">400</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Search for packages</property>
+                </accessibility>
               </object>
             </child>
             <child type="end">
               <object class="GtkButton" id="help_button">
                 <property name="icon-name">help-about-symbolic</property>
                 <property name="tooltip-text">Help</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Help</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -54,22 +64,29 @@
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="css-classes">dim-label</property>
-                        <property name="icon-name">system-software-install-symbolic</property>
+                        <property name="halign">center</property>
+                        <property name="icon-name">text-editor-symbolic</property>
                         <property name="icon-size">inherit</property>
-                        <property name="pixel-size">150</property>
+                        <property name="pixel-size">100</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="css-classes">title-1</property>
                         <property name="label" translatable="yes">Paru Package Manager</property>
+                        <style>
+                          <class name="title-1"/>
+                        </style>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="css-classes">dim-label</property>
                         <property name="label" translatable="yes">Select a PKGBUILD file or directory to get started</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -78,23 +95,29 @@
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkButton" id="select_file_button">
-                            <property name="css-classes">suggested-action</property>
                             <property name="label" translatable="yes">Select File</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="select_folder_button">
-                            <property name="css-classes">suggested-action</property>
                             <property name="label" translatable="yes">Select Folder</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
                           </object>
                         </child>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="recent_dirs_label">
-                        <property name="css-classes">heading</property>
                         <property name="label" translatable="yes">Recent Directories</property>
                         <property name="margin-top">24</property>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -118,11 +141,11 @@
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="hscrollbar-policy">never</property>
-                        <property name="vexpand">True</property>
+                        <property name="vexpand">true</property>
                         <child>
                           <object class="GtkFlowBox" id="content_cards">
                             <property name="column-spacing">12</property>
-                            <property name="homogeneous">False</property>
+                            <property name="homogeneous">false</property>
                             <property name="margin-bottom">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-start">12</property>
@@ -151,20 +174,24 @@
                         <child>
                           <object class="GtkBox">
                             <property name="halign">center</property>
-                            <property name="hexpand">True</property>
+                            <property name="hexpand">true</property>
                             <child>
                               <object class="GtkLabel" id="status_label">
-                                <property name="css-classes">dim-label</property>
                                 <property name="label" translatable="yes">Ready</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
                               </object>
                             </child>
                           </object>
                         </child>
                         <child>
                           <object class="GtkButton" id="action_button">
-                            <property name="css-classes">suggested-action</property>
                             <property name="halign">end</property>
                             <property name="label" translatable="yes">Action</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -186,20 +213,25 @@
                     <child>
                       <object class="GtkSpinner" id="processing_spinner">
                         <property name="height-request">64</property>
-                        <property name="spinning">True</property>
+                        <property name="spinning">true</property>
                         <property name="width-request">64</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="processing_label">
-                        <property name="css-classes">title-2</property>
                         <property name="label" translatable="yes">Processing...</property>
+                        <style>
+                          <class name="title-2"/>
+                        </style>
                       </object>
                     </child>
                     <child>
                       <object class="GtkProgressBar" id="processing_progress">
-                        <property name="show-text">True</property>
+                        <property name="show-text">true</property>
                         <property name="width-request">400</property>
+                        <accessibility>
+                           <property name="label" translatable="yes">Processing progress</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -208,8 +240,8 @@
                         <property name="width-request">600</property>
                         <child>
                           <object class="GtkTextView" id="log_textview">
-                            <property name="editable">False</property>
-                            <property name="monospace">True</property>
+                            <property name="editable">false</property>
+                            <property name="monospace">true</property>
                             <property name="wrap-mode">word</property>
                           </object>
                         </child>
@@ -249,20 +281,22 @@
                     <property name="spacing">12</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="css-classes">title-2</property>
                         <property name="halign">start</property>
                         <property name="label" translatable="yes">Upstream Updates</property>
                         <property name="margin-bottom">12</property>
+                        <style>
+                          <class name="title-2"/>
+                        </style>
                       </object>
                     </child>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="hscrollbar-policy">never</property>
-                        <property name="vexpand">True</property>
+                        <property name="vexpand">true</property>
                         <child>
                           <object class="GtkFlowBox" id="upstream_update_cards">
                             <property name="column-spacing">18</property>
-                            <property name="homogeneous">False</property>
+                            <property name="homogeneous">false</property>
                             <property name="margin-bottom">18</property>
                             <property name="margin-end">18</property>
                             <property name="margin-start">18</property>
@@ -298,7 +332,7 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
   <!-- Primary Menu Model -->
   <menu id="primary_menu">
     <section>
@@ -426,37 +460,49 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkImage" id="pkgbuild_icon">
+            <property name="halign">center</property>
             <property name="icon-name">text-x-generic-symbolic</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="pkgbuild_name">
-            <property name="css-classes">heading</property>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">true</property>
             <property name="label">Package Name</property>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
           <object class="GtkImage" id="trust_indicator">
-            <property name="css-classes">success</property>
+            <property name="halign">center</property>
             <property name="icon-name">security-high-symbolic</property>
+            <property name="valign">center</property>
+            <style>
+              <class name="success"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkLabel" id="pkgbuild_version">
-        <property name="css-classes">caption</property>
         <property name="halign">start</property>
         <property name="label">Version: 1.0.0</property>
+        <style>
+          <class name="caption"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkLabel" id="pkgbuild_size">
-        <property name="css-classes">caption</property>
         <property name="halign">start</property>
         <property name="label">Size: 2.5 MB</property>
+        <style>
+          <class name="caption"/>
+        </style>
       </object>
     </child>
     <child>
@@ -465,9 +511,11 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkButton" id="compile_button">
-            <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Compile</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
         <child>
@@ -498,30 +546,40 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkImage" id="package_icon">
+            <property name="halign">center</property>
             <property name="icon-name">package-x-generic-symbolic</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="package_name">
-            <property name="css-classes">heading</property>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">true</property>
             <property name="label">Package Name</property>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
           <object class="GtkImage" id="signature_indicator">
-            <property name="css-classes">success</property>
+            <property name="halign">center</property>
             <property name="icon-name">security-high-symbolic</property>
+            <property name="valign">center</property>
+            <style>
+              <class name="success"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkLabel" id="package_version">
-        <property name="css-classes">caption</property>
         <property name="halign">start</property>
         <property name="label">Version: 1.0.0</property>
+        <style>
+          <class name="caption"/>
+        </style>
       </object>
     </child>
     <child>
@@ -530,9 +588,11 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkButton" id="install_button">
-            <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Install</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
         <child>
@@ -563,25 +623,31 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkImage" id="patch_icon">
+            <property name="halign">center</property>
             <property name="icon-name">text-x-patch-symbolic</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="patch_name">
-            <property name="css-classes">heading</property>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">true</property>
             <property name="label">Patch Name</property>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkLabel" id="patch_description">
-        <property name="css-classes">caption</property>
         <property name="halign">start</property>
         <property name="label">Description of changes</property>
-        <property name="wrap">True</property>
+        <property name="wrap">true</property>
+        <style>
+          <class name="caption"/>
+        </style>
       </object>
     </child>
     <child>
@@ -590,9 +656,11 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkButton" id="apply_button">
-            <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Apply</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
         <child>
@@ -618,24 +686,30 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkImage" id="advanced_icon">
+            <property name="halign">center</property>
             <property name="icon-name">applications-system-symbolic</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="advanced_title">
-            <property name="css-classes">heading</property>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">true</property>
             <property name="label" translatable="yes">Advanced Mode</property>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkLabel" id="advanced_description">
-        <property name="css-classes">caption</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Execute custom commands or dry runs</property>
+        <style>
+          <class name="caption"/>
+        </style>
       </object>
     </child>
     <child>
@@ -644,9 +718,11 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkButton" id="command_button">
-            <property name="css-classes">suggested-action</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Run Command</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
         <child>
@@ -676,28 +752,37 @@
     <property name="valign">center</property>
     <child>
       <object class="GtkImage">
-        <property name="css-classes">dim-label</property>
+        <property name="halign">center</property>
         <property name="icon-name">folder-symbolic</property>
         <property name="pixel-size">64</property>
+        <style>
+          <class name="dim-label"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="css-classes">heading</property>
         <property name="label" translatable="yes">Empty Directory</property>
+        <style>
+          <class name="heading"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="css-classes">dim-label</property>
         <property name="label" translatable="yes">Download a PKGBUILD from AUR to get started</property>
+        <style>
+          <class name="dim-label"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkButton" id="download_button">
-        <property name="css-classes">suggested-action</property>
         <property name="halign">center</property>
         <property name="label" translatable="yes">Download PKGBUILD</property>
+        <style>
+          <class name="suggested-action"/>
+        </style>
       </object>
     </child>
     <style>
@@ -706,8 +791,8 @@
   </object>
   <!-- Error Dialog -->
   <object class="GtkDialog" id="error_dialog">
-    <property name="destroy-with-parent">True</property>
-    <property name="modal">True</property>
+    <property name="destroy-with-parent">true</property>
+    <property name="modal">true</property>
     <property name="title" translatable="yes">Error</property>
     <child internal-child="content_area">
       <object class="GtkBox">
@@ -722,17 +807,23 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkImage" id="error_icon">
-                <property name="css-classes">error</property>
+                <property name="halign">center</property>
                 <property name="icon-name">dialog-error-symbolic</property>
                 <property name="pixel-size">48</property>
+                <property name="valign">center</property>
+                <style>
+                  <class name="error"/>
+                </style>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="error_title">
-                <property name="css-classes">title-2</property>
                 <property name="halign">start</property>
-                <property name="hexpand">True</property>
+                <property name="hexpand">true</property>
                 <property name="label" translatable="yes">Operation Failed</property>
+                <style>
+                  <class name="title-2"/>
+                </style>
               </object>
             </child>
           </object>
@@ -741,7 +832,7 @@
           <object class="GtkLabel" id="error_message">
             <property name="halign">start</property>
             <property name="label" translatable="yes">An error occurred during the operation.</property>
-            <property name="wrap">True</property>
+            <property name="wrap">true</property>
           </object>
         </child>
         <child>
@@ -749,8 +840,8 @@
             <property name="height-request">150</property>
             <child>
               <object class="GtkTextView" id="error_details">
-                <property name="editable">False</property>
-                <property name="monospace">True</property>
+                <property name="editable">false</property>
+                <property name="monospace">true</property>
               </object>
             </child>
           </object>
@@ -766,8 +857,10 @@
             </child>
             <child>
               <object class="GtkButton" id="close_error_button">
-                <property name="css-classes">suggested-action</property>
                 <property name="label" translatable="yes">Close</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
               </object>
             </child>
           </object>
@@ -777,8 +870,8 @@
   </object>
   <!-- Preferences Dialog -->
   <object class="GtkDialog" id="preferences_dialog">
-    <property name="destroy-with-parent">True</property>
-    <property name="modal">True</property>
+    <property name="destroy-with-parent">true</property>
+    <property name="modal">true</property>
     <property name="title" translatable="yes">Preferences</property>
     <child internal-child="content_area">
       <object class="GtkBox">
@@ -794,9 +887,11 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="css-classes">heading</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">General Settings</property>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -805,7 +900,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Default Editor:</property>
                   </object>
                 </child>
@@ -827,13 +922,13 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Simplified Mode:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkSwitch" id="simplified_mode_switch">
-                    <property name="active">True</property>
+                    <property name="active">true</property>
                   </object>
                 </child>
               </object>
@@ -846,9 +941,11 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="css-classes">heading</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Trust Settings</property>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -857,13 +954,13 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Show Trust Icons:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkSwitch" id="trust_icons_switch">
-                    <property name="active">True</property>
+                    <property name="active">true</property>
                   </object>
                 </child>
               </object>
@@ -874,13 +971,13 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Block Unvoted Packages:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkSwitch" id="block_unvoted_switch">
-                    <property name="active">False</property>
+                    <property name="active">false</property>
                   </object>
                 </child>
               </object>
@@ -893,9 +990,11 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="css-classes">heading</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Developer Settings</property>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -904,13 +1003,13 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Clean After Build:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkSwitch" id="clean_after_build_switch">
-                    <property name="active">True</property>
+                    <property name="active">true</property>
                   </object>
                 </child>
               </object>
@@ -921,13 +1020,13 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">true</property>
                     <property name="label" translatable="yes">Show Real-time Terminal:</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkSwitch" id="terminal_switch">
-                    <property name="active">False</property>
+                    <property name="active">false</property>
                   </object>
                 </child>
               </object>

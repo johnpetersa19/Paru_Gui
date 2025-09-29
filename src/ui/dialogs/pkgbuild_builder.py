@@ -68,8 +68,8 @@ class PKGBUILDBuilder(Adw.Window):
 
     def __init__(self, parent_window: Optional[Gtk.Window] = None, initial_path: Optional[str] = None):
         super().__init__()
-        self.set_title("PKGBUILD Builder")
-        self.set_default_size(950, 750)
+        self.set_title("PKGBUILD Builder Wizard")
+        self.set_default_size(1000, 800)
         self.set_modal(True)
         if parent_window:
             self.set_transient_for(parent_window)
@@ -312,6 +312,40 @@ package_{pkgname}-dev() {{
                 optional_fields=["url", "license", "depends", "makedepends", "runtime_depends", "source_dir"]
             ),
             
+            PKGBUILDType.KERNEL_MODULE: PKGBUILDTemplate(
+                name="Kernel Module",
+                type=PKGBUILDType.KERNEL_MODULE,
+                description="Linux kernel module package",
+                template="""# Maintainer: {maintainer}
+pkgname={pkgname}
+pkgver={pkgver}
+pkgrel={pkgrel}
+pkgdesc="{pkgdesc}"
+arch=({arch})
+url="{url}"
+license=({license})
+depends=('linux')
+makedepends=('linux-headers' {makedepends})
+source=("{source}")
+sha256sums=('{sha256sum}')
+
+build() {{
+    cd "$srcdir/{source_dir}"
+    make -C /usr/lib/modules/$(uname -r)/build M="$PWD" modules
+}}
+
+package() {{
+    cd "$srcdir/{source_dir}"
+    install -Dt "$pkgdir/usr/lib/modules/$(uname -r)/extramodules" -m644 *.ko
+    
+    find "$pkgdir" -name '*.ko' -exec xz {{}} +
+    
+    echo "{pkgname}" | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/{pkgname}.conf"
+}}""",
+                required_fields=["maintainer", "pkgname", "pkgver", "pkgrel", "pkgdesc", "source"],
+                optional_fields=["url", "license", "makedepends", "source_dir"]
+            ),
+            
             PKGBUILDType.FONTS: PKGBUILDTemplate(
                 name="Font Package",
                 type=PKGBUILDType.FONTS,
@@ -334,10 +368,51 @@ package() {{
     install -dm755 "$pkgdir/usr/share/fonts/{font_family}"
     {font_install_commands}
     
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    if [[ -f LICENSE ]]; then
+        install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    fi
 }}""",
                 required_fields=["maintainer", "pkgname", "pkgver", "pkgrel", "pkgdesc", "source", "font_family"],
                 optional_fields=["url", "license", "font_install_commands"]
+            ),
+            
+            PKGBUILDType.THEMES: PKGBUILDTemplate(
+                name="Theme Package",
+                type=PKGBUILDType.THEMES,
+                description="Desktop theme or icon theme package",
+                template="""# Maintainer: {maintainer}
+pkgname={pkgname}
+pkgver={pkgver}
+pkgrel={pkgrel}
+pkgdesc="{pkgdesc}"
+arch=('any')
+url="{url}"
+license=({license})
+depends=({depends})
+optdepends=({optdepends})
+source=("{source}")
+sha256sums=('{sha256sum}')
+
+package() {{
+    cd "$srcdir"
+    
+    if [[ -d icons ]]; then
+        install -dm755 "$pkgdir/usr/share/icons"
+        cp -r icons/* "$pkgdir/usr/share/icons/"
+    fi
+    
+    if [[ -d themes ]]; then
+        install -dm755 "$pkgdir/usr/share/themes"
+        cp -r themes/* "$pkgdir/usr/share/themes/"
+    fi
+    
+    {theme_install_commands}
+    
+    find "$pkgdir" -type f -exec chmod 644 {{}} \\;
+    find "$pkgdir" -type d -exec chmod 755 {{}} \\;
+}}""",
+                required_fields=["maintainer", "pkgname", "pkgver", "pkgrel", "pkgdesc", "source"],
+                optional_fields=["url", "license", "depends", "optdepends", "theme_install_commands"]
             ),
             
             PKGBUILDType.CUSTOM: PKGBUILDTemplate(
@@ -391,6 +466,7 @@ sha256sums=({sha256sum})
             "source_dir": PKGBUILDField("source_dir", "Source Directory", "entry", False, "", "package-1.0.0", "Source directory name"),
             "font_family": PKGBUILDField("font_family", "Font Family", "entry", False, "", "TTF", "Font family directory"),
             "font_install_commands": PKGBUILDField("font_install_commands", "Font Install Commands", "text", False, "", "install -m644 *.ttf \"$pkgdir/usr/share/fonts/TTF/\"", "Commands to install fonts", None, True),
+            "theme_install_commands": PKGBUILDField("theme_install_commands", "Theme Install Commands", "text", False, "", "install -Dm644 theme.xml \"$pkgdir/usr/share/themes/mytheme/\"", "Commands to install theme files", None, True),
             "runtime_depends": PKGBUILDField("runtime_depends", "Runtime Dependencies", "entry", False, "", "glibc", "Runtime library dependencies"),
             "prepare_function": PKGBUILDField("prepare_function", "Prepare Function", "text", False, "", "patch -p1 < ../fix.patch", "Commands for prepare() function", None, True),
             "build_function": PKGBUILDField("build_function", "Build Function", "text", False, "", "./configure --prefix=/usr\nmake", "Commands for build() function", None, True),
@@ -521,7 +597,9 @@ sha256sums=({sha256sum})
             PKGBUILDType.PYTHON: "applications-development-symbolic",
             PKGBUILDType.NODE: "applications-internet-symbolic",
             PKGBUILDType.LIBRARY: "system-component-library-symbolic",
+            PKGBUILDType.KERNEL_MODULE: "computer-symbolic",
             PKGBUILDType.FONTS: "font-x-generic-symbolic",
+            PKGBUILDType.THEMES: "preferences-desktop-theme-symbolic",
             PKGBUILDType.CUSTOM: "text-editor-symbolic"
         }
         
@@ -903,8 +981,12 @@ sha256sums=({sha256sum})
             first_letter = self.build_fields.get("first_letter")
             
             if python_name and first_letter:
-                python_name.connect("changed", lambda entry: 
-                    first_letter.set_text(entry.get_text()[0].lower() if entry.get_text() else ""))
+                def update_first_letter(entry):
+                    text = entry.get_text()
+                    if text:
+                        first_letter.set_text(text[0].lower())
+                
+                python_name.connect("changed", update_first_letter)
 
     def _auto_fill_git_fields(self):
         if self.current_template and self.current_template.type == PKGBUILDType.GIT:
@@ -915,7 +997,6 @@ sha256sums=({sha256sum})
                 def update_git_dir(entry):
                     url = entry.get_text()
                     if url:
-                        import os
                         repo_name = os.path.splitext(os.path.basename(url))[0]
                         git_dir.set_text(repo_name)
                 

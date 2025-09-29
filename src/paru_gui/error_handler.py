@@ -7,7 +7,7 @@ import hashlib
 from enum import Enum
 from typing import Optional, Callable, Dict, Any, List
 from dataclasses import dataclass, asdict
-from gi.repository import Gtk, Adw, GLib, Gio
+from gi.repository import Gtk, Adw, GLib, Gio, Gdk
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("error_handler")
@@ -77,33 +77,33 @@ class MarkdownFormatter:
 **Timestamp:** {report.timestamp}  
 **Context:** {report.context}
 
-## 📋 Description
+## Description
 
 {report.message}
 
 """
 
         if report.user_action:
-            markdown += f"""## 👤 User Action
+            markdown += f"""## User Action
 
 {report.user_action}
 
 """
 
         if report.suggested_actions:
-            markdown += "## 💡 Suggested Actions\n\n"
+            markdown += "## Suggested Actions\n\n"
             for i, action in enumerate(report.suggested_actions, 1):
                 markdown += f"{i}. {action}\n"
             markdown += "\n"
 
         if report.system_info:
-            markdown += "## 🖥️ System Information\n\n"
+            markdown += "## System Information\n\n"
             for key, value in report.system_info.items():
                 markdown += f"- **{key.replace('_', ' ').title()}:** {value}\n"
             markdown += "\n"
 
         if report.stack_trace:
-            markdown += f"""## 🔍 Stack Trace
+            markdown += f"""## Stack Trace
 
 ```python
 {report.stack_trace}
@@ -298,8 +298,47 @@ class ErrorHandler:
         except Exception as handler_error:
             fallback_msg = f"Error Handler Failed: {handler_error} | Original: {error}"
             logger.critical(fallback_msg)
-            print(f"🔴 CRITICAL: {fallback_msg}")
+            print(f"CRITICAL: {fallback_msg}")
             return "handler_error"
+
+    def handle_critical_error(self, error, context: str = "Critical Error", user_action: str = None) -> str:
+        try:
+            error_id = self._generate_error_id(str(error), context)
+            category = self._categorize_error(error)
+            suggested_actions = self._get_suggested_actions(error, category)
+            
+            self._error_counts[error_id] = self._error_counts.get(error_id, 0) + 1
+            
+            report = ErrorReport(
+                timestamp=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                error_id=error_id,
+                level=ErrorLevel.CRITICAL,
+                category=category,
+                title=f"Critical Error: {context}",
+                message=str(error),
+                context=context,
+                stack_trace=traceback.format_exc() if traceback.format_exc().strip() != 'NoneType: None' else None,
+                user_action=user_action,
+                system_info=self._get_system_info(),
+                suggested_actions=suggested_actions
+            )
+            
+            self._error_history.append(report)
+            if len(self._error_history) > self._max_history:
+                self._error_history = self._error_history[-self._max_history:]
+            
+            self._log_to_file(report)
+            self._log_to_console(report)
+            
+            self.show_error_dialog(report)
+            
+            return error_id
+            
+        except Exception as handler_error:
+            fallback_msg = f"Critical Error Handler Failed: {handler_error} | Original: {error}"
+            logger.critical(fallback_msg)
+            print(f"CRITICAL: {fallback_msg}")
+            return "critical_handler_error"
 
     def _log_to_file(self, report: ErrorReport):
         try:

@@ -1,811 +1,656 @@
-import os
-import re
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import GObject, Gio, GLib, Gtk, Adw, Gdk
 import json
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any, Set
-from dataclasses import dataclass, field
+import os
+from typing import Dict, List, Any, Optional, Tuple, Union
 from enum import Enum
-from gi.repository import Gtk, GObject, Gio, GLib, Pango, Gdk
+from dataclasses import dataclass, field
 
-class SuggestionType(Enum):
-    COMMAND = "command"
-    PACKAGE = "package"
-    FILE = "file"
-    DIRECTORY = "directory"
-    OPTION = "option"
-    PARAMETER = "parameter"
-    HISTORY = "history"
-    CONTEXT = "context"
+class EditorChoice(Enum):
+    SYSTEM_DEFAULT = "system_default"
+    GEDIT = "gedit"
+    NANO = "nano"
+    VIM = "vim"
+    EMACS = "emacs"
+    VSCODE = "code"
+    ATOM = "atom"
+    SUBLIME = "subl"
+    CUSTOM = "custom"
 
-class CommandContext(Enum):
-    SEARCH = "search"
-    INSTALL = "install"
-    REMOVE = "remove"
-    UPDATE = "update"
-    BUILD = "build"
-    FILE_OPERATION = "file_operation"
-    GENERAL = "general"
+class UpstreamFrequency(Enum):
+    NEVER = "never"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    ON_STARTUP = "on_startup"
+    MANUAL = "manual"
+
+class AURConfidenceLevel(Enum):
+    PARANOID = "paranoid"
+    CONSERVATIVE = "conservative"
+    BALANCED = "balanced"
+    TRUSTING = "trusting"
+    PERMISSIVE = "permissive"
+
+class ThemeMode(Enum):
+    SYSTEM = "system"
+    LIGHT = "light"
+    DARK = "dark"
+
+class UpdateNotificationLevel(Enum):
+    NONE = "none"
+    CRITICAL = "critical"
+    IMPORTANT = "important"
+    ALL = "all"
+
+class LogLevel(Enum):
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
 
 @dataclass
-class CommandSuggestion:
-    text: str
+class PreferenceCategory:
+    name: str
+    title: str
     description: str
-    suggestion_type: SuggestionType
-    context: CommandContext
-    score: float = 0.0
-    icon: str = "application-x-executable-symbolic"
-    shortcut: Optional[str] = None
-    parameters: List[str] = field(default_factory=list)
-    examples: List[str] = field(default_factory=list)
+    preferences: List[str] = field(default_factory=list)
 
 @dataclass
-class CommandTemplate:
-    command: str
+class PreferenceDefinition:
+    key: str
+    title: str
     description: str
-    parameters: List[str]
-    examples: List[str]
-    context: CommandContext
-    aliases: List[str] = field(default_factory=list)
+    default_value: Any
+    value_type: type
+    category: str
+    requires_restart: bool = False
+    validator: Optional[callable] = None
+    constraints: Optional[Dict[str, Any]] = None
 
-class CommandAssistant(GObject.Object):
+class CommandAssistant(Adw.Window):
+    __gtype_name__ = "CommandAssistant"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.set_title("Command Assistant")
+        self.set_default_size(600, 500)
+        self.set_modal(True)
+        self._setup_ui()
+
+    def _setup_ui(self):
+        header_bar = Adw.HeaderBar()
+        self.set_titlebar(header_bar)
+
+        toast_overlay = Adw.ToastOverlay()
+        self.set_content(toast_overlay)
+
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        toast_overlay.set_child(scrolled_window)
+
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        main_box.set_spacing(24)
+        main_box.set_margin_top(24)
+        main_box.set_margin_bottom(24)
+        main_box.set_margin_start(24)
+        main_box.set_margin_end(24)
+        scrolled_window.set_child(main_box)
+
+        title_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        title_box.set_spacing(6)
+        main_box.append(title_box)
+
+        title_label = Gtk.Label()
+        title_label.set_markup("<big><b>Command Assistant</b></big>")
+        title_label.set_halign(Gtk.Align.START)
+        title_box.append(title_label)
+
+        subtitle_label = Gtk.Label()
+        subtitle_label.set_text("Get help with paru commands and manage application preferences")
+        subtitle_label.set_halign(Gtk.Align.START)
+        subtitle_label.add_css_class("dim-label")
+        title_box.append(subtitle_label)
+
+        commands_group = Adw.PreferencesGroup()
+        commands_group.set_title("Common Commands")
+        commands_group.set_description("Frequently used paru and AUR commands")
+        main_box.append(commands_group)
+
+        commands = [
+            ("paru -S <package>", "Install a package from repositories or AUR"),
+            ("paru -R <package>", "Remove an installed package"),
+            ("paru -Syu", "Update all installed packages"),
+            ("paru -Ss <query>", "Search for packages by name or description"),
+            ("paru -Si <package>", "Show detailed package information"),
+            ("paru -Ql <package>", "List files installed by a package"),
+            ("paru -Qo <file>", "Find which package owns a file"),
+            ("paru -Sc", "Clean package cache"),
+            ("paru --stats", "Show statistics about installed packages")
+        ]
+
+        for command, description in commands:
+            row = Adw.ActionRow()
+            row.set_title(command)
+            row.set_subtitle(description)
+
+            copy_button = Gtk.Button()
+            copy_button.set_icon_name("edit-copy-symbolic")
+            copy_button.set_valign(Gtk.Align.CENTER)
+            copy_button.add_css_class("flat")
+            copy_button.set_tooltip_text("Copy command")
+            copy_button.connect("clicked", self._on_copy_command, command)
+            row.add_suffix(copy_button)
+
+            commands_group.add(row)
+
+        options_group = Adw.PreferencesGroup()
+        options_group.set_title("Application Settings")
+        options_group.set_description("Configure application behavior and preferences")
+        main_box.append(options_group)
+
+        preferences_row = Adw.ActionRow()
+        preferences_row.set_title("Open Preferences")
+        preferences_row.set_subtitle("Configure general settings, security options, and more")
+
+        preferences_button = Gtk.Button()
+        preferences_button.set_icon_name("preferences-system-symbolic")
+        preferences_button.set_valign(Gtk.Align.CENTER)
+        preferences_button.add_css_class("flat")
+        preferences_button.connect("clicked", self._on_preferences_clicked)
+        preferences_row.add_suffix(preferences_button)
+
+        options_group.add(preferences_row)
+
+        shortcuts_row = Adw.ActionRow()
+        shortcuts_row.set_title("Keyboard Shortcuts")
+        shortcuts_row.set_subtitle("View available keyboard shortcuts")
+
+        shortcuts_button = Gtk.Button()
+        shortcuts_button.set_icon_name("preferences-desktop-keyboard-symbolic")
+        shortcuts_button.set_valign(Gtk.Align.CENTER)
+        shortcuts_button.add_css_class("flat")
+        shortcuts_button.connect("clicked", self._on_shortcuts_clicked)
+        shortcuts_row.add_suffix(shortcuts_button)
+
+        options_group.add(shortcuts_row)
+
+        help_group = Adw.PreferencesGroup()
+        help_group.set_title("Help Resources")
+        help_group.set_description("External documentation and support")
+        main_box.append(help_group)
+
+        help_items = [
+            ("Paru Documentation", "View official paru documentation", "text-x-generic-symbolic"),
+            ("Arch Wiki", "Browse Arch Linux Wiki for AUR information", "applications-internet-symbolic"),
+            ("AUR Guidelines", "Read AUR package guidelines", "text-x-generic-symbolic")
+        ]
+
+        for title, subtitle, icon in help_items:
+            row = Adw.ActionRow()
+            row.set_title(title)
+            row.set_subtitle(subtitle)
+
+            help_button = Gtk.Button()
+            help_button.set_icon_name(icon)
+            help_button.set_valign(Gtk.Align.CENTER)
+            help_button.add_css_class("flat")
+            help_button.connect("clicked", self._on_help_clicked, title)
+            row.add_suffix(help_button)
+
+            help_group.add(row)
+
+    def _on_copy_command(self, button, command):
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.set_text(command)
+
+        toast = Adw.Toast()
+        toast.set_title(f"Copied: {command}")
+        toast.set_timeout(2)
+
+        overlay = self.get_content()
+        if isinstance(overlay, Adw.ToastOverlay):
+            overlay.add_toast(toast)
+
+    def _on_preferences_clicked(self, button):
+        pass
+
+    def _on_shortcuts_clicked(self, button):
+        pass
+
+    def _on_help_clicked(self, button, resource):
+        pass
+
+class PreferencesManager(GObject.Object):
     __gsignals__ = {
-        'suggestion-selected': (GObject.SignalFlags.RUN_LAST, None, (object,)),
-        'command-executed': (GObject.SignalFlags.RUN_LAST, None, (str,)),
-        'history-updated': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'context-changed': (GObject.SignalFlags.RUN_LAST, None, (str,)),
+        'preference-changed': (GObject.SignalFlags.RUN_LAST, None, (str, object)),
+        'category-changed': (GObject.SignalFlags.RUN_LAST, None, (str,)),
+        'preferences-reset': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'preferences-imported': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'preferences-exported': (GObject.SignalFlags.RUN_LAST, None, (str,)),
     }
 
-    def __init__(self, preferences_manager=None):
+    def __init__(self):
         super().__init__()
-        self.preferences_manager = preferences_manager
-        self.command_history = []
-        self.suggestion_cache = {}
-        self.cache_timeout = 300
-        self.max_suggestions = 20
-        self.min_query_length = 1
-        self.current_context = CommandContext.GENERAL
-        self.completion_providers = {}
-        self.custom_commands = {}
-        
-        self._load_command_templates()
-        self._load_history()
-        self._setup_completion_providers()
+        self.settings = None
+        self.fallback_storage = {}
+        self.preference_definitions = {}
+        self.categories = {}
+        self.change_callbacks = {}
+        self.validation_errors = {}
 
-    def _load_command_templates(self):
-        self.paru_commands = [
-            CommandTemplate(
-                command="paru",
-                description="AUR helper and package manager",
-                parameters=["-S", "-R", "-Ss", "-Q", "-U"],
-                examples=["paru -S package", "paru -Ss search"],
-                context=CommandContext.GENERAL,
-                aliases=["p"]
+        self._initialize_schema()
+        self._setup_categories()
+        self._setup_preference_definitions()
+        self._setup_settings()
+        self._load_fallback_preferences()
+
+    def _initialize_schema(self):
+        try:
+            self.settings = Gio.Settings.new("org.gnome.paru-gui")
+            self.settings.connect("changed", self._on_settings_changed)
+        except Exception:
+            self.settings = None
+
+    def _setup_categories(self):
+        self.categories = {
+            'general': PreferenceCategory(
+                name='general',
+                title='General',
+                description='General application settings'
             ),
-            CommandTemplate(
-                command="paru -S",
-                description="Install packages from repositories and AUR",
-                parameters=["--needed", "--noconfirm", "--asdeps"],
-                examples=["paru -S firefox", "paru -S --needed base-devel"],
-                context=CommandContext.INSTALL
+            'interface': PreferenceCategory(
+                name='interface',
+                title='Interface',
+                description='User interface preferences'
             ),
-            CommandTemplate(
-                command="paru -R",
-                description="Remove packages",
-                parameters=["-s", "-c", "-n"],
-                examples=["paru -R package", "paru -Rs package"],
-                context=CommandContext.REMOVE
+            'editor': PreferenceCategory(
+                name='editor',
+                title='Editor',
+                description='Text editor configuration'
             ),
-            CommandTemplate(
-                command="paru -Ss",
-                description="Search for packages",
-                parameters=["--repo", "--aur"],
-                examples=["paru -Ss firefox", "paru -Ss --aur browser"],
-                context=CommandContext.SEARCH
+            'updates': PreferenceCategory(
+                name='updates',
+                title='Updates',
+                description='Package update settings'
             ),
-            CommandTemplate(
-                command="paru -Syu",
-                description="Update all packages",
-                parameters=["--devel", "--noconfirm"],
-                examples=["paru -Syu", "paru -Syu --devel"],
-                context=CommandContext.UPDATE
+            'security': PreferenceCategory(
+                name='security',
+                title='Security',
+                description='Security and verification settings'
             ),
-            CommandTemplate(
-                command="paru -Q",
-                description="Query installed packages",
-                parameters=["-e", "-m", "-n", "-t"],
-                examples=["paru -Q", "paru -Qm"],
-                context=CommandContext.SEARCH
+            'aur': PreferenceCategory(
+                name='aur',
+                title='AUR',
+                description='Arch User Repository settings'
             ),
-            CommandTemplate(
-                command="paru -U",
-                description="Install packages from local files",
-                parameters=["--noconfirm", "--asdeps"],
-                examples=["paru -U package.pkg.tar.zst"],
-                context=CommandContext.INSTALL
+            'advanced': PreferenceCategory(
+                name='advanced',
+                title='Advanced',
+                description='Advanced configuration options'
             ),
-            CommandTemplate(
-                command="paru -Sua",
-                description="Update AUR packages only",
-                parameters=["--devel", "--noconfirm"],
-                examples=["paru -Sua", "paru -Sua --devel"],
-                context=CommandContext.UPDATE
+            'developer': PreferenceCategory(
+                name='developer',
+                title='Developer',
+                description='Developer mode and debugging options'
+            )
+        }
+
+    def _setup_preference_definitions(self):
+        definitions = [
+            PreferenceDefinition(
+                key='general.startup_check_updates',
+                title='Check for updates on startup',
+                description='Automatically check for package updates when the application starts',
+                default_value=True,
+                value_type=bool,
+                category='general'
             ),
-            CommandTemplate(
-                command="paru -c",
-                description="Clean package cache",
-                parameters=["-c", "-cc"],
-                examples=["paru -c", "paru -cc"],
-                context=CommandContext.GENERAL
+            PreferenceDefinition(
+                key='general.simplified_mode',
+                title='Simplified mode',
+                description='Enable simplified interface for basic users',
+                default_value=True,
+                value_type=bool,
+                category='general'
             ),
-            CommandTemplate(
-                command="paru --pgpfetch",
-                description="Fetch PGP keys for packages",
-                parameters=["--needed"],
-                examples=["paru --pgpfetch"],
-                context=CommandContext.GENERAL
+            PreferenceDefinition(
+                key='interface.theme_mode',
+                title='Theme mode',
+                description='Application color theme preference',
+                default_value=ThemeMode.SYSTEM.value,
+                value_type=str,
+                category='interface'
+            ),
+            PreferenceDefinition(
+                key='editor.default_editor',
+                title='Default editor',
+                description='Default text editor for editing files',
+                default_value=EditorChoice.GEDIT.value,
+                value_type=str,
+                category='editor'
+            ),
+            PreferenceDefinition(
+                key='security.aur_confidence_level',
+                title='AUR confidence level',
+                description='Security level for AUR package installation',
+                default_value=AURConfidenceLevel.BALANCED.value,
+                value_type=str,
+                category='security'
+            ),
+            PreferenceDefinition(
+                key='updates.upstream_frequency',
+                title='Upstream check frequency',
+                description='How often to check for upstream updates',
+                default_value=UpstreamFrequency.WEEKLY.value,
+                value_type=str,
+                category='updates'
             )
         ]
 
-        self.file_commands = [
-            CommandTemplate(
-                command="makepkg",
-                description="Build packages from PKGBUILD",
-                parameters=["-s", "-i", "-c", "-f", "-r", "-d"],
-                examples=["makepkg -si", "makepkg -scf", "makepkg -sr"],
-                context=CommandContext.BUILD
-            ),
-            CommandTemplate(
-                command="makepkg -si",
-                description="Build and install package with dependencies",
-                parameters=["-c", "-f", "-r"],
-                examples=["makepkg -si", "makepkg -sic"],
-                context=CommandContext.BUILD
-            ),
-            CommandTemplate(
-                command="makepkg -scf",
-                description="Clean build with force",
-                parameters=["-i", "-r", "-d"],
-                examples=["makepkg -scf", "makepkg -scfi"],
-                context=CommandContext.BUILD
-            ),
-            CommandTemplate(
-                command="ls",
-                description="List directory contents",
-                parameters=["-l", "-a", "-h", "-t", "-r"],
-                examples=["ls -la", "ls -lth", "ls -lar"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="cd",
-                description="Change directory",
-                parameters=[],
-                examples=["cd /path/to/directory", "cd ..", "cd ~"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="pwd",
-                description="Print working directory",
-                parameters=[],
-                examples=["pwd"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="mkdir",
-                description="Create directories",
-                parameters=["-p", "-m"],
-                examples=["mkdir dirname", "mkdir -p path/to/dir"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="rm",
-                description="Remove files and directories",
-                parameters=["-r", "-f", "-i", "-v"],
-                examples=["rm file", "rm -rf directory"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="cp",
-                description="Copy files and directories",
-                parameters=["-r", "-f", "-i", "-v"],
-                examples=["cp source dest", "cp -r dir dest"],
-                context=CommandContext.FILE_OPERATION
-            ),
-            CommandTemplate(
-                command="mv",
-                description="Move/rename files and directories",
-                parameters=["-f", "-i", "-v"],
-                examples=["mv source dest", "mv old_name new_name"],
-                context=CommandContext.FILE_OPERATION
-            )
-        ]
+        for definition in definitions:
+            self.preference_definitions[definition.key] = definition
+            if definition.category in self.categories:
+                self.categories[definition.category].preferences.append(definition.key)
 
-        self.all_commands = self.paru_commands + self.file_commands
+    def _setup_settings(self):
+        if self.settings:
+            self.settings.connect("changed", self._on_settings_changed)
 
-    def _setup_completion_providers(self):
-        self.completion_providers = {
-            'packages': self._get_package_completions,
-            'files': self._get_file_completions,
-            'directories': self._get_directory_completions,
-            'commands': self._get_command_completions,
-            'options': self._get_option_completions
-        }
+    def _load_fallback_preferences(self):
+        fallback_path = os.path.expanduser("~/.config/paru-gui/preferences.json")
+        if os.path.exists(fallback_path):
+            try:
+                with open(fallback_path, 'r') as f:
+                    self.fallback_storage = json.load(f)
+            except Exception:
+                self.fallback_storage = {}
 
-    def _load_history(self):
-        history_file = os.path.expanduser("~/.config/paru-gui/command_history.json")
+    def _save_fallback_preferences(self):
+        os.makedirs(os.path.expanduser("~/.config/paru-gui"), exist_ok=True)
+        fallback_path = os.path.expanduser("~/.config/paru-gui/preferences.json")
         try:
-            if os.path.exists(history_file):
-                with open(history_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    self.command_history = [
-                        {
-                            'command': item['command'],
-                            'timestamp': datetime.fromisoformat(item['timestamp']),
-                            'context': CommandContext(item.get('context', 'general')),
-                            'success': item.get('success', True)
-                        }
-                        for item in data
-                    ]
-        except Exception:
-            self.command_history = []
-
-    def _save_history(self):
-        history_file = os.path.expanduser("~/.config/paru-gui/command_history.json")
-        os.makedirs(os.path.dirname(history_file), exist_ok=True)
-        
-        try:
-            data = [
-                {
-                    'command': item['command'],
-                    'timestamp': item['timestamp'].isoformat(),
-                    'context': item['context'].value,
-                    'success': item['success']
-                }
-                for item in self.command_history[-1000:]
-            ]
-            
-            with open(history_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
+            with open(fallback_path, 'w') as f:
+                json.dump(self.fallback_storage, f, indent=2)
         except Exception:
             pass
 
-    def get_suggestions(self, query: str, context: Optional[CommandContext] = None) -> List[CommandSuggestion]:
-        if len(query) < self.min_query_length:
-            return self._get_recent_suggestions()
+    def _on_settings_changed(self, settings, key):
+        self.emit('preference-changed', key, self.get_preference(key))
 
-        query = query.strip().lower()
-        cache_key = f"{query}:{context or self.current_context}"
-        
-        if cache_key in self.suggestion_cache:
-            cache_entry = self.suggestion_cache[cache_key]
-            if datetime.now() - cache_entry['timestamp'] < timedelta(seconds=self.cache_timeout):
-                return cache_entry['suggestions']
-
-        suggestions = []
-        search_context = context or self.current_context
-
-        suggestions.extend(self._get_command_suggestions(query, search_context))
-        suggestions.extend(self._get_package_suggestions(query, search_context))
-        suggestions.extend(self._get_file_suggestions(query, search_context))
-        suggestions.extend(self._get_history_suggestions(query, search_context))
-        suggestions.extend(self._get_contextual_suggestions(query, search_context))
-
-        suggestions = self._score_and_sort_suggestions(suggestions, query)
-        suggestions = suggestions[:self.max_suggestions]
-
-        self.suggestion_cache[cache_key] = {
-            'suggestions': suggestions,
-            'timestamp': datetime.now()
-        }
-
-        return suggestions
-
-    def _get_command_suggestions(self, query: str, context: CommandContext) -> List[CommandSuggestion]:
-        suggestions = []
-        
-        for template in self.all_commands:
-            if context != CommandContext.GENERAL and template.context != context and template.context != CommandContext.GENERAL:
-                continue
-            
-            if query in template.command.lower() or any(alias for alias in template.aliases if query in alias.lower()):
-                score = self._calculate_match_score(query, template.command)
-                
-                suggestion = CommandSuggestion(
-                    text=template.command,
-                    description=template.description,
-                    suggestion_type=SuggestionType.COMMAND,
-                    context=template.context,
-                    score=score,
-                    icon="application-x-executable-symbolic",
-                    parameters=template.parameters,
-                    examples=template.examples
-                )
-                suggestions.append(suggestion)
-        
-        return suggestions
-
-    def _get_package_suggestions(self, query: str, context: CommandContext) -> List[CommandSuggestion]:
-        if context not in [CommandContext.INSTALL, CommandContext.REMOVE, CommandContext.SEARCH]:
-            return []
-        
-        suggestions = []
-        
+    def get_bool(self, key: str) -> bool:
         try:
-            import subprocess
-            result = subprocess.run(['paru', '-Ss', query], 
-                                 capture_output=True, text=True, timeout=5)
-            if result.returncode == 0:
-                lines = result.stdout.split('\n')
-                packages = set()
-                
-                for line in lines:
-                    if line.strip() and not line.startswith(' '):
-                        parts = line.split(' ')
-                        if len(parts) >= 2:
-                            package_name = parts[0].split('/')[-1]
-                            if len(package_name) > 0:
-                                packages.add(package_name)
-                
-                for package in list(packages)[:10]:
-                    if query.lower() in package.lower():
-                        score = self._calculate_match_score(query, package)
-                        suggestion = CommandSuggestion(
-                            text=package,
-                            description=f"Package: {package}",
-                            suggestion_type=SuggestionType.PACKAGE,
-                            context=context,
-                            score=score,
-                            icon="package-x-generic-symbolic"
-                        )
-                        suggestions.append(suggestion)
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.get_boolean(key.replace('.', '-'))
         except Exception:
             pass
         
-        return suggestions
+        return self.fallback_storage.get(key, self._get_default_value(key))
 
-    def _get_file_suggestions(self, query: str, context: CommandContext) -> List[CommandSuggestion]:
-        if context != CommandContext.FILE_OPERATION:
-            return []
-        
-        suggestions = []
-        
+    def set_bool(self, key: str, value: bool) -> bool:
         try:
-            if '/' in query:
-                directory = os.path.dirname(query) or '.'
-                filename = os.path.basename(query)
-            else:
-                directory = '.'
-                filename = query
-            
-            if os.path.exists(directory):
-                for item in os.listdir(directory):
-                    if filename.lower() in item.lower():
-                        full_path = os.path.join(directory, item)
-                        is_dir = os.path.isdir(full_path)
-                        
-                        score = self._calculate_match_score(filename, item)
-                        suggestion = CommandSuggestion(
-                            text=full_path,
-                            description=f"{'Directory' if is_dir else 'File'}: {item}",
-                            suggestion_type=SuggestionType.DIRECTORY if is_dir else SuggestionType.FILE,
-                            context=context,
-                            score=score,
-                            icon="folder-symbolic" if is_dir else "text-x-generic-symbolic"
-                        )
-                        suggestions.append(suggestion)
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.set_boolean(key.replace('.', '-'), value)
         except Exception:
             pass
         
-        return suggestions
+        self.fallback_storage[key] = value
+        self._save_fallback_preferences()
+        self.emit('preference-changed', key, value)
+        return True
 
-    def _get_history_suggestions(self, query: str, context: CommandContext) -> List[CommandSuggestion]:
-        suggestions = []
+    def get_string(self, key: str) -> str:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.get_string(key.replace('.', '-'))
+        except Exception:
+            pass
         
-        for entry in reversed(self.command_history[-50:]):
-            command = entry['command']
-            if query.lower() in command.lower():
-                if context == CommandContext.GENERAL or entry['context'] == context:
-                    score = self._calculate_match_score(query, command)
-                    score *= 0.8
-                    
-                    suggestion = CommandSuggestion(
-                        text=command,
-                        description=f"Recent: {command}",
-                        suggestion_type=SuggestionType.HISTORY,
-                        context=entry['context'],
-                        score=score,
-                        icon="document-open-recent-symbolic"
-                    )
-                    suggestions.append(suggestion)
-        
-        return suggestions
+        return self.fallback_storage.get(key, self._get_default_value(key))
 
-    def _get_contextual_suggestions(self, query: str, context: CommandContext) -> List[CommandSuggestion]:
-        suggestions = []
+    def set_string(self, key: str, value: str) -> bool:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.set_string(key.replace('.', '-'), value)
+        except Exception:
+            pass
         
-        contextual_commands = {
-            CommandContext.INSTALL: [
-                ("install package", "Install a new package", "paru -S "),
-                ("install from file", "Install from local package file", "paru -U "),
-                ("install dependencies", "Install build dependencies", "paru -S --asdeps "),
-                ("install needed", "Install only needed packages", "paru -S --needed ")
-            ],
-            CommandContext.REMOVE: [
-                ("remove package", "Remove an installed package", "paru -R "),
-                ("remove with dependencies", "Remove package and unused dependencies", "paru -Rs "),
-                ("remove configuration", "Remove package with configuration files", "paru -Rn "),
-                ("remove cascade", "Remove package and all dependencies", "paru -Rc ")
-            ],
-            CommandContext.SEARCH: [
-                ("search packages", "Search in package repositories", "paru -Ss "),
-                ("search installed", "Search installed packages", "paru -Qs "),
-                ("search files", "Search files in packages", "paru -Fl "),
-                ("search info", "Show package information", "paru -Si ")
-            ],
-            CommandContext.UPDATE: [
-                ("update system", "Update all packages", "paru -Syu"),
-                ("update aur", "Update AUR packages only", "paru -Sua"),
-                ("update database", "Update package database", "paru -Sy"),
-                ("update devel", "Update development packages", "paru -Syu --devel")
-            ],
-            CommandContext.BUILD: [
-                ("build package", "Build package from PKGBUILD", "makepkg -s"),
-                ("build and install", "Build and install package", "makepkg -si"),
-                ("clean build", "Clean build with force", "makepkg -scf"),
-                ("build repackage", "Build and repackage", "makepkg -sr")
-            ],
-            CommandContext.FILE_OPERATION: [
-                ("list files", "List directory contents", "ls -la"),
-                ("change directory", "Change to directory", "cd "),
-                ("copy files", "Copy files or directories", "cp -r "),
-                ("move files", "Move or rename files", "mv ")
-            ]
-        }
-        
-        if context in contextual_commands:
-            for cmd_name, description, command in contextual_commands[context]:
-                if query.lower() in cmd_name.lower() or query.lower() in command.lower():
-                    score = self._calculate_match_score(query, cmd_name)
-                    suggestion = CommandSuggestion(
-                        text=command + query if command.endswith(' ') else command,
-                        description=description,
-                        suggestion_type=SuggestionType.CONTEXT,
-                        context=context,
-                        score=score,
-                        icon="system-run-symbolic"
-                    )
-                    suggestions.append(suggestion)
-        
-        return suggestions
+        self.fallback_storage[key] = value
+        self._save_fallback_preferences()
+        self.emit('preference-changed', key, value)
+        return True
 
-    def _get_recent_suggestions(self) -> List[CommandSuggestion]:
-        suggestions = []
-        recent_commands = list(reversed(self.command_history[-10:]))
+    def get_int(self, key: str) -> int:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.get_int(key.replace('.', '-'))
+        except Exception:
+            pass
         
-        for i, entry in enumerate(recent_commands):
-            suggestion = CommandSuggestion(
-                text=entry['command'],
-                description=f"Recent: {entry['command']}",
-                suggestion_type=SuggestionType.HISTORY,
-                context=entry['context'],
-                score=1.0 - (i * 0.1),
-                icon="document-open-recent-symbolic"
-            )
-            suggestions.append(suggestion)
-        
-        return suggestions
+        return self.fallback_storage.get(key, self._get_default_value(key))
 
-    def _calculate_match_score(self, query: str, text: str) -> float:
-        query = query.lower()
-        text = text.lower()
+    def set_int(self, key: str, value: int) -> bool:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.set_int(key.replace('.', '-'), value)
+        except Exception:
+            pass
         
-        if query == text:
-            return 1.0
-        
-        if text.startswith(query):
-            return 0.9
-        
-        if query in text:
-            position_score = 1.0 - (text.index(query) / len(text))
-            return 0.7 * position_score
-        
-        common_chars = set(query) & set(text)
-        if common_chars:
-            return 0.3 * (len(common_chars) / len(query))
-        
-        return 0.0
+        self.fallback_storage[key] = value
+        self._save_fallback_preferences()
+        self.emit('preference-changed', key, value)
+        return True
 
-    def _score_and_sort_suggestions(self, suggestions: List[CommandSuggestion], query: str) -> List[CommandSuggestion]:
-        for suggestion in suggestions:
-            base_score = suggestion.score
-            
-            type_bonus = {
-                SuggestionType.COMMAND: 0.2,
-                SuggestionType.PACKAGE: 0.15,
-                SuggestionType.HISTORY: 0.1,
-                SuggestionType.CONTEXT: 0.05,
-                SuggestionType.FILE: 0.0,
-                SuggestionType.DIRECTORY: 0.05,
-                SuggestionType.OPTION: 0.08,
-                SuggestionType.PARAMETER: 0.08
-            }.get(suggestion.suggestion_type, 0.0)
-            
-            context_bonus = 0.1 if suggestion.context == self.current_context else 0.0
-            
-            suggestion.score = base_score + type_bonus + context_bonus
+    def get_float(self, key: str) -> float:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.get_double(key.replace('.', '-'))
+        except Exception:
+            pass
         
-        return sorted(suggestions, key=lambda s: s.score, reverse=True)
+        return self.fallback_storage.get(key, self._get_default_value(key))
 
-    def add_to_history(self, command: str, success: bool = True):
-        entry = {
-            'command': command,
-            'timestamp': datetime.now(),
-            'context': self.current_context,
-            'success': success
-        }
+    def set_float(self, key: str, value: float) -> bool:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.set_double(key.replace('.', '-'), value)
+        except Exception:
+            pass
         
-        self.command_history.append(entry)
+        self.fallback_storage[key] = value
+        self._save_fallback_preferences()
+        self.emit('preference-changed', key, value)
+        return True
+
+    def get_list(self, key: str) -> List[str]:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.get_strv(key.replace('.', '-'))
+        except Exception:
+            pass
         
-        if len(self.command_history) > 1000:
-            self.command_history = self.command_history[-1000:]
+        return self.fallback_storage.get(key, self._get_default_value(key))
+
+    def set_list(self, key: str, value: List[str]) -> bool:
+        try:
+            if self.settings and self.settings.list_keys() and key.replace('.', '-') in self.settings.list_keys():
+                return self.settings.set_strv(key.replace('.', '-'), value)
+        except Exception:
+            pass
         
-        self._save_history()
-        self.suggestion_cache.clear()
-        self.emit('history-updated')
+        self.fallback_storage[key] = value
+        self._save_fallback_preferences()
+        self.emit('preference-changed', key, value)
+        return True
 
-    def set_context(self, context: CommandContext):
-        if self.current_context != context:
-            self.current_context = context
-            self.suggestion_cache.clear()
-            self.emit('context-changed', context.value)
+    def get_preference(self, key: str, default_value: Any = None) -> Any:
+        definition = self.preference_definitions.get(key)
+        if not definition:
+            return default_value
 
-    def get_context(self) -> CommandContext:
-        return self.current_context
+        if definition.value_type == bool:
+            return self.get_bool(key)
+        elif definition.value_type == int:
+            return self.get_int(key)
+        elif definition.value_type == float:
+            return self.get_float(key)
+        elif definition.value_type == list:
+            return self.get_list(key)
+        else:
+            return self.get_string(key)
 
-    def clear_history(self):
-        self.command_history.clear()
-        self._save_history()
-        self.suggestion_cache.clear()
-        self.emit('history-updated')
+    def set_preference(self, key: str, value: Any) -> bool:
+        definition = self.preference_definitions.get(key)
+        if not definition:
+            return False
 
-    def get_command_completions(self, partial_command: str) -> List[str]:
-        completions = []
-        words = partial_command.split()
-        
-        if len(words) == 1:
-            for template in self.all_commands:
-                if template.command.startswith(partial_command):
-                    completions.append(template.command)
-        elif len(words) > 1:
-            base_command = words[0]
-            for template in self.all_commands:
-                if template.command.startswith(base_command):
-                    for param in template.parameters:
-                        if param.startswith(words[-1]):
-                            completion = ' '.join(words[:-1] + [param])
-                            completions.append(completion)
-        
-        return sorted(set(completions))
+        if definition.value_type == bool:
+            return self.set_bool(key, bool(value))
+        elif definition.value_type == int:
+            return self.set_int(key, int(value))
+        elif definition.value_type == float:
+            return self.set_float(key, float(value))
+        elif definition.value_type == list:
+            return self.set_list(key, list(value))
+        else:
+            return self.set_string(key, str(value))
 
-    def get_parameter_suggestions(self, command: str) -> List[str]:
-        for template in self.all_commands:
-            if command.startswith(template.command):
-                return template.parameters
+    def get_simplified_mode(self) -> bool:
+        return self.get_preference('general.simplified_mode', True)
+
+    def set_simplified_mode(self, value: bool) -> bool:
+        return self.set_preference('general.simplified_mode', value)
+
+    def _get_default_value(self, key: str) -> Any:
+        definition = self.preference_definitions.get(key)
+        return definition.default_value if definition else None
+
+    def _validate_preference(self, key: str, value: Any) -> bool:
+        definition = self.preference_definitions.get(key)
+        if not definition:
+            return False
+
+        if definition.validator:
+            try:
+                if not definition.validator(value):
+                    return False
+            except Exception:
+                return False
+
+        if definition.constraints:
+            try:
+                if 'min' in definition.constraints and value < definition.constraints['min']:
+                    return False
+                if 'max' in definition.constraints and value > definition.constraints['max']:
+                    return False
+                if 'choices' in definition.constraints and value not in definition.constraints['choices']:
+                    return False
+            except Exception:
+                return False
+
+        return True
+
+    def get_categories(self) -> Dict[str, PreferenceCategory]:
+        return self.categories.copy()
+
+    def get_preferences_for_category(self, category: str) -> List[str]:
+        if category in self.categories:
+            return self.categories[category].preferences.copy()
         return []
 
-    def validate_command(self, command: str) -> Tuple[bool, str]:
-        command = command.strip()
-        
-        if not command:
-            return False, "Empty command"
-        
-        words = command.split()
-        base_command = words[0]
-        
-        valid_commands = [cmd.command.split()[0] for cmd in self.all_commands]
-        system_commands = ['cd', 'ls', 'pwd', 'mkdir', 'rm', 'cp', 'mv', 'cat', 'grep', 'find']
-        
-        if base_command not in valid_commands and base_command not in system_commands:
-            return False, f"Unknown command: {base_command}"
-        
-        if base_command == 'paru':
-            if len(words) < 2:
-                return False, "Paru requires at least one argument"
-            
-            valid_operations = ['-S', '-R', '-Q', '-Ss', '-Rs', '-Qs', '-Syu', '-U', '-Sua', '-c']
-            operation = words[1]
-            if not any(operation.startswith(op) for op in valid_operations):
-                return False, f"Invalid paru operation: {operation}"
-        
-        return True, "Valid command"
+    def get_preference_definition(self, key: str) -> Optional[PreferenceDefinition]:
+        return self.preference_definitions.get(key)
 
-    def get_command_help(self, command: str) -> Optional[str]:
-        for template in self.all_commands:
-            if command.startswith(template.command):
-                help_text = f"{template.description}\n\n"
-                help_text += f"Usage: {template.command}\n\n"
-                
-                if template.parameters:
-                    help_text += "Parameters:\n"
-                    for param in template.parameters:
-                        help_text += f"  {param}\n"
-                    help_text += "\n"
-                
-                if template.examples:
-                    help_text += "Examples:\n"
-                    for example in template.examples:
-                        help_text += f"  {example}\n"
-                
-                return help_text
+    def has_preference(self, key: str) -> bool:
+        return key in self.preference_definitions
+
+    def reset_preference(self, key: str) -> bool:
+        definition = self.preference_definitions.get(key)
+        if not definition:
+            return False
         
-        return None
+        return self.set_preference(key, definition.default_value)
 
-    def add_custom_command(self, template: CommandTemplate):
-        self.custom_commands[template.command] = template
-        self.all_commands.append(template)
-        self.suggestion_cache.clear()
+    def reset_category(self, category: str) -> bool:
+        if category not in self.categories:
+            return False
+        
+        success = True
+        for key in self.categories[category].preferences:
+            if not self.reset_preference(key):
+                success = False
+        
+        if success:
+            self.emit('category-changed', category)
+        
+        return success
 
-    def remove_custom_command(self, command: str):
-        if command in self.custom_commands:
-            template = self.custom_commands[command]
-            del self.custom_commands[command]
-            if template in self.all_commands:
-                self.all_commands.remove(template)
-            self.suggestion_cache.clear()
+    def reset_all_preferences(self) -> bool:
+        success = True
+        for key in self.preference_definitions.keys():
+            if not self.reset_preference(key):
+                success = False
 
-    def export_settings(self) -> Dict[str, Any]:
-        return {
-            'max_suggestions': self.max_suggestions,
-            'min_query_length': self.min_query_length,
-            'cache_timeout': self.cache_timeout,
-            'current_context': self.current_context.value,
-            'custom_commands': {
-                cmd: {
-                    'command': template.command,
-                    'description': template.description,
-                    'parameters': template.parameters,
-                    'examples': template.examples,
-                    'context': template.context.value,
-                    'aliases': template.aliases
-                }
-                for cmd, template in self.custom_commands.items()
+        if success:
+            self.emit('preferences-reset')
+
+        return success
+
+    def export_preferences(self, file_path: str) -> bool:
+        try:
+            export_data = {
+                'version': '1.0',
+                'preferences': {}
             }
-        }
 
-    def import_settings(self, settings: Dict[str, Any]):
-        self.max_suggestions = settings.get('max_suggestions', 20)
-        self.min_query_length = settings.get('min_query_length', 1)
-        self.cache_timeout = settings.get('cache_timeout', 300)
-        self.current_context = CommandContext(settings.get('current_context', 'general'))
-        
-        custom_commands = settings.get('custom_commands', {})
-        for cmd, data in custom_commands.items():
-            template = CommandTemplate(
-                command=data['command'],
-                description=data['description'],
-                parameters=data['parameters'],
-                examples=data['examples'],
-                context=CommandContext(data['context']),
-                aliases=data.get('aliases', [])
-            )
-            self.add_custom_command(template)
+            for key in self.preference_definitions.keys():
+                export_data['preferences'][key] = self.get_preference(key)
 
-    def get_statistics(self) -> Dict[str, Any]:
-        total_commands = len(self.command_history)
-        successful_commands = sum(1 for entry in self.command_history if entry['success'])
-        failed_commands = sum(1 for entry in self.command_history if not entry['success'])
-        
-        return {
-            'total_commands': total_commands,
-            'successful_commands': successful_commands,
-            'failed_commands': failed_commands,
-            'success_rate': successful_commands / total_commands if total_commands > 0 else 0,
-            'cache_size': len(self.suggestion_cache),
-            'custom_commands': len(self.custom_commands),
-            'contexts_used': len(set(entry['context'] for entry in self.command_history)),
-            'most_used_commands': self._get_most_used_commands(5),
-            'recent_activity': len([e for e in self.command_history 
-                                 if datetime.now() - e['timestamp'] < timedelta(days=7)])
-        }
+            with open(file_path, 'w') as f:
+                json.dump(export_data, f, indent=2)
 
-    def _get_most_used_commands(self, limit: int = 5) -> List[Tuple[str, int]]:
-        from collections import Counter
-        commands = [entry['command'].split()[0] for entry in self.command_history]
-        return Counter(commands).most_common(limit)
-
-    def clear_cache(self):
-        self.suggestion_cache.clear()
-
-    def _get_package_completions(self, query: str) -> List[str]:
-        try:
-            import subprocess
-            result = subprocess.run(['paru', '-Ss', query], 
-                                 capture_output=True, text=True, timeout=3)
-            if result.returncode == 0:
-                packages = []
-                for line in result.stdout.split('\n')[:20]:
-                    if line.strip() and not line.startswith(' '):
-                        parts = line.split(' ')
-                        if len(parts) >= 1:
-                            package_name = parts[0].split('/')[-1]
-                            if package_name:
-                                packages.append(package_name)
-                return packages
+            self.emit('preferences-exported', file_path)
+            return True
         except Exception:
-            pass
-        return []
+            return False
 
-    def _get_file_completions(self, query: str) -> List[str]:
+    def import_preferences(self, file_path: str) -> bool:
         try:
-            if os.path.isdir(query):
-                return [os.path.join(query, f) for f in os.listdir(query)[:20]]
-            else:
-                dirname = os.path.dirname(query) or '.'
-                basename = os.path.basename(query)
-                if os.path.isdir(dirname):
-                    return [
-                        os.path.join(dirname, f) 
-                        for f in os.listdir(dirname)[:20]
-                        if f.startswith(basename)
-                    ]
+            with open(file_path, 'r') as f:
+                import_data = json.load(f)
+
+            if 'preferences' not in import_data:
+                return False
+
+            for key, value in import_data['preferences'].items():
+                if self.has_preference(key):
+                    self.set_preference(key, value)
+
+            self.emit('preferences-imported')
+            return True
         except Exception:
-            pass
-        return []
+            return False
 
-    def _get_directory_completions(self, query: str) -> List[str]:
-        completions = self._get_file_completions(query)
-        return [path for path in completions if os.path.isdir(path)]
+    def get_preference_summary(self) -> Dict[str, Dict[str, Any]]:
+        summary = {}
+        for category_name, category in self.categories.items():
+            summary[category_name] = {
+                'title': category.title,
+                'description': category.description,
+                'preferences': {}
+            }
 
-    def _get_command_completions(self, query: str) -> List[str]:
-        return [cmd.command for cmd in self.all_commands if cmd.command.startswith(query)]
+            for key in category.preferences:
+                definition = self.preference_definitions.get(key)
+                if definition:
+                    summary[category_name]['preferences'][key] = {
+                        'title': definition.title,
+                        'description': definition.description,
+                        'value': self.get_preference(key),
+                        'default': definition.default_value,
+                        'type': definition.value_type.__name__
+                    }
 
-    def _get_option_completions(self, query: str) -> List[str]:
-        options = set()
-        for template in self.all_commands:
-            options.update(template.parameters)
-        return [opt for opt in options if opt.startswith(query)]
-
-    def get_smart_suggestions(self, query: str, file_path: Optional[str] = None) -> List[CommandSuggestion]:
-        suggestions = []
-        
-        if file_path:
-            if file_path.endswith('PKGBUILD'):
-                build_suggestions = [
-                    CommandSuggestion(
-                        text="makepkg -si",
-                        description="Build and install package",
-                        suggestion_type=SuggestionType.CONTEXT,
-                        context=CommandContext.BUILD,
-                        score=0.9,
-                        icon="system-run-symbolic"
-                    ),
-                    CommandSuggestion(
-                        text="makepkg -scf",
-                        description="Clean build with force",
-                        suggestion_type=SuggestionType.CONTEXT,
-                        context=CommandContext.BUILD,
-                        score=0.8,
-                        icon="system-run-symbolic"
-                    )
-                ]
-                suggestions.extend(build_suggestions)
-            elif file_path.endswith('.pkg.tar.zst'):
-                install_suggestion = CommandSuggestion(
-                    text=f"paru -U {os.path.basename(file_path)}",
-                    description="Install local package",
-                    suggestion_type=SuggestionType.CONTEXT,
-                    context=CommandContext.INSTALL,
-                    score=0.9,
-                    icon="package-x-generic-symbolic"
-                )
-                suggestions.append(install_suggestion)
-        
-        regular_suggestions = self.get_suggestions(query)
-        suggestions.extend(regular_suggestions)
-        
-        return self._score_and_sort_suggestions(suggestions, query)[:self.max_suggestions]
-
-    def execute_command_with_feedback(self, command: str, callback=None):
-        self.add_to_history(command, True)
-        self.emit('command-executed', command)
-        if callback:
-            GLib.idle_add(callback, command)
+        return summary
