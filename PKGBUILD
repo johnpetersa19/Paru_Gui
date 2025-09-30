@@ -1,10 +1,13 @@
+# Maintainer: John Peter <johnpetersa19@gmail.com>
+
 pkgname=paru-gui
 pkgver=2.7.0
 pkgrel=1
-pkgdesc="Manage AUR packages with ease and security"
+pkgdesc="A graphical user interface to manage AUR packages with ease and security"
 arch=('any')
 url="https://github.com/johnpetersa19/Paru_Gui"
 license=('GPL3')
+
 depends=(
     'python>=3.8'
     'python-requests>=2.25.0'
@@ -36,36 +39,25 @@ optdepends=(
     'python-black: for code formatting'
     'python-mypy: for type checking'
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnpetersa19/Paru_Gui/archive/v${pkgver}.tar.gz")
-sha256sums=('SKIP')
-validpgpkeys=()
+
+source=("$pkgname-$pkgver.tar.gz::https://github.com/johnpetersa19/Paru_Gui/archive/v$pkgver.tar.gz")
+sha256sums=('PLACEHOLDER_CHECKSUM_MUST_BE_GENERATED')
 
 prepare() {
-    cd "Paru_Gui-${pkgver}"
+    cd "Paru_Gui-$pkgver"
 }
 
 build() {
-    cd "Paru_Gui-${pkgver}"
-    arch-meson . build \
-        --prefix=/usr \
-        --libexecdir=lib \
-        --sbindir=bin \
-        --buildtype=plain \
-        --wrap-mode=nodownload \
-        -D b_lto=true \
-        -D b_pie=true
+    arch-meson "Paru_Gui-$pkgver" build --prefix=/usr
     meson compile -C build
 }
 
 check() {
-    cd "Paru_Gui-${pkgver}"
     meson test -C build --print-errorlogs
 }
 
 package() {
-    cd "Paru_Gui-${pkgver}"
-    meson install -C build --destdir="${pkgdir}"
-
-    install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
-    install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    DESTDIR="$pkgdir" meson install -C build
+    install -Dm644 "Paru_Gui-$pkgver/COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+    install -Dm644 "Paru_Gui-$pkgver/README.md" "$pkgdir/usr/share/doc/$pkgname/README.md"
 }
