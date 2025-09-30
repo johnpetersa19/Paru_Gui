@@ -4,7 +4,7 @@ build/
 *.cmb
 
 # Meson / Flatpak
-*.in
+.in
 
 # Arquivos de cache e logs
 *.log

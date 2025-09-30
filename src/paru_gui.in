@@ -1,0 +1,16 @@
+#!/usr/bin/env @PYTHON@
+
+import sys
+import os
+
+
+sys.path.insert(0, '@pkgdatadir@')
+
+
+os.environ['PARU_GUI_VERSION'] = '@VERSION@'
+
+
+from paru_gui.main import main
+
+if __name__ == "__main__":
+    sys.exit(main())

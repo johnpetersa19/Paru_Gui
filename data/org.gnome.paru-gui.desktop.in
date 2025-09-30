@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Paru GUI
+GenericName=AUR Package Manager
+Comment=Manage Arch User Repository (AUR) packages with ease and security
+Exec=paru_gui
+Icon=org.gnome.paru-gui
+Terminal=false
+Categories=GTK;GNOME;System;PackageManager;
+Keywords=AUR;Package;Manager;Arch Linux;Paru;
+StartupNotify=true
+DBusActivatable=true
