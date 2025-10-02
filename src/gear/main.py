@@ -8,22 +8,19 @@ from pathlib import Path
 
 def check_dependencies():
     missing_deps = []
-
     try:
         import requests
     except ImportError:
         missing_deps.append('requests')
-
     try:
         import gi
     except ImportError:
         missing_deps.append('PyGObject')
-
     if missing_deps:
         print("Missing required Python dependencies:")
         for dep in missing_deps:
             print(f"  - {dep}")
-        print("\nTo install:")
+        print("To install:")
         print(f"  pip install {' '.join(missing_deps)}")
         print("  or")
         print(f"  sudo pacman -S {' '.join(f'python-{dep.lower()}' for dep in missing_deps)}")
@@ -34,7 +31,6 @@ check_dependencies()
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-
 from gi.repository import Gtk, Gio, Adw, GLib
 
 project_root = Path(__file__).parent.parent.parent
@@ -42,12 +38,8 @@ sys.path.insert(0, str(project_root))
 
 def register_gresource():
     try:
-        pkgdatadir = Path(__file__).resolve().parent.parent
-        res_path = pkgdatadir / 'paru_gui.gresource'
-
-        if not res_path.exists():
-            res_path = Path(__file__).parent.parent.parent / 'builddir' / 'paru_gui.gresource'
-
+        pkgdatadir_path = Path(__file__).resolve().parent.parent.parent
+        res_path = pkgdatadir_path / 'paru_gui.gresource'
         if res_path.exists():
             res = Gio.Resource.load(str(res_path))
             Gio.resources_register(res)
@@ -55,7 +47,6 @@ def register_gresource():
         else:
             logging.getLogger("ParuGUI").error(f"FATAL: GResource file not found at: {res_path}")
             raise FileNotFoundError(f"GResource file not found at {res_path}")
-
     except Exception as e:
         logging.getLogger("ParuGUI").error(f"FATAL: Failed to register GResource: {e}")
         raise
@@ -65,6 +56,56 @@ try:
 except Exception:
     sys.exit(1)
 
+def import_window_module():
+    import sys
+    from pathlib import Path
+    try:
+        from window import ParuGUIWindow
+        return ParuGUIWindow
+    except ImportError:
+        pass
+    try:
+        current_dir = Path(__file__).parent
+        if str(current_dir) not in sys.path:
+            sys.path.insert(0, str(current_dir))
+        from window import ParuGUIWindow
+        return ParuGUIWindow
+    except ImportError:
+        pass
+    try:
+        root_dir = Path(__file__).parent.parent.parent
+        if str(root_dir) not in sys.path:
+            sys.path.insert(0, str(root_dir))
+        from window import ParuGUIWindow
+        return ParuGUIWindow
+    except ImportError:
+        pass
+    try:
+        flatpak_path = Path('/app/share/paru-gui/paru_gui')
+        if flatpak_path.exists() and str(flatpak_path) not in sys.path:
+            sys.path.insert(0, str(flatpak_path))
+        from window import ParuGUIWindow
+        return ParuGUIWindow
+    except ImportError:
+        pass
+    try:
+        flatpak_path = Path.home() / '.var' / 'app' / 'org.gnome.paru-gui' / 'data' / 'paru-gui'
+        if flatpak_path.exists() and str(flatpak_path) not in sys.path:
+            sys.path.insert(0, str(flatpak_path))
+        from window import ParuGUIWindow
+        return ParuGUIWindow
+    except ImportError:
+        pass
+    try:
+        pkgdatadir = os.environ.get('PKGDATADIR')
+        if pkgdatadir and os.path.exists(os.path.join(pkgdatadir, 'window.py')):
+            if pkgdatadir not in sys.path:
+                sys.path.insert(0, pkgdatadir)
+            from window import ParuGUIWindow
+            return ParuGUIWindow
+    except ImportError:
+        pass
+    raise ImportError("Unable to import ParuGUIWindow. Please check the installation.")
 
 class ParuGUIApplication(Adw.Application):
     def __init__(self):
@@ -72,7 +113,6 @@ class ParuGUIApplication(Adw.Application):
             application_id="org.gnome.paru-gui",
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS
         )
-
         self.window = None
         self.error_handler = None
         self.preferences_manager = None
@@ -85,7 +125,6 @@ class ParuGUIApplication(Adw.Application):
         self.file_utils = None
         self.pkgbuild_analyzer = None
         self.thread_pool_executor = None
-
         self._setup_logging()
         self._setup_signal_handlers()
         self._setup_actions()
@@ -102,7 +141,6 @@ class ParuGUIApplication(Adw.Application):
         def signal_handler(signum, frame):
             self.logger.info(f"Received signal {signum}, shutting down gracefully")
             self.quit()
-
         signal.signal(signal.SIGINT, signal_handler)
         signal.signal(signal.SIGTERM, signal_handler)
 
@@ -117,7 +155,6 @@ class ParuGUIApplication(Adw.Application):
             from .terminal_manager import TerminalManager
             from .file_utils import FileUtils
             from .pkgbuild_analyzer import PKGBUILDAnalyzer
-
             self.thread_pool_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ParuGUI")
             self.error_handler = ErrorHandler()
             self.preferences_manager = PreferencesManager()
@@ -128,7 +165,6 @@ class ParuGUIApplication(Adw.Application):
             self.terminal_manager = TerminalManager()
             self.file_utils = FileUtils()
             self.pkgbuild_analyzer = PKGBUILDAnalyzer()
-
             self.logger.info("All managers initialized successfully")
         except Exception as e:
             self.logger.error(f"Failed to initialize managers: {e}")
@@ -152,7 +188,6 @@ class ParuGUIApplication(Adw.Application):
             ("undo", self._on_undo_action, ["<primary>z"]),
             ("redo", self._on_redo_action, ["<primary><shift>z"]),
         ]
-
         for name, callback, accelerators in actions:
             action = Gio.SimpleAction.new(name, None)
             action.connect("activate", callback)
@@ -169,7 +204,6 @@ class ParuGUIApplication(Adw.Application):
                 css_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
-
             image_fixes_provider = Gtk.CssProvider()
             image_fixes_provider.load_from_resource("/org/gnome/paru-gui/ui/image_fixes.css")
             Gtk.StyleContext.add_provider_for_display(
@@ -177,7 +211,6 @@ class ParuGUIApplication(Adw.Application):
                 image_fixes_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
-
         except Exception as e:
             self.logger.warning(f"Could not load CSS: {e}")
 
@@ -193,39 +226,33 @@ class ParuGUIApplication(Adw.Application):
 
     def do_shutdown(self):
         self.logger.info("Application shutdown")
-
         if self.thread_pool_executor:
             try:
                 self.thread_pool_executor.shutdown(wait=False)
                 self.logger.info("Thread pool executor shutdown completed")
             except Exception as e:
                 self.logger.error(f"Error during thread pool shutdown: {e}")
-
         if self.history_manager and hasattr(self.history_manager, 'cleanup'):
             try:
                 self.history_manager.cleanup()
             except Exception as e:
                 self.logger.error(f"Error during history manager cleanup: {e}")
-
         if self.cache_manager and hasattr(self.cache_manager, 'cleanup'):
             try:
                 self.cache_manager.cleanup()
             except Exception as e:
                 self.logger.error(f"Error during cache manager cleanup: {e}")
-
         if self.terminal_manager and hasattr(self.terminal_manager, 'cleanup'):
             try:
                 self.terminal_manager.cleanup()
             except Exception as e:
                 self.logger.error(f"Error during terminal manager cleanup: {e}")
-
         Adw.Application.do_shutdown(self)
 
     def _create_main_window(self):
         try:
-            from window import ParuGUIWindow
+            ParuGUIWindow = import_window_module()
             from .tour_guide import TourGuide
-
             self.window = ParuGUIWindow(
                 application=self,
                 managers={
@@ -241,17 +268,13 @@ class ParuGUIApplication(Adw.Application):
                     'thread_pool_executor': self.thread_pool_executor,
                 }
             )
-
             builder = Gtk.Builder.new_from_resource('/org/gnome/paru-gui/ui/window.ui')
             self.tour_guide = TourGuide(self.window, builder, self.preferences_manager)
             self._setup_css_provider()
             self._connect_window_signals()
-
             if self.preferences_manager and self.preferences_manager.get_preference('show_tour_on_startup', True):
                 self.tour_guide.start_tour(self.window)
-
             self.logger.info("Main window created successfully")
-
         except Exception as e:
             self.logger.error(f"Failed to create main window: {e}")
             if self.error_handler:
@@ -275,11 +298,9 @@ class ParuGUIApplication(Adw.Application):
             dialog.set_response_appearance("quit", Adw.ResponseAppearance.DESTRUCTIVE)
             dialog.set_default_response("cancel")
             dialog.set_close_response("cancel")
-
             dialog.connect("response", self._on_quit_dialog_response)
             dialog.present()
             return True
-
         return False
 
     def _on_quit_dialog_response(self, dialog, response):
@@ -307,7 +328,6 @@ class ParuGUIApplication(Adw.Application):
             issue_url="https://github.com/johnpetersa19/Paru_Gui/issues",
             support_url="https://github.com/johnpetersa19/Paru_Gui/discussions",
         )
-
         about_window.set_comments("Manage AUR packages with ease and security")
         about_window.present()
 
@@ -316,8 +336,7 @@ class ParuGUIApplication(Adw.Application):
             self.window.show_preferences()
 
     def _on_new_window_action(self, action, param):
-        from window import ParuGUIWindow
-
+        ParuGUIWindow = import_window_module()
         new_window = ParuGUIWindow(
             application=self,
             managers={
@@ -405,28 +424,22 @@ class ParuGUIApplication(Adw.Application):
         if '--verbose' in args or '-v' in args:
             logging.getLogger().setLevel(logging.DEBUG)
             self.logger.debug("Verbose logging enabled")
-
         if '--no-tour' in args:
             if self.preferences_manager:
                 self.preferences_manager.set_preference('show_tour_on_startup', False)
-
         if '--reset-preferences' in args:
             if self.preferences_manager:
                 self.preferences_manager.reset_to_defaults()
                 self.logger.info("Preferences reset to defaults")
-
         if '--safe-mode' in args:
             if self.sandbox_manager:
                 self.sandbox_manager.enable_safe_mode()
                 self.logger.info("Safe mode enabled")
 
-
 def main():
     app = ParuGUIApplication()
-
     if len(sys.argv) > 1:
         app.handle_command_line_args(sys.argv[1:])
-
     try:
         return app.run(sys.argv)
     except KeyboardInterrupt:
@@ -438,7 +451,6 @@ def main():
         else:
             print(f"Critical error: {e}", file=sys.stderr)
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

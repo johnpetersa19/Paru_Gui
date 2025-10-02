@@ -17,6 +17,7 @@ conf = configuration_data()
 conf.set('pkgdatadir', pkgdatadir)
 conf.set('PYTHON', py_installation.full_path())
 conf.set('VERSION', meson.project_version())
+conf.set('moduledir', pkgdatadir / meson.project_name())
 
 configure_file(
   input: 'src/paru_gui.in',

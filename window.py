@@ -9,6 +9,32 @@ from pathlib import Path
 
 from gi.repository import Gtk, Gio, Adw, GLib, GObject, Pango, Gdk
 
+try:
+    # Try relative imports first (for installed version)
+    from .managers.ui_manager import UIManager
+    from .managers.content_view_manager import ContentViewManager
+    from .managers.search_manager import SearchManager
+    from .managers.file_operations import FileOperationsManager
+    from .managers.preferences_dialog_manager import PreferencesDialogManager
+    from .components.help_overlay import HelpOverlay
+    from .components.file_chooser_dialog import FileChooserDialog
+    from .screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
+    from .screens.welcome_screen import WelcomeScreen
+    from .screens.content_view import ContentView
+    from .screens.upstream_update import UpstreamUpdate
+except ImportError:
+    # Fall back to absolute imports for development environment
+    from src.ui.managers.ui_manager import UIManager
+    from src.ui.managers.content_view_manager import ContentViewManager
+    from src.ui.managers.search_manager import SearchManager
+    from src.ui.managers.file_operations import FileOperationsManager
+    from src.ui.managers.preferences_dialog_manager import PreferencesDialogManager
+    from src.ui.components.help_overlay import HelpOverlay
+    from src.ui.components.file_chooser_dialog import FileChooserDialog
+    from src.ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
+    from src.ui.screens.welcome_screen import WelcomeScreen
+    from src.ui.screens.content_view import ContentView
+    from src.ui.screens.upstream_update import UpstreamUpdate
 
 @Gtk.Template(resource_path='/org/gnome/paru-gui/ui/window.ui')
 class ParuGUIWindow(Gtk.ApplicationWindow):
@@ -86,14 +112,6 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
 
     def _init_managers(self):
         try:
-            from src.ui.managers.ui_manager import UIManager
-            from src.ui.managers.content_view_manager import ContentViewManager
-            from src.ui.managers.search_manager import SearchManager
-            from src.ui.managers.file_operations import FileOperationsManager
-            from src.ui.managers.preferences_dialog_manager import PreferencesDialogManager
-            from src.ui.components.help_overlay import HelpOverlay
-            from src.ui.components.file_chooser_dialog import FileChooserDialog
-
             builder = Gtk.Builder.new_from_resource('/org/gnome/paru-gui/ui/window.ui')
 
             self.ui_manager = UIManager(
@@ -172,6 +190,10 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
     def _load_recent_directories(self):
         if not self.preferences_manager:
             return
+
+        # Ensure the schema has the required key
+        if not self.preferences_manager.get_preference('show_tour_on_startup', None):
+            self.preferences_manager.set_preference('show_tour_on_startup', True)
 
         recent_dirs = self.preferences_manager.get_preference('recent-directories', [])
 
@@ -408,8 +430,6 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
             self.help_overlay.show_help_overlay(self)
 
     def show_pkgbuild_review(self, pkgbuild_path):
-        from src.ui.screens.pkgbuild_review_dialog import PKGBUILDReviewDialog
-
         dialog = PKGBUILDReviewDialog(
             parent=self,
             pkgbuild_path=pkgbuild_path,
@@ -418,14 +438,10 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
         dialog.present()
 
     def show_welcome_screen(self):
-        from src.ui.screens.welcome_screen import WelcomeScreen
-
         if self.ui_manager:
             self.ui_manager.show_welcome_screen()
 
     def show_content_view(self, directory_path=None):
-        from src.ui.screens.content_view import ContentView
-
         if directory_path:
             self._load_directory(directory_path)
         elif self.ui_manager:
@@ -478,11 +494,8 @@ class ParuGUIWindow(Gtk.ApplicationWindow):
             self.logger.warning(f"Paste operation failed: {e}")
 
     def show_upstream_updates(self):
-        from src.ui.screens.upstream_update import UpstreamUpdate
-        from src.ui.managers.ui_manager import ViewType
-
         if self.ui_manager:
-            self.ui_manager.show_view(ViewType.PROCESSING)
+            self.ui_manager.show_view("PROCESSING")
             GLib.timeout_add_seconds(1, lambda: self._show_upstream_updates_view())
 
     def _show_upstream_updates_view(self):

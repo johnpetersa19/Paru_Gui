@@ -1,103 +1,82 @@
-/* Arquivo CSS corrigido para GTK4 */
+/* CSS CORRECTED FOR GTK4 - image_fixes.css */
+/* Fixes for image display issues in GTK4 */
 
+/* Ensure minimum valid dimensions for all images */
 image {
-  min-width: 16px;
-  min-height: 16px;
-  margin: 2px;
+    min-width: 1px;
+    min-height: 1px;
 }
 
+/* Specific fixes for icons */
+.icon, image.icon {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Button icons */
+button image, menubutton image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* List items with icons */
+listbox image, row image {
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* Avatar images */
+.avatar, image.avatar {
+    min-width: 32px;
+    min-height: 32px;
+}
+
+/* Package icons */
+.package-icon {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+/* Package card images */
 .package-card image {
-  margin: 6px;
+    margin: 6px;
 }
 
+/* Package card container */
 .package-card {
-  padding: 12px;
-  margin: 6px;
-  border-radius: 8px;
-  border: 1px solid alpha(@borders, 0.3);
+    padding: 12px;
+    margin: 6px;
+    border-radius: 8px;
 }
 
+/* Flowbox containers */
 flowbox {
-  padding: 12px;
+    padding: 12px;
 }
 
 flowboxchild {
-  padding: 6px;
-  margin: 3px;
-  border-radius: 8px;
+    padding: 6px;
+    margin: 3px;
+    border-radius: 8px;
 }
 
-flowboxchild:selected {
-  background: alpha(@accent_color, 0.2);
-}
-
-button {
-  min-width: 32px;
-  min-height: 32px;
-  padding: 6px 12px;
-  margin: 2px;
-}
-
-button:hover {
-  background: alpha(@accent_color, 0.1);
-}
-
-label {
-  padding: 3px;
-}
-
-label.title {
-  font-weight: bold;
-}
-
-label.subtitle {
-  color: alpha(@foreground_color, 0.7);
-  font-size: smaller;
-}
-
-scrolledwindow {
-  border: 1px solid alpha(@borders, 0.5);
-  border-radius: 6px;
-}
-
-listbox {
-  border-radius: 6px;
-}
-
-listboxrow {
-  padding: 8px;
-  border-radius: 4px;
-}
-
-listboxrow:hover {
-  background: alpha(@accent_color, 0.1);
-}
-
-listboxrow:selected {
-  background: @accent_color;
-  color: @accent_fg_color;
-}
-
-spinner {
-  min-width: 24px;
-  min-height: 24px;
-}
-
+/* Progress bars */
 progressbar {
-  min-height: 8px;
-  border-radius: 4px;
+    min-height: 8px;
+    border-radius: 4px;
 }
 
+/* Entry fields */
 entry {
-  min-height: 32px;
-  padding: 6px 12px;
-  border-radius: 6px;
+    min-height: 32px;
+    padding: 6px 12px;
+    border-radius: 6px;
 }
 
+/* Tooltips */
 tooltip {
-  padding: 6px 12px;
-  border-radius: 6px;
-  background: alpha(@popover_bg_color, 0.9);
-  color: @popover_fg_color;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: alpha(@popover_bg_color, 0.9);
+    color: @popover_fg_color;
 }
-
