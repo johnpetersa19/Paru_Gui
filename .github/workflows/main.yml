@@ -10,15 +10,15 @@ on:
 
 jobs:
   build:
-    runs-on: archlinux_latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
 
-    - name: Install system dependencies for build and tests
+    steps:
+    - name: Instalar dependências do sistema (pacman)
       run: |
-        sudo pacman -Syu --noconfirm
-        sudo pacman -S --noconfirm \
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm \
           python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
           gtk4 libadwaita glib2 paru \
@@ -26,10 +26,13 @@ jobs:
           meson ninja appstream-glib desktop-file-utils \
           black flake8 mypy python-pytest
 
-    - name: Install project (editable+extras)
+    - name: Instalar dependências Python extras
       run: |
         pip install --upgrade pip
         pip install -e ".[dev,test]"
+
+    - name: Checkout código
+      uses: actions/checkout@v4
 
     - name: Run Black formatter check
       run: black --check src/ window.py
