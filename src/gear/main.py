@@ -4,6 +4,7 @@ import logging
 import signal
 from typing import Optional, List
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 def check_dependencies():
     missing_deps = []
@@ -35,7 +36,9 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
 from gi.repository import Gtk, Gio, Adw, GLib
-from pathlib import Path
+
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 def register_gresource():
     try:
@@ -105,15 +108,15 @@ class ParuGUIApplication(Adw.Application):
 
     def _initialize_managers(self):
         try:
-            from paru_gui.error_handler import ErrorHandler
-            from paru_gui.preferences_manager import PreferencesManager
-            from paru_gui.history_manager import HistoryManager
-            from paru_gui.lazy_cache_manager import LazyCacheManager
-            from paru_gui.sandboxing import SandboxManager
-            from paru_gui.security_analyzer import SecurityAnalyzer
-            from paru_gui.terminal_manager import TerminalManager
-            from paru_gui.file_utils import FileUtils
-            from paru_gui.pkgbuild_analyzer import PKGBUILDAnalyzer
+            from .error_handler import ErrorHandler
+            from .preferences_manager import PreferencesManager
+            from .history_manager import HistoryManager
+            from .lazy_cache_manager import LazyCacheManager
+            from .sandboxing import SandboxManager
+            from .security_analyzer import SecurityAnalyzer
+            from .terminal_manager import TerminalManager
+            from .file_utils import FileUtils
+            from .pkgbuild_analyzer import PKGBUILDAnalyzer
 
             self.thread_pool_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ParuGUI")
             self.error_handler = ErrorHandler()
@@ -220,8 +223,8 @@ class ParuGUIApplication(Adw.Application):
 
     def _create_main_window(self):
         try:
-            from paru_gui.window import ParuGUIWindow
-            from paru_gui.tour_guide import TourGuide
+            from window import ParuGUIWindow
+            from .tour_guide import TourGuide
 
             self.window = ParuGUIWindow(
                 application=self,
@@ -313,7 +316,7 @@ class ParuGUIApplication(Adw.Application):
             self.window.show_preferences()
 
     def _on_new_window_action(self, action, param):
-        from paru_gui.window import ParuGUIWindow
+        from window import ParuGUIWindow
 
         new_window = ParuGUIWindow(
             application=self,

@@ -1,5 +1,3 @@
-# Caminho: /home/john/Projects/Paru_Gui/src/meson.build
-
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 moduledir = pkgdatadir / 'paru_gui'
 gnome = import('gnome')
@@ -28,21 +26,21 @@ resources = gnome.compile_resources('paru_gui',
 )
 
 paru_gui_sources = [
-  'paru_gui/__init__.py',
-  'paru_gui/error_handler.py',
-  'paru_gui/file_utils.py',
-  'paru_gui/history_manager.py',
-  'paru_gui/lazy_cache_manager.py',
-  'paru_gui/main.py',
-  'paru_gui/pkgbuild_analyzer.py',
-  'paru_gui/preferences_manager.py',
-  'paru_gui/sandboxing.py',
-  'paru_gui/security_analyzer.py',
-  'paru_gui/signature_verifier.py',
-  'paru_gui/terminal_manager.py',
-  'paru_gui/tour_guide.py',
-  'paru_gui/upstream_checker.py',
-  'paru_gui/window.py',
+  'gear/__init__.py',
+  'gear/error_handler.py',
+  'gear/file_utils.py',
+  'gear/history_manager.py',
+  'gear/lazy_cache_manager.py',
+  'gear/main.py',
+  'gear/pkgbuild_analyzer.py',
+  'gear/preferences_manager.py',
+  'gear/sandboxing.py',
+  'gear/security_analyzer.py',
+  'gear/signature_verifier.py',
+  'gear/terminal_manager.py',
+  'gear/tour_guide.py',
+  'gear/upstream_checker.py',
+  '../window.py',
   'ui/__init__.py',
   'ui/components/__init__.py',
   'ui/components/command_assistant.py',
@@ -68,7 +66,6 @@ paru_gui_sources = [
   'ui/screens/welcome_screen.py',
 ]
 
-
-
 install_data(paru_gui_sources, install_dir: moduledir)
 install_subdir('ui', install_dir: moduledir)
+install_subdir('gear', install_dir: moduledir)

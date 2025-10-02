@@ -2,6 +2,7 @@ from gi.repository import Gtk, GObject, Adw, Pango
 import os
 from typing import Optional, List, Dict, Any, Tuple, Callable
 
+
 class FileItem:
     def __init__(self, name: str, path: str, is_dir: bool = False, file_type: str = "UNKNOWN"):
         self.name = name
@@ -18,6 +19,7 @@ class FileItem:
             "PATCH": "text-x-patch-symbolic",
             "ADVANCED": "text-x-generic-symbolic"
         }.get(self.file_type, "text-x-generic-symbolic")
+
 
 @Gtk.Template(resource_path="/org/gnome/paru-gui/ui/components/file_chooser_dialog.ui")
 class FileChooserDialog(Adw.Dialog):
@@ -52,13 +54,32 @@ class FileChooserDialog(Adw.Dialog):
         self._active_filters: List[str] = ["PKGBUILD", "PACKAGE", "PATCH", "ADVANCED"]
         self._search_text: str = ""
         self._callback: Optional[Callable] = None
+        self._parent_window = None
 
-        if parent:
-            self.set_transient_for(parent)
-
+        self._set_parent_window(parent)
         self.set_title("Select Folder with Compatible Files")
         self._connect_ui_signals()
         self._initialize_dialog()
+
+    def _set_parent_window(self, parent):
+        if not parent:
+            return
+
+        try:
+            if hasattr(self, 'set_property') and hasattr(parent, 'get_native'):
+                self.set_property("transient-for", parent)
+                return
+        except Exception:
+            pass
+
+        try:
+            if hasattr(self, 'set_transient_for'):
+                self.set_transient_for(parent)
+                return
+        except Exception:
+            pass
+
+        self._parent_window = parent
 
     def _connect_ui_signals(self):
         self.up_button.connect("clicked", self.on_up_button_clicked)
@@ -89,11 +110,23 @@ class FileChooserDialog(Adw.Dialog):
         self._current_folder_path = path
         self.current_path_label.set_label(path)
         self.current_path_label.set_tooltip_text(path)
-        self._mock_scan_folder(path)
+        self._scan_folder(path)
 
     def show_for_selection(self, callback: Callable[[Optional[str]], None]):
         self._callback = callback
-        self.present()
+
+        if self._parent_window:
+            try:
+                import inspect
+                sig = inspect.signature(self.present)
+                if len(sig.parameters) > 0:
+                    self.present(self._parent_window)
+                else:
+                    self.present()
+            except Exception:
+                self.present()
+        else:
+            self.present()
 
     def scan_and_display_files(self, folder_path: str, file_items: Optional[List[FileItem]] = None):
         self._current_folder_path = folder_path
@@ -236,15 +269,7 @@ class FileChooserDialog(Adw.Dialog):
         card_frame.set_tooltip_text(item.path)
         return card_frame
 
-    def _mock_scan_folder(self, folder_path: str):
-        mock_items = [
-            FileItem("parent", os.path.dirname(folder_path), is_dir=True),
-            FileItem("PKGBUILD", os.path.join(folder_path, "PKGBUILD"), file_type="PKGBUILD"),
-            FileItem("package.pkg.tar.zst", os.path.join(folder_path, "package.pkg.tar.zst"), file_type="PACKAGE"),
-            FileItem("fix.patch", os.path.join(folder_path, "fix.patch"), file_type="PATCH"),
-            FileItem("config.conf", os.path.join(folder_path, "config.conf"), file_type="ADVANCED"),
-        ]
-
+    def _scan_folder(self, folder_path: str):
         if os.path.exists(folder_path):
             try:
                 real_items = []
@@ -269,4 +294,11 @@ class FileChooserDialog(Adw.Dialog):
             except PermissionError:
                 self.scan_and_display_files(folder_path, [])
         else:
+            mock_items = [
+                FileItem("parent", os.path.dirname(folder_path), is_dir=True),
+                FileItem("PKGBUILD", os.path.join(folder_path, "PKGBUILD"), file_type="PKGBUILD"),
+                FileItem("package.pkg.tar.zst", os.path.join(folder_path, "package.pkg.tar.zst"), file_type="PACKAGE"),
+                FileItem("fix.patch", os.path.join(folder_path, "fix.patch"), file_type="PATCH"),
+                FileItem("config.conf", os.path.join(folder_path, "config.conf"), file_type="ADVANCED"),
+            ]
             self.scan_and_display_files(folder_path, mock_items)
