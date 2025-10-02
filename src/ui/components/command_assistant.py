@@ -77,7 +77,6 @@ class CommandAssistant(Adw.Window):
         super().__init__(**kwargs)
         self.set_title("Command Assistant")
         self.set_default_size(600, 500)
-        self.set_modal(True)
         self._setup_ui()
 
     def _setup_ui(self):

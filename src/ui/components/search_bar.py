@@ -43,7 +43,6 @@ class ParuSearchBar(Gtk.Box):
             parent_window = self.get_root()
             if parent_window and isinstance(parent_window, Gtk.Window):
                 command_assistant.set_transient_for(parent_window)
-                command_assistant.set_modal(True)
 
             command_assistant.present()
         except Exception:

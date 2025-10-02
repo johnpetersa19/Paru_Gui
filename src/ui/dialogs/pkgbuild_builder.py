@@ -70,7 +70,6 @@ class PKGBUILDBuilder(Adw.Window):
         super().__init__()
         self.set_title("PKGBUILD Builder Wizard")
         self.set_default_size(1000, 800)
-        self.set_modal(True)
         if parent_window:
             self.set_transient_for(parent_window)
         

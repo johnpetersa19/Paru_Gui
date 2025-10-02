@@ -57,7 +57,7 @@ class DependencyAnalysisResult:
     optional_deps_available: List[str] = field(default_factory=list)
 
 
-class PkGBUILDAnalyzer:
+class PKGBUILDAnalyzer:
     """
     Provides specialized analysis capabilities for PKGBUILD files,
     including detailed parsing, diffing against upstream versions,
@@ -79,7 +79,7 @@ class PkGBUILDAnalyzer:
             upstream_checker: An instance of UpstreamChecker to fetch upstream PKGBUILDs.
         """
         self.upstream_checker = upstream_checker
-        logger.info("PkGBUILDAnalyzer initialized.")
+        logger.info("PKGBUILDAnalyzer initialized.")
 
     def parse_pkgbuild_detailed(self, pkgbuild_path: str) -> Optional[PkgbuildMetadata]:
         """
@@ -427,7 +427,7 @@ if __name__ == "__main__":
         f.write(pkgbuild_content_upstream)
 
 
-    analyzer = PkGBUILDAnalyzer()
+    analyzer = PKGBUILDAnalyzer()
 
     print("\n--- Testing parse_pkgbuild_detailed (Local) ---")
     local_metadata = analyzer.parse_pkgbuild_detailed(local_pkgbuild_path)
@@ -484,4 +484,4 @@ if __name__ == "__main__":
     os.remove(upstream_pkgbuild_path)
     os.rmdir(os.path.dirname(upstream_pkgbuild_path)) # Remove dir if empty
 
-    print("\n--- PkGBUILDAnalyzer Test Complete ---")
+    print("\n--- PKGBUILDAnalyzer Test Complete ---")

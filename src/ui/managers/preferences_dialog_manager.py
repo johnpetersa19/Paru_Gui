@@ -39,7 +39,6 @@ class PreferencesDialogManager:
             self.builder.expose_widget(prefs_dialog, 'preferences_dialog')
             
         prefs_dialog.set_transient_for(self.window)
-        prefs_dialog.set_modal(True)
         
         # Connect controls on the dialog instance
         self._connect_preference_controls(prefs_dialog)

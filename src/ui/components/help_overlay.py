@@ -7,7 +7,6 @@ class HelpOverlay(Gtk.ShortcutsWindow):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_modal(True)
         self.set_resizable(True)
         self.set_default_size(800, 600)
         self._connect_signals()

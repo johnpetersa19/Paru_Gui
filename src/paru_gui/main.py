@@ -62,6 +62,7 @@ try:
 except Exception:
     sys.exit(1)
 
+
 class ParuGUIApplication(Adw.Application):
     def __init__(self):
         super().__init__(
@@ -112,7 +113,7 @@ class ParuGUIApplication(Adw.Application):
             from paru_gui.security_analyzer import SecurityAnalyzer
             from paru_gui.terminal_manager import TerminalManager
             from paru_gui.file_utils import FileUtils
-            from paru_gui.pkgbuild_analyzer import PkGBUILDAnalyzer
+            from paru_gui.pkgbuild_analyzer import PKGBUILDAnalyzer
 
             self.thread_pool_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ParuGUI")
             self.error_handler = ErrorHandler()
@@ -123,7 +124,7 @@ class ParuGUIApplication(Adw.Application):
             self.security_analyzer = SecurityAnalyzer()
             self.terminal_manager = TerminalManager()
             self.file_utils = FileUtils()
-            self.pkgbuild_analyzer = PkGBUILDAnalyzer()
+            self.pkgbuild_analyzer = PKGBUILDAnalyzer()
 
             self.logger.info("All managers initialized successfully")
         except Exception as e:
@@ -238,11 +239,12 @@ class ParuGUIApplication(Adw.Application):
                 }
             )
 
-            self.tour_guide = TourGuide(self.window)
+            builder = Gtk.Builder.new_from_resource('/org/gnome/paru-gui/ui/window.ui')
+            self.tour_guide = TourGuide(self.window, builder, self.preferences_manager)
             self._setup_css_provider()
             self._connect_window_signals()
 
-            if self.preferences_manager.get_preference('show_tour_on_startup', True):
+            if self.preferences_manager and self.preferences_manager.get_preference('show_tour_on_startup', True):
                 self.tour_guide.start_tour(self.window)
 
             self.logger.info("Main window created successfully")
@@ -259,7 +261,7 @@ class ParuGUIApplication(Adw.Application):
             self.window.connect('close-request', self._on_window_close_request)
 
     def _on_window_close_request(self, window):
-        if self.preferences_manager.get_preference('confirm_on_quit', False):
+        if self.preferences_manager and self.preferences_manager.get_preference('confirm_on_quit', False):
             dialog = Adw.MessageDialog.new(
                 self.window,
                 "Quit Paru GUI?",
@@ -402,15 +404,19 @@ class ParuGUIApplication(Adw.Application):
             self.logger.debug("Verbose logging enabled")
 
         if '--no-tour' in args:
-            self.preferences_manager.set_preference('show_tour_on_startup', False)
+            if self.preferences_manager:
+                self.preferences_manager.set_preference('show_tour_on_startup', False)
 
         if '--reset-preferences' in args:
-            self.preferences_manager.reset_to_defaults()
-            self.logger.info("Preferences reset to defaults")
+            if self.preferences_manager:
+                self.preferences_manager.reset_to_defaults()
+                self.logger.info("Preferences reset to defaults")
 
         if '--safe-mode' in args:
-            self.sandbox_manager.enable_safe_mode()
-            self.logger.info("Safe mode enabled")
+            if self.sandbox_manager:
+                self.sandbox_manager.enable_safe_mode()
+                self.logger.info("Safe mode enabled")
+
 
 def main():
     app = ParuGUIApplication()
@@ -429,6 +435,7 @@ def main():
         else:
             print(f"Critical error: {e}", file=sys.stderr)
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

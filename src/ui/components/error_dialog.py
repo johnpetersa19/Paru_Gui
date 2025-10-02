@@ -99,7 +99,6 @@ class ErrorDialog(Gtk.Dialog):
         self._app_version: str = "Unknown"
         self._action_handlers: Dict[SuggestedAction, Callable] = {}
         
-        self.set_modal(True)
         self.set_destroy_with_parent(True)
         self.set_default_size(700, 500)
         

@@ -1,34 +1,103 @@
-/* ===========================================
-   PARU GUI - CSS MÍNIMO PARA GNOME NATIVO
-   Apenas correções essenciais, sem customizações visuais
-   Autor: MiniMax Agent
-   =========================================== */
+/* Arquivo CSS corrigido para GTK4 */
 
-/* ===== APENAS CORREÇÕES ESSENCIAIS ===== */
-
-/* Garantir que elementos críticos tenham tamanhos adequados */
-/* Isso previne erros GdkPixbuf mas mantém aparência nativa */
 image {
-    min-width: 16px;
-    min-height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  margin: 2px;
+}
+
+.package-card image {
+  margin: 6px;
+}
+
+.package-card {
+  padding: 12px;
+  margin: 6px;
+  border-radius: 8px;
+  border: 1px solid alpha(@borders, 0.3);
+}
+
+flowbox {
+  padding: 12px;
+}
+
+flowboxchild {
+  padding: 6px;
+  margin: 3px;
+  border-radius: 8px;
+}
+
+flowboxchild:selected {
+  background: alpha(@accent_color, 0.2);
+}
+
+button {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 6px 12px;
+  margin: 2px;
+}
+
+button:hover {
+  background: alpha(@accent_color, 0.1);
+}
+
+label {
+  padding: 3px;
+}
+
+label.title {
+  font-weight: bold;
+}
+
+label.subtitle {
+  color: alpha(@foreground_color, 0.7);
+  font-size: smaller;
+}
+
+scrolledwindow {
+  border: 1px solid alpha(@borders, 0.5);
+  border-radius: 6px;
+}
+
+listbox {
+  border-radius: 6px;
+}
+
+listboxrow {
+  padding: 8px;
+  border-radius: 4px;
+}
+
+listboxrow:hover {
+  background: alpha(@accent_color, 0.1);
+}
+
+listboxrow:selected {
+  background: @accent_color;
+  color: @accent_fg_color;
 }
 
 spinner {
-    min-width: 16px;
-    min-height: 16px;
+  min-width: 24px;
+  min-height: 24px;
 }
 
-/* Correções específicas para ícones em botões */
-button image {
-    min-width: 16px;
-    min-height: 16px;
+progressbar {
+  min-height: 8px;
+  border-radius: 4px;
 }
 
-/* Correções para ícones no HeaderBar */
-headerbar image {
-    min-width: 16px;
-    min-height: 16px;
+entry {
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 6px;
 }
 
-/* ===== FIM - SEM OUTRAS CUSTOMIZAÇÕES ===== */
-/* O restante usa 100% os estilos nativos do GNOME/Adwaita */
+tooltip {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: alpha(@popover_bg_color, 0.9);
+  color: @popover_fg_color;
+}
+
