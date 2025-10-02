@@ -16,23 +16,18 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      # ERRO AQUI: Era 'actions:setup-python@v5', o correto é com '/'
-      uses: actions/setup-python@v5 # <--- CORRIGIDO AQUI
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11' 
 
     - name: Install system dependencies for build and tests
       run: |
         sudo apt-get update
-        # Dependências de sistema (não Python-específicas ou Python-core)
         sudo apt-get install -y python3-pip python3-setuptools python3-wheel ninja-build meson \
           libgtk-4-dev libadwaita-1-dev libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
           gir1.2-glib-2.0-dev \
           python3-gi python3-requests bubblewrap dbus \
           desktop-file-utils appstream
-          
-        # Nota: As ferramentas Python de desenvolvimento (pytest, black, flake8, mypy)
-        # serão instaladas via pip no próximo passo, não mais via apt-get aqui.
 
     - name: Install Python dependencies
       run: |
