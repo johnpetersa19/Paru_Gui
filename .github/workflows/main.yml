@@ -10,37 +10,25 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: archlinux_latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
     - name: Install system dependencies for build and tests
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          python3-pip python3-setuptools python3-wheel \
-          python3-gi python3-requests \
-          ninja-build meson \
-          libgtk-4-dev libadwaita-1-dev \
-          libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
-          gir1.2-glib-2.0-dev \
-          bubblewrap dbus glibc \
-          desktop-file-utils appstream appstream-util \
-          appstream-glib
-
-    - name: Install Python dev dependencies
-      run: |
-        pip install --upgrade pip
-        pip install black flake8 mypy pytest
+        sudo pacman -Syu --noconfirm
+        sudo pacman -S --noconfirm \
+          python python-pip python-setuptools python-wheel \
+          python-requests python-gobject \
+          gtk4 libadwaita glib2 paru \
+          bubblewrap dbus \
+          meson ninja appstream-glib desktop-file-utils \
+          black flake8 mypy python-pytest
 
     - name: Install project (editable+extras)
       run: |
+        pip install --upgrade pip
         pip install -e ".[dev,test]"
 
     - name: Run Black formatter check
