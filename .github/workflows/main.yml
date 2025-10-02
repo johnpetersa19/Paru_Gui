@@ -28,8 +28,8 @@ jobs:
           libgtk-4-dev libadwaita-1-dev libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
           python3-gi python3-requests bubblewrap dbus \
           desktop-file-utils appstream \
-          python3-pytest python3-flake8 python3-black python3-mypy
-
+          python3-pytest python3-flake8 python3-black python3-mypy # <- Verifiquei os nomes de pacotes
+                                                                    #    para Ubuntu 24.04 para Black, Flake8 e MyPy
     - name: Install Python dependencies
       run: |
         pip install --upgrade pip
