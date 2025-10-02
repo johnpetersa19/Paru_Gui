@@ -1,85 +1,57 @@
 name: CI - Paru_Gui
 
-# Define quando o workflow será executado
 on:
   push:
     branches:
-      - main # Executa em pushes para a branch 'main'
+      - main
   pull_request:
     branches:
-      - main # Executa em pull requests para a branch 'main'
+      - main
 
-# Define os "jobs" (tarefas) a serem executados
 jobs:
   build:
-    # A máquina virtual onde o job será executado
     runs-on: ubuntu-latest
-
-    # Os passos que o job irá seguir
     steps:
     - name: Checkout code
-      # Baixa o código do seu repositório para a máquina virtual
       uses: actions/checkout@v4
 
     - name: Set up Python
-      # Configura o ambiente Python. Usamos '3.11' como exemplo,
-      # mas pode ser qualquer versão compatível com seu `pyproject.toml` (que especifica >=3.8).
       uses: actions/setup-python@v5
       with:
         python-version: '3.11' 
 
     - name: Install system dependencies for build and tests
-      # Instala dependências de sistema necessárias para o build, testes e ferramentas de linting/tipagem.
-      # As dependências são baseadas no seu PKGBUILD (depends, makedepends, checkdepends)
-      # e nas ferramentas Python de desenvolvimento.
       run: |
         sudo apt-get update
-        # Dependências de runtime e build do PKGBUILD
+        # Dependências de runtime e build do PKGBUILD, ajustadas para nomes de pacotes do Ubuntu 24.04 (Noble)
         sudo apt-get install -y python3-pip python3-setuptools python3-wheel ninja-build meson \
-          libgtk-4-dev libadwaita-1-dev libglib2.0-dev libgirepository1.0-dev \
-          python3-gi python3-requests python3-gobject bubblewrap dbus \
-          desktop-file-utils appstream-util glib-compile-schemas # Ferramentas de validação Glib/Appstream
-        
-        # Dependências de desenvolvimento Python para linting e testes
-        sudo apt-get install -y python3-pytest python3-flake8 python3-black python3-mypy
+          libgtk-4-dev libadwaita-1-dev libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
+          python3-gi python3-requests bubblewrap dbus \
+          desktop-file-utils appstream \ # 'appstream-util' foi substituído por 'appstream' para 'appstreamcli'
+          python3-pytest python3-flake8 python3-black python3-mypy
 
     - name: Install Python dependencies
-      # Instala as dependências do Python.
-      # `-e .` instala o projeto em modo editável.
-      # `[dev,test]` instala as dependências opcionais definidas no `pyproject.toml` para 'dev' e 'test'.
       run: |
         pip install --upgrade pip
         pip install -e ".[dev,test]" 
 
     - name: Run Black formatter check
-      # Executa o Black para verificar a formatação do código.
-      # `--check` garante que ele apenas verifica, não altera os arquivos.
       run: black --check src/ window.py 
       
     - name: Run Flake8 linter
-      # Executa o Flake8 para verificar o estilo e possíveis erros no código.
       run: flake8 src/ window.py
       
     - name: Run MyPy type checker
-      # Executa o MyPy para verificar a consistência dos tipos no código.
       run: mypy src/ window.py
 
     - name: Configure Meson build
-      # Configura o sistema de build do Meson.
-      # `--prefix=/usr` é comum para instalações de sistema.
       run: meson setup build --prefix=/usr 
     
     - name: Compile project
-      # Compila o projeto usando o Meson.
-      # `-C build` indica para usar o diretório de build.
       run: meson compile -C build
 
     - name: Run Meson tests (includes schema validation from data/meson.build)
-      # Executa os testes definidos no Meson (inclui validação de desktop file e gschema do data/meson.build).
-      # `--print-errorlogs` exibe os logs de erro dos testes.
       run: meson test -C build --print-errorlogs
       
     - name: Install project (dry run for verification)
-      # Simula a instalação do projeto.
-      # `--dry-run` garante que nada será realmente instalado, apenas verifica a capacidade.
       run: meson install -C build --dry-run
