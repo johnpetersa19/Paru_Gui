@@ -16,7 +16,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions:setup-python@v5
+      # ERRO AQUI: Era 'actions:setup-python@v5', o correto é com '/'
+      uses: actions/setup-python@v5 # <--- CORRIGIDO AQUI
       with:
         python-version: '3.11' 
 
