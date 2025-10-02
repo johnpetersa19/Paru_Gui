@@ -21,16 +21,19 @@ jobs:
         python-version: '3.11' 
 
     - name: Install system dependencies for build and tests
+      # Dependências de sistema (não Python-específicas ou Python-core)
       run: |
         sudo apt-get update
-        # Dependências de runtime e build do PKGBUILD, ajustadas para nomes de pacotes do Ubuntu 24.04 (Noble)
         sudo apt-get install -y python3-pip python3-setuptools python3-wheel ninja-build meson \
           libgtk-4-dev libadwaita-1-dev libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
           python3-gi python3-requests bubblewrap dbus \
-          desktop-file-utils appstream \
-          python3-pytest python3-flake8 python3-black python3-mypy # <- Verifiquei os nomes de pacotes
-                                                                    #    para Ubuntu 24.04 para Black, Flake8 e MyPy
+          desktop-file-utils appstream
+          
+        # Nota: As ferramentas Python de desenvolvimento (pytest, black, flake8, mypy)
+        # serão instaladas via pip no próximo passo, não mais via apt-get aqui.
+
     - name: Install Python dependencies
+      # Este passo instala as dependências Python, incluindo as de desenvolvimento.
       run: |
         pip install --upgrade pip
         pip install -e ".[dev,test]" 
