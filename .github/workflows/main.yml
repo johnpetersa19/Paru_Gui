@@ -18,39 +18,48 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' 
+        python-version: '3.11'
 
     - name: Install system dependencies for build and tests
       run: |
         sudo apt-get update
-        sudo apt-get install -y python3-pip python3-setuptools python3-wheel ninja-build meson \
-          libgtk-4-dev libadwaita-1-dev libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
+        sudo apt-get install -y \
+          python3-pip python3-setuptools python3-wheel \
+          python3-gi python3-requests \
+          ninja-build meson \
+          libgtk-4-dev libadwaita-1-dev \
+          libglib2.0-dev libglib2.0-bin libgirepository1.0-dev \
           gir1.2-glib-2.0-dev \
-          python3-gi python3-requests bubblewrap dbus \
-          desktop-file-utils appstream
+          bubblewrap dbus glibc \
+          desktop-file-utils appstream appstream-util \
+          appstream-glib
 
-    - name: Install Python dependencies
+    - name: Install Python dev dependencies
       run: |
         pip install --upgrade pip
-        pip install -e ".[dev,test]" 
+        pip install black flake8 mypy pytest
+
+    - name: Install project (editable+extras)
+      run: |
+        pip install -e ".[dev,test]"
 
     - name: Run Black formatter check
-      run: black --check src/ window.py 
-      
+      run: black --check src/ window.py
+
     - name: Run Flake8 linter
       run: flake8 src/ window.py
-      
+
     - name: Run MyPy type checker
       run: mypy src/ window.py
 
     - name: Configure Meson build
-      run: meson setup build --prefix=/usr 
-    
+      run: meson setup build --prefix=/usr
+
     - name: Compile project
       run: meson compile -C build
 
     - name: Run Meson tests (includes schema validation from data/meson.build)
       run: meson test -C build --print-errorlogs
-      
+
     - name: Install project (dry run for verification)
       run: meson install -C build --dry-run
