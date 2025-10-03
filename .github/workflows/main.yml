@@ -21,16 +21,12 @@ jobs:
 
     - name: Setup Pacman Keyring and Install System Dependencies
       run: |
-        # 1. Inicializa o keyring do Pacman.
         pacman-key --init
-        # 2. Popula o keyring com as chaves oficiais do Arch Linux.
         pacman-key --populate archlinux
-        # LINHA REMOVIDA: pacman-key --refresh-keys || true # Isso causa o loop de erros!
-
-        # 3. Atualiza a lista de pacotes e o sistema no container Arch.
+        pacman-key --refresh-keys || true
+        
         pacman -Syu --noconfirm
         
-        # 4. Instala todas as dependências de sistema necessárias.
         pacman -S --noconfirm \
           base-devel python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
@@ -39,16 +35,21 @@ jobs:
           meson ninja appstream appstream-glib desktop-file-utils \
           python-black python-flake8 python-pytest
         
-        # 5. Limpa o cache do pacman.
         pacman -Scc --noconfirm || true
 
     - name: Install Paru (AUR helper)
       run: |
-        cd /home/runner/work/Paru_Gui/Paru_Gui
+        # O GITHUB_WORKSPACE aponta para o diretório raiz do repositório DENTRO do container.
+        # Isso é mais robusto do que codificar o caminho absoluto.
+        cd "${GITHUB_WORKSPACE}" 
+        
         git clone https://aur.archlinux.org/paru.git /tmp/paru-build
         cd /tmp/paru-build
         makepkg -si --noconfirm
-        cd /home/runner/work/Paru_Gui/Paru_Gui
+        
+
+        cd "${GITHUB_WORKSPACE}" 
+
 
     - name: Install Project and Python Dev Dependencies
       run: |
