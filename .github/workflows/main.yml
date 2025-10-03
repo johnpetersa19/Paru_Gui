@@ -23,21 +23,29 @@ jobs:
       run: |
         pacman-key --init
         pacman-key --populate archlinux
-        pacman-key --refresh-keys --noconfirm || true
-
+        pacman-key --refresh-keys || true # <-- REMOVIDO '--noconfirm'
+        
         pacman -Syu --noconfirm
         
         pacman -S --noconfirm \
-          base-devel \
-          python python-pip python-setuptools python-wheel \
+          base-devel python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
-          gtk4 libadwaita glib2 gobject-introspection paru \
+          gtk4 libadwaita glib2 gobject-introspection \
           bubblewrap dbus \
           meson ninja appstream appstream-glib desktop-file-utils \
-          python-black python-flake8 python-pytest
+          python-black python-flake8 python-pytest \
+          # 'paru' foi removido desta lista, pois será instalado via AUR no próximo passo.
         
         pacman -Scc --noconfirm || true
 
+    - name: Install Paru (AUR helper) # Este passo instalará o paru
+      run: |
+        # pacman -S --noconfirm --needed base-devel git # base-devel e git já devem ter sido instalados acima.
+        git clone https://aur.archlinux.org/paru.git /tmp/paru-build
+        cd /tmp/paru-build
+        makepkg -si --noconfirm
+        cd /home/runner/work/Paru_Gui/Paru_Gui # Volta para o diretório raiz do repositório
+        
     - name: Install Project and Python Dev Dependencies
       run: |
         pip install --upgrade pip
