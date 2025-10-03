@@ -1,4 +1,4 @@
-name: CI - Paru_Gui
+name: CI - Paru_Gui (Arch Linux Container)
 
 on:
   push:
@@ -13,44 +13,64 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
+      options: --privileged 
 
     steps:
-    - name: Instalar dependências do sistema (pacman)
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Update Pacman and install system dependencies for build and tests
       run: |
         pacman -Syu --noconfirm
         pacman -S --noconfirm \
           python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
-          gtk4 libadwaita glib2 paru \
+          gtk4 libadwaita glib2 \
           bubblewrap dbus \
           meson ninja appstream-glib desktop-file-utils \
-          black flake8 mypy python-pytest
+          python-black python-flake8 python-mypy python-pytest
+        pacman -Scc --noconfirm || true
 
-    - name: Instalar dependências Python extras
+    # --- NOVO PASSO: Instalar Paru (AUR helper) ---
+    - name: Install Paru (AUR helper)
+      run: |
+        # Instala dependências para compilar pacotes do AUR
+        pacman -S --noconfirm --needed base-devel git
+        # Clona o repositório do paru
+        git clone https://aur.archlinux.org/paru.git /tmp/paru-build
+        # Navega para o diretório clonado
+        cd /tmp/paru-build
+        # Compila e instala o paru
+        makepkg -si --noconfirm
+        # Volta ao diretório raiz do repositório (opcional, mas boa prática)
+        cd /home/runner/work/Paru_Gui/Paru_Gui 
+        # Nota: O diretório de trabalho padrão do GitHub Actions é /home/runner/work/<repo>/<repo>
+        # Se você clonar paru.git diretamente na raiz do seu repo, ele pode poluir.
+        # É melhor clonar em um /tmp ou diretório temporário.
+    # ---------------------------------------------
+
+    - name: Install project (editable mode)
       run: |
         pip install --upgrade pip
-        pip install -e ".[dev,test]"
-
-    - name: Checkout código
-      uses: actions/checkout@v4
+        pip install -e .
 
     - name: Run Black formatter check
-      run: black --check src/ window.py
-
+      run: black --check src/ window.py 
+      
     - name: Run Flake8 linter
       run: flake8 src/ window.py
-
+      
     - name: Run MyPy type checker
       run: mypy src/ window.py
 
     - name: Configure Meson build
-      run: meson setup build --prefix=/usr
-
+      run: meson setup build --prefix=/usr 
+    
     - name: Compile project
       run: meson compile -C build
 
     - name: Run Meson tests (includes schema validation from data/meson.build)
       run: meson test -C build --print-errorlogs
-
+      
     - name: Install project (dry run for verification)
       run: meson install -C build --dry-run
