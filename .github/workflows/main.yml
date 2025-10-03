@@ -21,38 +21,36 @@ jobs:
 
     - name: Update Pacman and install system dependencies for build and tests
       run: |
+        # Inicializa e popula o keyring do pacman (resolve o erro da chave secreta)
+        sudo pacman-key --init
+        sudo pacman-key --populate archlinux
+        sudo pacman-key --refresh-keys --noconfirm || true # Atualiza chaves, pode falhar mas não é crítico para o build
+
+        # Atualiza o sistema no container Arch
         pacman -Syu --noconfirm
+        
+        # Instala as dependências, removendo 'python-mypy' e 'python-build' (que não são pacotes diretos no Arch)
+        # e adicionando 'base-devel' para makepkg.
         pacman -S --noconfirm \
-          python python-pip python-setuptools python-wheel \
+          base-devel python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
-          gtk4 libadwaita glib2 \
+          gtk4 libadwaita glib2 paru \
           bubblewrap dbus \
           meson ninja appstream-glib desktop-file-utils \
-          python-black python-flake8 python-mypy python-pytest
+          python-black python-flake8 python-pytest \
+          # 'python-mypy' não é um pacote pacman direto no Arch; será instalado via pip.
+          # 'python-build' é um módulo python, também via pip.
+        
+        # Limpa o cache do pacman
         pacman -Scc --noconfirm || true
 
-    # --- NOVO PASSO: Instalar Paru (AUR helper) ---
-    - name: Install Paru (AUR helper)
-      run: |
-        # Instala dependências para compilar pacotes do AUR
-        pacman -S --noconfirm --needed base-devel git
-        # Clona o repositório do paru
-        git clone https://aur.archlinux.org/paru.git /tmp/paru-build
-        # Navega para o diretório clonado
-        cd /tmp/paru-build
-        # Compila e instala o paru
-        makepkg -si --noconfirm
-        # Volta ao diretório raiz do repositório (opcional, mas boa prática)
-        cd /home/runner/work/Paru_Gui/Paru_Gui 
-        # Nota: O diretório de trabalho padrão do GitHub Actions é /home/runner/work/<repo>/<repo>
-        # Se você clonar paru.git diretamente na raiz do seu repo, ele pode poluir.
-        # É melhor clonar em um /tmp ou diretório temporário.
-    # ---------------------------------------------
-
     - name: Install project (editable mode)
+      # Este passo instala o seu projeto e suas dependências python (incluindo mypy e python-build)
       run: |
         pip install --upgrade pip
-        pip install -e .
+        # o `-e .` instala o seu projeto e as extras `[dev,test]`.
+        # mypy e python-build são instalados aqui como dependências do seu pyproject.toml
+        pip install -e ".[dev,test]" 
 
     - name: Run Black formatter check
       run: black --check src/ window.py 
