@@ -21,50 +21,45 @@ jobs:
 
     - name: Setup Pacman Keyring and Install System Dependencies
       run: |
-        # 1. Inicializa o keyring do Pacman (AGORA SEM SUDO, POIS O USUÁRIO É ROOT NO CONTAINER)
         pacman-key --init
-        # 2. Popula o keyring com as chaves oficiais do Arch Linux.
         pacman-key --populate archlinux
-        # 3. Atualiza as chaves.
         pacman-key --refresh-keys --noconfirm || true
-
 
         pacman -Syu --noconfirm
         
-
         pacman -S --noconfirm \
-          base-devel python python-pip python-setuptools python-wheel \
+          base-devel \
+          python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
           gtk4 libadwaita glib2 gobject-introspection paru \
           bubblewrap dbus \
           meson ninja appstream appstream-glib desktop-file-utils \
           python-black python-flake8 python-pytest
         
-        # 6. Limpa o cache do pacman.
         pacman -Scc --noconfirm || true
 
- - name: Install Project and Python Dev Dependencies
-   run: |
-     pip install --upgrade pip
-     pip install -e ".[dev,test]" 
+    - name: Install Project and Python Dev Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -e ".[dev,test]" 
 
- - name: Run Black formatter check
-   run: black --check src/ window.py 
-   
- - name: Run Flake8 linter
-   run: flake8 src/ window.py
-   
- - name: Run MyPy type checker
-   run: mypy src/ window.py
+    - name: Run Black formatter check
+      run: black --check src/ window.py 
+      
+    - name: Run Flake8 linter
+      run: flake8 src/ window.py
+      
+    - name: Run MyPy type checker
+      run: mypy src/ window.py
 
- - name: Configure Meson build
-   run: meson setup build --prefix=/usr 
- 
- - name: Compile project
-   run: meson compile -C build
+    - name: Configure Meson build
+      run: meson setup build --prefix=/usr 
+    
+    - name: Compile project
+      run: meson compile -C build
 
- - name: Run Meson tests (includes schema validation from data/meson.build)
-   run: meson test -C build --print-errorlogs
-   
- - name: Install project (dry run for verification)
-   run: meson install -C build --dry-run
+    - name: Run Meson tests (includes schema validation from data/meson.build)
+      run: meson test -C build --print-errorlogs
+      
+    - name: Install project (dry run for verification)
+      run: meson install -C build --dry-run
