@@ -200,6 +200,24 @@
                                         </child>
                                       </object>
                                     </child>
+                                    
+                                    <!-- ADIÇÕES PARA FUNÇÕES PARU (CLEAN/REBUILD) -->
+                                    <child type="row">
+                                      <object class="AdwSwitchRow" id="sandbox_cleanafter_row">
+                                        <property name="title" translatable="yes">Clean Up After Build (--cleanafter)</property>
+                                        <property name="subtitle" translatable="yes">Remove downloaded sources and build directory after success.</property>
+                                        <property name="active">true</property>
+                                      </object>
+                                    </child>
+                                    <child type="row">
+                                      <object class="AdwSwitchRow" id="sandbox_rebuild_row">
+                                        <property name="title" translatable="yes">Force Rebuild (--rebuild)</property>
+                                        <property name="subtitle" translatable="yes">Re-download sources and force a full build, even if dependencies are satisfied.</property>
+                                        <property name="active">false</property>
+                                      </object>
+                                    </child>
+                                    <!-- FIM ADIÇÕES -->
+
                                   </object>
                                 </child>
                               </object>
@@ -228,6 +246,31 @@
             <property name="margin-bottom">6</property>
             <property name="margin-start">12</property>
             <property name="margin-end">12</property>
+
+            <!-- ADIÇÕES PARA AÇÕES ALTERNATIVAS (DRY RUN/NO DEVEL) -->
+            <child>
+              <object class="GtkButton" id="dry_run_button">
+                <property name="label" translatable="yes">Skip Review (--skipreview)</property>
+                <signal name="clicked" handler="on_skip_review_clicked"/>
+                <style>
+                  <class name="small-button"/>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="no_devel_button">
+                <property name="label" translatable="yes">Skip Dev Deps (--nodevel)</property>
+                <signal name="clicked" handler="on_no_devel_clicked"/>
+                <style>
+                  <class name="small-button"/>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </child>
+            <!-- FIM ADIÇÕES -->
 
             <child>
               <object class="GtkButton" id="cancel_button">

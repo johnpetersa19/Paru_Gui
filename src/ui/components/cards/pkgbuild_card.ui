@@ -169,6 +169,45 @@
                         <style>
                           <class name="popover-content"/>
                         </style>
+                        
+                        <!-- Opções de Sandbox Adicionais (Novas Adições) -->
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_skip_pgp_check">
+                            <property name="label" translatable="yes">Skip PGP Signature Check (--skippgpcheck)</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_skip_checksum_check">
+                            <property name="label" translatable="yes">Skip Checksum Verification (--skipchecksums)</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkEntry" id="extra_makepkg_flags_entry">
+                            <property name="placeholder-text" translatable="yes">Extra makepkg flags (--mflags)</property>
+                            <property name="hexpand">true</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_keep_src_check">
+                            <property name="label" translatable="yes">Keep Source Files (--keepsrc)</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_no_sign_check">
+                            <property name="label" translatable="yes">Do Not Sign Package (--nosign)</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+                        
+                        <!-- Opções de Sandbox Existentes (mantidas) -->
                         <child>
                           <object class="GtkComboBoxText" id="pkgbuild_sandbox_level_combo">
                             <property name="valign">center</property>

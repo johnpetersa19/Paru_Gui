@@ -121,6 +121,71 @@
                             <property name="active">false</property>
                           </object>
                         </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_skip_pgp_check">
+                            <property name="label" translatable="yes">Skip PGP Check</property>
+                            <property name="tooltip-text" translatable="yes">Bypass PGP signature checks for sources.</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_skip_checksum_check">
+                            <property name="label" translatable="yes">Skip Checksums</property>
+                            <property name="tooltip-text" translatable="yes">Bypass file checksum verification.</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkEntry" id="extra_makepkg_flags_entry">
+                            <property name="text" translatable="no"></property>
+                            <property name="placeholder-text" translatable="yes">Extra makepkg flags (e.g., --skippgpcheck --keepsrc)</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_keep_src_check">
+                            <property name="label" translatable="yes">Keep Sources (--keepsrc)</property>
+                            <property name="tooltip-text" translatable="yes">Keep source files after successful build.</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+                        
+                        <child>
+                          <object class="GtkCheckButton" id="sandbox_no_sign_check">
+                            <property name="label" translatable="yes">Skip Package Signing (--nosign)</property>
+                            <property name="tooltip-text" translatable="yes">Do not sign the resulting package.</property>
+                            <property name="active">False</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">PGP Key ID / Command:</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkComboBoxText" id="gpg_key_combo">
+                                <property name="hexpand">true</property>
+                                <items>
+                                  <item id="default" translatable="yes">Default GPG Key</item>
+                                  <item id="auto_fetch" translatable="yes">Auto-fetch from KeyServer</item>
+                                  <item id="custom_id" translatable="yes">Use Custom ID/Command</item>
+                                </items>
+                                <property name="active">0</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
                         <child>
                           <object class="GtkButton" id="confirm_advanced_sandbox_command">
                             <property name="label" translatable="yes">Start Command</property>

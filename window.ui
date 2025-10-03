@@ -153,6 +153,7 @@
                             <property name="max-children-per-line">3</property>
                             <property name="row-spacing">12</property>
                             <property name="selection-mode">none</property>
+                            <property name="valign">start</property>
                           </object>
                         </child>
                       </object>
@@ -399,20 +400,16 @@
       <submenu>
         <attribute name="label" translatable="yes">Developer Mode</attribute>
         <item>
-          <attribute name="action">app.check-devel</attribute>
-          <attribute name="label" translatable="yes">Check Devel Updates</attribute>
+          <attribute name="action">app.install-debug</attribute>
+          <attribute name="label" translatable="yes">Install Debug Packages</attribute>
         </item>
         <item>
-          <attribute name="action">app.ignore-packages</attribute>
-          <attribute name="label" translatable="yes">Ignore Specific Packages</attribute>
+          <attribute name="action">app.show-warnings</attribute>
+          <attribute name="label" translatable="yes">Show Detailed Warnings</attribute>
         </item>
         <item>
-          <attribute name="action">app.clean-after-build</attribute>
-          <attribute name="label" translatable="yes">Clean After Build</attribute>
-        </item>
-        <item>
-          <attribute name="action">app.review-pkgbuild</attribute>
-          <attribute name="label" translatable="yes">Review PKGBUILD</attribute>
+          <attribute name="action">app.show-terminal</attribute>
+          <attribute name="label" translatable="yes">Show Real-time Terminal</attribute>
         </item>
         <submenu>
           <attribute name="label" translatable="yes">Debugging</attribute>
@@ -491,15 +488,6 @@
       <object class="GtkLabel" id="pkgbuild_version">
         <property name="halign">start</property>
         <property name="label">Version: 1.0.0</property>
-        <style>
-          <class name="caption"/>
-        </style>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="pkgbuild_size">
-        <property name="halign">start</property>
-        <property name="label">Size: 2.5 MB</property>
         <style>
           <class name="caption"/>
         </style>
