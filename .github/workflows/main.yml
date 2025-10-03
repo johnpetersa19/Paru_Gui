@@ -1,56 +1,60 @@
-name: CI - Paru_Gui (Arch Linux Container)
+name: CI - Paru_Gui (Arch Linux Container) 
 
 on:
   push:
     branches:
-      - main
+      - main 
   pull_request:
     branches:
-      - main
+      - main 
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+    
+
     container:
-      image: archlinux:latest
+      image: archlinux:latest 
+     
       options: --privileged 
 
     steps:
     - name: Checkout code
+
       uses: actions/checkout@v4
 
-    - name: Update Pacman and install system dependencies for build and tests
-      run: |
-        # Inicializa e popula o keyring do pacman (resolve o erro da chave secreta)
-        sudo pacman-key --init
-        sudo pacman-key --populate archlinux
-        sudo pacman-key --refresh-keys --noconfirm || true # Atualiza chaves, pode falhar mas não é crítico para o build
+    - name: Setup Pacman Keyring and Install System Dependencies
 
-        # Atualiza o sistema no container Arch
+      run: |
+        # 1. Inicializa o keyring do Pacman. Essencial em ambientes novos para que o pacman funcione.
+        sudo pacman-key --init
+        # 2. Popula o keyring com as chaves oficiais do Arch Linux.
+        sudo pacman-key --populate archlinux
+        # 3. Atualiza as chaves. O '|| true' previne falhas se o keyserver não estiver acessível,
+        #    mas as chaves populadas já devem ser suficientes para o build.
+        sudo pacman-key --refresh-keys --noconfirm || true
+
+
         pacman -Syu --noconfirm
         
-        # Instala as dependências, removendo 'python-mypy' e 'python-build' (que não são pacotes diretos no Arch)
-        # e adicionando 'base-devel' para makepkg.
+       
         pacman -S --noconfirm \
           base-devel python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
-          gtk4 libadwaita glib2 paru \
+          gtk4 libadwaita glib2 gobject-introspection paru \
           bubblewrap dbus \
-          meson ninja appstream-glib desktop-file-utils \
-          python-black python-flake8 python-pytest \
-          # 'python-mypy' não é um pacote pacman direto no Arch; será instalado via pip.
-          # 'python-build' é um módulo python, também via pip.
+          meson ninja appstream appstream-glib desktop-file-utils \
+          python-black python-flake8 python-pytest
         
-        # Limpa o cache do pacman
+
         pacman -Scc --noconfirm || true
 
-    - name: Install project (editable mode)
-      # Este passo instala o seu projeto e suas dependências python (incluindo mypy e python-build)
+    - name: Install Project and Python Dev Dependencies
+      
       run: |
-        pip install --upgrade pip
-        # o `-e .` instala o seu projeto e as extras `[dev,test]`.
-        # mypy e python-build são instalados aqui como dependências do seu pyproject.toml
-        pip install -e ".[dev,test]" 
+        pip install --upgrade pip # Garante que o pip esteja na versão mais recente
+        pip install -e ".[dev,test]" # Instala seu projeto em modo editável com todas as extras
 
     - name: Run Black formatter check
       run: black --check src/ window.py 
