@@ -19,49 +19,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Initialize Pacman Keyring
-   
+    - name: Setup Pacman Keyring and Install System Dependencies
       run: |
+        # 1. Inicializa o keyring do Pacman.
         pacman-key --init
+        # 2. Popula o keyring com as chaves oficiais do Arch Linux.
         pacman-key --populate archlinux
-        pacman-key --refresh-keys || true # Removido '--noconfirm'
+        # LINHA REMOVIDA: pacman-key --refresh-keys || true # Isso causa o loop de erros!
 
-    - name: Update System and Install Base Dependencies
-
-      run: |
-        pacman -Syu --noconfirm # Atualiza o sistema
+        # 3. Atualiza a lista de pacotes e o sistema no container Arch.
+        pacman -Syu --noconfirm
         
-        # Instala dependências de sistema (não Python-específicas) e as que o paru precisa para compilar do AUR
+        # 4. Instala todas as dependências de sistema necessárias.
         pacman -S --noconfirm \
-          base-devel git \ # 'git' é essencial para clonar o paru, 'base-devel' para makepkg
-          python python-pip python-setuptools python-wheel \
+          base-devel python python-pip python-setuptools python-wheel \
           python-requests python-gobject \
           gtk4 libadwaita glib2 gobject-introspection \
           bubblewrap dbus \
           meson ninja appstream appstream-glib desktop-file-utils \
-          # As ferramentas Python de desenvolvimento (black, flake8, pytest) serão instaladas via pip
-          # 'paru' foi REMOVIDO daqui, será instalado no próximo passo a partir do AUR.
+          python-black python-flake8 python-pytest
         
-        # Limpa o cache do pacman
+        # 5. Limpa o cache do pacman.
         pacman -Scc --noconfirm || true
 
     - name: Install Paru (AUR helper)
-
       run: |
-        # Garante que estamos no diretório certo antes de clonar.
-        # O diretório de trabalho padrão é /home/runner/work/<repo>/<repo>
         cd /home/runner/work/Paru_Gui/Paru_Gui
-        
-        # Clona e compila o paru
         git clone https://aur.archlinux.org/paru.git /tmp/paru-build
         cd /tmp/paru-build
         makepkg -si --noconfirm
-        
-        # Volta para a raiz do seu repositório para os próximos passos
-        cd /home/runner/work/Paru_Gui/Paru_Gui 
+        cd /home/runner/work/Paru_Gui/Paru_Gui
 
     - name: Install Project and Python Dev Dependencies
-   
       run: |
         pip install --upgrade pip
         pip install -e ".[dev,test]" 
