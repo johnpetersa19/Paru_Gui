@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="paru-gui">
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <object class="AdwDialog" id="repo_manager_dialog">
+    <property name="title" translatable="yes">Repository Manager</property>
+    <property name="content-width">900</property>
+    <property name="content-height">700</property>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="dialog_header">
+            <child type="start">
+              <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="back_to_system_button">
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Back to System Tools</property>
+                    <signal name="clicked" handler="on_back_to_system_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_label">
+                    <property name="label" translatable="yes">Main › System › Repository Manager</property>
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="title">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">Repository Manager</property>
+                <property name="subtitle" translatable="yes">Manage system package repositories</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox" id="header_actions">
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkButton" id="test_connectivity_button">
+                    <property name="icon-name">network-wireless-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Test Repository Connectivity</property>
+                    <signal name="clicked" handler="on_test_connectivity_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="refresh_button">
+                    <property name="icon-name">view-refresh-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Refresh Repository List</property>
+                    <signal name="clicked" handler="on_refresh_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="margin-top">24</property>
+            <property name="margin-bottom">24</property>
+            <property name="margin-start">24</property>
+            <property name="margin-end">24</property>
+            <property name="spacing">20</property>
+            <property name="vexpand">true</property>
+
+            <child>
+              <object class="GtkRevealer" id="connectivity_status_revealer">
+                <property name="reveal-child">false</property>
+                <property name="transition-type">slide-down</property>
+                <child>
+                  <object class="AdwBanner" id="connectivity_banner">
+                    <property name="title" translatable="yes">Repository Connectivity Status</property>
+                    <property name="button-label" translatable="yes">View Details</property>
+                    <signal name="button-clicked" handler="on_connectivity_details_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">20</property>
+                <property name="vexpand">true</property>
+
+                <child>
+                  <object class="GtkBox" id="repositories_section">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">16</property>
+                    <property name="hexpand">true</property>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">12</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Available Repositories</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">true</property>
+                            <style>
+                              <class name="title-2"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel" id="repo_count_label">
+                            <property name="label">0 repositories</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vscrollbar-policy">automatic</property>
+                        <property name="vexpand">true</property>
+                        <property name="min-content-height">250</property>
+
+                        <child>
+                          <object class="GtkListView" id="repositories_list">
+                            <property name="model">repositories_selection</property>
+                            <property name="factory">repository_factory</property>
+                            <property name="single-click-activate">false</property>
+                            <property name="show-separators">true</property>
+                            <style>
+                              <class name="rich-list"/>
+                              <class name="boxed-list"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="repository_actions">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+                        <property name="halign">center</property>
+
+                        <child>
+                          <object class="GtkButton" id="view_packages_button">
+                            <property name="label" translatable="yes">View Packages in Repository</property>
+                            <property name="tooltip-text" translatable="yes">Navigate to package list for selected repository</property>
+                            <property name="sensitive">false</property>
+                            <signal name="clicked" handler="on_view_packages_clicked"/>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="list_repos_button">
+                            <property name="label" translatable="yes">List All Repositories</property>
+                            <property name="tooltip-text" translatable="yes">Display detailed information about all repositories</property>
+                            <signal name="clicked" handler="on_list_repos_clicked"/>
+                            <style>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="orientation">vertical</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="impact_preview_section">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">16</property>
+                    <property name="width-request">300</property>
+
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Impact Preview</property>
+                        <property name="halign">start</property>
+                        <style>
+                          <class name="title-3"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkFrame" id="impact_preview_frame">
+                        <property name="vexpand">true</property>
+                        <style>
+                          <class name="card"/>
+                        </style>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="margin-top">16</property>
+                            <property name="margin-bottom">16</property>
+                            <property name="margin-start">16</property>
+                            <property name="margin-end">16</property>
+
+                            <child>
+                              <object class="GtkLabel" id="impact_title">
+                                <property name="label" translatable="yes">Repository Changes Impact</property>
+                                <property name="halign">start</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="hscrollbar-policy">never</property>
+                                <property name="vscrollbar-policy">automatic</property>
+                                <property name="vexpand">true</property>
+                                <property name="min-content-height">150</property>
+
+                                <child>
+                                  <object class="GtkTextView" id="impact_preview_text">
+                                    <property name="editable">false</property>
+                                    <property name="wrap-mode">word</property>
+                                    <property name="margin-top">8</property>
+                                    <property name="margin-bottom">8</property>
+                                    <property name="margin-start">8</property>
+                                    <property name="margin-end">8</property>
+                                    <style>
+                                      <class name="monospace"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkBox" id="impact_stats">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">8</property>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Packages Affected:</property>
+                                        <property name="halign">start</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="packages_affected_count">
+                                        <property name="label">0</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">true</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Storage Impact:</property>
+                                        <property name="halign">start</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="storage_impact_size">
+                                        <property name="label">0 MB</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">true</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="operation_section">
+                <property name="orientation">vertical</property>
+                <property name="spacing">16</property>
+
+                <child>
+                  <object class="GtkBox" id="action_bar">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">8</property>
+                    <property name="halign">center</property>
+
+                    <child>
+                      <object class="GtkButton" id="clean_repos_button">
+                        <property name="label" translatable="yes">Clean Repositories</property>
+                        <property name="tooltip-text" translatable="yes">Remove old packages from all local repositories</property>
+                        <signal name="clicked" handler="on_clean_repos_clicked"/>
+                        <style>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkButton" id="delete_packages_button">
+                        <property name="label" translatable="yes">Delete Selected Packages</property>
+                        <property name="tooltip-text" translatable="yes">Delete selected packages from repository</property>
+                        <property name="sensitive">false</property>
+                        <signal name="clicked" handler="on_delete_packages_clicked"/>
+                        <style>
+                          <class name="destructive-action"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkButton" id="refresh_repos_button">
+                        <property name="label" translatable="yes">Refresh Package Database</property>
+                        <property name="tooltip-text" translatable="yes">Refresh package database for all repositories</property>
+                        <signal name="clicked" handler="on_refresh_repos_clicked"/>
+                        <style>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">8</property>
+
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Operation Status</property>
+                        <property name="halign">start</property>
+                        <style>
+                          <class name="heading"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vscrollbar-policy">automatic</property>
+                        <property name="min-content-height">100</property>
+
+                        <child>
+                          <object class="GtkTextView" id="status_textview">
+                            <property name="editable">false</property>
+                            <property name="monospace">true</property>
+                            <property name="wrap-mode">word</property>
+                            <property name="margin-top">8</property>
+                            <property name="margin-bottom">8</property>
+                            <property name="margin-start">8</property>
+                            <property name="margin-end">8</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkRevealer" id="progress_revealer">
+                        <property name="reveal-child">false</property>
+                        <property name="transition-type">slide-down</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <property name="margin-top">8</property>
+                            <child>
+                              <object class="GtkProgressBar" id="operation_progress">
+                                <property name="show-text">true</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="progress_detail_label">
+                                <property name="label" translatable="yes">Processing repositories...</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="GtkActionBar">
+            <child type="start">
+              <object class="GtkButton" id="system_tools_button">
+                <property name="label" translatable="yes">Back to System Tools</property>
+                <property name="tooltip-text" translatable="yes">Return to main system tools panel</property>
+                <signal name="clicked" handler="on_back_to_system_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox" id="bottom_actions">
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="apply_changes_button">
+                    <property name="label" translatable="yes">Apply Changes</property>
+                    <property name="tooltip-text" translatable="yes">Apply all pending repository changes</property>
+                    <property name="sensitive">false</property>
+                    <signal name="clicked" handler="on_apply_changes_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="close_button">
+                    <property name="label" translatable="yes">Close</property>
+                    <signal name="clicked" handler="on_close_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <object class="GtkStringList" id="repositories_model">
+  </object>
+
+  <object class="GtkSingleSelection" id="repositories_selection">
+    <property name="model">repositories_model</property>
+    <signal name="selection-changed" handler="on_selection_changed"/>
+  </object>
+
+  <object class="GtkSignalListItemFactory" id="repository_factory">
+    <signal name="setup" handler="on_repository_setup"/>
+    <signal name="bind" handler="on_repository_bind"/>
+    <signal name="unbind" handler="on_repository_unbind"/>
+  </object>
+</interface>

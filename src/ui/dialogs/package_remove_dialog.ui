@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <template class="PackageRemoveDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">Remove Package</property>
+    <property name="content-width">700</property>
+    <property name="content-height">600</property>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">Remove Package</property>
+                <property name="subtitle" translatable="yes">Review package removal impact and options</property>
+              </object>
+            </property>
+            <child type="start">
+              <object class="GtkButton" id="back_to_details_button">
+                <property name="label" translatable="yes">Back to Package Details</property>
+                <property name="tooltip-text" translatable="yes">Return to package details view</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Return to package details</property>
+                </accessibility>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <signal name="clicked" handler="on_back_to_details_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">0</property>
+
+            <child>
+              <object class="GtkBox" id="breadcrumb_navigation">
+                <property name="margin-bottom">0</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">18</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkBox" id="breadcrumb_box">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkButton" id="breadcrumb_packages">
+                        <property name="label" translatable="yes">Packages</property>
+                        <property name="tooltip-text" translatable="yes">Return to packages overview</property>
+                        <style>
+                          <class name="flat"/>
+                          <class name="caption"/>
+                        </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to packages overview</property>
+                        </accessibility>
+                        <signal name="clicked" handler="on_breadcrumb_packages_clicked"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">›</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="breadcrumb_package_name">
+                        <property name="label" translatable="yes">[Package Name]</property>
+                        <property name="tooltip-text" translatable="yes">Return to package details</property>
+                        <style>
+                          <class name="flat"/>
+                          <class name="caption"/>
+                        </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to package details</property>
+                        </accessibility>
+                        <signal name="clicked" handler="on_breadcrumb_package_clicked"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">›</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Remove</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="accent"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="warning_box">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">dialog-warning-symbolic</property>
+                        <property name="pixel-size">16</property>
+                        <style>
+                          <class name="warning"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Destructive Action - Review impact before proceeding</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="warning"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">12</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="vexpand">true</property>
+                <property name="hscrollbar-policy">never</property>
+                <property name="vscrollbar-policy">automatic</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="margin-top">12</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="package_info_group">
+                        <property name="title" translatable="yes">Package to Remove</property>
+                        <property name="description" translatable="yes">Package selected for removal</property>
+
+                        <child>
+                          <object class="AdwActionRow" id="target_package_row">
+                            <property name="title" translatable="yes">Target Package</property>
+                            <property name="subtitle" translatable="yes">Loading package information...</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">package-x-generic-symbolic</property>
+                                <property name="pixel-size">32</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child type="suffix">
+                              <object class="GtkLabel" id="package_size_label">
+                                <property name="label">--</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="impact_preview_group">
+                        <property name="title" translatable="yes">Removal Impact Preview</property>
+                        <property name="description" translatable="yes">Dependencies and packages affected by this removal</property>
+
+                        <child>
+                          <object class="GtkBox" id="impact_summary_box">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+
+                            <child>
+                              <object class="GtkGrid" id="impact_stats_grid">
+                                <property name="column-spacing">24</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">package-x-generic-symbolic</property>
+                                        <property name="pixel-size">16</property>
+                                        <style>
+                                          <class name="error"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Packages to Remove:</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="packages_count_label">
+                                        <property name="label">1</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">folder-download-symbolic</property>
+                                        <property name="pixel-size">16</property>
+                                        <style>
+                                          <class name="warning"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Disk Space Freed:</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="disk_space_label">
+                                        <property name="label">-- MB</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">dialog-warning-symbolic</property>
+                                        <property name="pixel-size">16</property>
+                                        <style>
+                                          <class name="error"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Broken Dependencies:</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="broken_deps_label">
+                                        <property name="label">0</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">preferences-system-symbolic</property>
+                                        <property name="pixel-size">16</property>
+                                        <style>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Config Files:</property>
+                                        <style>
+                                          <class name="caption"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="config_files_label">
+                                        <property name="label">--</property>
+                                        <style>
+                                          <class name="caption"/>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwExpanderRow" id="affected_packages_expander">
+                            <property name="title" translatable="yes">Affected Dependencies</property>
+                            <property name="subtitle" translatable="yes">Packages that depend on this package</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">package-x-generic-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkListBox" id="affected_packages_listbox">
+                                <property name="selection-mode">none</property>
+                                <style>
+                                  <class name="boxed-list"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">List of packages affected by removal</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwExpanderRow" id="orphaned_packages_expander">
+                            <property name="title" translatable="yes">Orphaned Dependencies</property>
+                            <property name="subtitle" translatable="yes">Dependencies that will become orphaned</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">edit-delete-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkListBox" id="orphaned_packages_listbox">
+                                <property name="selection-mode">none</property>
+                                <style>
+                                  <class name="boxed-list"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">List of dependencies that will become orphaned</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="removal_options_group">
+                        <property name="title" translatable="yes">Removal Options</property>
+                        <property name="description" translatable="yes">Configure how the package should be removed</property>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="remove_deps_switch">
+                            <property name="title" translatable="yes">Remove Unused Dependencies</property>
+                            <property name="subtitle" translatable="yes">Automatically remove dependencies that are no longer needed (paru -Rs)</property>
+                            <property name="active">true</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">package-x-generic-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="keep_config_switch">
+                            <property name="title" translatable="yes">Keep Configuration Files</property>
+                            <property name="subtitle" translatable="yes">Preserve configuration files for potential reinstallation</property>
+                            <property name="active">true</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">preferences-system-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="success"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="remove_config_switch">
+                            <property name="title" translatable="yes">Remove Configuration Files</property>
+                            <property name="subtitle" translatable="yes">Completely remove all configuration files (paru -Rn)</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">edit-delete-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="force_remove_switch">
+                            <property name="title" translatable="yes">Force Remove</property>
+                            <property name="subtitle" translatable="yes">Force removal even if there are dependency conflicts (paru -Rdd)</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">dialog-warning-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="error"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="cleanup_options_group">
+                        <property name="title" translatable="yes">Post-Removal Cleanup</property>
+                        <property name="description" translatable="yes">Additional cleanup tasks to perform after removal</property>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="clean_cache_switch">
+                            <property name="title" translatable="yes">Clean Package Cache</property>
+                            <property name="subtitle" translatable="yes">Remove downloaded package files from cache</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">edit-clear-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="clean_orphans_switch">
+                            <property name="title" translatable="yes">Remove Orphaned Packages</property>
+                            <property name="subtitle" translatable="yes">Automatically remove packages that are no longer needed by any installed package</property>
+                            <property name="active">true</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">user-trash-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="update_databases_switch">
+                            <property name="title" translatable="yes">Update Package Databases</property>
+                            <property name="subtitle" translatable="yes">Refresh package databases after removal</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkRevealer" id="progress_revealer">
+                        <property name="reveal-child">false</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="margin-top">12</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">6</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <child>
+                                  <object class="GtkSpinner" id="removal_spinner">
+                                    <property name="spinning">true</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="progress_label">
+                                    <property name="label" translatable="yes">Removing package...</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="halign">start</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkProgressBar" id="removal_progressbar">
+                                <property name="show-text">true</property>
+                                <property name="text" translatable="yes">0%</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Package removal progress</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="action_buttons_box">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">12</property>
+                        <property name="halign">end</property>
+                        <property name="margin-top">12</property>
+
+                        <child>
+                          <object class="GtkButton" id="cancel_button">
+                            <property name="label" translatable="yes">Cancel</property>
+                            <property name="tooltip-text" translatable="yes">Cancel removal and return to package details</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Cancel package removal</property>
+                            </accessibility>
+                            <signal name="clicked" handler="on_cancel_clicked"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="simulate_button">
+                            <property name="label" translatable="yes">Simulate Removal</property>
+                            <property name="tooltip-text" translatable="yes">Perform a dry run to see what would be removed</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Simulate package removal</property>
+                            </accessibility>
+                            <signal name="clicked" handler="on_simulate_clicked"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="remove_button">
+                            <property name="label" translatable="yes">Remove Package</property>
+                            <property name="tooltip-text" translatable="yes">Proceed with package removal</property>
+                            <style>
+                              <class name="destructive-action"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Remove the selected package</property>
+                            </accessibility>
+                            <signal name="clicked" handler="on_remove_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkListBoxRow" id="affected_package_row_template">
+    <child>
+      <object class="AdwActionRow" id="affected_package_action_row">
+        <property name="activatable">false</property>
+        <child type="prefix">
+          <object class="GtkImage" id="affected_package_icon">
+            <property name="icon-name">dialog-warning-symbolic</property>
+            <property name="pixel-size">16</property>
+            <style>
+              <class name="warning"/>
+            </style>
+          </object>
+        </child>
+        <child type="suffix">
+          <object class="GtkLabel" id="affected_package_impact">
+            <property name="label" translatable="yes">Broken</property>
+            <style>
+              <class name="caption"/>
+              <class name="error"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <object class="GtkListBoxRow" id="orphaned_package_row_template">
+    <child>
+      <object class="AdwActionRow" id="orphaned_package_action_row">
+        <property name="activatable">false</property>
+        <child type="prefix">
+          <object class="GtkImage" id="orphaned_package_icon">
+            <property name="icon-name">user-trash-symbolic</property>
+            <property name="pixel-size">16</property>
+            <style>
+              <class name="accent"/>
+            </style>
+          </object>
+        </child>
+        <child type="suffix">
+          <object class="GtkLabel" id="orphaned_package_size">
+            <property name="label">-- MB</property>
+            <style>
+              <class name="caption"/>
+              <class name="dim-label"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+</interface>

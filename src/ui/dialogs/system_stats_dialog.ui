@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="paru-gui">
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <template class="SystemStatsDialog" parent="AdwWindow">
+    <property name="title" translatable="yes">System Statistics</property>
+    <property name="modal">true</property>
+    <property name="resizable">true</property>
+    <property name="default-width">850</property>
+    <property name="default-height">700</property>
+    <property name="width-request">600</property>
+    <property name="height-request">500</property>
+    <accessibility>
+      <property name="label" translatable="yes">System statistics and maintenance dialog</property>
+    </accessibility>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">System Statistics</property>
+                <property name="subtitle" translatable="yes">Main › System › Statistics</property>
+              </object>
+            </property>
+
+            <child type="start">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkButton" id="back_to_system_button">
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Back to System Menu</property>
+                    <signal name="clicked" handler="on_back_to_system_clicked" swapped="no"/>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Navigate back to system menu</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="back_to_main_button">
+                    <property name="icon-name">go-home-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Back to Main Interface</property>
+                    <signal name="clicked" handler="on_back_to_main_clicked" swapped="no"/>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Navigate back to main interface</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkButton" id="refresh_button">
+                    <property name="icon-name">view-refresh-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Refresh all statistics</property>
+                    <signal name="clicked" handler="on_refresh_clicked" swapped="no"/>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Refresh system statistics</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkMenuButton" id="share_menu_button">
+                    <property name="icon-name">emblem-shared-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Share or export statistics</property>
+                    <property name="popover">
+                      <object class="GtkPopover">
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+
+                            <child>
+                              <object class="GtkButton" id="export_text_button">
+                                <property name="label" translatable="yes">Export as Text</property>
+                                <property name="icon-name">text-x-generic-symbolic</property>
+                                <signal name="clicked" handler="on_export_text_clicked" swapped="no"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="export_json_button">
+                                <property name="label" translatable="yes">Export as JSON</property>
+                                <property name="icon-name">application-json-symbolic</property>
+                                <signal name="clicked" handler="on_export_json_clicked" swapped="no"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkSeparator"/>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="copy_to_clipboard_button">
+                                <property name="label" translatable="yes">Copy to Clipboard</property>
+                                <property name="icon-name">edit-copy-symbolic</property>
+                                <signal name="clicked" handler="on_copy_to_clipboard_clicked" swapped="no"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="share_online_button">
+                                <property name="label" translatable="yes">Share Online</property>
+                                <property name="icon-name">network-transmit-symbolic</property>
+                                <signal name="clicked" handler="on_share_online_clicked" swapped="no"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Share statistics menu</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkScrolledWindow">
+            <property name="vexpand">true</property>
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+
+            <child>
+              <object class="AdwClamp">
+                <property name="maximum-size">900</property>
+                <property name="tightening-threshold">700</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Package Statistics</property>
+                        <property name="description" translatable="yes">Information about installed packages and package management</property>
+
+                        <child>
+                          <object class="AdwActionRow" id="total_packages_row">
+                            <property name="title" translatable="yes">Total Packages</property>
+                            <property name="subtitle" translatable="yes">All packages installed on the system</property>
+                            <property name="icon-name">package-x-generic-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_total_packages_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="total_packages_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="total_packages_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View detailed package list</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_total_packages_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="explicit_packages_row">
+                            <property name="title" translatable="yes">Explicitly Installed</property>
+                            <property name="subtitle" translatable="yes">Packages installed by user request</property>
+                            <property name="icon-name">starred-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_explicit_packages_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="explicit_packages_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="explicit_packages_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View explicit packages list</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_explicit_packages_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="aur_packages_row">
+                            <property name="title" translatable="yes">AUR Packages</property>
+                            <property name="subtitle" translatable="yes">Packages from Arch User Repository</property>
+                            <property name="icon-name">network-server-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_aur_packages_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="aur_packages_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="aur_packages_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View AUR packages list</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_aur_packages_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="orphan_packages_row">
+                            <property name="title" translatable="yes">Orphan Packages</property>
+                            <property name="subtitle" translatable="yes">Packages no longer needed as dependencies</property>
+                            <property name="icon-name">dialog-warning-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_orphan_packages_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="orphan_packages_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="orphan_packages_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View orphan packages list</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_orphan_packages_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Cache Statistics</property>
+                        <property name="description" translatable="yes">Package cache and download information</property>
+
+                        <child>
+                          <object class="AdwActionRow" id="cache_size_row">
+                            <property name="title" translatable="yes">Cache Size</property>
+                            <property name="subtitle" translatable="yes">Total size of package cache directory</property>
+                            <property name="icon-name">folder-download-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_cache_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="cache_size_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="cache_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View cache details</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_cache_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="cached_packages_row">
+                            <property name="title" translatable="yes">Cached Packages</property>
+                            <property name="subtitle" translatable="yes">Number of packages stored in cache</property>
+                            <property name="icon-name">package-x-generic-symbolic</property>
+                            <property name="activatable">true</property>
+                            <signal name="activated" handler="on_cached_packages_details_clicked" swapped="no"/>
+
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="cached_packages_label">
+                                    <property name="label">Loading...</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="cached_packages_details_button">
+                                    <property name="icon-name">view-more-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">View cached packages list</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_cached_packages_details_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">System Information</property>
+                        <property name="description" translatable="yes">Package manager and system version information</property>
+
+                        <child>
+                          <object class="AdwActionRow" id="pacman_version_row">
+                            <property name="title" translatable="yes">Pacman Version</property>
+                            <property name="subtitle" translatable="yes">Package manager version and build info</property>
+                            <property name="icon-name">application-x-executable-symbolic</property>
+
+                            <child type="suffix">
+                              <object class="GtkLabel" id="pacman_version_label">
+                                <property name="label">Loading...</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                  <class name="numeric"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="paru_version_row">
+                            <property name="title" translatable="yes">Paru Version</property>
+                            <property name="subtitle" translatable="yes">AUR helper version and build info</property>
+                            <property name="icon-name">application-x-executable-symbolic</property>
+
+                            <child type="suffix">
+                              <object class="GtkLabel" id="paru_version_label">
+                                <property name="label">Loading...</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                  <class name="numeric"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="arch_version_row">
+                            <property name="title" translatable="yes">Arch Linux Version</property>
+                            <property name="subtitle" translatable="yes">System release and kernel information</property>
+                            <property name="icon-name">computer-symbolic</property>
+
+                            <child type="suffix">
+                              <object class="GtkLabel" id="arch_version_label">
+                                <property name="label">Loading...</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                  <class name="numeric"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Quick System Maintenance</property>
+                        <property name="description" translatable="yes">Common maintenance tasks for system optimization</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <property name="margin-top">16</property>
+                                <property name="margin-bottom">16</property>
+                                <property name="margin-start">16</property>
+                                <property name="margin-end">16</property>
+
+                                <child>
+                                  <object class="GtkFlowBox" id="maintenance_actions_flowbox">
+                                    <property name="selection-mode">none</property>
+                                    <property name="column-spacing">8</property>
+                                    <property name="row-spacing">8</property>
+                                    <property name="homogeneous">true</property>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="clean_cache_button">
+                                            <property name="label" translatable="yes">Clean Cache</property>
+                                            <property name="tooltip-text" translatable="yes">Remove old package files from cache</property>
+                                            <property name="icon-name">edit-clear-symbolic</property>
+                                            <signal name="clicked" handler="on_clean_cache_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="remove_orphans_button">
+                                            <property name="label" translatable="yes">Remove Orphans</property>
+                                            <property name="tooltip-text" translatable="yes">Remove unused dependency packages</property>
+                                            <property name="icon-name">user-trash-symbolic</property>
+                                            <signal name="clicked" handler="on_remove_orphans_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="check_updates_button">
+                                            <property name="label" translatable="yes">Check Updates</property>
+                                            <property name="tooltip-text" translatable="yes">Check for available package updates</property>
+                                            <property name="icon-name">view-refresh-symbolic</property>
+                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="system_info_button">
+                                            <property name="label" translatable="yes">System Info</property>
+                                            <property name="tooltip-text" translatable="yes">View detailed system information</property>
+                                            <property name="icon-name">computer-symbolic</property>
+                                            <signal name="clicked" handler="on_system_info_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="AdwHeaderBar">
+            <property name="show-title">false</property>
+            <child type="start">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="generate_report_button">
+                    <property name="label" translatable="yes">Generate Report</property>
+                    <property name="tooltip-text" translatable="yes">Generate comprehensive system report</property>
+                    <property name="icon-name">document-new-symbolic</property>
+                    <signal name="clicked" handler="on_generate_report_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Generate detailed system report</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="schedule_maintenance_button">
+                    <property name="label" translatable="yes">Schedule Maintenance</property>
+                    <property name="tooltip-text" translatable="yes">Schedule automatic system maintenance</property>
+                    <property name="icon-name">preferences-system-time-symbolic</property>
+                    <signal name="clicked" handler="on_schedule_maintenance_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Schedule automatic maintenance</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="back_to_system_menu_button">
+                    <property name="label" translatable="yes">Back to System Menu</property>
+                    <property name="tooltip-text" translatable="yes">Return to system management menu</property>
+                    <signal name="clicked" handler="on_back_to_system_menu_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Return to system menu</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="close_button">
+                    <property name="label" translatable="yes">Close</property>
+                    <property name="tooltip-text" translatable="yes">Close statistics dialog</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Close statistics dialog</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

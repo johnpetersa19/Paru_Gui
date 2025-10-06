@@ -11,145 +11,435 @@
     <property name="margin-start">4</property>
     <property name="margin-top">4</property>
     <property name="width-request">220</property>
-    <property name="height-request">300</property>
+    <property name="height-request">380</property>
     <property name="hexpand">False</property>
     <property name="vexpand">False</property>
     <property name="child">
-      <object class="GtkBox" id="card_container">
+      <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
-        <property name="spacing">8</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
+        <property name="spacing">0</property>
+
         <child>
-          <object class="GtkBox" id="header_box">
-            <property name="spacing">8</property>
-            <child>
-              <object class="GtkImage" id="file_icon">
-                <property name="icon-size">4</property>
-                <property name="icon-name">text-x-patch</property>
-                <property name="pixel-size">32</property>
+          <object class="GtkHeaderBar" id="navigation_header">
+            <property name="title-widget">
+              <object class="GtkBox" id="breadcrumb_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_main">
+                    <property name="label">Main</property>
+                    <property name="tooltip-text">Return to main application view</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="breadcrumb"/>
+                    </style>
+                    <signal name="clicked" handler="on_breadcrumb_main_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_separator1">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_content">
+                    <property name="label">Content</property>
+                    <property name="tooltip-text">Return to content selection</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="breadcrumb"/>
+                    </style>
+                    <signal name="clicked" handler="on_breadcrumb_content_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_separator2">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_patches">
+                    <property name="label">Patches</property>
+                    <property name="tooltip-text">Return to patches directory</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="breadcrumb"/>
+                    </style>
+                    <signal name="clicked" handler="on_breadcrumb_patches_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_separator3">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_current">
+                    <property name="label">[Patch Name]</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
               </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="patch_name_label">
-            <property name="wrap">True</property>
-            <property name="wrap-mode">word-char</property>
-            <property name="justify">center</property>
-            <property name="max-width-chars">20</property>
-            <property name="ellipsize">end</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-            <style>
-              <class name="heading"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="description_label">
-            <property name="wrap">True</property>
-            <property name="wrap-mode">word-char</property>
-            <property name="justify">center</property>
-            <property name="max-width-chars">25</property>
-            <property name="ellipsize">end</property>
-            <style>
-              <class name="caption"/>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="margin-top">8</property>
-            <property name="margin-bottom">8</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="actions_box">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkButton" id="apply_button">
-                <property name="label" translatable="yes">Apply Patch</property>
-                <signal name="clicked" handler="on_apply_clicked"/>
+            </property>
+
+            <child type="start">
+              <object class="GtkButton" id="back_to_file_list_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text">Back to File List - return to patch file listing</property>
                 <style>
+                  <class name="circular"/>
                   <class name="suggested-action"/>
-                  <class name="small-button"/>
-                  <class name="pill"/>
                 </style>
+                <signal name="clicked" handler="on_back_to_file_list_clicked"/>
               </object>
             </child>
-            <child>
-              <object class="GtkMenuButton" id="apply_sandbox_button">
-                <property name="label" translatable="yes">Apply with Sandboxing</property>
-                <property name="tooltip-text" translatable="yes">Apply patch in an isolated environment with customizable security settings.</property>
-                <style>
-                  <class name="flat"/>
-                  <class name="pill"/>
-                </style>
-                <property name="popover">
-                  <object class="GtkPopover">
-                    <property name="position">bottom</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">8</property>
-                        <style>
-                          <class name="popover-content"/>
-                        </style>
-                        <child>
-                          <object class="GtkComboBoxText" id="patch_sandbox_level_combo">
-                            <property name="valign">center</property>
-                            <property name="hexpand">true</property>
-                            <items>
-                              <item id="strict" translatable="yes">Strict Isolation</item>
-                              <item id="medium" translatable="yes">Medium Isolation (Recommended)</item>
-                              <item id="minimal" translatable="yes">Minimal Isolation</item>
-                            </items>
-                            <property name="active">0</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="patch_sandbox_network_check">
-                            <property name="label" translatable="yes">Enable network access</property>
-                            <property name="active">false</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="patch_sandbox_filesystem_check">
-                            <property name="label" translatable="yes">Allow access to home directory</property>
-                            <property name="active">false</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="confirm_patch_sandbox_apply">
-                            <property name="label" translatable="yes">Start Apply</property>
-                            <style>
-                              <class name="suggested-action"/>
-                              <class name="pill"/>
-                              <class name="small-button"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+
+            <child type="end">
+              <object class="GtkRevealer" id="progress_revealer">
+                <property name="reveal-child">false</property>
+                <property name="transition-type">slide-left</property>
+                <property name="child">
+                  <object class="GtkSpinner" id="operation_spinner">
+                    <property name="spinning">false</property>
+                    <property name="width-request">16</property>
+                    <property name="height-request">16</property>
                   </object>
                 </property>
               </object>
             </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox" id="card_container">
+            <property name="orientation">vertical</property>
+            <property name="spacing">8</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+
             <child>
-              <object class="GtkButton" id="preview_button">
-                <property name="label" translatable="yes">Preview Changes</property>
-                <signal name="clicked" handler="on_preview_clicked"/>
+              <object class="GtkBox" id="header_box">
+                <property name="spacing">8</property>
+                <property name="halign">center</property>
+                <child>
+                  <object class="GtkImage" id="file_icon">
+                    <property name="icon-size">4</property>
+                    <property name="icon-name">text-x-patch</property>
+                    <property name="pixel-size">32</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox" id="status_container">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">2</property>
+                    <child>
+                      <object class="GtkLabel" id="patch_status_label">
+                        <property name="label">Ready to Apply</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="success"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="patch_type_label">
+                        <property name="label">.patch file</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="patch_name_label">
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="justify">center</property>
+                <property name="max-width-chars">20</property>
+                <property name="ellipsize">end</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
                 <style>
-                  <class name="small-button"/>
-                  <class name="flat"/>
-                  <class name="pill"/>
+                  <class name="heading"/>
                 </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="description_label">
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="justify">center</property>
+                <property name="max-width-chars">25</property>
+                <property name="ellipsize">end</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="patch_info_box">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <property name="halign">center</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">8</property>
+                    <property name="halign">center</property>
+                    <child>
+                      <object class="GtkLabel" id="lines_changed_label">
+                        <property name="label">Lines: +0/-0</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="files_affected_label">
+                        <property name="label">Files: 0</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="patch_size_label">
+                    <property name="label">Size: 0 KB</property>
+                    <property name="halign">center</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="actions_box">
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkButton" id="apply_button">
+                    <property name="label">Apply Patch</property>
+                    <property name="tooltip-text">Apply patch with confirmation workflow - shows preview before applying</property>
+                    <signal name="clicked" handler="on_apply_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="small-button"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="view_details_button">
+                    <property name="label">View Patch Details</property>
+                    <property name="tooltip-text">Open detailed patch viewer modal with file-by-file changes</property>
+                    <signal name="clicked" handler="on_view_details_clicked"/>
+                    <style>
+                      <class name="accent"/>
+                      <class name="small-button"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkMenuButton" id="apply_sandbox_button">
+                    <property name="label">Apply with Sandbox</property>
+                    <property name="tooltip-text">Apply patch in an isolated environment with customizable security settings</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                    <property name="popover">
+                      <object class="GtkPopover">
+                        <property name="position">bottom</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <style>
+                              <class name="popover-content"/>
+                            </style>
+
+                            <child>
+                              <object class="GtkLabel" id="sandbox_title">
+                                <property name="label">Sandbox Apply Configuration</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Isolation Level:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="patch_sandbox_level_combo">
+                                    <property name="valign">center</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="tooltip-text">Choose security isolation level for patch application</property>
+                                    <items>
+                                      <item id="strict">Strict Isolation</item>
+                                      <item id="medium">Medium Isolation (Recommended)</item>
+                                      <item id="minimal">Minimal Isolation</item>
+                                    </items>
+                                    <property name="active">1</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="patch_sandbox_network_check">
+                                <property name="label">Enable network access</property>
+                                <property name="tooltip-text">Allow patch application process to access network resources</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="patch_sandbox_filesystem_check">
+                                <property name="label">Allow access to home directory</property>
+                                <property name="tooltip-text">Grant read/write access to user home directory during patching</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="margin-top">4</property>
+                                <property name="margin-bottom">4</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="backup_before_apply_check">
+                                <property name="label">Create backup before applying</property>
+                                <property name="tooltip-text">Automatically backup files before patch application for rollback</property>
+                                <property name="active">true</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="dry_run_first_check">
+                                <property name="label">Perform dry run first</property>
+                                <property name="tooltip-text">Test patch application without making changes first</property>
+                                <property name="active">true</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="ignore_whitespace_check">
+                                <property name="label">Ignore whitespace changes</property>
+                                <property name="tooltip-text">Apply patch while ignoring whitespace differences</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="confirm_patch_sandbox_apply">
+                                <property name="label">Start Sandbox Apply</property>
+                                <property name="tooltip-text">Begin patch application with selected sandbox configuration</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                  <class name="small-button"/>
+                                </style>
+                                <signal name="clicked" handler="on_sandbox_apply_execute"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="preview_button">
+                    <property name="label">Preview Changes</property>
+                    <property name="tooltip-text">Preview patch changes with integrated diff viewer before applying</property>
+                    <signal name="clicked" handler="on_preview_clicked"/>
+                    <style>
+                      <class name="small-button"/>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="validate_button">
+                    <property name="label">Validate Patch</property>
+                    <property name="tooltip-text">Check patch integrity and compatibility with current files</property>
+                    <signal name="clicked" handler="on_validate_clicked"/>
+                    <style>
+                      <class name="small-button"/>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="revert_button">
+                    <property name="label">Revert Patch</property>
+                    <property name="tooltip-text">Remove previously applied patch and restore original files</property>
+                    <property name="sensitive">false</property>
+                    <signal name="clicked" handler="on_revert_clicked"/>
+                    <style>
+                      <class name="destructive-action"/>
+                      <class name="small-button"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

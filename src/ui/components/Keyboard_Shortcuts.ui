@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkShortcutsWindow" id="help_overlay">
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">Keyboard Shortcuts</property>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">general</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">General</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Application Actions</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Show Keyboard Shortcuts</property>
+                <property name="action-name">win.show-help-overlay</property>
+                <property name="accelerator">&lt;Primary&gt;question F1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open Preferences</property>
+                <property name="action-name">app.preferences</property>
+                <property name="accelerator">&lt;Primary&gt;comma</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">About Application</property>
+                <property name="action-name">app.about</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;a</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Quit Application</property>
+                <property name="action-name">app.quit</property>
+                <property name="accelerator">&lt;Primary&gt;q</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Close Current Window</property>
+                <property name="action-name">win.close</property>
+                <property name="accelerator">&lt;Primary&gt;w</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Refresh Current View</property>
+                <property name="action-name">app.refresh-view</property>
+                <property name="accelerator">F5 &lt;Primary&gt;r</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">navigation</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">Navigation</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Main Navigation</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Go to Home Screen</property>
+                <property name="action-name">app.go-home</property>
+                <property name="accelerator">Escape &lt;Alt&gt;Home</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Navigate Back</property>
+                <property name="action-name">app.go-back</property>
+                <property name="accelerator">&lt;Alt&gt;Left &lt;Primary&gt;bracketleft</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Navigate Forward</property>
+                <property name="action-name">app.go-forward</property>
+                <property name="accelerator">&lt;Alt&gt;Right &lt;Primary&gt;bracketright</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Show Action History</property>
+                <property name="action-name">app.action-history</property>
+                <property name="accelerator">&lt;Primary&gt;h</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Toggle Sidebar</property>
+                <property name="action-name">win.toggle-sidebar</property>
+                <property name="accelerator">&lt;Primary&gt;backslash</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Focus Search Bar</property>
+                <property name="action-name">app.search-packages</property>
+                <property name="accelerator">&lt;Primary&gt;f &lt;Primary&gt;k</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">packages</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">Package Management</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Package Operations</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Install Selected Package</property>
+                <property name="action-name">app.install-package</property>
+                <property name="accelerator">&lt;Primary&gt;i</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Uninstall Selected Package</property>
+                <property name="action-name">app.uninstall-package</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;i</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Update System Packages</property>
+                <property name="action-name">app.update-system</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;u</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Check for Updates</property>
+                <property name="action-name">app.check-updates</property>
+                <property name="accelerator">&lt;Primary&gt;u</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">View Package Information</property>
+                <property name="action-name">app.view-package-info</property>
+                <property name="accelerator">&lt;Primary&gt;Return</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Verify Package Signature</property>
+                <property name="action-name">app.verify-signature</property>
+                <property name="accelerator">&lt;Primary&gt;v</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">file-operations</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">File Operations</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">File Management</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open File Browser</property>
+                <property name="action-name">app.select-file</property>
+                <property name="accelerator">&lt;Primary&gt;o</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Select Directory</property>
+                <property name="action-name">app.select-folder</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;o</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Download PKGBUILD Sources</property>
+                <property name="action-name">app.download-sources</property>
+                <property name="accelerator">&lt;Primary&gt;l</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Clean Package Cache</property>
+                <property name="action-name">app.clean-cache</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;c</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">build-operations</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">Build Operations</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">PKGBUILD Actions</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Build Package from PKGBUILD</property>
+                <property name="action-name">app.build-package</property>
+                <property name="accelerator">&lt;Primary&gt;b</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Edit PKGBUILD File</property>
+                <property name="action-name">app.edit-pkgbuild</property>
+                <property name="accelerator">&lt;Primary&gt;e</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">View Complete Build Analysis</property>
+                <property name="action-name">app.view-analysis</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;r</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Simulate Build (Dry Run)</property>
+                <property name="action-name">app.dry-run</property>
+                <property name="accelerator">&lt;Primary&gt;y</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Apply Patch to Sources</property>
+                <property name="action-name">app.apply-patch</property>
+                <property name="accelerator">&lt;Primary&gt;p</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">View Source Differences</property>
+                <property name="action-name">app.view-diff</property>
+                <property name="accelerator">&lt;Primary&gt;d</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">system-info</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">System Information</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">System Monitoring</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Show System Information</property>
+                <property name="action-name">app.system-info</property>
+                <property name="accelerator">&lt;Primary&gt;s</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">View Package Statistics</property>
+                <property name="action-name">app.statistics</property>
+                <property name="accelerator">&lt;Primary&gt;t</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Read Arch Linux News</property>
+                <property name="action-name">app.arch-news</property>
+                <property name="accelerator">&lt;Primary&gt;n</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Check Upstream Updates</property>
+                <property name="action-name">app.show-upstream-updates</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;d</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Refresh Update Information</property>
+                <property name="action-name">app.refresh-upstream-updates</property>
+                <property name="accelerator">F6</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">advanced</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">Advanced Features</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Advanced Operations</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Toggle Simplified Mode</property>
+                <property name="action-name">app.toggle-simplified-mode</property>
+                <property name="accelerator">&lt;Primary&gt;m</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Execute Custom Command</property>
+                <property name="action-name">app.execute-custom-command</property>
+                <property name="accelerator">&lt;Primary&gt;x</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open Terminal Interface</property>
+                <property name="action-name">app.show-terminal</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;t</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Access Documentation</property>
+                <property name="action-name">app.show-documentation</property>
+                <property name="accelerator">&lt;Primary&gt;slash</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Show Debug Information</property>
+                <property name="action-name">app.show-debug-info</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;F12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">developer</property>
+        <property name="max-height">12</property>
+        <property name="title" translatable="yes" context="shortcut window">Developer Mode</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Development Tools</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Check Development Updates</property>
+                <property name="action-name">app.check-devel-updates</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;e</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Install Debug Packages</property>
+                <property name="action-name">app.install-debug-packages</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;p</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Show Detailed Warnings</property>
+                <property name="action-name">app.show-detailed-warnings</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;w</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Enable Verbose Logging</property>
+                <property name="action-name">app.toggle-verbose-logging</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;v</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open Build Environment</property>
+                <property name="action-name">app.open-build-environment</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;b</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">accessibility</property>
+        <property name="max-height">8</property>
+        <property name="title" translatable="yes" context="shortcut window">Accessibility</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes" context="shortcut window">Accessibility Features</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Increase Text Size</property>
+                <property name="action-name">app.zoom-in</property>
+                <property name="accelerator">&lt;Primary&gt;plus &lt;Primary&gt;equal</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Decrease Text Size</property>
+                <property name="action-name">app.zoom-out</property>
+                <property name="accelerator">&lt;Primary&gt;minus</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Reset Text Size</property>
+                <property name="action-name">app.zoom-reset</property>
+                <property name="accelerator">&lt;Primary&gt;0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Toggle High Contrast Mode</property>
+                <property name="action-name">app.toggle-high-contrast</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;h</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

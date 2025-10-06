@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
+  <template class="AurSpecificDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">AUR Tools</property>
+    <property name="content-width">900</property>
+    <property name="content-height">800</property>
+    <property name="can-close">true</property>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <child type="start">
+              <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="back_to_package_management_button">
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Back to Package Management</property>
+                    <signal name="clicked" handler="on_back_to_package_management_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_label">
+                    <property name="label" translatable="yes">Main › AUR Tools › Operations</property>
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">AUR Tools</property>
+                <property name="subtitle" translatable="yes">Arch User Repository operations and configuration</property>
+              </object>
+            </property>
+            <child type="end">
+              <object class="GtkBox" id="header_actions">
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkButton" id="search_aur_button">
+                    <property name="icon-name">edit-find-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Search AUR Packages</property>
+                    <signal name="clicked" handler="on_search_aur_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="about_aur_button">
+                    <property name="icon-name">help-contents-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Learn About AUR</property>
+                    <signal name="clicked" handler="on_about_aur_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <child>
+              <object class="AdwClamp">
+                <property name="maximum-size">800</property>
+                <property name="tightening-threshold">600</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">About AUR (Arch User Repository)</property>
+                        <property name="description" translatable="yes">Educational content about AUR usage and security considerations</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">16</property>
+                                <property name="margin-top">20</property>
+                                <property name="margin-bottom">20</property>
+                                <property name="margin-start">20</property>
+                                <property name="margin-end">20</property>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">dialog-information-symbolic</property>
+                                        <property name="icon-size">large</property>
+                                        <style>
+                                          <class name="accent"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">8</property>
+                                        <property name="hexpand">true</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">What is the AUR?</property>
+                                            <property name="halign">start</property>
+                                            <style>
+                                              <class name="title-3"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">The Arch User Repository (AUR) is a community-driven repository for Arch Linux users. It contains package descriptions (PKGBUILDs) that allow you to compile packages from source with makepkg and then install them via pacman.</property>
+                                            <property name="halign">start</property>
+                                            <property name="wrap">true</property>
+                                            <property name="max-width-chars">60</property>
+                                            <style>
+                                              <class name="body"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkSeparator"/>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">8</property>
+                                    <property name="halign">center</property>
+                                    <child>
+                                      <object class="GtkButton" id="learn_more_button">
+                                        <property name="label" translatable="yes">Learn More About AUR</property>
+                                        <property name="tooltip-text" translatable="yes">Open comprehensive AUR documentation</property>
+                                        <signal name="clicked" handler="on_learn_more_clicked"/>
+                                        <style>
+                                          <class name="pill"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="search_packages_button">
+                                        <property name="label" translatable="yes">Search AUR Packages</property>
+                                        <property name="tooltip-text" translatable="yes">Browse and search AUR package database</property>
+                                        <signal name="clicked" handler="on_search_aur_clicked"/>
+                                        <style>
+                                          <class name="suggested-action"/>
+                                          <class name="pill"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkRevealer" id="warning_revealer">
+                        <property name="reveal-child">false</property>
+                        <property name="transition-type">slide-down</property>
+                        <child>
+                          <object class="AdwBanner" id="security_warning_banner">
+                            <property name="title" translatable="yes">Security Warning: AUR packages are user-contributed</property>
+                            <property name="button-label" translatable="yes">I Understand</property>
+                            <signal name="button-clicked" handler="on_security_warning_acknowledged"/>
+                            <style>
+                              <class name="warning"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Package Source Selection</property>
+                        <property name="description" translatable="yes">Choose installation source for package operations</property>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">AUR Packages Only</property>
+                            <property name="subtitle" translatable="yes">Install packages exclusively from AUR (--aur)</property>
+                            <property name="activatable-widget">aur_only_radio</property>
+                            <child type="prefix">
+                              <object class="GtkCheckButton" id="aur_only_radio">
+                                <property name="active">true</property>
+                                <signal name="toggled" handler="on_source_type_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Official Repositories Only</property>
+                            <property name="subtitle" translatable="yes">Install packages only from official Arch repositories (--repo)</property>
+                            <property name="activatable-widget">repo_only_radio</property>
+                            <child type="prefix">
+                              <object class="GtkCheckButton" id="repo_only_radio">
+                                <property name="group">aur_only_radio</property>
+                                <signal name="toggled" handler="on_source_type_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Mixed Sources (Default)</property>
+                            <property name="subtitle" translatable="yes">Search both AUR and official repositories</property>
+                            <property name="activatable-widget">mixed_sources_radio</property>
+                            <child type="prefix">
+                              <object class="GtkCheckButton" id="mixed_sources_radio">
+                                <property name="group">aur_only_radio</property>
+                                <signal name="toggled" handler="on_source_type_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Package Information</property>
+                        <property name="description" translatable="yes">Specify target package and access build files</property>
+
+                        <child>
+                          <object class="AdwEntryRow" id="package_name_entry">
+                            <property name="title" translatable="yes">Package Name</property>
+                            <property name="text"></property>
+                            <signal name="changed" handler="on_package_name_changed"/>
+                            <child type="suffix">
+                              <object class="GtkButton" id="package_info_button">
+                                <property name="icon-name">dialog-information-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">View Package Information</property>
+                                <property name="valign">center</property>
+                                <property name="sensitive">false</property>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="circular"/>
+                                </style>
+                                <signal name="clicked" handler="on_package_info_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">View PKGBUILD File</property>
+                            <property name="subtitle" translatable="yes">Review build script before installation (--show)</property>
+                            <child type="suffix">
+                              <object class="GtkButton" id="view_pkgbuild_button">
+                                <property name="label" translatable="yes">View PKGBUILD</property>
+                                <property name="tooltip-text" translatable="yes">Display PKGBUILD content for review</property>
+                                <property name="valign">center</property>
+                                <property name="sensitive">false</property>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                                <signal name="clicked" handler="on_view_pkgbuild_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Edit PKGBUILD File</property>
+                            <property name="subtitle" translatable="yes">Open interactive editor for PKGBUILD files (--editmenu)</property>
+                            <child type="prefix">
+                              <object class="GtkImage">
+                                <property name="icon-name">dialog-warning-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child type="suffix">
+                              <object class="GtkButton" id="edit_pkgbuild_button">
+                                <property name="label" translatable="yes">Edit PKGBUILD</property>
+                                <property name="tooltip-text" translatable="yes">WARNING: Advanced feature - modify build scripts</property>
+                                <property name="valign">center</property>
+                                <property name="sensitive">false</property>
+                                <style>
+                                  <class name="destructive-action"/>
+                                </style>
+                                <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Build Environment Configuration</property>
+                        <property name="description" translatable="yes">Configure compilation and build environment settings</property>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="chroot_switch">
+                            <property name="title" translatable="yes">Build in Isolated Environment</property>
+                            <property name="subtitle" translatable="yes">Build packages in clean chroot environment (--chroot)</property>
+                            <property name="active">true</property>
+                            <signal name="notify::active" handler="on_build_option_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="keep_build_switch">
+                            <property name="title" translatable="yes">Keep Build Directory</property>
+                            <property name="subtitle" translatable="yes">Preserve build files after installation (--keepbuild)</property>
+                            <signal name="notify::active" handler="on_build_option_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Clone Directory</property>
+                            <property name="subtitle" translatable="yes">Directory where AUR packages are downloaded and built</property>
+                            <child type="suffix">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">8</property>
+                                <child>
+                                  <object class="GtkEntry" id="clonedir_entry">
+                                    <property name="placeholder-text" translatable="yes">/tmp/paru</property>
+                                    <property name="width-chars">30</property>
+                                    <signal name="changed" handler="on_clonedir_changed"/>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="clonedir_button">
+                                    <property name="icon-name">folder-open-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Select Build Directory</property>
+                                    <style>
+                                      <class name="flat"/>
+                                      <class name="circular"/>
+                                    </style>
+                                    <signal name="clicked" handler="on_clonedir_select_clicked"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Security and Verification Options</property>
+                        <property name="description" translatable="yes">Configure package verification and security settings</property>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="skip_pgp_switch">
+                            <property name="title" translatable="yes">Skip PGP Signature Verification</property>
+                            <property name="subtitle" translatable="yes">WARNING: Skip cryptographic signature verification (--skippgpcheck)</property>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="sign_packages_switch">
+                            <property name="title" translatable="yes">Sign Built Packages</property>
+                            <property name="subtitle" translatable="yes">Cryptographically sign packages after building (--sign)</property>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="review_pkgbuild_switch">
+                            <property name="title" translatable="yes">Always Review PKGBUILD</property>
+                            <property name="subtitle" translatable="yes">Mandatory PKGBUILD review before installation (Recommended)</property>
+                            <property name="active">true</property>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkRevealer" id="dangerous_action_revealer">
+                        <property name="reveal-child">false</property>
+                        <property name="transition-type">slide-down</property>
+                        <child>
+                          <object class="AdwBanner" id="dangerous_action_banner">
+                            <property name="title" translatable="yes">Warning: Risky Security Settings Detected</property>
+                            <property name="button-label" translatable="yes">Acknowledge Risk</property>
+                            <signal name="button-clicked" handler="on_dangerous_action_acknowledged"/>
+                            <style>
+                              <class name="error"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Command Preview and Execution</property>
+                        <property name="description" translatable="yes">Review and execute the generated AUR command</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">16</property>
+                                <property name="margin-top">20</property>
+                                <property name="margin-bottom">20</property>
+                                <property name="margin-start">20</property>
+                                <property name="margin-end">20</property>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkImage" id="command_status_icon">
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                        <property name="icon-size">large</property>
+                                        <style>
+                                          <class name="success"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">4</property>
+                                        <property name="hexpand">true</property>
+                                        <child>
+                                          <object class="GtkLabel" id="command_status_label">
+                                            <property name="label" translatable="yes">AUR command is ready for execution</property>
+                                            <property name="halign">start</property>
+                                            <style>
+                                              <class name="heading"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="command_description_label">
+                                            <property name="label" translatable="yes">This will install packages from the Arch User Repository</property>
+                                            <property name="halign">start</property>
+                                            <property name="wrap">true</property>
+                                            <style>
+                                              <class name="caption"/>
+                                              <class name="dim-label"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkFrame">
+                                    <style>
+                                      <class name="view"/>
+                                    </style>
+                                    <child>
+                                      <object class="GtkLabel" id="command_preview_label">
+                                        <property name="label">paru -S --aur</property>
+                                        <property name="halign">start</property>
+                                        <property name="selectable">true</property>
+                                        <property name="wrap">true</property>
+                                        <property name="margin-top">12</property>
+                                        <property name="margin-bottom">12</property>
+                                        <property name="margin-start">16</property>
+                                        <property name="margin-end">16</property>
+                                        <style>
+                                          <class name="monospace"/>
+                                          <class name="title-3"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">8</property>
+                                    <property name="halign">center</property>
+                                    <child>
+                                      <object class="GtkButton" id="copy_command_button">
+                                        <property name="label" translatable="yes">Copy Command</property>
+                                        <property name="tooltip-text" translatable="yes">Copy command to clipboard</property>
+                                        <style>
+                                          <class name="pill"/>
+                                        </style>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="spacing">6</property>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="icon-name">edit-copy-symbolic</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="label" translatable="yes">Copy</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <signal name="clicked" handler="on_copy_command_clicked"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="test_command_button">
+                                        <property name="label" translatable="yes">Test Command</property>
+                                        <property name="tooltip-text" translatable="yes">Test command without making changes</property>
+                                        <style>
+                                          <class name="pill"/>
+                                        </style>
+                                        <signal name="clicked" handler="on_test_command_clicked"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="AdwHeaderBar">
+            <property name="show-title">false</property>
+            <child type="start">
+              <object class="GtkButton" id="package_management_button">
+                <property name="label" translatable="yes">Back to Package Management</property>
+                <property name="tooltip-text" translatable="yes">Return to package management panel</property>
+                <signal name="clicked" handler="on_back_to_package_management_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="cancel_button">
+                <property name="label" translatable="yes">Cancel</property>
+                <signal name="clicked" handler="on_cancel_clicked"/>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox" id="execute_actions">
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="dry_run_button">
+                    <property name="label" translatable="yes">Dry Run</property>
+                    <property name="tooltip-text" translatable="yes">Preview operation without making changes</property>
+                    <signal name="clicked" handler="on_dry_run_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="execute_button">
+                    <property name="label" translatable="yes">Execute AUR Operation</property>
+                    <property name="tooltip-text" translatable="yes">Execute the configured AUR operation</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <signal name="clicked" handler="on_execute_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <accessibility>
+      <property name="label" translatable="yes">AUR Tools Dialog</property>
+      <property name="description" translatable="yes">Comprehensive AUR package management with educational content and security warnings</property>
+    </accessibility>
+  </template>
+</interface>

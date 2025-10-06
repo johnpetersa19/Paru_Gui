@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="paru-gui">
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gio" version="2.0"/>
+
+  <object class="AdwApplicationWindow" id="patch_management_window">
+    <property name="title" translatable="yes">Patch Management</property>
+    <property name="default-width">900</property>
+    <property name="default-height">600</property>
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">Patches › Management</property>
+                <property name="subtitle" translatable="yes">Apply and manage system patches</property>
+              </object>
+            </property>
+            <child type="start">
+              <object class="GtkButton" id="back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Back to Main</property>
+                <property name="action-name">app.go-back</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate back to main application</property>
+                </accessibility>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton" id="menu_button">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Main menu</property>
+                <property name="primary">True</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="refresh_button">
+                <property name="icon-name">view-refresh-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Refresh patch list</property>
+                <property name="action-name">app.refresh-patches</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <child>
+              <object class="GtkBox" id="toolbar_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+                <property name="margin-bottom">8</property>
+                <child>
+                  <object class="GtkSearchEntry" id="patch_search">
+                    <property name="placeholder-text" translatable="yes">Search patches...</property>
+                    <property name="width-chars">30</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Search for patches by name or description</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkDropDown" id="status_filter">
+                    <property name="tooltip-text" translatable="yes">Filter patches by status</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Filter patches by application status</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="apply_selected_button">
+                    <property name="label" translatable="yes">Apply Selected</property>
+                    <property name="sensitive">False</property>
+                    <property name="action-name">app.apply-selected-patches</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Apply all selected patches</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="import_patch_button">
+                    <property name="label" translatable="yes">Import Patch</property>
+                    <property name="icon-name">document-open-symbolic</property>
+                    <property name="action-name">app.import-patch</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Import patch file from disk</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="hscrollbar-policy">automatic</property>
+                <property name="vscrollbar-policy">automatic</property>
+                <child>
+                  <object class="GtkFlowBox" id="patches_container">
+                    <property name="margin-top">8</property>
+                    <property name="margin-bottom">8</property>
+                    <property name="margin-start">8</property>
+                    <property name="margin-end">8</property>
+                    <property name="row-spacing">12</property>
+                    <property name="column-spacing">12</property>
+                    <property name="min-children-per-line">1</property>
+                    <property name="max-children-per-line">3</property>
+                    <property name="selection-mode">none</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">List of available patches</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkRevealer" id="status_revealer">
+                <property name="reveal-child">False</property>
+                <property name="transition-type">slide-up</property>
+                <child>
+                  <object class="AdwStatusPage" id="status_page">
+                    <property name="icon-name">application-x-patch-symbolic</property>
+                    <property name="title" translatable="yes">No Patches Available</property>
+                    <property name="description" translatable="yes">Import patch files or check for system updates to see available patches here.</property>
+                    <child>
+                      <object class="GtkButton" id="import_first_patch_button">
+                        <property name="label" translatable="yes">Import First Patch</property>
+                        <property name="halign">center</property>
+                        <property name="action-name">app.import-patch</property>
+                        <style>
+                          <class name="pill"/>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <template class="PatchCard" parent="GtkFrame">
+    <property name="margin-top">4</property>
+    <property name="margin-bottom">4</property>
+    <property name="margin-start">4</property>
+    <property name="margin-end">4</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="margin-top">16</property>
+        <property name="margin-bottom">16</property>
+        <property name="margin-start">16</property>
+        <property name="margin-end">16</property>
+        <child>
+          <object class="GtkBox" id="header_box">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <child>
+              <object class="GtkCheckButton" id="selection_checkbox">
+                <property name="valign">center</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Select patch for bulk operations</property>
+                </accessibility>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="patch_icon">
+                <property name="icon-name">application-x-patch-symbolic</property>
+                <property name="icon-size">large</property>
+                <property name="valign">start</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkLabel" id="patch_name">
+                        <property name="label" translatable="yes">Patch Name</property>
+                        <property name="xalign">0</property>
+                        <property name="hexpand">True</property>
+                        <property name="ellipsize">end</property>
+                        <property name="selectable">True</property>
+                        <style>
+                          <class name="title-4"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="status_badge">
+                        <property name="label" translatable="yes">Available</property>
+                        <property name="valign">center</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="accent"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="patch_description">
+                    <property name="label" translatable="yes">Description of changes made by this patch</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="lines">2</property>
+                    <property name="ellipsize">end</property>
+                    <property name="xalign">0</property>
+                    <property name="selectable">True</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="actions_menu">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="tooltip-text" translatable="yes">More patch actions</property>
+                <property name="valign">start</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Additional patch actions menu</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="details_revealer">
+            <property name="reveal-child">False</property>
+            <property name="transition-type">slide-down</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="margin-top">4</property>
+                    <property name="margin-bottom">4</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">16</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Files Affected</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption-heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="files_count">
+                            <property name="label">3 files</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Patch Size</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption-heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="patch_size">
+                            <property name="label">2.1 KB</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Risk Level</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption-heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="risk_level">
+                            <property name="label" translatable="yes">Low</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="success"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="preview_container">
+                    <property name="height-request">120</property>
+                    <property name="hscrollbar-policy">automatic</property>
+                    <property name="vscrollbar-policy">automatic</property>
+                    <property name="has-frame">True</property>
+                    <child>
+                      <object class="GtkTextView" id="patch_preview">
+                        <property name="editable">False</property>
+                        <property name="monospace">True</property>
+                        <property name="wrap-mode">none</property>
+                        <property name="left-margin">8</property>
+                        <property name="right-margin">8</property>
+                        <property name="top-margin">8</property>
+                        <property name="bottom-margin">8</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Patch content preview</property>
+                        </accessibility>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="action_buttons">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">end</property>
+            <property name="margin-top">8</property>
+            <child>
+              <object class="GtkButton" id="view_details_button">
+                <property name="label" translatable="yes">View Details</property>
+                <property name="action-name">patch.view-details</property>
+                <accessibility>
+                  <property name="label" translatable="yes">View complete patch details in modal</property>
+                </accessibility>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="preview_button">
+                <property name="label" translatable="yes">Preview Changes</property>
+                <property name="action-name">patch.toggle-preview</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Preview patch changes before applying</property>
+                </accessibility>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="apply_button">
+                <property name="label" translatable="yes">Apply Patch</property>
+                <property name="action-name">patch.apply</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Apply this patch to the system</property>
+                </accessibility>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="reverse_button">
+                <property name="label" translatable="yes">Reverse</property>
+                <property name="action-name">patch.reverse</property>
+                <property name="visible">False</property>
+                <style>
+                  <class name="destructive-action"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Reverse this applied patch</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="progress_revealer">
+            <property name="reveal-child">False</property>
+            <property name="transition-type">slide-down</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="margin-top">8</property>
+                <child>
+                  <object class="GtkSpinner" id="operation_spinner">
+                    <property name="spinning">False</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="operation_status">
+                    <property name="label" translatable="yes">Applying patch...</property>
+                    <property name="xalign">0</property>
+                    <style>
+                      <class name="caption"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object name="GtkBox">
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="operation_progress">
+                    <property name="width-request">100</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="AdwDialog" id="patch_details_dialog">
+    <property name="title" translatable="yes">Patch Details</property>
+    <property name="content-width">600</property>
+    <property name="content-height">500</property>
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle" id="details_title">
+                <property name="title" translatable="yes">Patch › Details</property>
+                <property name="subtitle" translatable="yes">Complete patch information</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">automatic</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">16</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">application-x-patch-symbolic</property>
+                        <property name="icon-size">large</property>
+                        <property name="valign">start</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkLabel" id="details_patch_name">
+                            <property name="label" translatable="yes">Patch Name</property>
+                            <property name="xalign">0</property>
+                            <property name="selectable">True</property>
+                            <style>
+                              <class name="title-2"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="details_patch_description">
+                            <property name="label" translatable="yes">Complete description of changes made by this patch</property>
+                            <property name="wrap">True</property>
+                            <property name="xalign">0</property>
+                            <property name="selectable">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="details_content">
+                    <property name="editable">False</property>
+                    <property name="monospace">True</property>
+                    <property name="wrap-mode">none</property>
+                    <property name="left-margin">12</property>
+                    <property name="right-margin">12</property>
+                    <property name="top-margin">12</property>
+                    <property name="bottom-margin">12</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Complete patch file content</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">8</property>
+                    <property name="halign">end</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="label" translatable="yes">Close</property>
+                        <property name="action-name">window.close</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="label" translatable="yes">Apply Patch</property>
+                        <property name="action-name">patch.apply</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -1,169 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface domain="paru-gui">
+<interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="gio" version="2.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
   <template class="WelcomeScreen" parent="GtkBox">
     <property name="orientation">vertical</property>
-    <property name="spacing">24</property>
-    <property name="margin-top">48</property>
-    <property name="margin-bottom">48</property>
-    <property name="margin-start">48</property>
-    <property name="margin-end">48</property>
-    <property name="halign">center</property>
-    <property name="valign">center</property>
+    <property name="spacing">0</property>
+    <property name="halign">fill</property>
+    <property name="valign">fill</property>
+    <style>
+      <class name="welcome-screen"/>
+    </style>
 
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <property name="halign">center</property>
-
-        <child>
-          <object class="GtkImage">
-            <property name="icon-name">package-x-generic</property>
-            <property name="pixel-size">96</property>
-            <property name="css-classes">welcome-icon</property>
-            <accessibility>
-              <property name="label">Paru GUI application icon</property>
-            </accessibility>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkLabel">
-            <property name="label" translatable="yes">Welcome to Paru GUI</property>
-            <property name="css-classes">title-1</property>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkLabel">
-            <property name="label" translatable="yes">Manage AUR packages with ease and security</property>
-            <property name="css-classes">body</property>
-            <property name="wrap">True</property>
-            <property name="max-width-chars">50</property>
-            <property name="halign">center</property>
-          </object>
-        </child>
-      </object>
-    </child>
-
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">horizontal</property>
-        <property name="spacing">24</property>
-        <property name="halign">center</property>
-        <property name="margin-top">24</property>
-
-        <child>
-          <object class="GtkButton" id="select_file_button">
-            <property name="tooltip-text" translatable="yes">Select PKGBUILD file, .zst package, or patch file</property>
-            <signal name="clicked" handler="on_select_file_clicked"/>
-            <style>
-              <class name="card"/>
-              <class name="welcome-card"/>
-            </style>
-            <accessibility>
-              <property name="label">Select file button - Choose PKGBUILD or package file</property>
-            </accessibility>
-            <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">8</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">document-open-symbolic</property>
-                    <property name="pixel-size">48</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">Select File</property>
-                    <property name="css-classes">heading</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">PKGBUILD, .pkg.tar.zst, .patch</property>
-                    <property name="css-classes">caption dim-label</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkButton" id="select_folder_button">
-            <property name="tooltip-text" translatable="yes">Select folder with compatible files for smart visualization</property>
-            <signal name="clicked" handler="on_select_folder_clicked"/>
-            <style>
-              <class name="card"/>
-              <class name="welcome-card"/>
-            </style>
-            <accessibility>
-              <property name="label">Select folder button - Choose directory with package files</property>
-            </accessibility>
-            <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">8</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">folder-open-symbolic</property>
-                    <property name="pixel-size">48</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">Select Folder</property>
-                    <property name="css-classes">heading</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">Directory with package files</property>
-                    <property name="css-classes">caption dim-label</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-
-    <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="header_section">
         <property name="orientation">vertical</property>
         <property name="spacing">16</property>
         <property name="margin-top">32</property>
+        <property name="margin-bottom">24</property>
         <property name="halign">center</property>
 
         <child>
-          <object class="GtkLabel">
-            <property name="label" translatable="yes">Recent Files</property>
-            <property name="css-classes">heading</property>
+          <object class="GtkBox" id="welcome_header">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">16</property>
+            <property name="halign">center</property>
+
+            <child>
+              <object class="GtkImage" id="app_icon">
+                <property name="icon-name">package-x-generic</property>
+                <property name="pixel-size">72</property>
+                <style>
+                  <class name="welcome-icon"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <property name="valign">center</property>
+
+                <child>
+                  <object class="GtkLabel" id="welcome_title">
+                    <property name="label" translatable="yes">Welcome to Paru GUI</property>
+                    <property name="halign">start</property>
+                    <style>
+                      <class name="title-1"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="welcome_subtitle">
+                    <property name="label" translatable="yes">Secure AUR package management made simple</property>
+                    <property name="halign">start</property>
+                    <style>
+                      <class name="subtitle"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
 
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="min-content-height">120</property>
-            <property name="max-content-height">200</property>
-            <accessibility>
-              <property name="label">Recent files list container</property>
-            </accessibility>
+          <object class="GtkRevealer" id="user_status_revealer">
+            <property name="reveal-child">false</property>
+            <property name="transition-type">slide-down</property>
 
             <child>
-              <object class="GtkListBox" id="recent_files_list">
-                <property name="selection-mode">none</property>
-                <property name="css-classes">boxed-list</property>
-                <accessibility>
-                  <property name="label">Recent files and directories</property>
-                </accessibility>
+              <object class="GtkBox" id="returning_user_section">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="toolbar"/>
+                  <class name="returning-user"/>
+                </style>
+
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">emblem-favorite-symbolic</property>
+                    <property name="icon-size">normal</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Welcome back! Ready to continue where you left off?</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="import_settings_button">
+                    <property name="label" translatable="yes">Import Settings</property>
+                    <property name="tooltip-text" translatable="yes">Import previous configuration and preferences</property>
+                    <signal name="clicked" handler="on_import_settings_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -172,33 +117,567 @@
     </child>
 
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="main_content">
         <property name="orientation">horizontal</property>
-        <property name="spacing">12</property>
+        <property name="spacing">32</property>
+        <property name="margin-start">32</property>
+        <property name="margin-end">32</property>
+        <property name="margin-bottom">32</property>
         <property name="halign">center</property>
-        <property name="margin-top">24</property>
+        <property name="hexpand">true</property>
 
         <child>
-          <object class="GtkButton" id="tour_guide_button">
-            <property name="label" translatable="yes">Tour Guide</property>
-            <property name="css-classes">flat</property>
-            <signal name="clicked" handler="on_tour_guide_clicked"/>
-            <property name="tooltip-text" translatable="yes">Start an interactive tour for new users.</property>
-            <accessibility>
-              <property name="label">Start interactive tour guide</property>
-            </accessibility>
+          <object class="GtkBox" id="get_started_section">
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
+            <property name="width-request">400</property>
+
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Get Started</property>
+                <property name="halign">start</property>
+                <style>
+                  <class name="title-2"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkFlowBox" id="quick_actions_flow">
+                <property name="selection-mode">none</property>
+                <property name="max-children-per-line">2</property>
+                <property name="min-children-per-line">1</property>
+                <property name="row-spacing">12</property>
+                <property name="column-spacing">12</property>
+                <property name="homogeneous">true</property>
+
+                <child>
+                  <object class="GtkButton" id="select_file_action">
+                    <property name="tooltip-text" translatable="yes">Select PKGBUILD file, package, or patch for analysis</property>
+                    <signal name="clicked" handler="on_select_file_clicked"/>
+                    <style>
+                      <class name="card"/>
+                      <class name="quick-action"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">document-open-symbolic</property>
+                            <property name="icon-size">large</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Open File</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">PKGBUILD, packages, patches</property>
+                            <property name="wrap">true</property>
+                            <property name="justify">center</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="select_directory_action">
+                    <property name="tooltip-text" translatable="yes">Select directory containing package files for batch processing</property>
+                    <signal name="clicked" handler="on_select_directory_clicked"/>
+                    <style>
+                      <class name="card"/>
+                      <class name="quick-action"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">folder-open-symbolic</property>
+                            <property name="icon-size">large</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Open Directory</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Batch process package files</property>
+                            <property name="wrap">true</property>
+                            <property name="justify">center</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="search_packages_action">
+                    <property name="tooltip-text" translatable="yes">Search and browse available AUR packages</property>
+                    <signal name="clicked" handler="on_search_packages_clicked"/>
+                    <style>
+                      <class name="card"/>
+                      <class name="quick-action"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">system-search-symbolic</property>
+                            <property name="icon-size">large</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Search Packages</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Browse AUR repository</property>
+                            <property name="wrap">true</property>
+                            <property name="justify">center</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="take_tour_action">
+                    <property name="tooltip-text" translatable="yes">Take an interactive tour to learn the application features</property>
+                    <signal name="clicked" handler="on_take_tour_clicked"/>
+                    <style>
+                      <class name="card"/>
+                      <class name="quick-action"/>
+                      <class name="tour-action"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">help-browser-symbolic</property>
+                            <property name="icon-size">large</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Take Tour</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Interactive guided tour</property>
+                            <property name="wrap">true</property>
+                            <property name="justify">center</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="guided_workflow_section">
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <property name="margin-top">16</property>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Guided Workflow</property>
+                    <property name="halign">start</property>
+                    <style>
+                      <class name="title-3"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkFlowBox" id="workflow_steps">
+                    <property name="selection-mode">none</property>
+                    <property name="max-children-per-line">3</property>
+                    <property name="min-children-per-line">1</property>
+                    <property name="row-spacing">8</property>
+                    <property name="column-spacing">8</property>
+                    <property name="homogeneous">true</property>
+
+                    <child>
+                      <object class="GtkBox" id="step_1">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="workflow-step"/>
+                        </style>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">1</property>
+                            <style>
+                              <class name="step-number"/>
+                              <class name="accent"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Choose Source</property>
+                            <style>
+                              <class name="caption"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="step_2">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="workflow-step"/>
+                        </style>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">2</property>
+                            <style>
+                              <class name="step-number"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Review Content</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="step_3">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+                        <style>
+                          <class name="workflow-step"/>
+                        </style>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">3</property>
+                            <style>
+                              <class name="step-number"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Execute Action</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
+
+        <child>
+          <object class="GtkBox" id="recent_section">
+            <property name="orientation">vertical</property>
+            <property name="spacing">16</property>
+            <property name="width-request">350</property>
+
+            <child>
+              <object class="GtkBox" id="recent_header">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Recent Directories</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">true</property>
+                    <style>
+                      <class name="title-2"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="clear_recent_button">
+                    <property name="icon-name">user-trash-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Clear recent directories list</property>
+                    <signal name="clicked" handler="on_clear_recent_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkScrolledWindow" id="recent_scroll">
+                <property name="hscrollbar-policy">never</property>
+                <property name="vscrollbar-policy">automatic</property>
+                <property name="min-content-height">200</property>
+                <property name="max-content-height">400</property>
+                <property name="vexpand">true</property>
+
+                <child>
+                  <object class="GtkListBox" id="recent_directories_list">
+                    <property name="selection-mode">none</property>
+                    <signal name="row-activated" handler="on_recent_directory_activated"/>
+                    <style>
+                      <class name="boxed-list"/>
+                      <class name="recent-list"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkRevealer" id="recent_preview_revealer">
+                <property name="reveal-child">false</property>
+                <property name="transition-type">slide-down</property>
+                <property name="transition-duration">200</property>
+
+                <child>
+                  <object class="GtkFrame" id="preview_frame">
+                    <style>
+                      <class name="view"/>
+                      <class name="preview-frame"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkImage" id="preview_icon">
+                                <property name="icon-name">folder-symbolic</property>
+                                <property name="icon-size">normal</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="preview_title">
+                                <property name="label">Directory Preview</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">true</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel" id="preview_path">
+                            <property name="label">/path/to/directory</property>
+                            <property name="halign">start</property>
+                            <property name="ellipsize">start</property>
+                            <property name="max-width-chars">40</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel" id="preview_content">
+                            <property name="label">Contains: 3 PKGBUILD files, 2 packages</property>
+                            <property name="halign">start</property>
+                            <property name="wrap">true</property>
+                            <style>
+                              <class name="caption"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">8</property>
+                            <property name="margin-top">4</property>
+                            <child>
+                              <object class="GtkButton" id="open_preview_button">
+                                <property name="label" translatable="yes">Open</property>
+                                <signal name="clicked" handler="on_open_preview_clicked"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="browse_preview_button">
+                                <property name="label" translatable="yes">Browse</property>
+                                <signal name="clicked" handler="on_browse_preview_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox" id="footer_section">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">16</property>
+        <property name="margin-start">32</property>
+        <property name="margin-end">32</property>
+        <property name="margin-bottom">24</property>
+        <property name="halign">center</property>
 
         <child>
           <object class="GtkButton" id="documentation_button">
             <property name="label" translatable="yes">Documentation</property>
-            <property name="css-classes">flat</property>
+            <property name="tooltip-text" translatable="yes">Access comprehensive documentation and guides</property>
             <signal name="clicked" handler="on_documentation_clicked"/>
-            <property name="tooltip-text" translatable="yes">Open the Paru GUI documentation.</property>
-            <accessibility>
-              <property name="label">Open documentation and help</property>
-            </accessibility>
+            <style>
+              <class name="flat"/>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="keyboard_shortcuts_button">
+            <property name="label" translatable="yes">Keyboard Shortcuts</property>
+            <property name="tooltip-text" translatable="yes">View available keyboard shortcuts</property>
+            <signal name="clicked" handler="on_keyboard_shortcuts_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="preferences_button">
+            <property name="label" translatable="yes">Preferences</property>
+            <property name="tooltip-text" translatable="yes">Configure application settings</property>
+            <signal name="clicked" handler="on_preferences_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="pill"/>
+            </style>
           </object>
         </child>
       </object>

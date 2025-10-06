@@ -11,217 +11,397 @@
     <property name="margin-start">4</property>
     <property name="margin-top">4</property>
     <property name="width-request">220</property>
-    <property name="height-request">300</property>
+    <property name="height-request">380</property>
     <property name="hexpand">False</property>
     <property name="vexpand">False</property>
     <property name="child">
-      <object class="GtkBox" id="card_container">
+      <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
-        <property name="spacing">8</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
+        <property name="spacing">0</property>
+
         <child>
-          <object class="GtkBox" id="header_box">
-            <property name="spacing">8</property>
-            <child>
-              <object class="GtkImage" id="file_icon">
-                <property name="icon-size">4</property>
-                <property name="icon-name">applications-engineering-symbolic</property>
-                <property name="pixel-size">32</property>
+          <object class="GtkHeaderBar" id="navigation_header">
+            <property name="title-widget">
+              <object class="GtkBox" id="breadcrumb_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_main">
+                    <property name="label">Main</property>
+                    <property name="tooltip-text">Return to main application view</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="breadcrumb"/>
+                    </style>
+                    <signal name="clicked" handler="on_breadcrumb_main_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_separator1">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_content">
+                    <property name="label">Content</property>
+                    <property name="tooltip-text">Return to content selection</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="breadcrumb"/>
+                    </style>
+                    <signal name="clicked" handler="on_breadcrumb_content_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_separator2">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_current">
+                    <property name="label">Advanced</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
               </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="title_label">
-                <property name="label" translatable="yes">Advanced Mode</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+            </property>
+
+            <child type="start">
+              <object class="GtkButton" id="back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text">Return to simple mode</property>
                 <style>
-                  <class name="heading"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="description_label">
-            <property name="label" translatable="yes">Execute custom commands with advanced options</property>
-            <property name="wrap">True</property>
-            <property name="wrap-mode">word-char</property>
-            <property name="justify">center</property>
-            <property name="max-width-chars">30</property>
-            <style>
-              <class name="caption"/>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="margin-top">8</property>
-            <property name="margin-bottom">8</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="actions_box">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkButton" id="custom_command_button">
-                <property name="label" translatable="yes">Execute Custom Command</property>
-                <signal name="clicked" handler="on_custom_command_clicked"/>
-                <style>
+                  <class name="circular"/>
                   <class name="suggested-action"/>
-                  <class name="small-button"/>
-                  <class name="pill"/>
                 </style>
+                <signal name="clicked" handler="on_back_to_simple_clicked"/>
               </object>
             </child>
-            <child>
-              <object class="GtkMenuButton" id="custom_command_sandbox_button">
-                <property name="label" translatable="yes">Execute Sandboxed Command</property>
-                <property name="tooltip-text" translatable="yes">Run a custom command in an isolated environment with customizable security settings.</property>
-                <style>
-                  <class name="flat"/>
-                  <class name="pill"/>
-                </style>
-                <property name="popover">
-                  <object class="GtkPopover">
-                    <property name="position">bottom</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">8</property>
-                        <style>
-                          <class name="popover-content"/>
-                        </style>
-                        <child>
-                          <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
-                            <property name="valign">center</property>
-                            <property name="hexpand">true</property>
-                            <items>
-                              <item id="strict" translatable="yes">Strict Isolation</item>
-                              <item id="medium" translatable="yes">Medium Isolation (Recommended)</item>
-                              <item id="minimal" translatable="yes">Minimal Isolation</item>
-                            </items>
-                            <property name="active">0</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="advanced_sandbox_network_check">
-                            <property name="label" translatable="yes">Enable network access</property>
-                            <property name="active">false</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="advanced_sandbox_filesystem_check">
-                            <property name="label" translatable="yes">Allow access to home directory</property>
-                            <property name="active">false</property>
-                          </object>
-                        </child>
-                        
-                        <child>
-                          <object class="GtkCheckButton" id="sandbox_skip_pgp_check">
-                            <property name="label" translatable="yes">Skip PGP Check</property>
-                            <property name="tooltip-text" translatable="yes">Bypass PGP signature checks for sources.</property>
-                            <property name="active">False</property>
-                          </object>
-                        </child>
 
-                        <child>
-                          <object class="GtkCheckButton" id="sandbox_skip_checksum_check">
-                            <property name="label" translatable="yes">Skip Checksums</property>
-                            <property name="tooltip-text" translatable="yes">Bypass file checksum verification.</property>
-                            <property name="active">False</property>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkEntry" id="extra_makepkg_flags_entry">
-                            <property name="text" translatable="no"></property>
-                            <property name="placeholder-text" translatable="yes">Extra makepkg flags (e.g., --skippgpcheck --keepsrc)</property>
-                            <property name="margin-top">6</property>
-                            <property name="margin-bottom">6</property>
-                          </object>
-                        </child>
-                        
-                        <child>
-                          <object class="GtkCheckButton" id="sandbox_keep_src_check">
-                            <property name="label" translatable="yes">Keep Sources (--keepsrc)</property>
-                            <property name="tooltip-text" translatable="yes">Keep source files after successful build.</property>
-                            <property name="active">False</property>
-                          </object>
-                        </child>
-                        
-                        <child>
-                          <object class="GtkCheckButton" id="sandbox_no_sign_check">
-                            <property name="label" translatable="yes">Skip Package Signing (--nosign)</property>
-                            <property name="tooltip-text" translatable="yes">Do not sign the resulting package.</property>
-                            <property name="active">False</property>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label" translatable="yes">PGP Key ID / Command:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="gpg_key_combo">
-                                <property name="hexpand">true</property>
-                                <items>
-                                  <item id="default" translatable="yes">Default GPG Key</item>
-                                  <item id="auto_fetch" translatable="yes">Auto-fetch from KeyServer</item>
-                                  <item id="custom_id" translatable="yes">Use Custom ID/Command</item>
-                                </items>
-                                <property name="active">0</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkButton" id="confirm_advanced_sandbox_command">
-                            <property name="label" translatable="yes">Start Command</property>
-                            <style>
-                              <class name="suggested-action"/>
-                              <class name="pill"/>
-                              <class name="small-button"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+            <child type="end">
+              <object class="GtkRevealer" id="progress_revealer">
+                <property name="reveal-child">false</property>
+                <property name="transition-type">slide-left</property>
+                <property name="child">
+                  <object class="GtkSpinner" id="operation_spinner">
+                    <property name="spinning">false</property>
+                    <property name="width-request">16</property>
+                    <property name="height-request">16</property>
                   </object>
                 </property>
               </object>
             </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox" id="card_container">
+            <property name="orientation">vertical</property>
+            <property name="spacing">8</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+
             <child>
-              <object class="GtkButton" id="dry_run_button">
-                <property name="label" translatable="yes">Simulate Action (Dry Run)</property>
-                <signal name="clicked" handler="on_dry_run_clicked"/>
+              <object class="GtkBox" id="header_box">
+                <property name="spacing">8</property>
+                <property name="halign">center</property>
+                <child>
+                  <object class="GtkImage" id="file_icon">
+                    <property name="icon-size">4</property>
+                    <property name="icon-name">applications-engineering-symbolic</property>
+                    <property name="pixel-size">32</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="title_label">
+                    <property name="label">Advanced Mode</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="description_label">
+                <property name="label">Execute custom commands with advanced options and enhanced control</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="justify">center</property>
+                <property name="max-width-chars">30</property>
                 <style>
-                  <class name="small-button"/>
-                  <class name="flat"/>
-                  <class name="pill"/>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
                 </style>
               </object>
             </child>
+
             <child>
-              <object class="GtkButton" id="documentation_button">
-                <property name="label" translatable="yes">Consult Documentation</property>
-                <signal name="clicked" handler="on_documentation_clicked"/>
-                <style>
-                  <class name="small-button"/>
-                  <class name="flat"/>
-                  <class name="pill"/>
-                </style>
+              <object class="GtkInfoBar" id="warning_bar">
+                <property name="message-type">warning</property>
+                <property name="show-close-button">false</property>
+                <property name="revealed">true</property>
+                <child>
+                  <object class="GtkLabel" id="warning_label">
+                    <property name="label">Advanced mode allows dangerous operations. Use with caution.</property>
+                    <property name="wrap">true</property>
+                    <property name="max-width-chars">25</property>
+                    <style>
+                      <class name="caption"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="margin-top">4</property>
+                <property name="margin-bottom">4</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="actions_box">
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkButton" id="custom_command_button">
+                    <property name="label">Execute Custom Command</property>
+                    <property name="tooltip-text">Run a custom command with full system access - opens command dialog</property>
+                    <signal name="clicked" handler="on_custom_command_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="small-button"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkMenuButton" id="custom_command_sandbox_button">
+                    <property name="label">Execute Sandboxed Command</property>
+                    <property name="tooltip-text">Run a custom command in an isolated environment with customizable security settings</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                    <property name="popover">
+                      <object class="GtkPopover">
+                        <property name="position">bottom</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <style>
+                              <class name="popover-content"/>
+                            </style>
+
+                            <child>
+                              <object class="GtkLabel" id="sandbox_title">
+                                <property name="label">Sandbox Configuration</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Isolation Level:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
+                                    <property name="valign">center</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="tooltip-text">Choose security isolation level for command execution</property>
+                                    <items>
+                                      <item id="strict">Strict Isolation</item>
+                                      <item id="medium">Medium Isolation (Recommended)</item>
+                                      <item id="minimal">Minimal Isolation</item>
+                                    </items>
+                                    <property name="active">1</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="advanced_sandbox_network_check">
+                                <property name="label">Enable network access</property>
+                                <property name="tooltip-text">Allow the sandboxed command to access network resources</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="advanced_sandbox_filesystem_check">
+                                <property name="label">Allow access to home directory</property>
+                                <property name="tooltip-text">Grant read/write access to user home directory</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="margin-top">4</property>
+                                <property name="margin-bottom">4</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="sandbox_skip_pgp_check">
+                                <property name="label">Skip PGP Check</property>
+                                <property name="tooltip-text">Bypass PGP signature verification - WARNING: reduces security</property>
+                                <property name="active">False</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="sandbox_skip_checksum_check">
+                                <property name="label">Skip Checksums</property>
+                                <property name="tooltip-text">Bypass file checksum verification - WARNING: reduces security</property>
+                                <property name="active">False</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkEntry" id="extra_makepkg_flags_entry">
+                                <property name="text"></property>
+                                <property name="placeholder-text">Extra makepkg flags (e.g., --skippgpcheck --keepsrc)</property>
+                                <property name="tooltip-text">Add custom makepkg flags - separate multiple flags with spaces</property>
+                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">6</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="sandbox_keep_src_check">
+                                <property name="label">Keep Sources (--keepsrc)</property>
+                                <property name="tooltip-text">Preserve source files after successful build completion</property>
+                                <property name="active">False</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkCheckButton" id="sandbox_no_sign_check">
+                                <property name="label">Skip Package Signing (--nosign)</property>
+                                <property name="tooltip-text">Do not sign the resulting package with GPG</property>
+                                <property name="active">False</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">PGP Key ID:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="gpg_key_combo">
+                                    <property name="hexpand">true</property>
+                                    <property name="tooltip-text">Select GPG key for package signing operations</property>
+                                    <items>
+                                      <item id="default">Default GPG Key</item>
+                                      <item id="auto_fetch">Auto-fetch from KeyServer</item>
+                                      <item id="custom_id">Use Custom ID/Command</item>
+                                    </items>
+                                    <property name="active">0</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="confirm_advanced_sandbox_command">
+                                <property name="label">Start Sandboxed Command</property>
+                                <property name="tooltip-text">Execute the command with selected sandbox configuration</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                  <class name="small-button"/>
+                                </style>
+                                <signal name="clicked" handler="on_sandbox_command_execute"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="dry_run_button">
+                    <property name="label">Simulate Action (Dry Run)</property>
+                    <property name="tooltip-text">Preview command execution without making changes - safe testing mode</property>
+                    <signal name="clicked" handler="on_dry_run_clicked"/>
+                    <style>
+                      <class name="small-button"/>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="documentation_button">
+                    <property name="label">Consult Documentation</property>
+                    <property name="tooltip-text">Open advanced mode documentation and usage examples</property>
+                    <signal name="clicked" handler="on_documentation_clicked"/>
+                    <style>
+                      <class name="small-button"/>
+                      <class name="flat"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="return_simple_button">
+                    <property name="label">Return to Simple Mode</property>
+                    <property name="tooltip-text">Switch back to simple mode with basic options</property>
+                    <signal name="clicked" handler="on_return_to_simple_clicked"/>
+                    <style>
+                      <class name="destructive-action"/>
+                      <class name="small-button"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

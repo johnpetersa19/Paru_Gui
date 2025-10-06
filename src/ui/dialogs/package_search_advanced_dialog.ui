@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
+  <template class="PackageSearchAdvancedDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">Advanced Package Search</property>
+    <property name="content-width">800</property>
+    <property name="content-height">750</property>
+    <property name="can-close">true</property>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <property name="halign">center</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Main</property>
+                        <property name="css-classes">breadcrumb</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">›</property>
+                        <property name="css-classes">breadcrumb-separator</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Search</property>
+                        <property name="css-classes">breadcrumb</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">›</property>
+                        <property name="css-classes">breadcrumb-separator</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Advanced Search</property>
+                        <property name="css-classes">breadcrumb-current</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Search packages with advanced filters and criteria</property>
+                    <property name="css-classes">subtitle</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <child type="start">
+              <object class="GtkButton" id="back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Back to Search Results</property>
+                <signal name="clicked" handler="on_back_clicked"/>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton" id="view_menu_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="tooltip-text" translatable="yes">View Options</property>
+                <property name="popover">
+                  <object class="GtkPopoverMenu">
+                    <property name="menu-model">
+                      <object class="GMenu">
+                        <section>
+                          <item>
+                            <attribute name="label" translatable="yes">Switch to Simple Search</attribute>
+                            <attribute name="action">dialog.switch-simple</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Save Current Search</attribute>
+                            <attribute name="action">dialog.save-search</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Load Saved Search</attribute>
+                            <attribute name="action">dialog.load-search</attribute>
+                          </item>
+                        </section>
+                        <section>
+                          <item>
+                            <attribute name="label" translatable="yes">Reset All Filters</attribute>
+                            <attribute name="action">dialog.reset-filters</attribute>
+                          </item>
+                        </section>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="child">
+              <object class="AdwClamp">
+                <property name="maximum-size">750</property>
+                <property name="tightening-threshold">500</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
+                    <child>
+                      <object class="AdwBanner" id="search_progress_banner">
+                        <property name="title" translatable="yes">Searching packages...</property>
+                        <property name="revealed">false</property>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="label" translatable="yes">Cancel</property>
+                            <property name="action-name">dialog.cancel-search</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Search Configuration</property>
+                        <property name="description" translatable="yes">Configure your advanced search parameters</property>
+
+                        <child>
+                          <object class="AdwEntryRow" id="search_term_entry">
+                            <property name="title" translatable="yes">Search Term</property>
+                            <property name="text"></property>
+                            <property name="tooltip-text" translatable="yes">Enter package name or keywords to search</property>
+                            <signal name="changed" handler="on_search_term_changed"/>
+                            <child type="suffix">
+                              <object class="GtkButton" id="search_button">
+                                <property name="label" translatable="yes">Search</property>
+                                <property name="valign">center</property>
+                                <property name="tooltip-text" translatable="yes">Execute search with current filters</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                                <signal name="clicked" handler="on_search_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Search Source</property>
+                            <property name="subtitle" translatable="yes">Select where to search for packages</property>
+                            <child type="suffix">
+                              <object class="GtkDropDown" id="source_dropdown">
+                                <property name="model">
+                                  <object class="GtkStringList">
+                                    <items>
+                                      <item translatable="yes">All Sources (Repositories + AUR)</item>
+                                      <item translatable="yes">AUR Only</item>
+                                      <item translatable="yes">Official Repositories Only</item>
+                                    </items>
+                                  </object>
+                                </property>
+                                <property name="selected">0</property>
+                                <property name="tooltip-text" translatable="yes">Choose search scope: all sources, AUR only, or repositories only</property>
+                                <signal name="notify::selected" handler="on_source_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Filter Options</property>
+                        <property name="description" translatable="yes">Refine your search with advanced filters</property>
+
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Package Category</property>
+                            <property name="subtitle" translatable="yes">Filter by package group or category</property>
+                            <child type="suffix">
+                              <object class="GtkDropDown" id="category_dropdown">
+                                <property name="model">
+                                  <object class="GtkStringList">
+                                    <items>
+                                      <item translatable="yes">All Categories</item>
+                                      <item>base</item>
+                                      <item>base-devel</item>
+                                      <item>devel</item>
+                                      <item>lib</item>
+                                      <item>net</item>
+                                      <item>utils</item>
+                                      <item>x11</item>
+                                      <item>kde</item>
+                                      <item>gnome</item>
+                                      <item>multimedia</item>
+                                      <item>games</item>
+                                      <item>office</item>
+                                      <item>science</item>
+                                      <item>fonts</item>
+                                    </items>
+                                  </object>
+                                </property>
+                                <property name="selected">0</property>
+                                <property name="tooltip-text" translatable="yes">Filter packages by category or group</property>
+                                <signal name="notify::selected" handler="on_category_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="installed_only_switch">
+                            <property name="title" translatable="yes">Installed Packages Only</property>
+                            <property name="subtitle" translatable="yes">Show only currently installed packages</property>
+                            <property name="tooltip-text" translatable="yes">Filter to show only packages currently installed on your system</property>
+                            <signal name="notify::active" handler="on_filter_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="orphaned_switch">
+                            <property name="title" translatable="yes">Orphaned Packages</property>
+                            <property name="subtitle" translatable="yes">Show packages with no dependencies</property>
+                            <property name="tooltip-text" translatable="yes">Display packages that are no longer needed by other packages</property>
+                            <signal name="notify::active" handler="on_filter_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwSwitchRow" id="outdated_switch">
+                            <property name="title" translatable="yes">Updates Available</property>
+                            <property name="subtitle" translatable="yes">Show packages with available updates</property>
+                            <property name="tooltip-text" translatable="yes">Display only packages that have newer versions available</property>
+                            <signal name="notify::active" handler="on_filter_changed"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwEntryRow" id="keyword_filter_entry">
+                            <property name="title" translatable="yes">Keyword Filter</property>
+                            <property name="text"></property>
+                            <property name="tooltip-text" translatable="yes">Additional keywords to filter search results</property>
+                            <signal name="changed" handler="on_keyword_filter_changed"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Live Search Results</property>
+                        <property name="description" translatable="yes">Real-time preview of packages matching your criteria</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">12</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <child>
+                                      <object class="GtkLabel" id="results_count_label">
+                                        <property name="label" translatable="yes">No results yet</property>
+                                        <property name="halign">start</property>
+                                        <property name="hexpand">true</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="view_all_results_button">
+                                        <property name="label" translatable="yes">View All Results</property>
+                                        <property name="sensitive">false</property>
+                                        <property name="tooltip-text" translatable="yes">Open full search results in main window</property>
+                                        <style>
+                                          <class name="flat"/>
+                                        </style>
+                                        <signal name="clicked" handler="on_view_all_results_clicked"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="height-request">250</property>
+                                    <property name="hscrollbar-policy">automatic</property>
+                                    <property name="vscrollbar-policy">automatic</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <property name="margin-bottom">12</property>
+                                    <property name="child">
+                                      <object class="GtkTextView" id="results_textview">
+                                        <property name="editable">false</property>
+                                        <property name="cursor-visible">false</property>
+                                        <property name="monospace">true</property>
+                                        <property name="wrap-mode">word</property>
+                                        <property name="margin-top">8</property>
+                                        <property name="margin-bottom">8</property>
+                                        <property name="margin-start">8</property>
+                                        <property name="margin-end">8</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Command Preview</property>
+                        <property name="description" translatable="yes">Preview the exact command that will be executed</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+
+                                <child>
+                                  <object class="GtkLabel" id="command_preview_label">
+                                    <property name="label">paru -Ss</property>
+                                    <property name="halign">start</property>
+                                    <property name="selectable">true</property>
+                                    <property name="wrap">true</property>
+                                    <style>
+                                      <class name="monospace"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkButton" id="copy_command_button">
+                                        <property name="label" translatable="yes">Copy Command</property>
+                                        <property name="icon-name">edit-copy-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Copy command to clipboard</property>
+                                        <style>
+                                          <class name="flat"/>
+                                        </style>
+                                        <signal name="clicked" handler="on_copy_command_clicked"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="run_terminal_button">
+                                        <property name="label" translatable="yes">Run in Terminal</property>
+                                        <property name="icon-name">utilities-terminal-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Execute command in terminal</property>
+                                        <style>
+                                          <class name="flat"/>
+                                        </style>
+                                        <signal name="clicked" handler="on_run_terminal_clicked"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Saved Searches</property>
+                        <property name="description" translatable="yes">Quick access to your saved search configurations</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <child>
+                                  <object class="GtkDropDown" id="saved_searches_dropdown">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item translatable="yes">Select a saved search...</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                    <property name="selected">0</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="tooltip-text" translatable="yes">Load a previously saved search configuration</property>
+                                    <signal name="notify::selected" handler="on_saved_search_selected"/>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="save_current_button">
+                                    <property name="label" translatable="yes">Save Current</property>
+                                    <property name="icon-name">document-save-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Save current search configuration for later use</property>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                    <signal name="clicked" handler="on_save_current_clicked"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </property>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="AdwHeaderBar">
+            <property name="show-title">false</property>
+            <child type="start">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkButton" id="simple_search_button">
+                    <property name="label" translatable="yes">Simple Search</property>
+                    <property name="tooltip-text" translatable="yes">Switch to Simple Search mode</property>
+                    <signal name="clicked" handler="on_simple_search_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="cancel_button">
+                    <property name="label" translatable="yes">Cancel</property>
+                    <property name="tooltip-text" translatable="yes">Close dialog without executing search</property>
+                    <signal name="clicked" handler="on_cancel_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkButton" id="reset_button">
+                    <property name="label" translatable="yes">Reset Filters</property>
+                    <property name="tooltip-text" translatable="yes">Clear all search filters and reset to defaults</property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <signal name="clicked" handler="on_reset_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="execute_button">
+                    <property name="label" translatable="yes">Execute Search</property>
+                    <property name="tooltip-text" translatable="yes">Run the configured search and show results</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <signal name="clicked" handler="on_execute_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <accessibility>
+      <property name="label" translatable="yes">Advanced Package Search Dialog</property>
+      <property name="description" translatable="yes">Configure and execute advanced package searches with filters and real-time preview</property>
+    </accessibility>
+  </template>
+</interface>

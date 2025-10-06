@@ -1,182 +1,690 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gio" version="2.0"/>
+  <requires lib="adw" version="1"/>
+
   <template class="FileChooserDialog" parent="AdwDialog">
-    <property name="title" translatable="yes">Select Folder with Compatible Files</property>
-    <child>
-      <object class="GtkBox" id="main_box">
-        <property name="orientation">vertical</property>
-        <property name="spacing">18</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="margin-start">24</property>
-        <property name="margin-end">24</property>
-        <property name="vexpand">True</property>
-        <property name="hexpand">True</property>
-        <child>
-          <object class="GtkBox" id="path_bar">
-            <property name="spacing">12</property>
-            <property name="margin-bottom">12</property>
+    <property name="title" translatable="yes">Select Files</property>
+    <property name="modal">True</property>
+    <property name="default-width">1000</property>
+    <property name="default-height">700</property>
+    <property name="content-width">1000</property>
+    <property name="content-height">700</property>
+    <accessibility>
+      <property name="label" translatable="yes">Context-aware file chooser with preview and recent locations</property>
+    </accessibility>
+
+    <child type="top">
+      <object class="AdwHeaderBar" id="file_chooser_header_bar">
+        <property name="title-widget">
+          <object class="AdwWindowTitle" id="file_chooser_window_title">
+            <property name="title" translatable="yes">Select PKGBUILD</property>
+            <property name="subtitle" translatable="yes">Main › Files › PKGBUILD Selector</property>
+            <accessibility>
+              <property name="label" translatable="yes">File chooser title with contextual breadcrumb</property>
+            </accessibility>
+          </object>
+        </property>
+
+        <child type="start">
+          <object class="GtkButton" id="back_button">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Go back to previous screen</property>
+            <property name="valign">center</property>
+            <accessibility>
+              <property name="label" translatable="yes">Navigate back to previous screen</property>
+            </accessibility>
+            <style>
+              <class name="flat"/>
+            </style>
+          </object>
+        </child>
+
+        <child type="end">
+          <object class="GtkBox" id="header_controls">
+            <property name="spacing">6</property>
+            <property name="valign">center</property>
+
             <child>
-              <object class="GtkButton" id="up_button">
-                <property name="icon-name">go-up-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Go up one level</property>
-                <signal name="clicked" handler="on_up_button_clicked"/>
+              <object class="GtkToggleButton" id="view_mode_toggle">
+                <property name="icon-name">view-grid-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Switch between grid and list view</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle view mode</property>
+                </accessibility>
                 <style>
                   <class name="flat"/>
-                  <class name="circular"/>
                 </style>
               </object>
             </child>
+
             <child>
-              <object class="GtkLabel" id="current_path_label">
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="ellipsize">middle</property>
-                <property name="max-width-chars">50</property>
-                <property name="label">/home/user</property>
+              <object class="GtkMenuButton" id="options_menu_button">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">File chooser options</property>
+                <property name="valign">center</property>
+                <property name="popover">
+                  <object class="GtkPopoverMenu">
+                    <property name="menu-model">
+                      <object class="GMenuModel" id="options_menu">
+                        <section>
+                          <item>
+                            <attribute name="label" translatable="yes">Show Hidden Files</attribute>
+                            <attribute name="action">chooser.show-hidden</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Sort by Name</attribute>
+                            <attribute name="action">chooser.sort-name</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Sort by Date</attribute>
+                            <attribute name="action">chooser.sort-date</attribute>
+                          </item>
+                        </section>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+                <accessibility>
+                  <property name="label" translatable="yes">File chooser options menu</property>
+                </accessibility>
                 <style>
-                  <class name="monospace"/>
-                  <class name="dim-label"/>
+                  <class name="flat"/>
                 </style>
-                <property name="tooltip-text" translatable="yes">Current directory path.</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSearchEntry" id="search_entry">
-                <property name="placeholder-text" translatable="yes">Search files...</property>
-                <property name="width-request">250</property>
-                <signal name="search-changed" handler="on_search_entry_changed"/>
-                <style>
-                  <class name="rounded"/>
-                </style>
-                <property name="tooltip-text" translatable="yes">Filter files by name.</property>
               </object>
             </child>
           </object>
         </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwToastOverlay" id="toast_overlay">
         <child>
-          <object class="GtkScrolledWindow" id="scrolled_window">
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="hscrollbar-policy">never</property>
-            <property name="vexpand">True</property>
-            <property name="hexpand">True</property>
-            <child>
-              <object class="GtkFlowBox" id="files_grid">
-                <property name="min-children-per-line">2</property>
-                <property name="max-children-per-line">4</property>
-                <property name="row-spacing">18</property>
-                <property name="column-spacing">18</property>
-                <property name="selection-mode">none</property>
-                <property name="activate-on-single-click">True</property>
-                <property name="homogeneous">False</property>
-                <property name="valign">start</property>
-                <property name="margin-start">6</property>
-                <property name="margin-end">6</property>
-                <property name="margin-top">6</property>
-                <property name="margin-bottom">6</property>
-                <signal name="child-activated" handler="on_file_activated"/>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="status_bar">
-            <property name="spacing">12</property>
-            <property name="margin-top">12</property>
-            <child>
-              <object class="GtkLabel" id="file_count_label">
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">0 files found</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox" id="filter_buttons">
-                <property name="spacing">8</property>
-                <child>
-                  <object class="GtkToggleButton" id="filter_pkgbuild">
-                    <property name="label" translatable="yes">PKGBUILD</property>
-                    <property name="active">True</property>
-                    <property name="name">PKGBUILD</property>
-                    <signal name="toggled" handler="on_filter_toggled"/>
-                    <style>
-                      <class name="filter-button"/>
-                      <class name="pill"/>
-                    </style>
-                    <property name="tooltip-text" translatable="yes">Show PKGBUILD files.</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="filter_packages">
-                    <property name="label" translatable="yes">Packages</property>
-                    <property name="active">True</property>
-                    <property name="name">PACKAGE</property>
-                    <signal name="toggled" handler="on_filter_toggled"/>
-                    <style>
-                      <class name="filter-button"/>
-                      <class name="pill"/>
-                    </style>
-                    <property name="tooltip-text" translatable="yes">Show pre-compiled package files (.pkg.tar.zst).</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="filter_patches">
-                    <property name="label" translatable="yes">Patches</property>
-                    <property name="active">True</property>
-                    <property name="name">PATCH</property>
-                    <signal name="toggled" handler="on_filter_toggled"/>
-                    <style>
-                      <class name="filter-button"/>
-                      <class name="pill"/>
-                    </style>
-                    <property name="tooltip-text" translatable="yes">Show patch files (.patch, .diff).</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="filter_advanced">
-                    <property name="label" translatable="yes">Advanced</property>
-                    <property name="active">True</property>
-                    <property name="name">ADVANCED</property>
-                    <signal name="toggled" handler="on_filter_toggled"/>
-                    <style>
-                      <class name="filter-button"/>
-                      <class name="pill"/>
-                    </style>
-                    <property name="tooltip-text" translatable="yes">Show other compatible files and advanced options.</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="action_area">
+          <object class="GtkBox" id="main_container">
             <property name="orientation">horizontal</property>
-            <property name="spacing">12</property>
-            <property name="margin-bottom">18</property>
-            <property name="margin-end">24</property>
-            <property name="margin-start">24</property>
-            <property name="margin-top">12</property>
-            <property name="halign">end</property>
+            <property name="spacing">0</property>
+            <accessibility>
+              <property name="label" translatable="yes">Main file chooser container with sidebar and content</property>
+            </accessibility>
+
             <child>
-              <object class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_cancel_clicked"/>
+              <object class="GtkBox" id="sidebar_container">
+                <property name="orientation">vertical</property>
+                <property name="width-request">300</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">6</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Sidebar with recent locations and shortcuts</property>
+                </accessibility>
+
+                <child>
+                  <object class="AdwPreferencesGroup" id="context_group">
+                    <property name="title" translatable="yes">File Context</property>
+                    <property name="description" translatable="yes">What type of file are you selecting?</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">File context selection group</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="AdwComboRow" id="context_selector">
+                        <property name="title" translatable="yes">Purpose</property>
+                        <property name="subtitle" translatable="yes">Choose what you're selecting</property>
+                        <property name="model">
+                          <object class="GtkStringList">
+                            <items>
+                              <item translatable="yes">Select PKGBUILD File</item>
+                              <item translatable="yes">Choose Directory</item>
+                              <item translatable="yes">Select Package File</item>
+                              <item translatable="yes">Choose Patch File</item>
+                              <item translatable="yes">Select Source Files</item>
+                            </items>
+                          </object>
+                        </property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Select the purpose of file selection</property>
+                        </accessibility>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwPreferencesGroup" id="recent_locations_group">
+                    <property name="title" translatable="yes">Recent Locations</property>
+                    <property name="description" translatable="yes">Quick access to recently visited folders</property>
+                    <property name="margin-top">12</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Recent locations group</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="AdwActionRow" id="recent_home">
+                        <property name="title" translatable="yes">Home Directory</property>
+                        <property name="subtitle" translatable="yes">~/</property>
+                        <property name="icon-name">user-home-symbolic</property>
+                        <property name="activatable">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to home directory</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Navigation indicator</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwActionRow" id="recent_downloads">
+                        <property name="title" translatable="yes">Downloads</property>
+                        <property name="subtitle" translatable="yes">~/Downloads</property>
+                        <property name="icon-name">folder-download-symbolic</property>
+                        <property name="activatable">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to downloads folder</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Navigation indicator</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwActionRow" id="recent_projects">
+                        <property name="title" translatable="yes">Projects</property>
+                        <property name="subtitle" translatable="yes">~/Projects/arch-packages</property>
+                        <property name="icon-name">folder-symbolic</property>
+                        <property name="activatable">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to projects folder</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Navigation indicator</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwActionRow" id="recent_desktop">
+                        <property name="title" translatable="yes">Desktop</property>
+                        <property name="subtitle" translatable="yes">~/Desktop</property>
+                        <property name="icon-name">user-desktop-symbolic</property>
+                        <property name="activatable">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to desktop folder</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Navigation indicator</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwPreferencesGroup" id="quick_actions_group">
+                    <property name="title" translatable="yes">Quick Actions</property>
+                    <property name="margin-top">12</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Quick actions group</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="AdwActionRow" id="create_folder_row">
+                        <property name="title" translatable="yes">Create New Folder</property>
+                        <property name="subtitle" translatable="yes">Make a new directory here</property>
+                        <property name="icon-name">folder-new-symbolic</property>
+                        <property name="activatable">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Create a new folder in current location</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkImage">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Add action indicator</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
+
             <child>
-              <object class="GtkButton" id="open_button">
-                <property name="label" translatable="yes">Open</property>
-                <signal name="clicked" handler="on_open_clicked"/>
-                <style>
-                  <class name="suggested-action"/>
-                  <class name="pill"/>
-                </style>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="content_area">
+                <property name="orientation">vertical</property>
+                <property name="hexpand">True</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">12</property>
+                <property name="spacing">12</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Main content area with navigation and file browser</property>
+                </accessibility>
+
+                <child>
+                  <object class="GtkBox" id="navigation_bar">
+                    <property name="spacing">12</property>
+                    <property name="margin-bottom">6</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Navigation bar with path and search</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="GtkButton" id="up_button">
+                        <property name="icon-name">go-up-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Go up one level</property>
+                        <property name="valign">center</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate up one directory level</property>
+                        </accessibility>
+                        <style>
+                          <class name="flat"/>
+                          <class name="circular"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwEntryRow" id="path_entry">
+                        <property name="title" translatable="yes">Location</property>
+                        <property name="text">/home/user</property>
+                        <property name="hexpand">True</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Current directory path - editable</property>
+                        </accessibility>
+                        <child type="suffix">
+                          <object class="GtkButton" id="path_browse_button">
+                            <property name="icon-name">folder-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Browse for location</property>
+                            <property name="valign">center</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Browse for directory location</property>
+                            </accessibility>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkSearchEntry" id="search_entry">
+                        <property name="placeholder-text" translatable="yes">Search files...</property>
+                        <property name="width-request">200</property>
+                        <property name="valign">center</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Search files in current directory</property>
+                        </accessibility>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="file_browser_container">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">12</property>
+                    <property name="vexpand">True</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">File browser with list and preview</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="GtkBox" id="file_list_container">
+                        <property name="orientation">vertical</property>
+                        <property name="hexpand">True</property>
+                        <property name="spacing">6</property>
+
+                        <child>
+                          <object class="GtkBox" id="filter_bar">
+                            <property name="spacing">6</property>
+                            <property name="margin-bottom">6</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">File type filter buttons</property>
+                            </accessibility>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Show:</property>
+                                <property name="valign">center</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Filter label</property>
+                                </accessibility>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkToggleButton" id="filter_pkgbuild">
+                                <property name="label" translatable="yes">PKGBUILD</property>
+                                <property name="active">True</property>
+                                <property name="tooltip-text" translatable="yes">Show PKGBUILD files</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Filter: Show PKGBUILD files</property>
+                                </accessibility>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkToggleButton" id="filter_packages">
+                                <property name="label" translatable="yes">Packages</property>
+                                <property name="active">True</property>
+                                <property name="tooltip-text" translatable="yes">Show package files (.pkg.tar.zst)</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Filter: Show package files</property>
+                                </accessibility>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkToggleButton" id="filter_patches">
+                                <property name="label" translatable="yes">Patches</property>
+                                <property name="active">True</property>
+                                <property name="tooltip-text" translatable="yes">Show patch files (.patch, .diff)</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Filter: Show patch files</property>
+                                </accessibility>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkToggleButton" id="filter_directories">
+                                <property name="label" translatable="yes">Folders</property>
+                                <property name="active">True</property>
+                                <property name="tooltip-text" translatable="yes">Show directories</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Filter: Show directories</property>
+                                </accessibility>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkScrolledWindow" id="file_list_scrolled">
+                            <property name="vscrollbar-policy">automatic</property>
+                            <property name="hscrollbar-policy">never</property>
+                            <property name="vexpand">True</property>
+                            <property name="hexpand">True</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Scrollable file list</property>
+                            </accessibility>
+
+                            <child>
+                              <object class="GtkListBox" id="file_list">
+                                <property name="selection-mode">single</property>
+                                <property name="activate-on-single-click">False</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">List of files and directories</property>
+                                </accessibility>
+                                <style>
+                                  <class name="boxed-list"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel" id="file_count_label">
+                            <property name="label" translatable="yes">0 files found</property>
+                            <property name="halign">start</property>
+                            <property name="margin-top">6</property>
+                            <style>
+                              <class name="dim-label"/>
+                              <class name="caption"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">File count status</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="preview_panel">
+                        <property name="orientation">vertical</property>
+                        <property name="width-request">300</property>
+                        <property name="spacing">12</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">File preview panel</property>
+                        </accessibility>
+
+                        <child>
+                          <object class="AdwHeaderBar" id="preview_header">
+                            <property name="title-widget">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Preview</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Preview panel title</property>
+                                </accessibility>
+                              </object>
+                            </property>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkStack" id="preview_stack">
+                            <property name="vexpand">True</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Preview content stack</property>
+                            </accessibility>
+
+                            <child>
+                              <object class="AdwStatusPage" id="preview_empty">
+                                <property name="icon-name">document-symbolic</property>
+                                <property name="title" translatable="yes">No File Selected</property>
+                                <property name="description" translatable="yes">Select a file to see its preview and details</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Empty preview state</property>
+                                </accessibility>
+                              </object>
+                              <property name="name">empty</property>
+                            </child>
+
+                            <child>
+                              <object class="GtkScrolledWindow" id="preview_content_scrolled">
+                                <property name="vscrollbar-policy">automatic</property>
+                                <property name="hscrollbar-policy">never</property>
+                                <child>
+                                  <object class="GtkBox" id="preview_content">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">12</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-bottom">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+
+                                    <child>
+                                      <object class="AdwPreferencesGroup" id="file_info_group">
+                                        <property name="title" translatable="yes">File Information</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Selected file information</property>
+                                        </accessibility>
+
+                                        <child>
+                                          <object class="AdwActionRow" id="file_name_row">
+                                            <property name="title" translatable="yes">Name</property>
+                                            <property name="subtitle" translatable="yes">PKGBUILD</property>
+                                            <property name="icon-name">document-text-symbolic</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Selected file name</property>
+                                            </accessibility>
+                                          </object>
+                                        </child>
+
+                                        <child>
+                                          <object class="AdwActionRow" id="file_size_row">
+                                            <property name="title" translatable="yes">Size</property>
+                                            <property name="subtitle" translatable="yes">2.4 KB</property>
+                                            <property name="icon-name">disk-usage-symbolic</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Selected file size</property>
+                                            </accessibility>
+                                          </object>
+                                        </child>
+
+                                        <child>
+                                          <object class="AdwActionRow" id="file_modified_row">
+                                            <property name="title" translatable="yes">Modified</property>
+                                            <property name="subtitle" translatable="yes">Today at 12:15 PM</property>
+                                            <property name="icon-name">preferences-system-time-symbolic</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Selected file modification time</property>
+                                            </accessibility>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="AdwPreferencesGroup" id="preview_text_group">
+                                        <property name="title" translatable="yes">Content Preview</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">File content preview</property>
+                                        </accessibility>
+
+                                        <child>
+                                          <object class="GtkFrame">
+                                            <property name="margin-top">6</property>
+                                            <child>
+                                              <object class="GtkScrolledWindow">
+                                                <property name="height-request">200</property>
+                                                <property name="vscrollbar-policy">automatic</property>
+                                                <property name="hscrollbar-policy">automatic</property>
+                                                <child>
+                                                  <object class="GtkTextView" id="preview_text_view">
+                                                    <property name="editable">False</property>
+                                                    <property name="cursor-visible">False</property>
+                                                    <property name="margin-top">8</property>
+                                                    <property name="margin-bottom">8</property>
+                                                    <property name="margin-start">8</property>
+                                                    <property name="margin-end">8</property>
+                                                    <style>
+                                                      <class name="monospace"/>
+                                                    </style>
+                                                    <accessibility>
+                                                      <property name="label" translatable="yes">File content preview text</property>
+                                                    </accessibility>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <style>
+                                              <class name="view"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <property name="name">content</property>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="action_area">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">12</property>
+                    <property name="halign">end</property>
+                    <property name="margin-top">12</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Dialog action buttons</property>
+                    </accessibility>
+
+                    <child>
+                      <object class="GtkButton" id="cancel_button">
+                        <property name="label" translatable="yes">Cancel</property>
+                        <property name="tooltip-text" translatable="yes">Cancel file selection and close dialog</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Cancel file selection</property>
+                        </accessibility>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkButton" id="select_button">
+                        <property name="label" translatable="yes">Select</property>
+                        <property name="tooltip-text" translatable="yes">Confirm selection and continue</property>
+                        <property name="sensitive">False</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Confirm file selection</property>
+                        </accessibility>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

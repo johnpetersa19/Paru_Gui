@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.4"/>
+  <template class="ChrootManagerDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">Chroot Manager</property>
+    <property name="content-width">900</property>
+    <property name="content-height">700</property>
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar">
+            <child type="start">
+              <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="back_to_advanced_button">
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Back to Advanced Tools</property>
+                    <signal name="clicked" handler="on_back_to_advanced_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_label">
+                    <property name="label" translatable="yes">Main › Advanced › Chroot Manager</property>
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="title">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">Chroot Manager</property>
+                <property name="subtitle" translatable="yes">Manage isolated system environments</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox" id="header_actions">
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkButton" id="learn_chroot_button">
+                    <property name="icon-name">help-contents-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Learn About Chroot Environments</property>
+                    <signal name="clicked" handler="on_learn_chroot_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="refresh_status_button">
+                    <property name="icon-name">view-refresh-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Refresh Chroot Status</property>
+                    <signal name="clicked" handler="on_refresh_status_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <property name="content">
+          <object class="AdwToastOverlay" id="toast_overlay">
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">20</property>
+                <property name="margin-top">20</property>
+                <property name="margin-bottom">20</property>
+                <property name="margin-start">20</property>
+                <property name="margin-end">20</property>
+
+                <child>
+                  <object class="GtkRevealer" id="warning_revealer">
+                    <property name="reveal-child">false</property>
+                    <property name="transition-type">slide-down</property>
+                    <child>
+                      <object class="AdwBanner" id="warning_banner">
+                        <property name="title" translatable="yes">Warning: Advanced Tool</property>
+                        <property name="button-label" translatable="yes">I Understand</property>
+                        <signal name="button-clicked" handler="on_warning_acknowledged"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Chroot Environment Status</property>
+                    <property name="description" translatable="yes">Monitor and manage your chroot environment configuration</property>
+                    <child>
+                      <object class="AdwActionRow" id="chroot_path_row">
+                        <property name="title" translatable="yes">Chroot Root Directory</property>
+                        <property name="subtitle" translatable="yes">Not configured</property>
+                        <child type="prefix">
+                          <object class="GtkImage" id="chroot_status_icon">
+                            <property name="icon-name">dialog-question-symbolic</property>
+                            <property name="pixel-size">16</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child type="suffix">
+                          <object class="GtkBox" id="path_actions">
+                            <property name="spacing">4</property>
+                            <child>
+                              <object class="GtkLabel" id="chroot_status_label">
+                                <property name="label" translatable="yes">Unknown</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="show_path_button">
+                                <property name="icon-name">folder-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Show Chroot Directory</property>
+                                <property name="valign">center</property>
+                                <signal name="clicked" handler="on_show_path_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="circular"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow" id="chroot_health_row">
+                        <property name="title" translatable="yes">Environment Health</property>
+                        <property name="subtitle" translatable="yes">System integrity and package status</property>
+                        <child type="prefix">
+                          <object class="GtkImage" id="health_status_icon">
+                            <property name="icon-name">emblem-default-symbolic</property>
+                            <property name="pixel-size">16</property>
+                            <style>
+                              <class name="success"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child type="suffix">
+                          <object class="GtkBox" id="health_actions">
+                            <property name="spacing">4</property>
+                            <child>
+                              <object class="GtkLabel" id="health_status_label">
+                                <property name="label" translatable="yes">Checking...</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="check_health_button">
+                                <property name="icon-name">medical-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Check Environment Health</property>
+                                <property name="valign">center</property>
+                                <signal name="clicked" handler="on_check_health_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="circular"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">20</property>
+                    <property name="homogeneous">true</property>
+                    <property name="vexpand">true</property>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Terminal Output</property>
+                            <property name="halign">start</property>
+                            <style>
+                              <class name="title-3"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="output_scroll">
+                            <property name="vexpand">True</property>
+                            <property name="hscrollbar-policy">automatic</property>
+                            <property name="vscrollbar-policy">automatic</property>
+                            <property name="min-content-height">250</property>
+                            <child>
+                              <object class="GtkTextView" id="output_textview">
+                                <property name="editable">False</property>
+                                <property name="cursor-visible">False</property>
+                                <property name="wrap-mode">word-char</property>
+                                <property name="left-margin">16</property>
+                                <property name="right-margin">16</property>
+                                <property name="top-margin">16</property>
+                                <property name="bottom-margin">16</property>
+                                <style>
+                                  <class name="monospace"/>
+                                  <class name="card"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Package Management</property>
+                            <property name="halign">start</property>
+                            <style>
+                              <class name="title-3"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="vexpand">true</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">16</property>
+                                <property name="margin-top">20</property>
+                                <property name="margin-bottom">20</property>
+                                <property name="margin-start">20</property>
+                                <property name="margin-end">20</property>
+
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Install Package in Chroot</property>
+                                    <property name="halign">start</property>
+                                    <style>
+                                      <class name="heading"/>
+                                    </style>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkEntry" id="package_entry">
+                                        <property name="placeholder-text" translatable="yes">Enter package name to install in chroot</property>
+                                        <property name="hexpand">True</property>
+                                        <signal name="activate" handler="on_install_activate"/>
+                                        <signal name="changed" handler="on_package_entry_changed"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="install_button">
+                                        <property name="label" translatable="yes">Install</property>
+                                        <property name="tooltip-text" translatable="yes">Install package in chroot environment</property>
+                                        <property name="sensitive">False</property>
+                                        <signal name="clicked" handler="on_install_clicked"/>
+                                        <style>
+                                          <class name="suggested-action"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkSeparator">
+                                    <property name="margin-top">8</property>
+                                    <property name="margin-bottom">8</property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Quick Actions</property>
+                                        <property name="halign">start</property>
+                                        <style>
+                                          <class name="heading"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">8</property>
+                                        <child>
+                                          <object class="GtkButton" id="shell_button">
+                                            <property name="label" translatable="yes">Open Interactive Shell</property>
+                                            <property name="tooltip-text" translatable="yes">Open interactive shell in chroot environment</property>
+                                            <signal name="clicked" handler="on_shell_clicked"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="upgrade_button">
+                                            <property name="label" translatable="yes">Upgrade All Packages</property>
+                                            <property name="tooltip-text" translatable="yes">Upgrade all packages in chroot environment</property>
+                                            <signal name="clicked" handler="on_upgrade_clicked"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkRevealer" id="progress_revealer">
+                    <property name="reveal-child">false</property>
+                    <property name="transition-type">slide-down</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <child>
+                          <object class="GtkProgressBar" id="progress_bar">
+                            <property name="show-text">true</property>
+                            <property name="hexpand">True</property>
+                            <style>
+                              <class name="osd"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="progress_detail_label">
+                            <property name="label" translatable="yes">Processing chroot operation...</property>
+                            <property name="halign">center</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkRevealer" id="destructive_warning_revealer">
+                    <property name="reveal-child">false</property>
+                    <property name="transition-type">slide-down</property>
+                    <child>
+                      <object class="AdwBanner" id="destructive_warning_banner">
+                        <property name="title" translatable="yes">Destructive Operation Warning</property>
+                        <property name="button-label" translatable="yes">Proceed Anyway</property>
+                        <signal name="button-clicked" handler="on_destructive_warning_acknowledged"/>
+                        <style>
+                          <class name="error"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+        <child type="bottom">
+          <object class="GtkActionBar" id="action_bar">
+            <child type="start">
+              <object class="GtkButton" id="advanced_tools_button">
+                <property name="label" translatable="yes">Back to Advanced Tools</property>
+                <property name="tooltip-text" translatable="yes">Return to advanced tools panel</property>
+                <signal name="clicked" handler="on_back_to_advanced_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="destructive_actions">
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="clean_chroot_button">
+                    <property name="label" translatable="yes">Clean Chroot</property>
+                    <property name="tooltip-text" translatable="yes">Remove unnecessary files and clean package cache</property>
+                    <signal name="clicked" handler="on_clean_chroot_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="reset_chroot_button">
+                    <property name="label" translatable="yes">Reset Environment</property>
+                    <property name="tooltip-text" translatable="yes">WARNING: This will completely reset the chroot environment</property>
+                    <signal name="clicked" handler="on_reset_chroot_clicked"/>
+                    <style>
+                      <class name="destructive-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox" id="bottom_actions">
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="help_button">
+                    <property name="label" translatable="yes">Learn About Chroot</property>
+                    <property name="tooltip-text" translatable="yes">Open documentation about chroot environments</property>
+                    <signal name="clicked" handler="on_learn_chroot_clicked"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="close_button">
+                    <property name="label" translatable="yes">Close</property>
+                    <signal name="clicked" handler="on_close_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

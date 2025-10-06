@@ -1,87 +1,427 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
   <object class="GtkBox" id="empty_state_box">
     <property name="orientation">vertical</property>
-    <property name="spacing">24</property>
-    <property name="margin-top">60</property>
-    <property name="margin-bottom">60</property>
+    <property name="spacing">32</property>
+    <property name="margin-top">40</property>
+    <property name="margin-bottom">40</property>
     <property name="margin-start">36</property>
     <property name="margin-end">36</property>
     <property name="valign">center</property>
     <property name="halign">center</property>
     <property name="hexpand">true</property>
     <property name="vexpand">true</property>
+    <accessibility>
+      <property name="label" translatable="yes">Empty directory state with available actions</property>
+    </accessibility>
+
     <child>
-      <object class="GtkImage" id="empty_icon">
-        <property name="pixel-size">64</property>
-        <property name="icon-name">folder-symbolic</property>
-        <property name="margin-bottom">18</property>
-        <property name="visible">true</property>
-        <property name="sensitive">true</property>
-        <property name="opacity">0.7</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="empty_title_label">
-        <property name="label" translatable="yes">Empty Folder</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-        <style>
-          <class name="title-2"/>
-          <class name="dim-label"/>
-        </style>
-        <property name="visible">true</property>
-        <property name="sensitive">true</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="empty_description_label">
-        <property name="label" translatable="yes">This folder is empty. Download a PKGBUILD from AUR or create a new one.</property>
-        <property name="wrap">true</property>
-        <property name="wrap-mode">word-char</property>
-        <property name="justify">center</property>
-        <property name="max-width-chars">55</property>
-        <style>
-          <class name="body"/>
-          <class name="dim-label"/>
-        </style>
-        <property name="visible">true</property>
-        <property name="sensitive">true</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox" id="empty_options_box">
+      <object class="GtkBox">
         <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <property name="margin-top">36</property>
-        <property name="visible">true</property>
-        <property name="sensitive">true</property>
-        <property name="width-request">280</property>
+        <property name="spacing">20</property>
         <property name="halign">center</property>
+
         <child>
-          <object class="GtkButton" id="download_pkgbuild_button">
-            <property name="label" translatable="yes">Download PKGBUILD</property>
-            <property name="visible">true</property>
-            <property name="sensitive">true</property>
-            <style>
-              <class name="suggested-action"/>
-              <class name="pill"/>
-            </style>
-            <property name="tooltip-text" translatable="yes">Search and download PKGBUILDs from AUR.</property>
+          <object class="GtkImage" id="empty_icon">
+            <property name="pixel-size">80</property>
+            <property name="icon-name">folder-symbolic</property>
+            <property name="opacity">0.6</property>
+            <accessibility>
+              <property name="label" translatable="yes">Empty folder icon</property>
+            </accessibility>
           </object>
         </child>
+
         <child>
-          <object class="GtkButton" id="builder_mode_button">
-            <property name="label" translatable="yes">Builder Mode (Wizard)</property>
-            <property name="visible">true</property>
-            <property name="sensitive">true</property>
+          <object class="GtkLabel" id="empty_title_label">
+            <property name="label" translatable="yes">This Directory is Empty</property>
+            <property name="halign">center</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+              <attribute name="scale" value="1.2"/>
+            </attributes>
+            <style>
+              <class name="title-2"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Empty directory title</property>
+            </accessibility>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="empty_description_label">
+            <property name="label" translatable="yes">Get started by downloading a PKGBUILD from AUR, creating a new project, or browsing available packages.</property>
+            <property name="wrap">true</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="justify">center</property>
+            <property name="max-width-chars">60</property>
+            <property name="halign">center</property>
+            <style>
+              <class name="body"/>
+              <class name="dim-label"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Empty directory description and suggestions</property>
+            </accessibility>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Quick Actions</property>
+        <property name="description" translatable="yes">Choose an action to get started with package management</property>
+        <property name="width-request">400</property>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Download PKGBUILD from AUR</property>
+            <property name="subtitle" translatable="yes">Search and download packages from the Arch User Repository</property>
+            <property name="activatable-widget">download_pkgbuild_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">folder-download-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="download_pkgbuild_button">
+                <property name="label" translatable="yes">Download</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Open AUR search and download dialog</property>
+                <style>
+                  <class name="suggested-action"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Download PKGBUILD from AUR</property>
+                </accessibility>
+                <signal name="clicked" handler="on_download_pkgbuild_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Create New PKGBUILD</property>
+            <property name="subtitle" translatable="yes">Use the guided wizard to create a custom PKGBUILD from scratch</property>
+            <property name="activatable-widget">builder_mode_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">document-new-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="builder_mode_button">
+                <property name="label" translatable="yes">Create</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Launch PKGBUILD creation wizard</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Create new PKGBUILD with wizard</property>
+                </accessibility>
+                <signal name="clicked" handler="on_builder_mode_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Browse AUR Packages</property>
+            <property name="subtitle" translatable="yes">Explore popular and trending packages in the AUR</property>
+            <property name="activatable-widget">browse_aur_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">system-search-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="browse_aur_button">
+                <property name="label" translatable="yes">Browse</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Open AUR package browser</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Browse AUR packages</property>
+                </accessibility>
+                <signal name="clicked" handler="on_browse_aur_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Create New Directory</property>
+            <property name="subtitle" translatable="yes">Create a new folder for organizing your projects</property>
+            <property name="activatable-widget">create_directory_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">folder-new-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="create_directory_button">
+                <property name="label" translatable="yes">Create</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Create a new directory in current location</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Create new directory</property>
+                </accessibility>
+                <signal name="clicked" handler="on_create_directory_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup" id="recent_actions_group">
+        <property name="title" translatable="yes">Recent Actions</property>
+        <property name="description" translatable="yes">Quickly access your recently used packages and locations</property>
+        <property name="width-request">400</property>
+        <property name="visible">false</property>
+
+        <child>
+          <object class="AdwActionRow" id="recent_downloads_row">
+            <property name="title" translatable="yes">Recent Downloads</property>
+            <property name="subtitle" translatable="yes">Access recently downloaded PKGBUILDs</property>
+            <property name="activatable-widget">recent_downloads_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">document-open-recent-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="recent_downloads_button">
+                <property name="label" translatable="yes">View</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Show recent downloads list</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">View recent downloads</property>
+                </accessibility>
+                <signal name="clicked" handler="on_recent_downloads_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="recent_projects_row">
+            <property name="title" translatable="yes">Recent Projects</property>
+            <property name="subtitle" translatable="yes">Return to recently worked on PKGBUILD projects</property>
+            <property name="activatable-widget">recent_projects_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">folder-documents-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="recent_projects_button">
+                <property name="label" translatable="yes">Open</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Open recent projects list</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Open recent projects</property>
+                </accessibility>
+                <signal name="clicked" handler="on_recent_projects_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="favorite_packages_row">
+            <property name="title" translatable="yes">Favorite Packages</property>
+            <property name="subtitle" translatable="yes">Quick access to your bookmarked AUR packages</property>
+            <property name="activatable-widget">favorite_packages_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">starred-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="favorite_packages_button">
+                <property name="label" translatable="yes">Browse</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Browse favorite packages</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Browse favorite packages</property>
+                </accessibility>
+                <signal name="clicked" handler="on_favorite_packages_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Advanced Options</property>
+        <property name="description" translatable="yes">Additional tools and settings for experienced users</property>
+        <property name="width-request">400</property>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Import Existing PKGBUILD</property>
+            <property name="subtitle" translatable="yes">Import a PKGBUILD file from your local filesystem</property>
+            <property name="activatable-widget">import_pkgbuild_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">document-open-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="import_pkgbuild_button">
+                <property name="label" translatable="yes">Import</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Import PKGBUILD from file</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Import existing PKGBUILD file</property>
+                </accessibility>
+                <signal name="clicked" handler="on_import_pkgbuild_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Clone Git Repository</property>
+            <property name="subtitle" translatable="yes">Clone a Git repository containing PKGBUILD or sources</property>
+            <property name="activatable-widget">clone_repository_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">software-update-available-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="clone_repository_button">
+                <property name="label" translatable="yes">Clone</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Clone Git repository</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Clone Git repository</property>
+                </accessibility>
+                <signal name="clicked" handler="on_clone_repository_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Open Terminal Here</property>
+            <property name="subtitle" translatable="yes">Open a terminal window in the current directory</property>
+            <property name="activatable-widget">open_terminal_button</property>
+            <child type="prefix">
+              <object class="GtkImage">
+                <property name="icon-name">utilities-terminal-symbolic</property>
+                <property name="pixel-size">24</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkButton" id="open_terminal_button">
+                <property name="label" translatable="yes">Open</property>
+                <property name="valign">center</property>
+                <property name="tooltip-text" translatable="yes">Open terminal in current directory</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="pill"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Open terminal in current directory</property>
+                </accessibility>
+                <signal name="clicked" handler="on_open_terminal_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox" id="help_section">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="halign">center</property>
+        <property name="margin-top">20</property>
+        <accessibility>
+          <property name="label" translatable="yes">Help and documentation links</property>
+        </accessibility>
+
+        <child>
+          <object class="GtkButton" id="help_button">
+            <property name="label" translatable="yes">View Documentation</property>
+            <property name="tooltip-text" translatable="yes">Open help documentation and tutorials</property>
             <style>
               <class name="flat"/>
-              <class name="pill"/>
             </style>
-            <property name="tooltip-text" translatable="yes">Create a new PKGBUILD using a guided wizard.</property>
+            <accessibility>
+              <property name="label" translatable="yes">Open help documentation</property>
+            </accessibility>
+            <signal name="clicked" handler="on_help_clicked"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="settings_button">
+            <property name="label" translatable="yes">Settings</property>
+            <property name="tooltip-text" translatable="yes">Configure application preferences</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Open application settings</property>
+            </accessibility>
+            <signal name="clicked" handler="on_settings_clicked"/>
           </object>
         </child>
       </object>

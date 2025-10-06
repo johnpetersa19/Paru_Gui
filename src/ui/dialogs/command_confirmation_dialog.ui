@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
+  <template class="CommandConfirmationDialog" parent="AdwDialog">
+    <property name="title" translatable="yes">Confirm Operation</property>
+    <property name="content-width">850</property>
+    <property name="content-height">750</property>
+    <property name="can-close">true</property>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <child type="start">
+              <object class="GtkButton" id="back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Go back to previous view</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Return to previous screen</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <property name="title-widget">
+              <object class="AdwWindowTitle" id="dialog_title">
+                <property name="title" translatable="yes">Confirm Operation</property>
+                <property name="subtitle" translatable="yes">Review changes before proceeding</property>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="AdwToastOverlay" id="toast_overlay">
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="hscrollbar-policy">never</property>
+                <property name="vscrollbar-policy">automatic</property>
+                <property name="child">
+                  <object class="AdwClamp">
+                    <property name="maximum-size">800</property>
+                    <property name="tightening-threshold">500</property>
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">24</property>
+                        <property name="margin-top">24</property>
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-end">24</property>
+
+                        <child>
+                          <object class="AdwBanner" id="risk_banner">
+                            <property name="title" translatable="yes">High Risk Operation - Review Carefully</property>
+                            <property name="button-label" translatable="yes">Safety Tips</property>
+                            <property name="revealed">false</property>
+                            <signal name="button-clicked" handler="on_safety_tips_clicked"/>
+                            <style>
+                              <class name="warning"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Request Context</property>
+                            <property name="description" translatable="yes">Where this operation was initiated from</property>
+
+                            <child>
+                              <object class="AdwActionRow" id="origin_row">
+                                <property name="title" translatable="yes">Requested From</property>
+                                <property name="subtitle" translatable="yes">Package Manager Main Window</property>
+                                <child type="prefix">
+                                  <object class="GtkImage">
+                                    <property name="icon-name">go-jump-symbolic</property>
+                                    <property name="icon-size">large</property>
+                                    <style>
+                                      <class name="accent"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child type="suffix">
+                                  <object class="GtkButton" id="return_origin_button">
+                                    <property name="label" translatable="yes">Return</property>
+                                    <property name="tooltip-text" translatable="yes">Return to the originating view</property>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwActionRow" id="user_action_row">
+                                <property name="title" translatable="yes">User Action</property>
+                                <property name="subtitle" translatable="yes">Install selected packages</property>
+                                <child type="prefix">
+                                  <object class="GtkImage">
+                                    <property name="icon-name">input-mouse-symbolic</property>
+                                    <property name="icon-size">large</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwActionRow" id="timestamp_row">
+                                <property name="title" translatable="yes">Request Time</property>
+                                <property name="subtitle" translatable="yes">Just now</property>
+                                <child type="prefix">
+                                  <object class="GtkImage">
+                                    <property name="icon-name">preferences-system-time-symbolic</property>
+                                    <property name="icon-size">large</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Command Explanation</property>
+                            <property name="description" translatable="yes">What this operation will do in simple terms</property>
+
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="css-classes">card</property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">16</property>
+                                    <property name="margin-top">16</property>
+                                    <property name="margin-bottom">16</property>
+                                    <property name="margin-start">16</property>
+                                    <property name="margin-end">16</property>
+
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">12</property>
+                                        <child>
+                                          <object class="GtkImage" id="command_icon">
+                                            <property name="icon-name">software-install-symbolic</property>
+                                            <property name="pixel-size">32</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="orientation">vertical</property>
+                                            <property name="spacing">4</property>
+                                            <property name="hexpand">true</property>
+                                            <child>
+                                              <object class="GtkLabel" id="simple_explanation_label">
+                                                <property name="label" translatable="yes">Install new software packages on your system</property>
+                                                <property name="halign">start</property>
+                                                <property name="wrap">true</property>
+                                                <style>
+                                                  <class name="title-3"/>
+                                                </style>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="technical_command_label">
+                                                <property name="label" translatable="yes">Command: paru -S package1 package2</property>
+                                                <property name="halign">start</property>
+                                                <property name="wrap">true</property>
+                                                <style>
+                                                  <class name="monospace"/>
+                                                  <class name="dim-label"/>
+                                                </style>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkSeparator"/>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel" id="detailed_explanation_label">
+                                        <property name="label" translatable="yes">This will download and install the selected packages along with any required dependencies. The packages will be integrated into your system and available for use immediately after installation.</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">true</property>
+                                        <property name="xalign">0</property>
+                                        <style>
+                                          <class name="body"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Risk Assessment</property>
+                            <property name="description" translatable="yes">Potential risks and safety information</property>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+                                <property name="homogeneous">true</property>
+
+                                <child>
+                                  <object class="GtkFrame" id="system_risk_card">
+                                    <property name="css-classes">card</property>
+                                    <property name="child">
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">8</property>
+                                        <property name="margin-top">12</property>
+                                        <property name="margin-bottom">12</property>
+                                        <property name="margin-start">12</property>
+                                        <property name="margin-end">12</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon-name">security-low-symbolic</property>
+                                            <property name="pixel-size">24</property>
+                                            <style>
+                                              <class name="success"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">System Risk</property>
+                                            <style>
+                                              <class name="title-4"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="system_risk_label">
+                                            <property name="label" translatable="yes">Low</property>
+                                            <style>
+                                              <class name="success"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkFrame" id="data_risk_card">
+                                    <property name="css-classes">card</property>
+                                    <property name="child">
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">8</property>
+                                        <property name="margin-top">12</property>
+                                        <property name="margin-bottom">12</property>
+                                        <property name="margin-start">12</property>
+                                        <property name="margin-end">12</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon-name">security-low-symbolic</property>
+                                            <property name="pixel-size">24</property>
+                                            <style>
+                                              <class name="success"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">Data Risk</property>
+                                            <style>
+                                              <class name="title-4"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="data_risk_label">
+                                            <property name="label" translatable="yes">Minimal</property>
+                                            <style>
+                                              <class name="success"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkFrame" id="complexity_card">
+                                    <property name="css-classes">card</property>
+                                    <property name="child">
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">8</property>
+                                        <property name="margin-top">12</property>
+                                        <property name="margin-bottom">12</property>
+                                        <property name="margin-start">12</property>
+                                        <property name="margin-end">12</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon-name">security-medium-symbolic</property>
+                                            <property name="pixel-size">24</property>
+                                            <style>
+                                              <class name="warning"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">Complexity</property>
+                                            <style>
+                                              <class name="title-4"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="complexity_label">
+                                            <property name="label" translatable="yes">Medium</property>
+                                            <style>
+                                              <class name="warning"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Operation Summary</property>
+                            <property name="description" translatable="yes">Overview of the planned operation</property>
+
+                            <child>
+                              <object class="AdwActionRow" id="operation_type_row">
+                                <property name="title" translatable="yes">Operation Type</property>
+                                <property name="subtitle" translatable="yes">Package installation</property>
+                                <child type="prefix">
+                                  <object class="GtkImage" id="operation_icon">
+                                    <property name="icon-name">software-install-symbolic</property>
+                                    <property name="icon-size">large</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwActionRow" id="package_count_row">
+                                <property name="title" translatable="yes">Packages Affected</property>
+                                <property name="subtitle" translatable="yes">0 packages selected</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwActionRow" id="total_size_row">
+                                <property name="title" translatable="yes">Total Size</property>
+                                <property name="subtitle" translatable="yes">0 MB</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Space Usage</property>
+                            <property name="description" translatable="yes">Disk space that will be used or freed</property>
+
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="css-classes">card</property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">12</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-bottom">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">12</property>
+
+                                        <child>
+                                          <object class="GtkLabel" id="space_used_label">
+                                            <property name="label" translatable="yes">Space Used: 0 MB</property>
+                                            <property name="halign">start</property>
+                                            <property name="hexpand">true</property>
+                                          </object>
+                                        </child>
+
+                                        <child>
+                                          <object class="GtkLabel" id="space_freed_label">
+                                            <property name="label" translatable="yes">Space Freed: 0 MB</property>
+                                            <property name="halign">end</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkProgressBar" id="space_progress_bar">
+                                        <property name="fraction">0.0</property>
+                                        <property name="show-text">true</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup" id="packages_group">
+                            <property name="title" translatable="yes">Package List</property>
+                            <property name="description" translatable="yes">Packages that will be affected by this operation</property>
+
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="css-classes">card</property>
+                                <property name="child">
+                                  <object class="GtkScrolledWindow">
+                                    <property name="height-request">200</property>
+                                    <property name="hscrollbar-policy">automatic</property>
+                                    <property name="vscrollbar-policy">automatic</property>
+                                    <property name="child">
+                                      <object class="GtkListBox" id="packages_listbox">
+                                        <property name="selection-mode">none</property>
+                                        <style>
+                                          <class name="boxed-list"/>
+                                        </style>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup" id="dependencies_group">
+                            <property name="title" translatable="yes">Dependencies</property>
+                            <property name="description" translatable="yes">Additional packages required as dependencies</property>
+
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="css-classes">card</property>
+                                <property name="child">
+                                  <object class="GtkScrolledWindow">
+                                    <property name="height-request">180</property>
+                                    <property name="hscrollbar-policy">automatic</property>
+                                    <property name="vscrollbar-policy">automatic</property>
+                                    <property name="child">
+                                      <object class="GtkTreeView" id="dependencies_treeview">
+                                        <property name="headers-visible">true</property>
+                                        <property name="enable-tree-lines">true</property>
+                                        <property name="show-expanders">true</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup" id="conflicts_group">
+                            <property name="title" translatable="yes">Conflicts and Warnings</property>
+                            <property name="description" translatable="yes">Issues that require attention</property>
+                            <property name="visible">false</property>
+
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="css-classes">card</property>
+                                <property name="child">
+                                  <object class="GtkScrolledWindow">
+                                    <property name="height-request">150</property>
+                                    <property name="hscrollbar-policy">automatic</property>
+                                    <property name="vscrollbar-policy">automatic</property>
+                                    <property name="child">
+                                      <object class="GtkListBox" id="conflicts_listbox">
+                                        <property name="selection-mode">none</property>
+                                        <style>
+                                          <class name="boxed-list"/>
+                                        </style>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="AdwHeaderBar">
+            <property name="show-title">false</property>
+            <child type="start">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="cancel_go_back_button">
+                    <property name="label" translatable="yes">Cancel &amp; Go Back</property>
+                    <property name="tooltip-text" translatable="yes">Cancel this operation and return to the previous screen</property>
+                    <signal name="clicked" handler="on_cancel_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                      <class name="destructive-action"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Cancel operation and go back</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="details_button">
+                    <property name="label" translatable="yes">View Details</property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <signal name="clicked" handler="on_details_clicked"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="simulate_button">
+                    <property name="label" translatable="yes">Simulate First</property>
+                    <property name="tooltip-text" translatable="yes">Run a simulation without making changes</property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <signal name="clicked" handler="on_simulate_clicked"/>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="execute_monitor_button">
+                    <property name="label" translatable="yes">Execute &amp; Monitor</property>
+                    <property name="tooltip-text" translatable="yes">Execute the operation with real-time monitoring</property>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                    <signal name="clicked" handler="on_execute_monitor_clicked"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Execute operation with monitoring</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <accessibility>
+      <property name="label" translatable="yes">Command Confirmation Dialog</property>
+      <property name="description" translatable="yes">Review and confirm package operations before execution</property>
+    </accessibility>
+  </template>
+</interface>

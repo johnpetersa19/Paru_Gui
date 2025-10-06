@@ -1,0 +1,474 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface domain="paru-gui">
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <object class="AdwWindow" id="pkgbuild_downloader_dialog">
+    <property name="title" translatable="yes">Download PKGBUILD</property>
+    <property name="modal">true</property>
+    <property name="resizable">true</property>
+    <property name="default-width">800</property>
+    <property name="default-height">650</property>
+    <property name="destroy-with-parent">true</property>
+    <accessibility>
+      <property name="label" translatable="yes">Download and manage PKGBUILD files from AUR</property>
+    </accessibility>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar">
+            <property name="show-end-title-buttons">true</property>
+            <property name="show-start-title-buttons">false</property>
+
+            <child type="start">
+              <object class="GtkButton" id="back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Back to Empty State</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Return to previous view</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <child type="title">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">Download PKGBUILD</property>
+                <property name="subtitle" translatable="yes">Main › Tools › Download PKGBUILD</property>
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkButton" id="browse_files_button">
+                <property name="icon-name">folder-open-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Browse Downloaded Files</property>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Browse downloaded files</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwToastOverlay" id="toast_overlay">
+            <child>
+              <object class="GtkPaned" id="main_paned">
+                <property name="orientation">horizontal</property>
+                <property name="position">400</property>
+                <property name="resize-start-child">true</property>
+                <property name="resize-end-child">true</property>
+                <property name="shrink-start-child">false</property>
+                <property name="shrink-end-child">false</property>
+
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vscrollbar-policy">automatic</property>
+                    <child>
+                      <object class="GtkBox" id="main_content">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">24</property>
+                        <property name="margin-top">24</property>
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-end">24</property>
+
+                        <child>
+                          <object class="AdwBanner" id="workflow_banner">
+                            <property name="title" translatable="yes">Download &amp; Review Workflow</property>
+                            <property name="button-label" translatable="yes">Learn More</property>
+                            <property name="revealed">true</property>
+                            <style>
+                              <class name="informative"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Package Selection</property>
+                            <property name="description" translatable="yes">Search and select AUR packages to download</property>
+
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Package Name</property>
+                                <property name="subtitle" translatable="yes">Enter the name of an AUR package</property>
+                                <child type="suffix">
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkEntry" id="package_name_entry">
+                                        <property name="placeholder-text" translatable="yes">e.g., yay-git</property>
+                                        <property name="width-request">200</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Enter name of AUR package to download</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="search_aur_button">
+                                        <property name="icon-name">system-search-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Search AUR for packages</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Search AUR packages</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwActionRow" id="package_info_row">
+                                <property name="title" translatable="yes">Package Information</property>
+                                <property name="subtitle" translatable="yes">Enter a package name above to get started</property>
+                                <property name="sensitive">false</property>
+                                <child type="prefix">
+                                  <object class="GtkImage">
+                                    <property name="icon-name">info-symbolic</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Download Configuration</property>
+                            <property name="description" translatable="yes">Configure how packages should be downloaded</property>
+
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Download Directory</property>
+                                <property name="subtitle" translatable="yes">Location where PKGBUILDs will be saved</property>
+                                <child type="suffix">
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkEntry" id="download_dir_entry">
+                                        <property name="text">~/Downloads</property>
+                                        <property name="width-request">200</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Directory path for downloading PKGBUILD</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="browse_dir_button">
+                                        <property name="icon-name">folder-open-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Browse for directory</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Browse for download directory</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwSwitchRow" id="ssh_clone_row">
+                                <property name="title" translatable="yes">Clone via SSH</property>
+                                <property name="subtitle" translatable="yes">Use SSH for git clone (paru -Gs)</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwSwitchRow" id="download_deps_row">
+                                <property name="title" translatable="yes">Download Dependencies</property>
+                                <property name="subtitle" translatable="yes">Also download PKGBUILDs for dependencies</property>
+                                <property name="active">false</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="AdwSwitchRow" id="open_after_row">
+                                <property name="title" translatable="yes">Open After Download</property>
+                                <property name="subtitle" translatable="yes">Open downloaded directory in file manager</property>
+                                <property name="active">true</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Review Actions</property>
+                            <property name="description" translatable="yes">Preview and review package information before downloading</property>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+                                <property name="homogeneous">true</property>
+                                <child>
+                                  <object class="GtkButton" id="preview_pkgbuild_button">
+                                    <property name="tooltip-text" translatable="yes">Preview PKGBUILD content (paru -Gp)</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Preview PKGBUILD content before download</property>
+                                    </accessibility>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">6</property>
+                                        <property name="halign">center</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon-name">document-preview-symbolic</property>
+                                            <property name="pixel-size">24</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">Preview PKGBUILD</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="card"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="view_comments_button">
+                                    <property name="tooltip-text" translatable="yes">View AUR comments (paru -Gc)</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">View AUR package comments</property>
+                                    </accessibility>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">6</property>
+                                        <property name="halign">center</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon-name">dialog-information-symbolic</property>
+                                            <property name="pixel-size">24</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="label" translatable="yes">View Comments</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="card"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Command Preview</property>
+                            <property name="description" translatable="yes">Review the command that will be executed</property>
+
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Paru Command</property>
+                                <child type="suffix">
+                                  <object class="GtkEntry" id="command_preview_entry">
+                                    <property name="editable">false</property>
+                                    <property name="text">paru -G</property>
+                                    <property name="width-request">250</property>
+                                    <style>
+                                      <class name="monospace"/>
+                                    </style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Preview of download command that will be executed</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="progress_section">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="visible">false</property>
+                            <child>
+                              <object class="AdwStatusPage" id="download_status">
+                                <property name="icon-name">folder-download-symbolic</property>
+                                <property name="title" translatable="yes">Downloading Package</property>
+                                <property name="description" translatable="yes">Please wait while the PKGBUILD is being downloaded...</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="width-request">300</property>
+                                    <child>
+                                      <object class="GtkLabel" id="progress_label">
+                                        <property name="label" translatable="yes">Initializing download...</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkProgressBar" id="download_progress">
+                                        <property name="show-text">true</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="action_buttons">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">12</property>
+                            <property name="halign">end</property>
+                            <property name="margin-top">12</property>
+
+                            <child>
+                              <object class="GtkButton" id="cancel_button">
+                                <property name="label" translatable="yes">Cancel</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Cancel download operation</property>
+                                </accessibility>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="download_review_button">
+                                <property name="label" translatable="yes">Download &amp; Review</property>
+                                <property name="sensitive">false</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Download package and open for review</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="preview_panel">
+                    <property name="orientation">vertical</property>
+                    <property name="visible">true</property>
+                    <child>
+                      <object class="AdwHeaderBar" id="preview_header">
+                        <property name="show-end-title-buttons">false</property>
+                        <property name="show-start-title-buttons">false</property>
+                        <child type="title">
+                          <object class="AdwWindowTitle">
+                            <property name="title" translatable="yes">PKGBUILD Preview</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkButton" id="close_preview_button">
+                            <property name="icon-name">window-close-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Close preview panel</property>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkStack" id="preview_stack">
+                        <property name="vexpand">true</property>
+
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">empty</property>
+                            <property name="child">
+                              <object class="AdwStatusPage">
+                                <property name="icon-name">document-preview-symbolic</property>
+                                <property name="title" translatable="yes">No Preview Available</property>
+                                <property name="description" translatable="yes">Enter a package name and click Preview to see PKGBUILD content</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">content</property>
+                            <property name="child">
+                              <object class="GtkScrolledWindow">
+                                <property name="hscrollbar-policy">automatic</property>
+                                <property name="vscrollbar-policy">automatic</property>
+                                <child>
+                                  <object class="GtkTextView" id="preview_textview">
+                                    <property name="editable">false</property>
+                                    <property name="monospace">true</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-bottom">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">PKGBUILD file content preview</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">loading</property>
+                            <property name="child">
+                              <object class="AdwStatusPage">
+                                <property name="icon-name">content-loading-symbolic</property>
+                                <property name="title" translatable="yes">Loading Preview</property>
+                                <property name="description" translatable="yes">Fetching PKGBUILD content...</property>
+                                <child>
+                                  <object class="GtkSpinner">
+                                    <property name="spinning">true</property>
+                                    <property name="width-request">32</property>
+                                    <property name="height-request">32</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

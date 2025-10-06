@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="paru-gui">
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <template class="OperationResultDialog" parent="AdwWindow">
+    <property name="title" translatable="yes">Operation Result</property>
+    <property name="modal">true</property>
+    <property name="resizable">true</property>
+    <property name="deletable">true</property>
+    <property name="default-width">700</property>
+    <property name="default-height">600</property>
+    <property name="width-request">500</property>
+    <property name="height-request">400</property>
+    <accessibility>
+      <property name="label" translatable="yes">Operation result and next steps dialog</property>
+    </accessibility>
+
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle" id="header_title">
+                <property name="title" translatable="yes">Operation Complete</property>
+                <property name="subtitle" id="operation_context_subtitle"></property>
+              </object>
+            </property>
+
+            <child type="start">
+              <object class="GtkButton" id="return_to_origin_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Return to originating view</property>
+                <signal name="clicked" handler="on_return_to_origin_clicked" swapped="no"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate back to operation source</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkButton" id="close_dialog_button">
+                <property name="icon-name">window-close-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Close dialog</property>
+                <signal name="clicked" handler="on_close_dialog_clicked" swapped="no"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Close result dialog</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <property name="propagate-natural-width">true</property>
+
+            <child>
+              <object class="AdwClamp">
+                <property name="maximum-size">800</property>
+                <property name="tightening-threshold">600</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">Operation Context</property>
+                        <property name="description" translatable="yes">Source and details of completed operation</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">12</property>
+                                <property name="margin-top">16</property>
+                                <property name="margin-bottom">16</property>
+                                <property name="margin-start">16</property>
+                                <property name="margin-end">16</property>
+
+                                <child>
+                                  <object class="GtkImage" id="context_type_icon">
+                                    <property name="icon-name">package-x-generic-symbolic</property>
+                                    <property name="icon-size">large</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">4</property>
+                                    <property name="hexpand">true</property>
+
+                                    <child>
+                                      <object class="GtkLabel" id="operation_breadcrumb_label">
+                                        <property name="label" translatable="yes">Package Manager › Installation › Selected Packages</property>
+                                        <property name="halign">start</property>
+                                        <property name="ellipsize">end</property>
+                                        <style>
+                                          <class name="heading"/>
+                                        </style>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkLabel" id="operation_details_label">
+                                        <property name="label" translatable="yes">3 packages processed • Duration: 2m 15s</property>
+                                        <property name="halign">start</property>
+                                        <property name="ellipsize">end</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkButton" id="view_origin_button">
+                                    <property name="label" translatable="yes">View Source</property>
+                                    <property name="tooltip-text" translatable="yes">Return to operation source</property>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                    <signal name="clicked" handler="on_view_origin_clicked" swapped="no"/>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Navigate to operation origin</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">20</property>
+
+                        <child>
+                          <object class="GtkImage" id="result_status_icon">
+                            <property name="icon-name">emblem-ok-symbolic</property>
+                            <property name="icon-size">large</property>
+                            <property name="valign">start</property>
+                            <style>
+                              <class name="success"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <property name="hexpand">true</property>
+
+                            <child>
+                              <object class="GtkLabel" id="primary_result_text">
+                                <property name="label" translatable="yes">Operation Completed Successfully</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="selectable">true</property>
+                                <style>
+                                  <class name="title-2"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Operation result status</property>
+                                </accessibility>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="secondary_result_text">
+                                <property name="label" translatable="yes">All selected packages have been successfully installed and are ready to use.</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">true</property>
+                                <property name="selectable">true</property>
+                                <property name="max-width-chars">60</property>
+                                <style>
+                                  <class name="body"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Detailed result description</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="operation_summary_group">
+                        <property name="title" translatable="yes">Operation Summary</property>
+                        <property name="description" translatable="yes">Details about the completed operation</property>
+
+                        <child>
+                          <object class="AdwActionRow" id="status_code_row">
+                            <property name="title" translatable="yes">Result Status</property>
+                            <property name="subtitle" id="status_code_value">Success</property>
+                            <property name="icon-name">emblem-ok-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Operation status information</property>
+                            </accessibility>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="processed_packages_row">
+                            <property name="title" translatable="yes">Packages Processed</property>
+                            <property name="subtitle" id="processed_packages_count">0</property>
+                            <property name="icon-name">package-x-generic-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Number of packages processed</property>
+                            </accessibility>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwActionRow" id="operation_duration_row">
+                            <property name="title" translatable="yes">Total Duration</property>
+                            <property name="subtitle" id="total_duration_value">00:00:00</property>
+                            <property name="icon-name">preferences-system-time-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Total operation duration</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <property name="title" translatable="yes">What's Next?</property>
+                        <property name="description" translatable="yes">Suggested actions and next steps</property>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <property name="css-classes">card</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <property name="margin-top">16</property>
+                                <property name="margin-bottom">16</property>
+                                <property name="margin-start">16</property>
+                                <property name="margin-end">16</property>
+
+                                <child>
+                                  <object class="GtkFlowBox" id="next_steps_flowbox">
+                                    <property name="selection-mode">none</property>
+                                    <property name="column-spacing">8</property>
+                                    <property name="row-spacing">8</property>
+                                    <property name="homogeneous">true</property>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="explore_packages_suggestion">
+                                            <property name="label" translatable="yes">Explore More Packages</property>
+                                            <property name="tooltip-text" translatable="yes">Browse available packages</property>
+                                            <signal name="clicked" handler="on_explore_packages_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="manage_installed_suggestion">
+                                            <property name="label" translatable="yes">Manage Installed</property>
+                                            <property name="tooltip-text" translatable="yes">View and manage installed packages</property>
+                                            <signal name="clicked" handler="on_manage_installed_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkFlowBoxChild">
+                                        <property name="child">
+                                          <object class="GtkButton" id="check_updates_suggestion">
+                                            <property name="label" translatable="yes">Check for Updates</property>
+                                            <property name="tooltip-text" translatable="yes">Look for package updates</property>
+                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="pill"/>
+                                            </style>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="operation_log_group">
+                        <property name="title" translatable="yes">Operation Log</property>
+                        <property name="description" translatable="yes">Complete operation output and details</property>
+
+                        <child>
+                          <object class="AdwExpanderRow" id="log_expander_row">
+                            <property name="title" translatable="yes">View Operation Log</property>
+                            <property name="subtitle" translatable="yes">Complete command output and operation details</property>
+                            <property name="icon-name">text-x-generic-symbolic</property>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">0</property>
+                                <property name="margin-top">12</property>
+                                <style>
+                                  <class name="card"/>
+                                </style>
+
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">8</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <property name="margin-bottom">8</property>
+
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Command Output</property>
+                                        <property name="halign">start</property>
+                                        <property name="hexpand">true</property>
+                                        <style>
+                                          <class name="caption-heading"/>
+                                        </style>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkButton" id="copy_operation_log_button">
+                                        <property name="icon-name">edit-copy-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Copy operation log to clipboard</property>
+                                        <signal name="clicked" handler="on_copy_operation_log_clicked" swapped="no"/>
+                                        <style>
+                                          <class name="flat"/>
+                                        </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Copy operation log to clipboard</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+
+                                    <child>
+                                      <object class="GtkButton" id="save_operation_log_button">
+                                        <property name="icon-name">document-save-symbolic</property>
+                                        <property name="tooltip-text" translatable="yes">Save operation log to file</property>
+                                        <signal name="clicked" handler="on_save_operation_log_clicked" swapped="no"/>
+                                        <style>
+                                          <class name="flat"/>
+                                        </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Save operation log to file</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="height-request">200</property>
+                                    <property name="hscrollbar-policy">automatic</property>
+                                    <property name="vscrollbar-policy">automatic</property>
+                                    <property name="has-frame">false</property>
+
+                                    <child>
+                                      <object class="GtkTextView" id="operation_log_textview">
+                                        <property name="editable">false</property>
+                                        <property name="cursor-visible">false</property>
+                                        <property name="monospace">true</property>
+                                        <property name="wrap-mode">word</property>
+                                        <property name="left-margin">12</property>
+                                        <property name="right-margin">12</property>
+                                        <property name="top-margin">8</property>
+                                        <property name="bottom-margin">12</property>
+                                        <style>
+                                          <class name="terminal"/>
+                                        </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Complete operation log output</property>
+                                          <property name="description" translatable="yes">Full command output and messages from the operation</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child type="bottom">
+          <object class="AdwHeaderBar">
+            <property name="show-title">false</property>
+            <child type="start">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="repeat_operation_button">
+                    <property name="label" translatable="yes">Repeat Operation</property>
+                    <property name="tooltip-text" translatable="yes">Run the same operation again</property>
+                    <property name="icon-name">view-refresh-symbolic</property>
+                    <signal name="clicked" handler="on_repeat_operation_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Repeat the same operation</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="try_different_button">
+                    <property name="label" translatable="yes">Try Different</property>
+                    <property name="tooltip-text" translatable="yes">Try a different operation or configuration</property>
+                    <property name="icon-name">preferences-other-symbolic</property>
+                    <signal name="clicked" handler="on_try_different_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Try different operation or settings</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkButton" id="return_to_source_button">
+                    <property name="label" translatable="yes">Return to Source</property>
+                    <property name="tooltip-text" translatable="yes">Return to the originating view</property>
+                    <signal name="clicked" handler="on_return_to_source_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Return to operation source</property>
+                    </accessibility>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="close_button">
+                    <property name="label" translatable="yes">Close</property>
+                    <property name="tooltip-text" translatable="yes">Close result dialog</property>
+                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Close operation result dialog</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

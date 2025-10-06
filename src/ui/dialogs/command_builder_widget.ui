@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
+  <template class="CommandBuilderWidget" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">0</property>
+
+    <child>
+      <object class="GtkBox" id="navigation_header">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="margin-top">16</property>
+        <property name="margin-bottom">16</property>
+        <property name="margin-start">20</property>
+        <property name="margin-end">20</property>
+        <child>
+          <object class="GtkButton" id="back_to_advanced_button">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Back to Advanced Tools</property>
+            <signal name="clicked" handler="on_back_to_advanced_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="breadcrumb_label">
+            <property name="label" translatable="yes">Main › Advanced › Command Builder</property>
+            <property name="ellipsize">end</property>
+            <property name="halign">start</property>
+            <style>
+              <class name="caption"/>
+              <class name="dim-label"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="page_title">
+            <property name="label" translatable="yes">Visual Command Builder</property>
+            <property name="halign">center</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="title-2"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="help_button">
+            <property name="icon-name">help-contents-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Command Builder Help</property>
+            <signal name="clicked" handler="on_help_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkSeparator">
+        <property name="margin-start">20</property>
+        <property name="margin-end">20</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="vexpand">true</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">24</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">20</property>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Quick Start Templates</property>
+                <property name="description" translatable="yes">Load predefined command patterns for common operations</property>
+
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Load Command Template</property>
+                    <property name="subtitle" translatable="yes">Choose from popular paru command patterns</property>
+                    <child type="suffix">
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+
+                        <child>
+                          <object class="GtkDropDown" id="templates_dropdown">
+                            <property name="model">
+                              <object class="GtkStringList">
+                                <items>
+                                  <item translatable="yes">Select Template</item>
+                                  <item translatable="yes">System Update (paru -Syu)</item>
+                                  <item translatable="yes">Install Package (paru -S)</item>
+                                  <item translatable="yes">Remove Package (paru -R)</item>
+                                  <item translatable="yes">Search Package (paru -Ss)</item>
+                                  <item translatable="yes">AUR Install (paru -S --aur)</item>
+                                  <item translatable="yes">Clean Orphans (paru -Qtdq | paru -Rns -)</item>
+                                  <item translatable="yes">Package Info (paru -Si)</item>
+                                  <item translatable="yes">Development Update (paru -Syu --devel)</item>
+                                </items>
+                              </object>
+                            </property>
+                            <property name="selected">0</property>
+                            <signal name="notify::selected" handler="on_template_selected"/>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="use_template_button">
+                            <property name="label" translatable="yes">Load Template</property>
+                            <property name="tooltip-text" translatable="yes">Load selected template into builder</property>
+                            <property name="sensitive">false</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
+                            <signal name="clicked" handler="on_use_template_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Visual Command Builder</property>
+                <property name="description" translatable="yes">Build your paru command step by step with real-time preview</property>
+
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Base Operation</property>
+                    <property name="subtitle" translatable="yes">Select the main operation type</property>
+                    <child type="suffix">
+                      <object class="GtkDropDown" id="operation_dropdown">
+                        <property name="model">
+                          <object class="GtkStringList">
+                            <items>
+                              <item>-S (Install)</item>
+                              <item>-R (Remove)</item>
+                              <item>-U (Upgrade)</item>
+                              <item>-Q (Query)</item>
+                              <item>-Ss (Search)</item>
+                              <item>-Si (Info)</item>
+                              <item>-Syu (System Update)</item>
+                              <item>-Qtdq (List Orphans)</item>
+                            </items>
+                          </object>
+                        </property>
+                        <property name="selected">0</property>
+                        <signal name="notify::selected" handler="on_operation_changed"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwEntryRow" id="package_name_entry">
+                    <property name="title" translatable="yes">Package Name(s)</property>
+                    <property name="text"></property>
+                    <signal name="changed" handler="on_package_name_changed"/>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwExpanderRow" id="flags_expander">
+                    <property name="title" translatable="yes">Advanced Options</property>
+                    <property name="subtitle" translatable="yes">Additional flags and parameters</property>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="noconfirm_switch">
+                        <property name="title" translatable="yes">No Confirmation</property>
+                        <property name="subtitle" translatable="yes">Skip interactive prompts (--noconfirm)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="aur_switch">
+                        <property name="title" translatable="yes">AUR Only</property>
+                        <property name="subtitle" translatable="yes">Search only AUR packages (--aur)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="repo_switch">
+                        <property name="title" translatable="yes">Repository Only</property>
+                        <property name="subtitle" translatable="yes">Search only official repositories (--repo)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="devel_switch">
+                        <property name="title" translatable="yes">Development Packages</property>
+                        <property name="subtitle" translatable="yes">Include VCS packages in updates (--devel)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="needed_switch">
+                        <property name="title" translatable="yes">Skip Up-to-date</property>
+                        <property name="subtitle" translatable="yes">Do not reinstall up-to-date packages (--needed)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwSwitchRow" id="recursive_switch">
+                        <property name="title" translatable="yes">Recursive Operations</property>
+                        <property name="subtitle" translatable="yes">Remove dependencies and dependents (-s)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwEntryRow" id="ignore_entry">
+                        <property name="title" translatable="yes">Ignore Packages</property>
+                        <property name="text"></property>
+                        <signal name="changed" handler="on_ignore_changed"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Real-Time Command Preview</property>
+                <property name="description" translatable="yes">Live preview of the generated command with validation</property>
+
+                <child>
+                  <object class="GtkFrame">
+                    <style>
+                      <class name="card"/>
+                    </style>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <property name="margin-top">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-start">20</property>
+                        <property name="margin-end">20</property>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">12</property>
+
+                            <child>
+                              <object class="GtkImage" id="validation_icon">
+                                <property name="icon-name">emblem-ok-symbolic</property>
+                                <property name="icon-size">large</property>
+                                <style>
+                                  <class name="success"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">4</property>
+                                <property name="hexpand">true</property>
+                                <child>
+                                  <object class="GtkLabel" id="validation_label">
+                                    <property name="label" translatable="yes">Command is valid and ready to execute</property>
+                                    <property name="halign">start</property>
+                                    <style>
+                                      <class name="heading"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="command_description">
+                                    <property name="label" translatable="yes">This command will install packages from repositories</property>
+                                    <property name="halign">start</property>
+                                    <property name="wrap">true</property>
+                                    <style>
+                                      <class name="caption"/>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkFrame">
+                            <style>
+                              <class name="view"/>
+                            </style>
+                            <child>
+                              <object class="GtkLabel" id="command_preview_label">
+                                <property name="label">paru -S</property>
+                                <property name="halign">start</property>
+                                <property name="selectable">true</property>
+                                <property name="wrap">true</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="margin-start">16</property>
+                                <property name="margin-end">16</property>
+                                <style>
+                                  <class name="monospace"/>
+                                  <class name="title-3"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="halign">center</property>
+
+                            <child>
+                              <object class="GtkButton" id="copy_command_button">
+                                <property name="label" translatable="yes">Copy Command</property>
+                                <property name="tooltip-text" translatable="yes">Copy command to clipboard</property>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">edit-copy-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Copy</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <signal name="clicked" handler="on_copy_command_clicked"/>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="execute_command_button">
+                                <property name="label" translatable="yes">Execute Command</property>
+                                <property name="tooltip-text" translatable="yes">Execute this command directly</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                </style>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">media-playback-start-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Execute</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <signal name="clicked" handler="on_execute_command_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Save as Template</property>
+                <property name="description" translatable="yes">Save this command configuration for future reuse</property>
+
+                <child>
+                  <object class="AdwEntryRow" id="template_name_entry">
+                    <property name="title" translatable="yes">Template Name</property>
+                    <property name="text"></property>
+                    <signal name="changed" handler="on_template_name_changed"/>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwEntryRow" id="template_description_entry">
+                    <property name="title" translatable="yes">Template Description</property>
+                    <property name="text"></property>
+                    <signal name="changed" handler="on_template_description_changed"/>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Save Command Template</property>
+                    <property name="subtitle" translatable="yes">Add this command to your template collection</property>
+                    <child type="suffix">
+                      <object class="GtkButton" id="save_template_button">
+                        <property name="label" translatable="yes">Save as Template</property>
+                        <property name="tooltip-text" translatable="yes">Save current command configuration as reusable template</property>
+                        <property name="sensitive">false</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">document-save-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Save Template</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <signal name="clicked" handler="on_save_template_clicked"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Saved Command Templates</property>
+                <property name="description" translatable="yes">Your personal collection of command templates</property>
+
+                <child>
+                  <object class="GtkFrame">
+                    <style>
+                      <class name="card"/>
+                    </style>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="margin-top">16</property>
+                            <property name="margin-start">16</property>
+                            <property name="margin-end">16</property>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Your Templates</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">true</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="template_count_label">
+                                <property name="label">0 templates</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="refresh_templates_button">
+                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Refresh Template List</property>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="circular"/>
+                                </style>
+                                <signal name="clicked" handler="on_refresh_templates_clicked"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="height-request">200</property>
+                            <property name="hscrollbar-policy">never</property>
+                            <property name="vscrollbar-policy">automatic</property>
+                            <property name="margin-bottom">16</property>
+                            <child>
+                              <object class="GtkListBox" id="saved_templates_listbox">
+                                <property name="selection-mode">none</property>
+                                <style>
+                                  <class name="boxed-list"/>
+                                </style>
+                                <signal name="row-activated" handler="on_saved_template_activated"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkActionBar">
+        <child type="start">
+          <object class="GtkButton" id="advanced_tools_button">
+            <property name="label" translatable="yes">Back to Advanced Tools</property>
+            <property name="tooltip-text" translatable="yes">Return to advanced tools panel</property>
+            <signal name="clicked" handler="on_back_to_advanced_clicked"/>
+            <style>
+              <class name="flat"/>
+            </style>
+          </object>
+        </child>
+        <child type="end">
+          <object class="GtkBox" id="bottom_actions">
+            <property name="spacing">8</property>
+            <child>
+              <object class="GtkButton" id="reset_builder_button">
+                <property name="label" translatable="yes">Reset Builder</property>
+                <property name="tooltip-text" translatable="yes">Clear all fields and start over</property>
+                <signal name="clicked" handler="on_reset_builder_clicked"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="export_command_button">
+                <property name="label" translatable="yes">Export Command</property>
+                <property name="tooltip-text" translatable="yes">Export command to file or share</property>
+                <signal name="clicked" handler="on_export_command_clicked"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <accessibility>
+      <property name="label" translatable="yes">Visual Command Builder</property>
+      <property name="description" translatable="yes">Interactive tool for building and managing paru commands with real-time preview</property>
+    </accessibility>
+  </template>
+</interface>

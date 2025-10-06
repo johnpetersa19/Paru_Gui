@@ -1,75 +1,501 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface domain="paru-gui">
+<interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="gio" version="2.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
   <template class="ParuSearchBar" parent="GtkBox">
-    <property name="orientation">horizontal</property>
-    <property name="spacing">12</property>
-    <property name="margin-start">12</property>
-    <property name="margin-end">12</property>
-    <property name="margin-top">8</property>
-    <property name="margin-bottom">8</property>
-    <property name="halign">center</property>
-    <property name="css-classes">search-bar</property>
-    <accessibility>
-      <property name="label" translatable="yes">Package search bar with options</property>
-    </accessibility>
+    <property name="orientation">vertical</property>
+    <property name="spacing">0</property>
+    <property name="halign">fill</property>
+    <style>
+      <class name="search-container"/>
+    </style>
 
     <child>
-      <object class="GtkSearchEntry" id="search_entry">
-        <property name="placeholder-text" translatable="yes">Search packages (e.g. firefox, paru -Ss keyword) or type commands</property>
-        <property name="hexpand">True</property>
-        <signal name="search-changed" handler="on_search_changed" swapped="no"/>
-        <signal name="activate" handler="on_search_activated" swapped="no"/>
+      <object class="GtkBox" id="navigation_header">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">8</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">4</property>
         <style>
-          <class name="rounded"/>
+          <class name="navigation-breadcrumb"/>
         </style>
-        <property name="tooltip-text" translatable="yes">Enter package name or paru search command. Type '-c' for command assistant.</property>
-        <accessibility>
-          <property name="label" translatable="yes">Package search input field</property>
-          <property name="description" translatable="yes">Search for packages by name or use paru commands</property>
-        </accessibility>
+
+        <child>
+          <object class="GtkButton" id="back_button">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Go back to previous view</property>
+            <signal name="clicked" handler="on_back_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="breadcrumb_label">
+            <property name="label" translatable="yes">Main › Search</property>
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="breadcrumb"/>
+              <class name="caption"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="search_help_button">
+            <property name="icon-name">help-contents-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Search help and syntax guide</property>
+            <signal name="clicked" handler="on_search_help_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
       </object>
     </child>
 
     <child>
-      <object class="GtkButton" id="clear_button">
-        <property name="icon-name">edit-clear-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Clear search input</property>
-        <signal name="clicked" handler="on_clear_clicked" swapped="no"/>
-        <style>
-          <class name="flat"/>
-          <class name="circular"/>
-        </style>
-        <accessibility>
-          <property name="label" translatable="yes">Clear search button</property>
-          <property name="description" translatable="yes">Clear the search input field</property>
-        </accessibility>
-      </object>
-    </child>
-
-    <child>
-      <object class="GtkSeparator">
+      <object class="GtkBox" id="main_search_container">
         <property name="orientation">vertical</property>
-        <accessibility>
-          <property name="label" translatable="yes">Visual separator</property>
-        </accessibility>
+        <property name="spacing">8</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">8</property>
+
+        <child>
+          <object class="GtkBox" id="search_input_box">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">fill</property>
+            <style>
+              <class name="search-bar"/>
+              <class name="linked"/>
+            </style>
+
+            <child>
+              <object class="GtkSearchEntry" id="search_entry">
+                <property name="placeholder-text" translatable="yes">Search packages, files, or commands...</property>
+                <property name="hexpand">true</property>
+                <property name="tooltip-text" translatable="yes">Enter package name, file path, or paru command</property>
+                <signal name="search-changed" handler="on_search_changed"/>
+                <signal name="activate" handler="on_search_activated"/>
+                <signal name="focus-in" handler="on_search_focus_in"/>
+                <signal name="focus-out" handler="on_search_focus_out"/>
+                <style>
+                  <class name="search-entry"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkMenuButton" id="search_context_button">
+                <property name="icon-name">funnel-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Filter search by context</property>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <property name="popover">
+                  <object class="GtkPopover" id="context_popover">
+                    <property name="position">bottom</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Search Context</property>
+                            <property name="halign">start</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkCheckButton" id="packages_filter">
+                            <property name="label" translatable="yes">Packages</property>
+                            <property name="active">true</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkCheckButton" id="files_filter">
+                            <property name="label" translatable="yes">Files &amp; Paths</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkCheckButton" id="commands_filter">
+                            <property name="label" translatable="yes">Commands &amp; Actions</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkCheckButton" id="descriptions_filter">
+                            <property name="label" translatable="yes">Descriptions</property>
+                            <property name="active">false</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkSeparator"/>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="homogeneous">true</property>
+
+                            <child>
+                              <object class="GtkButton" id="reset_filters_button">
+                                <property name="label" translatable="yes">Reset</property>
+                                <signal name="clicked" handler="on_reset_filters_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="apply_filters_button">
+                                <property name="label" translatable="yes">Apply</property>
+                                <signal name="clicked" handler="on_apply_filters_clicked"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton" id="clear_search_button">
+                <property name="icon-name">edit-clear-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Clear search input</property>
+                <signal name="clicked" handler="on_clear_search_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton" id="advanced_search_button">
+                <property name="label" translatable="yes">Advanced</property>
+                <property name="tooltip-text" translatable="yes">Open advanced search dialog</property>
+                <signal name="clicked" handler="on_advanced_search_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkRevealer" id="search_suggestions_revealer">
+            <property name="reveal-child">false</property>
+            <property name="transition-type">slide-down</property>
+            <property name="transition-duration">200</property>
+
+            <child>
+              <object class="GtkFrame" id="suggestions_frame">
+                <property name="margin-top">4</property>
+                <style>
+                  <class name="view"/>
+                  <class name="suggestions-popup"/>
+                </style>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">0</property>
+
+                    <child>
+                      <object class="GtkBox" id="suggestions_header">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">8</property>
+                        <property name="margin-bottom">4</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Search Results Preview</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">true</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="view_all_results_button">
+                            <property name="label" translatable="yes">View All</property>
+                            <property name="tooltip-text" translatable="yes">View complete search results</property>
+                            <signal name="clicked" handler="on_view_all_results_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkScrolledWindow" id="suggestions_scroll">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vscrollbar-policy">automatic</property>
+                        <property name="max-content-height">300</property>
+                        <property name="propagate-natural-height">true</property>
+
+                        <child>
+                          <object class="GtkListBox" id="suggestions_list">
+                            <property name="selection-mode">single</property>
+                            <signal name="row-activated" handler="on_suggestion_activated"/>
+                            <style>
+                              <class name="navigation-sidebar"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox" id="search_history_container">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">start</property>
+            <property name="visible">false</property>
+
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Recent:</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkFlowBox" id="history_flowbox">
+                <property name="selection-mode">none</property>
+                <property name="max-children-per-line">5</property>
+                <property name="row-spacing">4</property>
+                <property name="column-spacing">4</property>
+                <signal name="child-activated" handler="on_history_item_activated"/>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton" id="clear_history_button">
+                <property name="icon-name">user-trash-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Clear search history</property>
+                <signal name="clicked" handler="on_clear_history_clicked"/>
+                <style>
+                  <class name="flat"/>
+                  <class name="circular"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
 
     <child>
-      <object class="GtkButton" id="search_options_button">
-        <property name="icon-name">preferences-system-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Search options / Command assistant</property>
-        <signal name="clicked" handler="on_search_options_clicked" swapped="no"/>
-        <style>
-          <class name="flat"/>
-          <class name="circular"/>
-        </style>
-        <accessibility>
-          <property name="label" translatable="yes">Search options button</property>
-          <property name="description" translatable="yes">Access advanced search options and command assistant</property>
-        </accessibility>
+      <object class="GtkRevealer" id="status_revealer">
+        <property name="reveal-child">false</property>
+        <property name="transition-type">slide-down</property>
+        <property name="transition-duration">150</property>
+
+        <child>
+          <object class="GtkBox" id="status_container">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-top">4</property>
+            <property name="margin-bottom">8</property>
+            <property name="halign">fill</property>
+            <style>
+              <class name="toolbar"/>
+              <class name="status-bar"/>
+            </style>
+
+            <child>
+              <object class="GtkBox" id="status_info_box">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="halign">start</property>
+                <property name="hexpand">true</property>
+
+                <child>
+                  <object class="GtkSpinner" id="activity_spinner">
+                    <property name="visible">false</property>
+                    <property name="valign">center</property>
+                    <property name="width-request">16</property>
+                    <property name="height-request">16</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkImage" id="status_icon">
+                    <property name="icon-name">dialog-information-symbolic</property>
+                    <property name="icon-size">normal</property>
+                    <property name="valign">center</property>
+                    <property name="visible">false</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="status_label">
+                    <property name="label" translatable="yes">Ready to search</property>
+                    <property name="halign">start</property>
+                    <property name="valign">center</property>
+                    <property name="ellipsize">end</property>
+                    <property name="max-width-chars">40</property>
+                    <style>
+                      <class name="caption"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="results_count_label">
+                    <property name="visible">false</property>
+                    <property name="halign">start</property>
+                    <property name="valign">center</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="accent"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="progress_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="halign">end</property>
+                <property name="visible">false</property>
+
+                <child>
+                  <object class="GtkLabel" id="progress_label">
+                    <property name="valign">center</property>
+                    <property name="width-chars">6</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="numeric"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkProgressBar" id="progress_bar">
+                    <property name="valign">center</property>
+                    <property name="width-request">150</property>
+                    <property name="show-text">false</property>
+                    <style>
+                      <class name="osd"/>
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkButton" id="cancel_operation_button">
+                    <property name="icon-name">process-stop-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Cancel current search operation</property>
+                    <signal name="clicked" handler="on_cancel_operation_clicked"/>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox" id="quick_actions_container">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">8</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">8</property>
+        <property name="halign">center</property>
+        <property name="visible">false</property>
+
+        <child>
+          <object class="GtkButton" id="search_packages_action">
+            <property name="label" translatable="yes">Search Packages</property>
+            <property name="tooltip-text" translatable="yes">Search for installable packages</property>
+            <signal name="clicked" handler="on_search_packages_action_clicked"/>
+            <style>
+              <class name="pill"/>
+              <class name="suggested-action"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="search_files_action">
+            <property name="label" translatable="yes">Search Files</property>
+            <property name="tooltip-text" translatable="yes">Search for files in packages</property>
+            <signal name="clicked" handler="on_search_files_action_clicked"/>
+            <style>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="browse_categories_action">
+            <property name="label" translatable="yes">Browse Categories</property>
+            <property name="tooltip-text" translatable="yes">Browse packages by category</property>
+            <signal name="clicked" handler="on_browse_categories_action_clicked"/>
+            <style>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
       </object>
     </child>
   </template>

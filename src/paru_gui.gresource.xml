@@ -11,7 +11,7 @@
     <file preprocess="xml-stripblanks">ui/components/empty_state.ui</file>
     <file preprocess="xml-stripblanks">ui/components/error_dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/components/file_chooser_dialog.ui</file>
-    <file preprocess="xml-stripblanks">ui/components/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/Keyboard_Shortcuts.ui</file>
     <file preprocess="xml-stripblanks">ui/components/search_bar.ui</file>
 
     <file preprocess="xml-stripblanks">ui/components/cards/advanced_card.ui</file>
