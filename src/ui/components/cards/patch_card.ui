@@ -23,7 +23,6 @@
           <object class="GtkHeaderBar" id="navigation_header">
             <property name="title-widget">
               <object class="GtkBox" id="breadcrumb_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_main">
@@ -312,7 +311,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">

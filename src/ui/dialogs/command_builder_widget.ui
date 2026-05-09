@@ -9,7 +9,6 @@
 
     <child>
       <object class="GtkBox" id="navigation_header">
-        <property name="orientation">horizontal</property>
         <property name="spacing">12</property>
         <property name="margin-top">16</property>
         <property name="margin-bottom">16</property>
@@ -93,7 +92,6 @@
                     <property name="subtitle" translatable="yes">Choose from popular paru command patterns</property>
                     <child type="suffix">
                       <object class="GtkBox">
-                        <property name="orientation">horizontal</property>
                         <property name="spacing">8</property>
 
                         <child>
@@ -262,7 +260,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -331,7 +328,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">8</property>
                             <property name="halign">center</property>
 
@@ -468,7 +464,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">8</property>
                             <property name="margin-top">16</property>
                             <property name="margin-start">16</property>

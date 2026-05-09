@@ -45,7 +45,6 @@
         </child>
         <child>
           <object class="GtkBox" id="breadcrumb_container">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="margin-start">16</property>
             <property name="margin-end">16</property>
@@ -430,7 +429,6 @@
                         </style>
                         <child>
                           <object class="GtkBox" id="aur_header">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">16</property>
                             <property name="margin-start">20</property>
                             <property name="margin-end">20</property>
@@ -477,7 +475,6 @@
                         </child>
                         <child>
                           <object class="GtkBox" id="aur_search_container">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="margin-start">20</property>
                             <property name="margin-end">20</property>
@@ -523,7 +520,6 @@
                         </style>
                         <child>
                           <object class="GtkBox" id="create_header">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">16</property>
                             <property name="margin-start">20</property>
                             <property name="margin-end">20</property>
@@ -631,7 +627,6 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="create_actions">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <property name="halign">end</property>
                                 <property name="margin-top">8</property>

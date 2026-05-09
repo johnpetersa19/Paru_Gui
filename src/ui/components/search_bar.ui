@@ -13,7 +13,6 @@
 
     <child>
       <object class="GtkBox" id="navigation_header">
-        <property name="orientation">horizontal</property>
         <property name="spacing">8</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
@@ -74,7 +73,6 @@
 
         <child>
           <object class="GtkBox" id="search_input_box">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="halign">fill</property>
             <style>
@@ -160,7 +158,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">8</property>
                             <property name="homogeneous">true</property>
 
@@ -237,7 +234,6 @@
 
                     <child>
                       <object class="GtkBox" id="suggestions_header">
-                        <property name="orientation">horizontal</property>
                         <property name="spacing">8</property>
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>
@@ -296,7 +292,6 @@
 
         <child>
           <object class="GtkBox" id="search_history_container">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="halign">start</property>
             <property name="visible">false</property>
@@ -345,7 +340,6 @@
 
         <child>
           <object class="GtkBox" id="status_container">
-            <property name="orientation">horizontal</property>
             <property name="spacing">12</property>
             <property name="margin-start">12</property>
             <property name="margin-end">12</property>
@@ -359,7 +353,6 @@
 
             <child>
               <object class="GtkBox" id="status_info_box">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="halign">start</property>
                 <property name="hexpand">true</property>
@@ -411,7 +404,6 @@
 
             <child>
               <object class="GtkBox" id="progress_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="halign">end</property>
                 <property name="visible">false</property>
@@ -458,7 +450,6 @@
 
     <child>
       <object class="GtkBox" id="quick_actions_container">
-        <property name="orientation">horizontal</property>
         <property name="spacing">8</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>

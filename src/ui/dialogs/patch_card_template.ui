@@ -23,9 +23,6 @@
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to Main</property>
                 <property name="action-name">app.go-back</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Navigate back to main application</property>
-                </accessibility>
               </object>
             </child>
             <child type="end">
@@ -54,24 +51,17 @@
             <property name="margin-end">12</property>
             <child>
               <object class="GtkBox" id="toolbar_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
                 <property name="margin-bottom">8</property>
                 <child>
                   <object class="GtkSearchEntry" id="patch_search">
                     <property name="placeholder-text" translatable="yes">Search patches...</property>
                     <property name="width-chars">30</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Search for patches by name or description</property>
-                    </accessibility>
                   </object>
                 </child>
                 <child>
                   <object class="GtkDropDown" id="status_filter">
                     <property name="tooltip-text" translatable="yes">Filter patches by status</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Filter patches by application status</property>
-                    </accessibility>
                   </object>
                 </child>
                 <child>
@@ -87,9 +77,6 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Apply all selected patches</property>
-                    </accessibility>
                   </object>
                 </child>
                 <child>
@@ -97,9 +84,6 @@
                     <property name="label" translatable="yes">Import Patch</property>
                     <property name="icon-name">document-open-symbolic</property>
                     <property name="action-name">app.import-patch</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Import patch file from disk</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -121,9 +105,6 @@
                     <property name="min-children-per-line">1</property>
                     <property name="max-children-per-line">3</property>
                     <property name="selection-mode">none</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">List of available patches</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -173,14 +154,10 @@
         <property name="margin-end">16</property>
         <child>
           <object class="GtkBox" id="header_box">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <child>
               <object class="GtkCheckButton" id="selection_checkbox">
                 <property name="valign">center</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Select patch for bulk operations</property>
-                </accessibility>
               </object>
             </child>
             <child>
@@ -197,7 +174,6 @@
                 <property name="hexpand">True</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkLabel" id="patch_name">
@@ -245,9 +221,6 @@
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="tooltip-text" translatable="yes">More patch actions</property>
                 <property name="valign">start</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Additional patch actions menu</property>
-                </accessibility>
               </object>
             </child>
           </object>
@@ -268,7 +241,6 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">16</property>
                     <property name="homogeneous">True</property>
                     <child>
@@ -363,9 +335,6 @@
                         <property name="right-margin">8</property>
                         <property name="top-margin">8</property>
                         <property name="bottom-margin">8</property>
-                        <accessibility>
-                          <property name="label" translatable="yes">Patch content preview</property>
-                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -376,7 +345,6 @@
         </child>
         <child>
           <object class="GtkBox" id="action_buttons">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="halign">end</property>
             <property name="margin-top">8</property>
@@ -384,18 +352,12 @@
               <object class="GtkButton" id="view_details_button">
                 <property name="label" translatable="yes">View Details</property>
                 <property name="action-name">patch.view-details</property>
-                <accessibility>
-                  <property name="label" translatable="yes">View complete patch details in modal</property>
-                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="preview_button">
                 <property name="label" translatable="yes">Preview Changes</property>
                 <property name="action-name">patch.toggle-preview</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Preview patch changes before applying</property>
-                </accessibility>
               </object>
             </child>
             <child>
@@ -405,9 +367,6 @@
                 <style>
                   <class name="suggested-action"/>
                 </style>
-                <accessibility>
-                  <property name="label" translatable="yes">Apply this patch to the system</property>
-                </accessibility>
               </object>
             </child>
             <child>
@@ -418,9 +377,6 @@
                 <style>
                   <class name="destructive-action"/>
                 </style>
-                <accessibility>
-                  <property name="label" translatable="yes">Reverse this applied patch</property>
-                </accessibility>
               </object>
             </child>
           </object>
@@ -431,7 +387,6 @@
             <property name="transition-type">slide-down</property>
             <child>
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="margin-top">8</property>
                 <child>
@@ -497,7 +452,6 @@
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">12</property>
                     <child>
                       <object class="GtkImage">
@@ -542,14 +496,10 @@
                     <property name="right-margin">12</property>
                     <property name="top-margin">12</property>
                     <property name="bottom-margin">12</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Complete patch file content</property>
-                    </accessibility>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">8</property>
                     <property name="halign">end</property>
                     <child>

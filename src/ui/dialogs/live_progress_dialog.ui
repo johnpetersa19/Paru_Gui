@@ -26,7 +26,6 @@
 
             <child type="start">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -38,9 +37,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Return to previous screen</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -52,9 +48,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Minimize progress window</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -62,7 +55,6 @@
 
             <child type="end">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -73,9 +65,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Show or hide detailed information</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -88,9 +77,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Save operation log to file</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -126,7 +112,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -175,9 +160,6 @@
                                   <class name="flat"/>
                                 </style>
                                 <signal name="clicked" handler="on_view_source_clicked" swapped="no"/>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Navigate back to operation source</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -208,7 +190,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -229,9 +210,6 @@
                                 <style>
                                   <class name="heading"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Current operation stage</property>
-                                </accessibility>
                               </object>
                             </child>
 
@@ -242,9 +220,6 @@
                                 <style>
                                   <class name="numeric"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Progress percentage</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -254,15 +229,11 @@
                           <object class="GtkProgressBar" id="overall_progress_bar">
                             <property name="fraction">0.0</property>
                             <property name="show-text">false</property>
-                            <accessibility>
-                              <property name="label" translatable="yes">Overall operation progress</property>
-                            </accessibility>
                           </object>
                         </child>
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">24</property>
 
                             <child>
@@ -273,9 +244,6 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Download speed indicator</property>
-                                </accessibility>
                               </object>
                             </child>
 
@@ -287,9 +255,6 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Estimated time remaining</property>
-                                </accessibility>
                               </object>
                             </child>
 
@@ -302,9 +267,6 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Elapsed operation time</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -403,7 +365,6 @@
 
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -412,9 +373,6 @@
                                 <property name="halign">start</property>
                                 <property name="hexpand">true</property>
                                 <property name="ellipsize">end</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Build stage description</property>
-                                </accessibility>
                               </object>
                             </child>
 
@@ -425,9 +383,6 @@
                                 <style>
                                   <class name="numeric"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Build progress counter</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -437,9 +392,6 @@
                           <object class="GtkProgressBar" id="build_progress_bar">
                             <property name="fraction">0.0</property>
                             <property name="show-text">false</property>
-                            <accessibility>
-                              <property name="label" translatable="yes">Build operation progress</property>
-                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -469,7 +421,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <property name="margin-top">8</property>
                                 <property name="margin-start">12</property>
@@ -494,9 +445,6 @@
                                       <class name="flat"/>
                                     </style>
                                     <signal name="toggled" handler="on_autoscroll_toggled" swapped="no"/>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Toggle automatic scrolling</property>
-                                    </accessibility>
                                   </object>
                                 </child>
 
@@ -508,9 +456,6 @@
                                       <class name="flat"/>
                                     </style>
                                     <signal name="clicked" handler="on_copy_output_clicked" swapped="no"/>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Copy log to clipboard</property>
-                                    </accessibility>
                                   </object>
                                 </child>
 
@@ -522,9 +467,6 @@
                                       <class name="flat"/>
                                     </style>
                                     <signal name="clicked" handler="on_clear_log_clicked" swapped="no"/>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Clear output log</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -572,7 +514,6 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -582,9 +523,6 @@
                     <property name="tooltip-text" translatable="yes">Pause current operation</property>
                     <property name="visible">false</property>
                     <signal name="clicked" handler="on_pause_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Pause operation</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -595,16 +533,12 @@
                     <property name="tooltip-text" translatable="yes">Resume paused operation</property>
                     <property name="visible">false</property>
                     <signal name="clicked" handler="on_resume_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Resume operation</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -612,9 +546,6 @@
                     <property name="label" translatable="yes">Continue in Background</property>
                     <property name="tooltip-text" translatable="yes">Hide progress and continue operation in background</property>
                     <signal name="clicked" handler="on_background_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Continue operation in background</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -626,9 +557,6 @@
                       <class name="destructive-action"/>
                     </style>
                     <signal name="clicked" handler="on_cancel_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Cancel current operation</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -641,9 +569,6 @@
                       <class name="suggested-action"/>
                     </style>
                     <signal name="clicked" handler="on_close_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Close progress dialog</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>

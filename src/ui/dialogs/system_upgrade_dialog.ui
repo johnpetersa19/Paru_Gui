@@ -15,7 +15,6 @@
           <object class="AdwHeaderBar">
             <child type="start">
               <object class="GtkBox" id="navigation_header">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="valign">center</property>
                 <child>
@@ -419,7 +418,6 @@
 
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <child>
                                       <object class="GtkImage" id="command_status_icon">
@@ -486,7 +484,6 @@
 
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <property name="halign">center</property>
                                     <child>

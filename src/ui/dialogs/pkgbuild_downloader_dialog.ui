@@ -10,9 +10,6 @@
     <property name="default-width">800</property>
     <property name="default-height">650</property>
     <property name="destroy-with-parent">true</property>
-    <accessibility>
-      <property name="label" translatable="yes">Download and manage PKGBUILD files from AUR</property>
-    </accessibility>
 
     <child>
       <object class="AdwToolbarView">
@@ -25,9 +22,6 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to Empty State</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Return to previous view</property>
-                </accessibility>
               </object>
             </child>
 
@@ -45,9 +39,6 @@
                 <style>
                   <class name="flat"/>
                 </style>
-                <accessibility>
-                  <property name="label" translatable="yes">Browse downloaded files</property>
-                </accessibility>
               </object>
             </child>
           </object>
@@ -57,7 +48,6 @@
           <object class="AdwToastOverlay" id="toast_overlay">
             <child>
               <object class="GtkPaned" id="main_paned">
-                <property name="orientation">horizontal</property>
                 <property name="position">400</property>
                 <property name="resize-start-child">true</property>
                 <property name="resize-end-child">true</property>
@@ -99,24 +89,17 @@
                                 <property name="subtitle" translatable="yes">Enter the name of an AUR package</property>
                                 <child type="suffix">
                                   <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkEntry" id="package_name_entry">
                                         <property name="placeholder-text" translatable="yes">e.g., yay-git</property>
                                         <property name="width-request">200</property>
-                                        <accessibility>
-                                          <property name="label" translatable="yes">Enter name of AUR package to download</property>
-                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="search_aur_button">
                                         <property name="icon-name">system-search-symbolic</property>
                                         <property name="tooltip-text" translatable="yes">Search AUR for packages</property>
-                                        <accessibility>
-                                          <property name="label" translatable="yes">Search AUR packages</property>
-                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -153,24 +136,17 @@
                                 <property name="subtitle" translatable="yes">Location where PKGBUILDs will be saved</property>
                                 <child type="suffix">
                                   <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkEntry" id="download_dir_entry">
                                         <property name="text">~/Downloads</property>
                                         <property name="width-request">200</property>
-                                        <accessibility>
-                                          <property name="label" translatable="yes">Directory path for downloading PKGBUILD</property>
-                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="browse_dir_button">
                                         <property name="icon-name">folder-open-symbolic</property>
                                         <property name="tooltip-text" translatable="yes">Browse for directory</property>
-                                        <accessibility>
-                                          <property name="label" translatable="yes">Browse for download directory</property>
-                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -211,15 +187,11 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <property name="homogeneous">true</property>
                                 <child>
                                   <object class="GtkButton" id="preview_pkgbuild_button">
                                     <property name="tooltip-text" translatable="yes">Preview PKGBUILD content (paru -Gp)</property>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Preview PKGBUILD content before download</property>
-                                    </accessibility>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
@@ -246,9 +218,6 @@
                                 <child>
                                   <object class="GtkButton" id="view_comments_button">
                                     <property name="tooltip-text" translatable="yes">View AUR comments (paru -Gc)</property>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">View AUR package comments</property>
-                                    </accessibility>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
@@ -293,9 +262,6 @@
                                     <style>
                                       <class name="monospace"/>
                                     </style>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Preview of download command that will be executed</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -341,7 +307,6 @@
 
                         <child>
                           <object class="GtkBox" id="action_buttons">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">end</property>
                             <property name="margin-top">12</property>
@@ -349,9 +314,6 @@
                             <child>
                               <object class="GtkButton" id="cancel_button">
                                 <property name="label" translatable="yes">Cancel</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Cancel download operation</property>
-                                </accessibility>
                               </object>
                             </child>
 
@@ -362,9 +324,6 @@
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Download package and open for review</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -377,7 +336,6 @@
                 <child>
                   <object class="GtkBox" id="preview_panel">
                     <property name="orientation">vertical</property>
-                    <property name="visible">true</property>
                     <child>
                       <object class="AdwHeaderBar" id="preview_header">
                         <property name="show-end-title-buttons">false</property>
@@ -431,9 +389,6 @@
                                     <property name="margin-bottom">12</property>
                                     <property name="margin-start">12</property>
                                     <property name="margin-end">12</property>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">PKGBUILD file content preview</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>

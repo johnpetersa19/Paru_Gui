@@ -17,9 +17,6 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Go back to previous view</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Return to previous screen</property>
-                </accessibility>
               </object>
             </child>
 
@@ -140,7 +137,6 @@
 
                                     <child>
                                       <object class="GtkBox">
-                                        <property name="orientation">horizontal</property>
                                         <property name="spacing">12</property>
                                         <child>
                                           <object class="GtkImage" id="command_icon">
@@ -208,7 +204,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <property name="homogeneous">true</property>
 
@@ -392,7 +387,6 @@
 
                                     <child>
                                       <object class="GtkBox">
-                                        <property name="orientation">horizontal</property>
                                         <property name="spacing">12</property>
 
                                         <child>
@@ -522,7 +516,6 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -534,9 +527,6 @@
                       <class name="pill"/>
                       <class name="destructive-action"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Cancel operation and go back</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -554,7 +544,6 @@
 
             <child type="end">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -577,9 +566,6 @@
                       <class name="pill"/>
                     </style>
                     <signal name="clicked" handler="on_execute_monitor_clicked"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Execute operation with monitoring</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>

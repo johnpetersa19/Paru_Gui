@@ -23,7 +23,6 @@
           <object class="GtkHeaderBar" id="navigation_header">
             <property name="title-widget">
               <object class="GtkBox" id="breadcrumb_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_main">
@@ -149,13 +148,11 @@
                       <object class="GtkImage" id="trust_icon">
                         <property name="icon-size">1</property>
                         <property name="pixel-size">16</property>
-                        <property name="visible">True</property>
                         <property name="tooltip-text">Package trust level indicator</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="trust_label">
-                        <property name="visible">True</property>
                         <property name="ellipsize">end</property>
                         <style>
                           <class name="caption"/>
@@ -213,7 +210,6 @@
               <object class="GtkBox" id="detailed_trust_box">
                 <property name="spacing">4</property>
                 <property name="halign">center</property>
-                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox">
@@ -324,7 +320,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">

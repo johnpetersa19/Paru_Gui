@@ -22,9 +22,6 @@
               <object class="GtkButton" id="back_to_details_button">
                 <property name="label" translatable="yes">Back to Package Details</property>
                 <property name="tooltip-text" translatable="yes">Return to package details view</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Return to package details</property>
-                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -41,7 +38,6 @@
 
             <child>
               <object class="GtkBox" id="breadcrumb_navigation">
-                <property name="margin-bottom">0</property>
                 <property name="margin-end">24</property>
                 <property name="margin-start">24</property>
                 <property name="margin-top">18</property>
@@ -59,9 +55,6 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <accessibility>
-                          <property name="label" translatable="yes">Navigate to packages overview</property>
-                        </accessibility>
                         <signal name="clicked" handler="on_breadcrumb_packages_clicked"/>
                       </object>
                     </child>
@@ -81,9 +74,6 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <accessibility>
-                          <property name="label" translatable="yes">Navigate to package details</property>
-                        </accessibility>
                         <signal name="clicked" handler="on_breadcrumb_package_clicked"/>
                       </object>
                     </child>
@@ -370,9 +360,6 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">List of packages affected by removal</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -397,9 +384,6 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">List of dependencies that will become orphaned</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -575,9 +559,6 @@
                                 <property name="margin-bottom">12</property>
                                 <property name="margin-start">12</property>
                                 <property name="margin-end">12</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Package removal progress</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -587,7 +568,6 @@
 
                     <child>
                       <object class="GtkBox" id="action_buttons_box">
-                        <property name="orientation">horizontal</property>
                         <property name="spacing">12</property>
                         <property name="halign">end</property>
                         <property name="margin-top">12</property>
@@ -596,9 +576,6 @@
                           <object class="GtkButton" id="cancel_button">
                             <property name="label" translatable="yes">Cancel</property>
                             <property name="tooltip-text" translatable="yes">Cancel removal and return to package details</property>
-                            <accessibility>
-                              <property name="label" translatable="yes">Cancel package removal</property>
-                            </accessibility>
                             <signal name="clicked" handler="on_cancel_clicked"/>
                           </object>
                         </child>
@@ -607,9 +584,6 @@
                           <object class="GtkButton" id="simulate_button">
                             <property name="label" translatable="yes">Simulate Removal</property>
                             <property name="tooltip-text" translatable="yes">Perform a dry run to see what would be removed</property>
-                            <accessibility>
-                              <property name="label" translatable="yes">Simulate package removal</property>
-                            </accessibility>
                             <signal name="clicked" handler="on_simulate_clicked"/>
                           </object>
                         </child>
@@ -621,9 +595,6 @@
                             <style>
                               <class name="destructive-action"/>
                             </style>
-                            <accessibility>
-                              <property name="label" translatable="yes">Remove the selected package</property>
-                            </accessibility>
                             <signal name="clicked" handler="on_remove_clicked"/>
                           </object>
                         </child>

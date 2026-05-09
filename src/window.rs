@@ -113,12 +113,44 @@ mod imp {
     impl ParuGuiWindow {
         #[template_callback]
         fn on_select_file_clicked(&self, _button: &gtk::Button) {
-            println!("Select file clicked");
+            let dialog = gtk::FileDialog::builder()
+                .title("Select File")
+                .modal(true)
+                .build();
+
+            let obj = self.obj().clone();
+            dialog.open(
+                Some(obj.upcast_ref::<gtk::Window>()),
+                None::<&gio::Cancellable>,
+                move |result| {
+                    if let Ok(file) = result {
+                        if let Some(path) = file.path() {
+                            println!("File selected: {:?}", path);
+                        }
+                    }
+                },
+            );
         }
 
         #[template_callback]
         fn on_select_folder_clicked(&self, _button: &gtk::Button) {
-            println!("Select folder clicked");
+            let dialog = gtk::FileDialog::builder()
+                .title("Select Folder")
+                .modal(true)
+                .build();
+
+            let obj = self.obj().clone();
+            dialog.select_folder(
+                Some(obj.upcast_ref::<gtk::Window>()),
+                None::<&gio::Cancellable>,
+                move |result| {
+                    if let Ok(folder) = result {
+                        if let Some(path) = folder.path() {
+                            println!("Folder selected: {:?}", path);
+                        }
+                    }
+                },
+            );
         }
 
         #[template_callback]

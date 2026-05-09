@@ -11,9 +11,6 @@
     <property name="default-height">700</property>
     <property name="width-request">600</property>
     <property name="height-request">500</property>
-    <accessibility>
-      <property name="label" translatable="yes">System statistics and maintenance dialog</property>
-    </accessibility>
 
     <child>
       <object class="AdwToolbarView">
@@ -28,7 +25,6 @@
 
             <child type="start">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -39,9 +35,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Navigate back to system menu</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -53,9 +46,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Navigate back to main interface</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -63,7 +53,6 @@
 
             <child type="end">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -74,9 +63,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Refresh system statistics</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -149,9 +135,6 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Share statistics menu</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -194,7 +177,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -233,7 +215,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -272,7 +253,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -311,7 +291,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -357,7 +336,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -396,7 +374,6 @@
 
                             <child type="suffix">
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
 
                                 <child>
@@ -595,7 +572,6 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -604,9 +580,6 @@
                     <property name="tooltip-text" translatable="yes">Generate comprehensive system report</property>
                     <property name="icon-name">document-new-symbolic</property>
                     <signal name="clicked" handler="on_generate_report_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Generate detailed system report</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -616,16 +589,12 @@
                     <property name="tooltip-text" translatable="yes">Schedule automatic system maintenance</property>
                     <property name="icon-name">preferences-system-time-symbolic</property>
                     <signal name="clicked" handler="on_schedule_maintenance_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Schedule automatic maintenance</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -633,9 +602,6 @@
                     <property name="label" translatable="yes">Back to System Menu</property>
                     <property name="tooltip-text" translatable="yes">Return to system management menu</property>
                     <signal name="clicked" handler="on_back_to_system_menu_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Return to system menu</property>
-                    </accessibility>
                   </object>
                 </child>
 
@@ -647,9 +613,6 @@
                       <class name="suggested-action"/>
                     </style>
                     <signal name="clicked" handler="on_close_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Close statistics dialog</property>
-                    </accessibility>
                   </object>
                 </child>
               </object>

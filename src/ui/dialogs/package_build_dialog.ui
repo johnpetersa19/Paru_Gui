@@ -23,9 +23,6 @@
                   <object class="GtkButton" id="dialog_close_button">
                     <property name="icon-name">window-close-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Close build dialog</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Close dialog</property>
-                    </accessibility>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -40,9 +37,6 @@
                   <object class="GtkButton" id="back_to_file_button">
                     <property name="label" translatable="yes">Back to File</property>
                     <property name="tooltip-text" translatable="yes">Return to PKGBUILD file view</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Return to PKGBUILD file view</property>
-                    </accessibility>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -55,9 +49,6 @@
                 <property name="icon-name">preferences-system-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Build options and advanced settings</property>
                 <property name="menu-model">build_options_menu_model</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Build options menu</property>
-                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -72,7 +63,6 @@
 
             <child>
               <object class="GtkBox" id="breadcrumb_navigation">
-                <property name="margin-bottom">0</property>
                 <property name="margin-end">24</property>
                 <property name="margin-start">24</property>
                 <property name="margin-top">18</property>
@@ -90,9 +80,6 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <accessibility>
-                          <property name="label" translatable="yes">Navigate to content management</property>
-                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -111,9 +98,6 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <accessibility>
-                          <property name="label" translatable="yes">Navigate to PKGBUILD management</property>
-                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -182,9 +166,6 @@
                           <class name="pill"/>
                           <class name="suggested-action"/>
                         </style>
-                        <accessibility>
-                          <property name="label" translatable="yes">Review PKGBUILD before building</property>
-                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -236,18 +217,12 @@
                               <object class="GtkButton" id="edit_pkgbuild_button">
                                 <property name="label" translatable="yes">Edit</property>
                                 <property name="tooltip-text" translatable="yes">Edit PKGBUILD file in external editor</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Edit PKGBUILD file</property>
-                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="reload_pkgbuild_button">
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reload PKGBUILD content from file</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Reload PKGBUILD</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -267,9 +242,6 @@
                                 <property name="bottom-margin">12</property>
                                 <property name="left-margin">12</property>
                                 <property name="right-margin">12</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">PKGBUILD file content</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -408,9 +380,6 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Runtime dependencies list</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -435,9 +404,6 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Build dependencies list</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -462,9 +428,6 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Check dependencies list</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -489,9 +452,6 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Optional dependencies list</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -534,9 +494,6 @@
                               <object class="GtkButton" id="download_sources_button">
                                 <property name="label" translatable="yes">Download Sources</property>
                                 <property name="tooltip-text" translatable="yes">Download all source files required for building</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Download all source files</property>
-                                </accessibility>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
@@ -556,9 +513,6 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Source files list</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -585,9 +539,6 @@
                                   <object class="GtkButton" id="verify_checksums_button">
                                     <property name="label" translatable="yes">Verify</property>
                                     <property name="tooltip-text" translatable="yes">Verify integrity of downloaded files</property>
-                                    <accessibility>
-                                      <property name="label" translatable="yes">Verify file checksums</property>
-                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -598,9 +549,6 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
-                                <accessibility>
-                                  <property name="label" translatable="yes">File checksums list</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -658,9 +606,6 @@
                               <object class="GtkProgressBar" id="build_progressbar">
                                 <property name="show-text">true</property>
                                 <property name="text" translatable="yes">0%</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Build progress indicator</property>
-                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -685,9 +630,6 @@
                               <object class="GtkButton" id="clear_log_button">
                                 <property name="icon-name">edit-clear-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Clear build log</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Clear build log</property>
-                                </accessibility>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -697,9 +639,6 @@
                               <object class="GtkButton" id="save_log_button">
                                 <property name="icon-name">document-save-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Save build log to file</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Save build log</property>
-                                </accessibility>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -724,9 +663,6 @@
                                 <property name="bottom-margin">12</property>
                                 <property name="left-margin">12</property>
                                 <property name="right-margin">12</property>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Real-time build output log</property>
-                                </accessibility>
                                 <style>
                                   <class name="card"/>
                                 </style>
@@ -762,18 +698,12 @@
                   <object class="GtkButton" id="clean_button">
                     <property name="label" translatable="yes">Clean</property>
                     <property name="tooltip-text" translatable="yes">Clean build directory and remove old files</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Clean build directory</property>
-                    </accessibility>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="install_deps_button">
                     <property name="label" translatable="yes">Install Dependencies</property>
                     <property name="tooltip-text" translatable="yes">Install all build and runtime dependencies</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Install build dependencies</property>
-                    </accessibility>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -783,9 +713,6 @@
                   <object class="GtkButton" id="build_button">
                     <property name="label" translatable="yes">Build Package</property>
                     <property name="tooltip-text" translatable="yes">Start building the package from source</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Start building the package</property>
-                    </accessibility>
                     <style>
                       <class name="suggested-action"/>
                     </style>
@@ -795,9 +722,6 @@
                   <object class="GtkButton" id="install_button">
                     <property name="label" translatable="yes">Build &amp; Install</property>
                     <property name="tooltip-text" translatable="yes">Build package and install it to the system</property>
-                    <accessibility>
-                      <property name="label" translatable="yes">Build and install the package</property>
-                    </accessibility>
                     <style>
                       <class name="destructive-action"/>
                     </style>
@@ -868,9 +792,6 @@
           <object class="GtkButton" id="dependency_info_button">
             <property name="icon-name">help-about-symbolic</property>
             <property name="tooltip-text" translatable="yes">Show package information and details</property>
-            <accessibility>
-              <property name="label" translatable="yes">Package information</property>
-            </accessibility>
             <style>
               <class name="flat"/>
             </style>
@@ -896,9 +817,6 @@
               <object class="GtkButton" id="source_download_button">
                 <property name="icon-name">folder-download-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Download this source file</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Download source</property>
-                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -908,9 +826,6 @@
               <object class="GtkButton" id="source_verify_button">
                 <property name="icon-name">security-high-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Verify source file integrity</property>
-                <accessibility>
-                  <property name="label" translatable="yes">Verify source</property>
-                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>

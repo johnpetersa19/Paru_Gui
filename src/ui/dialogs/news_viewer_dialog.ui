@@ -12,7 +12,6 @@
           <object class="AdwHeaderBar">
             <child type="start">
               <object class="GtkBox" id="navigation_header">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="valign">center</property>
                 <child>
@@ -94,7 +93,6 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">0</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
@@ -105,7 +103,6 @@
                         <property name="width-request">320</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="margin-top">16</property>
                             <property name="margin-start">16</property>
@@ -181,7 +178,6 @@
                             <property name="margin-end">16</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <child>
                                   <object class="GtkLabel" id="article_title">
@@ -285,7 +281,6 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">16</property>
                                 <child>
                                   <object class="GtkLabel" id="article_date">
@@ -322,7 +317,6 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="navigation_controls">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">8</property>
                                 <property name="halign">center</property>
                                 <property name="margin-top">8</property>

@@ -13,7 +13,6 @@
 
     <child>
       <object class="GtkBox" id="navigation_header">
-        <property name="orientation">horizontal</property>
         <property name="spacing">12</property>
         <property name="margin-start">16</property>
         <property name="margin-end">16</property>
@@ -80,7 +79,6 @@
 
     <child>
       <object class="GtkBox" id="status_header">
-        <property name="orientation">horizontal</property>
         <property name="spacing">16</property>
         <property name="margin-start">16</property>
         <property name="margin-end">16</property>
@@ -92,7 +90,6 @@
 
         <child>
           <object class="GtkBox" id="status_info">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="halign">start</property>
             <property name="hexpand">true</property>
@@ -132,7 +129,6 @@
 
         <child>
           <object class="GtkBox" id="filter_container">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
             <property name="halign">end</property>
 
@@ -168,7 +164,6 @@
 
     <child>
       <object class="GtkBox" id="bulk_actions_bar">
-        <property name="orientation">horizontal</property>
         <property name="spacing">8</property>
         <property name="margin-start">16</property>
         <property name="margin-end">16</property>
@@ -270,7 +265,6 @@
 
         <child>
           <object class="GtkBox" id="progress_container">
-            <property name="orientation">horizontal</property>
             <property name="spacing">12</property>
             <property name="margin-start">16</property>
             <property name="margin-end">16</property>
@@ -345,7 +339,6 @@
 
         <child>
           <object class="GtkBox" id="card_header">
-            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
 
             <child>
@@ -530,7 +523,6 @@
 
             <child>
               <object class="GtkBox" id="secondary_actions">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">4</property>
                 <property name="homogeneous">true</property>
 

@@ -20,10 +20,9 @@
         <property name="spacing">0</property>
 
         <child>
-          <object class="GtkHeaderBar" id="navigation_header">
+          <object class="AdwHeaderBar" id="navigation_header">
             <property name="title-widget">
               <object class="GtkBox" id="breadcrumb_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_main">
@@ -151,20 +150,10 @@
             </child>
 
             <child>
-              <object class="GtkInfoBar" id="warning_bar">
-                <property name="message-type">warning</property>
-                <property name="show-close-button">false</property>
+              <object class="AdwBanner" id="warning_bar">
+                <property name="title" translatable="yes">Advanced mode allows dangerous operations. Use with caution.</property>
                 <property name="revealed">true</property>
-                <child>
-                  <object class="GtkLabel" id="warning_label">
-                    <property name="label">Advanced mode allows dangerous operations. Use with caution.</property>
-                    <property name="wrap">true</property>
-                    <property name="max-width-chars">25</property>
-                    <style>
-                      <class name="caption"/>
-                    </style>
-                  </object>
-                </child>
+                <property name="css-classes">warning</property>
               </object>
             </child>
 
@@ -227,7 +216,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">
@@ -235,16 +223,20 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
+                                  <object class="GtkDropDown" id="advanced_sandbox_level_combo">
                                     <property name="valign">center</property>
                                     <property name="hexpand">true</property>
                                     <property name="tooltip-text">Choose security isolation level for command execution</property>
-                                    <items>
-                                      <item id="strict">Strict Isolation</item>
-                                      <item id="medium">Medium Isolation (Recommended)</item>
-                                      <item id="minimal">Minimal Isolation</item>
-                                    </items>
-                                    <property name="active">1</property>
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item translatable="yes">Strict Isolation</item>
+                                          <item translatable="yes">Medium Isolation (Recommended)</item>
+                                          <item translatable="yes">Minimal Isolation</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                    <property name="selected">1</property>
                                   </object>
                                 </child>
                               </object>
@@ -323,7 +315,6 @@
 
                             <child>
                               <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">
@@ -331,15 +322,19 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="gpg_key_combo">
+                                  <object class="GtkDropDown" id="gpg_key_combo">
                                     <property name="hexpand">true</property>
                                     <property name="tooltip-text">Select GPG key for package signing operations</property>
-                                    <items>
-                                      <item id="default">Default GPG Key</item>
-                                      <item id="auto_fetch">Auto-fetch from KeyServer</item>
-                                      <item id="custom_id">Use Custom ID/Command</item>
-                                    </items>
-                                    <property name="active">0</property>
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item translatable="yes">Default GPG Key</item>
+                                          <item translatable="yes">Auto-fetch from KeyServer</item>
+                                          <item translatable="yes">Use Custom ID/Command</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                    <property name="selected">0</property>
                                   </object>
                                 </child>
                               </object>

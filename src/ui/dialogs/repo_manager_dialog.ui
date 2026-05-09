@@ -14,7 +14,6 @@
           <object class="AdwHeaderBar" id="dialog_header">
             <child type="start">
               <object class="GtkBox" id="navigation_header">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="valign">center</property>
                 <child>
@@ -102,7 +101,6 @@
 
             <child>
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">20</property>
                 <property name="vexpand">true</property>
 
@@ -114,7 +112,6 @@
 
                     <child>
                       <object class="GtkBox">
-                        <property name="orientation">horizontal</property>
                         <property name="spacing">12</property>
 
                         <child>
@@ -164,7 +161,6 @@
 
                     <child>
                       <object class="GtkBox" id="repository_actions">
-                        <property name="orientation">horizontal</property>
                         <property name="spacing">8</property>
                         <property name="halign">center</property>
 
@@ -347,7 +343,6 @@
 
                 <child>
                   <object class="GtkBox" id="action_bar">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">8</property>
                     <property name="halign">center</property>
 

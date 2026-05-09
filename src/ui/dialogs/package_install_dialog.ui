@@ -11,16 +11,9 @@
     <property name="modal">true</property>
     <property name="resizable">true</property>
     <property name="title">Package Installation Wizard</property>
-    <accessibility>
-      <property name="label">Package installation wizard with step-by-step guidance</property>
-    </accessibility>
 
     <child internal-child="content_area">
       <object class="GtkBox">
-        <property name="margin-bottom">0</property>
-        <property name="margin-end">0</property>
-        <property name="margin-start">0</property>
-        <property name="margin-top">0</property>
         <property name="orientation">vertical</property>
         <property name="spacing">0</property>
 
@@ -28,7 +21,6 @@
           <object class="GtkHeaderBar" id="navigation_header">
             <property name="title-widget">
               <object class="GtkBox" id="breadcrumb_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_packages">
@@ -118,13 +110,11 @@
 
             <child>
               <object class="GtkBox" id="step_indicator_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
                 <property name="halign">center</property>
 
                 <child>
                   <object class="GtkBox" id="step1_container">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step1_number">
@@ -151,7 +141,6 @@
 
                 <child>
                   <object class="GtkSeparator" id="step_separator1">
-                    <property name="orientation">horizontal</property>
                     <property name="hexpand">true</property>
                     <style>
                       <class name="step-connector"/>
@@ -161,7 +150,6 @@
 
                 <child>
                   <object class="GtkBox" id="step2_container">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step2_number">
@@ -187,7 +175,6 @@
 
                 <child>
                   <object class="GtkSeparator" id="step_separator2">
-                    <property name="orientation">horizontal</property>
                     <property name="hexpand">true</property>
                     <style>
                       <class name="step-connector"/>
@@ -197,7 +184,6 @@
 
                 <child>
                   <object class="GtkBox" id="step3_container">
-                    <property name="orientation">horizontal</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step3_number">
@@ -250,7 +236,6 @@
 
                         <child>
                           <object class="GtkBox" id="package_header">
-                            <property name="orientation">horizontal</property>
                             <property name="spacing">16</property>
                             <child>
                               <object class="GtkImage" id="package_icon">
@@ -648,9 +633,6 @@
       <object class="GtkButton" id="wizard_cancel_button">
         <property name="label">Cancel</property>
         <property name="tooltip-text">Cancel installation and return to package details</property>
-        <accessibility>
-          <property name="label">Cancel package installation</property>
-        </accessibility>
         <signal name="clicked" handler="on_wizard_cancel_clicked"/>
       </object>
     </child>
@@ -671,9 +653,6 @@
         <style>
           <class name="suggested-action"/>
         </style>
-        <accessibility>
-          <property name="label">Start package installation</property>
-        </accessibility>
         <signal name="clicked" handler="on_wizard_next_clicked"/>
       </object>
     </child>
