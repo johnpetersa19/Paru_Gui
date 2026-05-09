@@ -651,26 +651,6 @@
                       <object class="GtkActionBar" id="updates_action_bar">
                         <property name="revealed">True</property>
 
-                                                <child type="start">
-                          <object class="GtkButton" id="open_file_button">
-                            <property name="label">Open PKGBUILD...</property>
-                            <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
-                            <signal name="clicked" handler="on_select_file_clicked"/>
-                            <style>
-                              <class name="flat"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child type="start">
-                          <object class="GtkButton" id="open_folder_button">
-                            <property name="label">Open Folder...</property>
-                            <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
-                            <signal name="clicked" handler="on_select_folder_clicked"/>
-                            <style>
-                              <class name="flat"/>
-                            </style>
-                          </object>
-                        </child>
 
                         <child type="end">
                           <object class="GtkButton" id="update_all_button">

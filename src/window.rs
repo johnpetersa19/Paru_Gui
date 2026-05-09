@@ -68,8 +68,6 @@ mod imp {
         pub status_spinner: TemplateChild<gtk::Spinner>,
         #[template_child]
         pub content_cards: TemplateChild<gtk::FlowBox>,
-        #[template_child]
-        pub recent_dirs_flowbox: TemplateChild<gtk::FlowBox>,
 
         // Backend Managers (Wrapped in RefCell for mutability in subclass methods)
         pub preferences: RefCell<Option<PreferencesManager>>,
