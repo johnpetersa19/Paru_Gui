@@ -25,7 +25,6 @@ mod ui;
 mod window;
 
 use self::application::ParuGuiApplication;
-use self::window::ParuGuiWindow;
 
 use config::{GETTEXT_PACKAGE, LOCALEDIR, PKGDATADIR};
 use gettextrs::{bind_textdomain_codeset, bindtextdomain, textdomain};
@@ -47,7 +46,7 @@ fn main() -> glib::ExitCode {
     // Create a new GtkApplication. The application manages our main loop,
     // application windows, integration with the window manager/compositor, and
     // desktop features such as file opening and single-instance applications.
-    let app = ParuGuiApplication::new("org.gnome.Example", &gio::ApplicationFlags::empty());
+    let app = ParuGuiApplication::new("org.gnome.paru-gui", &gio::ApplicationFlags::empty());
 
     // Run the application. This function will block until the application
     // exits. Upon return, we have our exit code to return to the shell. (This

@@ -15,7 +15,7 @@
     </style>
 
     <!-- Header Bar -->
-    <child type="titlebar">
+    <property name="content"><object class="AdwToolbarView"><child type="top">
       <object class="AdwHeaderBar" id="header_bar">
         <property name="show-end-title-buttons">True</property>
 
@@ -191,10 +191,8 @@
           </object>
         </child>
       </object>
-    </child>
-
-    <!-- Conteúdo Principal -->
-    <child>
+        </child>
+        <property name="content">
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
 
@@ -688,9 +686,7 @@
             </accessibility>
           </object>
         </child>
-      </object>
-    </child>
-  </object>
+      </object></property></object></property></object>
 
   <!-- Menu Principal da Aplicação -->
   <menu id="primary_menu">

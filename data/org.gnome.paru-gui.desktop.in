@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Paru-gui
+Exec=paru-gui
+Icon=org.gnome.paru-gui
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

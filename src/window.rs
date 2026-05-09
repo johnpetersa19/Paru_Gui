@@ -51,7 +51,7 @@ mod imp {
     use super::*;
 
     #[derive(Debug, Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/Example/window.ui")]
+    #[template(resource = "/org/gnome/paru-gui/window.ui")]
     pub struct ParuGuiWindow {
         // Template widgets
         #[template_child]
