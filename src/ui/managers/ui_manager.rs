@@ -1,4 +1,5 @@
 
+#[derive(Debug)]
 pub struct UiManager {
     // UI components and state
 }

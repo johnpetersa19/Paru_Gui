@@ -29,6 +29,7 @@ pub enum SecurityLevel {
     Danger,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct FileItem {
     pub name: String,
@@ -40,6 +41,7 @@ pub struct FileItem {
 }
 
 impl FileItem {
+    #[allow(dead_code)]
     pub fn get_icon_name(&self) -> String {
         if self.is_dir {
             return "folder-symbolic".to_string();
@@ -134,6 +136,7 @@ impl Default for PackageType {
     }
 }
 
+#[derive(Debug)]
 pub struct FileUtils {
     pub supported_compressions: Vec<String>,
     pub dangerous_commands: Vec<String>,

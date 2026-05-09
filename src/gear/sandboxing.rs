@@ -73,6 +73,7 @@ pub struct SandboxResult {
     pub errors: Vec<String>,
 }
 
+#[derive(Debug)]
 pub struct SandboxManager {
     // In a real app, you might want to track processes, but for now we'll keep it simple.
 }

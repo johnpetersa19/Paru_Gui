@@ -48,6 +48,7 @@ pub struct DependencyAnalysisResult {
     pub optional_deps_available: Vec<String>,
 }
 
+#[derive(Debug)]
 pub struct PKGBUILDAnalyzer {
     _array_var_re: Regex,
     _single_var_re: Regex,

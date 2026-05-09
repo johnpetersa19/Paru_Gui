@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
+#[derive(Debug)]
 struct CacheEntry<T> {
     value: T,
     timestamp: Instant,
@@ -20,6 +21,7 @@ impl<T> CacheEntry<T> {
     }
 }
 
+#[derive(Debug)]
 pub struct LazyCacheManager<T> {
     cache: Arc<Mutex<HashMap<String, CacheEntry<T>>>>,
     default_ttl: Duration,

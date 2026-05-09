@@ -5,12 +5,11 @@
   <requires lib="libadwaita" version="1.0"/>
 
   <template class="ContentView" parent="GtkBox">
-    <property name="margin-bottom">16</property>
-    <property name="margin-end">24</property>
-    <property name="margin-start">24</property>
-    <property name="margin-top">16</property>
     <property name="orientation">vertical</property>
     <property name="spacing">16</property>
+    <style>
+      <class name="view-root"/>
+    </style>
     <accessibility>
       <property name="label" translatable="yes">Main content view for package management with navigation and filtering</property>
     </accessibility>
@@ -61,7 +60,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Browse and manage package files</property>
-                <property name="css-classes">subtitle</property>
+                <style>
+                  <class name="subtitle"/>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
           </object>
@@ -220,15 +222,17 @@
 
     <child>
       <object class="GtkBox" id="path_and_controls_bar">
-        <property name="margin-bottom">12</property>
         <property name="spacing">12</property>
+        <style>
+          <class name="view-section"/>
+        </style>
         <accessibility>
           <property name="label" translatable="yes">Path display and control panel</property>
         </accessibility>
 
         <child>
           <object class="GtkFrame">
-            <property name="css-classes">card</property>
+            <property name="css-classes">quick-card</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="orientation">horizontal</property>
@@ -328,7 +332,9 @@
     <child>
       <object class="GtkBox" id="filter_and_view_controls">
         <property name="spacing">12</property>
-        <property name="margin-bottom">12</property>
+        <style>
+          <class name="view-section"/>
+        </style>
         <accessibility>
           <property name="label" translatable="yes">File type filters and view controls</property>
         </accessibility>
@@ -485,6 +491,9 @@
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <property name="vexpand">true</property>
+        <style>
+          <class name="view-section"/>
+        </style>
         <accessibility>
           <property name="label" translatable="yes">Main content area with file cards</property>
         </accessibility>
@@ -530,7 +539,7 @@
                           <object class="GtkFlowBoxChild">
                             <property name="child">
                               <object class="GtkFrame" id="pkgbuild_card_template">
-                                <property name="css-classes">card pkgbuild-card</property>
+                                <property name="css-classes">quick-card pkgbuild-card</property>
                                 <property name="margin-bottom">4</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-start">4</property>
@@ -683,7 +692,7 @@
                           <object class="GtkFlowBoxChild">
                             <property name="child">
                               <object class="GtkFrame" id="empty_card_template">
-                                <property name="css-classes">card empty-card</property>
+                                <property name="css-classes">quick-card empty-card</property>
                                 <property name="margin-bottom">4</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-start">4</property>

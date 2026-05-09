@@ -47,10 +47,13 @@ pub struct PkgbuildSecurityAnalysisResult {
     pub security_suggestions: Vec<String>,
 }
 
+#[derive(Debug)]
 pub struct SecurityAnalyzer {
     dangerous_patterns: Vec<Regex>,
     insecure_patterns: Vec<(Regex, RiskLevel, String)>,
+    #[allow(dead_code)]
     trusted_domains: Vec<String>,
+    #[allow(dead_code)]
     client: Client,
 }
 

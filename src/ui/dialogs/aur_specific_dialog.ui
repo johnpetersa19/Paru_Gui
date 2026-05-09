@@ -102,7 +102,7 @@
                         <child>
                           <object class="GtkFrame">
                             <style>
-                              <class name="card"/>
+                              <class name="quick-card"/>
                             </style>
                             <child>
                               <object class="GtkBox">
@@ -446,7 +446,7 @@
                         <child>
                           <object class="GtkFrame">
                             <style>
-                              <class name="card"/>
+                              <class name="quick-card"/>
                             </style>
                             <child>
                               <object class="GtkBox">

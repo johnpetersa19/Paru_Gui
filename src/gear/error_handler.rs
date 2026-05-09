@@ -40,6 +40,7 @@ pub struct ErrorReport {
     pub suggested_actions: Vec<String>,
 }
 
+#[derive(Debug)]
 pub struct ErrorHandler {
     pub app_version: String,
     error_history: Vec<ErrorReport>,

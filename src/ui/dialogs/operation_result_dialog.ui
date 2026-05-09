@@ -84,7 +84,7 @@
 
                         <child>
                           <object class="GtkFrame">
-                            <property name="css-classes">card</property>
+                            <property name="css-classes">quick-card</property>
                             <property name="child">
                               <object class="GtkBox">
                                 <property name="orientation">horizontal</property>
@@ -256,7 +256,7 @@
 
                         <child>
                           <object class="GtkFrame">
-                            <property name="css-classes">card</property>
+                            <property name="css-classes">quick-card</property>
                             <property name="child">
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
@@ -343,7 +343,7 @@
                                 <property name="spacing">0</property>
                                 <property name="margin-top">12</property>
                                 <style>
-                                  <class name="card"/>
+                                  <class name="quick-card"/>
                                 </style>
 
                                 <child>

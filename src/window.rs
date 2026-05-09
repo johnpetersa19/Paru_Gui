@@ -22,11 +22,30 @@ use gtk::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{gio, glib};
 use std::cell::RefCell;
+use crate::config::VERSION;
 
 use crate::gear::preferences_manager::PreferencesManager;
 use crate::gear::history_manager::HistoryManager;
 use crate::gear::tour_guide::TourGuide;
 use crate::gear::terminal_manager::TerminalManager;
+use crate::gear::chroot_manager::ChrootManager;
+use crate::gear::error_handler::ErrorHandler;
+use crate::gear::file_utils::FileUtils;
+use crate::gear::lazy_cache_manager::LazyCacheManager;
+use crate::gear::paru_stats_manager::ParuStatsManager;
+use crate::gear::pkgbuild_analyzer::PKGBUILDAnalyzer;
+use crate::gear::repo_manager::RepoManager;
+use crate::gear::sandboxing::SandboxManager;
+use crate::gear::security_analyzer::SecurityAnalyzer;
+use crate::gear::signature_verifier::SignatureVerifier;
+use crate::gear::upstream_checker::UniversalUpstreamChecker;
+
+use crate::ui::managers::ui_manager::UiManager;
+use crate::ui::managers::action_handlers::ActionHandlers;
+use crate::ui::managers::content_view_manager::ContentViewManager;
+use crate::ui::managers::file_operations::FileOperations;
+use crate::ui::managers::preferences_dialog_manager::PreferencesDialogManager;
+use crate::ui::managers::search_manager::SearchManager;
 
 mod imp {
     use super::*;
@@ -57,6 +76,25 @@ mod imp {
         pub history: RefCell<Option<HistoryManager>>,
         pub tour_guide: RefCell<Option<TourGuide>>,
         pub terminal: RefCell<Option<TerminalManager>>,
+        pub chroot: RefCell<Option<ChrootManager>>,
+        pub error_handler: RefCell<Option<ErrorHandler>>,
+        pub file_utils: RefCell<Option<FileUtils>>,
+        pub lazy_cache: RefCell<Option<LazyCacheManager<String>>>,
+        pub paru_stats: RefCell<Option<ParuStatsManager>>,
+        pub pkgbuild_analyzer: RefCell<Option<PKGBUILDAnalyzer>>,
+        pub repo_manager: RefCell<Option<RepoManager>>,
+        pub sandbox_manager: RefCell<Option<SandboxManager>>,
+        pub security_analyzer: RefCell<Option<SecurityAnalyzer>>,
+        pub signature_verifier: RefCell<Option<SignatureVerifier>>,
+        pub upstream_checker: RefCell<Option<UniversalUpstreamChecker>>,
+
+        // UI Managers
+        pub ui_manager: RefCell<Option<UiManager>>,
+        pub action_handlers: RefCell<Option<ActionHandlers>>,
+        pub content_view_manager: RefCell<Option<ContentViewManager>>,
+        pub file_operations: RefCell<Option<FileOperations>>,
+        pub preferences_dialog: RefCell<Option<PreferencesDialogManager>>,
+        pub search_manager: RefCell<Option<SearchManager>>,
     }
 
     #[glib::object_subclass]
@@ -188,6 +226,24 @@ mod imp {
             *self.history.borrow_mut() = HistoryManager::new(None).ok();
             *self.tour_guide.borrow_mut() = Some(TourGuide::new());
             *self.terminal.borrow_mut() = Some(TerminalManager::new());
+            *self.chroot.borrow_mut() = Some(ChrootManager::new());
+            *self.error_handler.borrow_mut() = Some(ErrorHandler::new(VERSION));
+            *self.file_utils.borrow_mut() = Some(FileUtils::new());
+            *self.lazy_cache.borrow_mut() = Some(LazyCacheManager::new(100, 3600));
+            *self.paru_stats.borrow_mut() = Some(ParuStatsManager::new());
+            *self.pkgbuild_analyzer.borrow_mut() = Some(PKGBUILDAnalyzer::new());
+            *self.repo_manager.borrow_mut() = Some(RepoManager::new());
+            *self.sandbox_manager.borrow_mut() = SandboxManager::new().ok();
+            *self.security_analyzer.borrow_mut() = Some(SecurityAnalyzer::new());
+            *self.signature_verifier.borrow_mut() = Some(SignatureVerifier::new(None));
+            *self.upstream_checker.borrow_mut() = Some(UniversalUpstreamChecker::new());
+
+            *self.ui_manager.borrow_mut() = Some(UiManager::new());
+            *self.action_handlers.borrow_mut() = Some(ActionHandlers::new());
+            *self.content_view_manager.borrow_mut() = Some(ContentViewManager::new());
+            *self.file_operations.borrow_mut() = Some(FileOperations::new());
+            *self.preferences_dialog.borrow_mut() = Some(PreferencesDialogManager::new());
+            *self.search_manager.borrow_mut() = Some(SearchManager::new());
 
             println!("ParuGuiWindow constructed and managers initialized");
         }

@@ -1,4 +1,5 @@
 
+#[derive(Debug)]
 pub struct ContentViewManager {}
 
 impl ContentViewManager {

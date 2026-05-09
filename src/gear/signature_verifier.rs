@@ -25,6 +25,7 @@ pub enum KeyTrust {
     Unknown,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GpgKey {
     pub key_id: String,
@@ -53,6 +54,7 @@ pub struct SignatureInfo {
     pub signature_file: Option<String>,
 }
 
+#[derive(Debug)]
 pub struct SignatureVerifier {
     pub gnupg_home: String,
 }

@@ -10,6 +10,9 @@
     <property name="default-height">700</property>
     <property name="default-width">1000</property>
     <property name="title">Paru GUI</property>
+    <style>
+      <class name="view-root"/>
+    </style>
 
     <!-- Header Bar -->
     <child type="titlebar">
@@ -94,7 +97,8 @@
             <child>
               <object class="GtkSearchEntry" id="search_entry">
                 <property name="placeholder-text">Search packages...</property>
-                <property name="width-request">400</property>
+                <property name="hexpand">True</property>
+                <property name="max-width-chars">40</property>
                 <property name="tooltip-text">Search packages (Ctrl+F)</property>
                 <signal name="search-changed" handler="on_search_changed"/>
                 <signal name="activate" handler="on_search_activate"/>
@@ -120,9 +124,9 @@
                   <object class="GtkLabel" id="breadcrumb_current">
                     <property name="label">Welcome</property>
                     <style>
-                      <class name="caption"/>
-                      <class name="breadcrumb-current"/>
-                    </style>
+                    <class name="subtitle"/>
+                    <class name="breadcrumb-current"/>
+                  </style>
                   </object>
                 </child>
               </object>
@@ -246,10 +250,9 @@
                     <property name="spacing">32</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
-                    <property name="margin-start">48</property>
-                    <property name="margin-end">48</property>
-                    <property name="margin-top">48</property>
-                    <property name="margin-bottom">48</property>
+                    <style>
+                      <class name="view-section"/>
+                    </style>
 
                     <!-- Cabeçalho de Boas-vindas -->
                     <child>
@@ -290,7 +293,7 @@
                             <property name="wrap">True</property>
                             <property name="justify">center</property>
                             <style>
-                              <class name="title-4"/>
+                              <class name="subtitle"/>
                               <class name="dim-label"/>
                             </style>
                           </object>
@@ -445,6 +448,9 @@
                 <property name="child">
                   <object class="GtkBox" id="content_view">
                     <property name="orientation">vertical</property>
+                    <style>
+                      <class name="view-section"/>
+                    </style>
 
                     <!-- Cabeçalho do Conteúdo -->
                     <child>
@@ -590,12 +596,13 @@
                   <object class="GtkBox" id="processing_screen">
                     <property name="orientation">vertical</property>
                     <property name="spacing">24</property>
-                    <property name="halign">center</property>
+                    <property name="halign">fill</property>
                     <property name="valign">center</property>
-                    <property name="margin-start">48</property>
-                    <property name="margin-end">48</property>
-                    <property name="margin-top">48</property>
-                    <property name="margin-bottom">48</property>
+                    <property name="margin-start">32</property>
+                    <property name="margin-end">32</property>
+                    <style>
+                      <class name="view-section"/>
+                    </style>
 
                     <!-- Spinner de Processamento -->
                     <child>
@@ -635,8 +642,7 @@
                     <child>
                       <object class="GtkProgressBar" id="processing_progress">
                         <property name="show-text">True</property>
-                        <property name="width-request">400</property>
-                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
                         <property name="text">0%</property>
                         <accessibility>
                           <property name="label">Operation progress</property>
@@ -649,11 +655,11 @@
                     <child>
                       <object class="GtkExpander" id="log_expander">
                         <property name="label">View Details</property>
-                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
                         <child>
                           <object class="GtkFrame" id="log_frame">
-                            <property name="width-request">600</property>
-                            <property name="height-request">200</property>
+                            <property name="hexpand">True</property>
+                            <property name="height-request">250</property>
                             <style>
                               <class name="view"/>
                             </style>
@@ -732,11 +738,10 @@
                 <property name="child">
                   <object class="GtkBox" id="upstream_updates_view">
                     <property name="orientation">vertical</property>
-                    <property name="spacing">16</property>
-                    <property name="margin-start">24</property>
-                    <property name="margin-end">24</property>
-                    <property name="margin-top">24</property>
-                    <property name="margin-bottom">24</property>
+                    <property name="spacing">24</property>
+                    <style>
+                      <class name="view-section"/>
+                    </style>
 
                     <!-- Cabeçalho de Atualizações -->
                     <child>
@@ -872,9 +877,12 @@
         <!-- Barra de Status -->
         <child>
           <object class="GtkStatusbar" id="status_bar">
-            <property name="margin-start">8</property>
-            <property name="margin-end">8</property>
-            <property name="margin-bottom">4</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-bottom">6</property>
+            <style>
+              <class name="status-bar"/>
+            </style>
             <accessibility>
               <property name="label">Status bar</property>
               <property name="description">Application status information</property>

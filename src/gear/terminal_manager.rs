@@ -39,7 +39,9 @@ pub struct TerminalConfig {
     pub title: Vec<String>,
     pub working_dir: Vec<String>,
     pub hold: Vec<String>,
+    #[allow(dead_code)]
     pub new_window: Vec<String>,
+    #[allow(dead_code)]
     pub new_tab: Vec<String>,
 }
 

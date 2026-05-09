@@ -5,19 +5,18 @@
 
   <template class="WelcomeScreen" parent="GtkBox">
     <property name="orientation">vertical</property>
-    <property name="spacing">0</property>
+    <property name="spacing">32</property>
     <property name="halign">fill</property>
     <property name="valign">fill</property>
     <style>
       <class name="welcome-screen"/>
+      <class name="view-root"/>
     </style>
 
     <child>
       <object class="GtkBox" id="header_section">
         <property name="orientation">vertical</property>
         <property name="spacing">16</property>
-        <property name="margin-top">32</property>
-        <property name="margin-bottom">24</property>
         <property name="halign">center</property>
 
         <child>
@@ -120,9 +119,6 @@
       <object class="GtkBox" id="main_content">
         <property name="orientation">horizontal</property>
         <property name="spacing">32</property>
-        <property name="margin-start">32</property>
-        <property name="margin-end">32</property>
-        <property name="margin-bottom">32</property>
         <property name="halign">center</property>
         <property name="hexpand">true</property>
 
@@ -156,8 +152,7 @@
                     <property name="tooltip-text" translatable="yes">Select PKGBUILD file, package, or patch for analysis</property>
                     <signal name="clicked" handler="on_select_file_clicked"/>
                     <style>
-                      <class name="card"/>
-                      <class name="quick-action"/>
+                      <class name="quick-card"/>
                     </style>
 
                     <child>
@@ -206,8 +201,7 @@
                     <property name="tooltip-text" translatable="yes">Select directory containing package files for batch processing</property>
                     <signal name="clicked" handler="on_select_directory_clicked"/>
                     <style>
-                      <class name="card"/>
-                      <class name="quick-action"/>
+                      <class name="quick-card"/>
                     </style>
 
                     <child>
@@ -256,8 +250,7 @@
                     <property name="tooltip-text" translatable="yes">Search and browse available AUR packages</property>
                     <signal name="clicked" handler="on_search_packages_clicked"/>
                     <style>
-                      <class name="card"/>
-                      <class name="quick-action"/>
+                      <class name="quick-card"/>
                     </style>
 
                     <child>
@@ -306,8 +299,7 @@
                     <property name="tooltip-text" translatable="yes">Take an interactive tour to learn the application features</property>
                     <signal name="clicked" handler="on_take_tour_clicked"/>
                     <style>
-                      <class name="card"/>
-                      <class name="quick-action"/>
+                      <class name="quick-card"/>
                       <class name="tour-action"/>
                     </style>
 
@@ -640,9 +632,6 @@
       <object class="GtkBox" id="footer_section">
         <property name="orientation">horizontal</property>
         <property name="spacing">16</property>
-        <property name="margin-start">32</property>
-        <property name="margin-end">32</property>
-        <property name="margin-bottom">24</property>
         <property name="halign">center</property>
 
         <child>

@@ -8,6 +8,7 @@
     <property name="spacing">0</property>
     <style>
       <class name="upstream-updates-view"/>
+      <class name="view-root"/>
     </style>
 
     <child>
@@ -20,6 +21,7 @@
         <property name="margin-bottom">8</property>
         <style>
           <class name="navigation-breadcrumb"/>
+          <class name="view-section"/>
         </style>
 
         <child>
@@ -84,6 +86,9 @@
         <property name="margin-end">16</property>
         <property name="margin-top">12</property>
         <property name="margin-bottom">8</property>
+        <style>
+          <class name="view-section"/>
+        </style>
 
         <child>
           <object class="GtkBox" id="status_info">
@@ -172,6 +177,7 @@
         <style>
           <class name="toolbar"/>
           <class name="bulk-actions"/>
+          <class name="view-section"/>
         </style>
 
         <child>
@@ -322,6 +328,7 @@
     <property name="visible">false</property>
     <style>
       <class name="card"/>
+      <class name="quick-card"/>
       <class name="upstream-update-card"/>
     </style>
     <property name="width-request">280</property>
@@ -400,7 +407,7 @@
             <property name="ellipsize">end</property>
             <property name="max-width-chars">20</property>
             <style>
-              <class name="title-3"/>
+              <class name="heading"/>
             </style>
           </object>
         </child>

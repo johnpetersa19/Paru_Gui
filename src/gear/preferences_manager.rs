@@ -26,6 +26,7 @@ pub enum EditorChoice {
     Custom,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum UpstreamFrequency {
     #[serde(rename = "never")]
@@ -66,6 +67,7 @@ pub enum ThemeMode {
     Dark,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum UpdateNotificationLevel {
     #[serde(rename = "none")]
@@ -158,8 +160,33 @@ impl PreferencesManager {
     pub fn simplified_mode(&self) -> bool { self._get_boolean("simplified-mode", true) }
     pub fn set_simplified_mode(&self, value: bool) { self._set_boolean("simplified-mode", value); }
 
-    pub fn default_editor(&self) -> String { self._get_string("default-editor", "gedit") }
-    pub fn set_default_editor(&self, value: &str) { self._set_string("default-editor", value); }
+    pub fn default_editor(&self) -> EditorChoice {
+        match self._get_string("default-editor", "gedit").as_str() {
+            "system_default" => EditorChoice::SystemDefault,
+            "gedit" => EditorChoice::Gedit,
+            "nano" => EditorChoice::Nano,
+            "vim" => EditorChoice::Vim,
+            "emacs" => EditorChoice::Emacs,
+            "code" => EditorChoice::VsCode,
+            "atom" => EditorChoice::Atom,
+            "subl" => EditorChoice::Sublime,
+            _ => EditorChoice::Custom,
+        }
+    }
+    pub fn set_default_editor(&self, value: EditorChoice) {
+        let val = match value {
+            EditorChoice::SystemDefault => "system_default",
+            EditorChoice::Gedit => "gedit",
+            EditorChoice::Nano => "nano",
+            EditorChoice::Vim => "vim",
+            EditorChoice::Emacs => "emacs",
+            EditorChoice::VsCode => "code",
+            EditorChoice::Atom => "atom",
+            EditorChoice::Sublime => "subl",
+            EditorChoice::Custom => "custom",
+        };
+        self._set_string("default-editor", val);
+    }
 
     pub fn window_width(&self) -> i32 { self._get_int("window-width", 1200) }
     pub fn set_window_width(&self, value: i32) { self._set_int("window-width", value); }
@@ -185,8 +212,26 @@ impl PreferencesManager {
     pub fn aur_show_trust_icons(&self) -> bool { self._get_boolean("aur-show-trust-icons", true) }
     pub fn set_aur_show_trust_icons(&self, value: bool) { self._set_boolean("aur-show-trust-icons", value); }
 
-    pub fn aur_confidence_level(&self) -> String { self._get_string("aur-confidence-level", "balanced") }
-    pub fn set_aur_confidence_level(&self, value: &str) { self._set_string("aur-confidence-level", value); }
+    pub fn aur_confidence_level(&self) -> AURConfidenceLevel {
+        match self._get_string("aur-confidence-level", "balanced").as_str() {
+            "paranoid" => AURConfidenceLevel::Paranoid,
+            "conservative" => AURConfidenceLevel::Conservative,
+            "balanced" => AURConfidenceLevel::Balanced,
+            "trusting" => AURConfidenceLevel::Trusting,
+            "permissive" => AURConfidenceLevel::Permissive,
+            _ => AURConfidenceLevel::Balanced,
+        }
+    }
+    pub fn set_aur_confidence_level(&self, value: AURConfidenceLevel) {
+        let val = match value {
+            AURConfidenceLevel::Paranoid => "paranoid",
+            AURConfidenceLevel::Conservative => "conservative",
+            AURConfidenceLevel::Balanced => "balanced",
+            AURConfidenceLevel::Trusting => "trusting",
+            AURConfidenceLevel::Permissive => "permissive",
+        };
+        self._set_string("aur-confidence-level", val);
+    }
 
     pub fn developer_mode(&self) -> bool { self._get_boolean("developer-mode", false) }
     pub fn set_developer_mode(&self, value: bool) { self._set_boolean("developer-mode", value); }
@@ -197,11 +242,40 @@ impl PreferencesManager {
     pub fn enable_sandboxing(&self) -> bool { self._get_boolean("enable-sandboxing", true) }
     pub fn set_enable_sandboxing(&self, value: bool) { self._set_boolean("enable-sandboxing", value); }
 
-    pub fn theme_mode(&self) -> String { self._get_string("theme-mode", "system") }
-    pub fn set_theme_mode(&self, value: &str) { self._set_string("theme-mode", value); }
+    pub fn theme_mode(&self) -> ThemeMode {
+        match self._get_string("theme-mode", "system").as_str() {
+            "light" => ThemeMode::Light,
+            "dark" => ThemeMode::Dark,
+            _ => ThemeMode::System,
+        }
+    }
+    pub fn set_theme_mode(&self, value: ThemeMode) {
+        let val = match value {
+            ThemeMode::System => "system",
+            ThemeMode::Light => "light",
+            ThemeMode::Dark => "dark",
+        };
+        self._set_string("theme-mode", val);
+    }
 
-    pub fn log_level(&self) -> String { self._get_string("log-level", "info") }
-    pub fn set_log_level(&self, value: &str) { self._set_string("log-level", value); }
+    pub fn log_level(&self) -> LogLevel {
+        match self._get_string("log-level", "info").as_str() {
+            "debug" => LogLevel::Debug,
+            "info" => LogLevel::Info,
+            "warning" => LogLevel::Warning,
+            "error" => LogLevel::Error,
+            _ => LogLevel::Info,
+        }
+    }
+    pub fn set_log_level(&self, value: LogLevel) {
+        let val = match value {
+            LogLevel::Debug => "debug",
+            LogLevel::Info => "info",
+            LogLevel::Warning => "warning",
+            LogLevel::Error => "error",
+        };
+        self._set_string("log-level", val);
+    }
 
     pub fn add_recent_directory(&self, directory: &str) {
         let mut recent = self.recent_directories();
@@ -223,12 +297,16 @@ impl PreferencesManager {
 
     pub fn get_editor_command(&self) -> String {
         let editor = self.default_editor();
-        if editor == "system_default" {
-            std::env::var("EDITOR").unwrap_or_else(|_| "gedit".to_string())
-        } else if editor == "custom" {
-            self._get_string("custom-editor-command", "gedit")
-        } else {
-            editor
+        match editor {
+            EditorChoice::SystemDefault => std::env::var("EDITOR").unwrap_or_else(|_| "gedit".to_string()),
+            EditorChoice::Custom => self._get_string("custom-editor-command", "gedit"),
+            EditorChoice::Gedit => "gedit".to_string(),
+            EditorChoice::Nano => "nano".to_string(),
+            EditorChoice::Vim => "vim".to_string(),
+            EditorChoice::Emacs => "emacs".to_string(),
+            EditorChoice::VsCode => "code".to_string(),
+            EditorChoice::Atom => "atom".to_string(),
+            EditorChoice::Sublime => "subl".to_string(),
         }
     }
 
@@ -264,12 +342,12 @@ impl PreferencesManager {
 
     pub fn apply_theme(&self) {
         let theme = self.theme_mode();
-        if theme == "system" { return; }
+        if theme == ThemeMode::System { return; }
 
         let style_manager = adw::StyleManager::default();
-        match theme.as_str() {
-            "dark" => style_manager.set_color_scheme(adw::ColorScheme::ForceDark),
-            "light" => style_manager.set_color_scheme(adw::ColorScheme::ForceLight),
+        match theme {
+            ThemeMode::Dark => style_manager.set_color_scheme(adw::ColorScheme::ForceDark),
+            ThemeMode::Light => style_manager.set_color_scheme(adw::ColorScheme::ForceLight),
             _ => style_manager.set_color_scheme(adw::ColorScheme::Default),
         }
     }
