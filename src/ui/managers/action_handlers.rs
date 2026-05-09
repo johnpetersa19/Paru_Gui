@@ -1,0 +1,10 @@
+use gtk::prelude::*;
+
+pub struct ActionHandlers {
+}
+
+impl ActionHandlers {
+    pub fn new() -> Self {
+        Self {}
+    }
+}

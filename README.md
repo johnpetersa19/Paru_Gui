@@ -1,3 +1,3 @@
-# paru_gui
+# paru-gui
 
 A description of this project.

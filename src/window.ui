@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- Dependências -->
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.4"/>
+
+  <!-- Janela Principal da Aplicação -->
+  <object class="AdwApplicationWindow" id="window">
+    <property name="default-height">700</property>
+    <property name="default-width">1000</property>
+    <property name="title">Paru GUI</property>
+
+    <!-- Header Bar -->
+    <child type="titlebar">
+      <object class="AdwHeaderBar" id="header_bar">
+        <property name="show-end-title-buttons">True</property>
+
+        <!-- Controles de Navegação (Início) -->
+        <child type="start">
+          <object class="GtkBox" id="navigation_controls">
+            <property name="spacing">6</property>
+            <property name="orientation">horizontal</property>
+
+            <!-- Botão Voltar -->
+            <child>
+              <object class="GtkButton" id="nav_back_button">
+                <property name="icon-name">go-previous-symbolic</property>
+                <property name="tooltip-text">Go Back (Alt+Left)</property>
+                <property name="sensitive">False</property>
+                <signal name="clicked" handler="on_nav_back_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">Navigate back</property>
+                  <property name="description">Navigate to the previous page</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <!-- Botão Avançar -->
+            <child>
+              <object class="GtkButton" id="nav_forward_button">
+                <property name="icon-name">go-next-symbolic</property>
+                <property name="tooltip-text">Go Forward (Alt+Right)</property>
+                <property name="sensitive">False</property>
+                <signal name="clicked" handler="on_nav_forward_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">Navigate forward</property>
+                  <property name="description">Navigate to the next page</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <!-- Separador -->
+            <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
+              </object>
+            </child>
+
+            <!-- Menu da Aplicação -->
+            <child>
+              <object class="GtkMenuButton" id="app_menu_button">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text">Application Menu</property>
+                <property name="menu-model">primary_menu</property>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">Application menu</property>
+                  <property name="description">Open the main application menu</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Área Central do Header -->
+        <child type="title">
+          <object class="GtkBox" id="header_center">
+            <property name="orientation">vertical</property>
+            <property name="spacing">4</property>
+            <property name="halign">center</property>
+
+            <!-- Campo de Busca -->
+            <child>
+              <object class="GtkSearchEntry" id="search_entry">
+                <property name="placeholder-text">Search packages...</property>
+                <property name="width-request">400</property>
+                <property name="tooltip-text">Search packages (Ctrl+F)</property>
+                <signal name="search-changed" handler="on_search_changed"/>
+                <signal name="activate" handler="on_search_activate"/>
+                <accessibility>
+                  <property name="label">Package search</property>
+                  <property name="description">Search for packages in the repository</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <!-- Breadcrumb de Navegação -->
+            <child>
+              <object class="GtkBox" id="breadcrumb_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">4</property>
+                <property name="halign">center</property>
+                <property name="visible">False</property>
+                <style>
+                  <class name="navigation-breadcrumbs"/>
+                  <class name="compact"/>
+                </style>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_current">
+                    <property name="label">Welcome</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="breadcrumb-current"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Controles do Header (Final) -->
+        <child type="end">
+          <object class="GtkBox" id="header_end_controls">
+            <property name="spacing">6</property>
+            <property name="orientation">horizontal</property>
+
+            <!-- Botão Alternar Visualização -->
+            <child>
+              <object class="GtkButton" id="view_switcher_button">
+                <property name="icon-name">view-grid-symbolic</property>
+                <property name="tooltip-text">Switch View (Ctrl+Tab)</property>
+                <property name="visible">False</property>
+                <signal name="clicked" handler="on_view_switcher_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">Switch view</property>
+                  <property name="description">Switch between different view modes</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <!-- Menu de Visualização -->
+            <child>
+              <object class="GtkMenuButton" id="view_menu_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="tooltip-text">View Options</property>
+                <property name="menu-model">view_menu</property>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">View options</property>
+                  <property name="description">Configure view settings</property>
+                </accessibility>
+              </object>
+            </child>
+
+            <!-- Botão de Ajuda -->
+            <child>
+              <object class="GtkButton" id="help_button">
+                <property name="icon-name">help-about-symbolic</property>
+                <property name="tooltip-text">Help (F1)</property>
+                <signal name="clicked" handler="on_help_clicked"/>
+                <style>
+                  <class name="flat"/>
+                </style>
+                <accessibility>
+                  <property name="label">Help</property>
+                  <property name="description">Show help and application information</property>
+                </accessibility>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Conteúdo Principal -->
+    <child>
+      <object class="GtkBox" id="main_container">
+        <property name="orientation">vertical</property>
+
+        <!-- Área de Notificações -->
+        <child>
+          <object class="GtkRevealer" id="notification_revealer">
+            <property name="reveal-child">False</property>
+            <property name="transition-type">slide-down</property>
+            <child>
+              <object class="AdwToastOverlay" id="toast_overlay">
+                <child>
+                  <object class="GtkInfoBar" id="notification_bar">
+                    <property name="message-type">info</property>
+                    <property name="show-close-button">True</property>
+                    <signal name="response" handler="on_notification_response"/>
+                    <child>
+                      <object class="GtkLabel" id="notification_label">
+                        <property name="label">Notification message</property>
+                        <property name="wrap">True</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <accessibility>
+                      <property name="label">Notification</property>
+                      <property name="description">Application notification message</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Stack Principal de Conteúdo -->
+        <child>
+          <object class="GtkStack" id="main_stack">
+            <property name="transition-type">slide-left-right</property>
+            <property name="transition-duration">250</property>
+            <property name="vexpand">True</property>
+            <property name="hhomogeneous">False</property>
+            <property name="vhomogeneous">False</property>
+            <signal name="notify::visible-child" handler="on_stack_changed"/>
+
+            <!-- Página de Boas-vindas -->
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">welcome</property>
+                <property name="title">Welcome</property>
+                <property name="icon-name">go-home-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="welcome_screen">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">32</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="margin-start">48</property>
+                    <property name="margin-end">48</property>
+                    <property name="margin-top">48</property>
+                    <property name="margin-bottom">48</property>
+
+                    <!-- Cabeçalho de Boas-vindas -->
+                    <child>
+                      <object class="GtkBox" id="welcome_header">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <property name="halign">center</property>
+
+                        <!-- Ícone Principal -->
+                        <child>
+                          <object class="GtkImage" id="welcome_icon">
+                            <property name="icon-name">package-x-generic-symbolic</property>
+                            <property name="pixel-size">128</property>
+                            <property name="halign">center</property>
+                            <style>
+                              <class name="dim-label"/>
+                              <class name="welcome-icon"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <!-- Título -->
+                        <child>
+                          <object class="GtkLabel" id="welcome_title">
+                            <property name="label">Paru Package Manager</property>
+                            <property name="halign">center</property>
+                            <style>
+                              <class name="title-1"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <!-- Subtítulo -->
+                        <child>
+                          <object class="GtkLabel" id="welcome_subtitle">
+                            <property name="label">Modern Arch Linux package management made simple</property>
+                            <property name="halign">center</property>
+                            <property name="wrap">True</property>
+                            <property name="justify">center</property>
+                            <style>
+                              <class name="title-4"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Ações de Boas-vindas -->
+                    <child>
+                      <object class="GtkBox" id="welcome_actions">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <property name="halign">center</property>
+
+                        <!-- Ações Primárias -->
+                        <child>
+                          <object class="GtkBox" id="primary_actions">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">12</property>
+                            <property name="halign">center</property>
+
+                            <child>
+                              <object class="GtkButton" id="select_file_button">
+                                <property name="label">Select PKGBUILD File</property>
+                                <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
+                                <signal name="clicked" handler="on_select_file_clicked"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label">Select PKGBUILD file</property>
+                                  <property name="description">Choose a PKGBUILD file to manage</property>
+                                </accessibility>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="select_folder_button">
+                                <property name="label">Select Project Folder</property>
+                                <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
+                                <signal name="clicked" handler="on_select_folder_clicked"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                  <class name="pill"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label">Select project folder</property>
+                                  <property name="description">Choose a project directory to manage</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Ações Secundárias -->
+                        <child>
+                          <object class="GtkBox" id="secondary_actions">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="halign">center</property>
+
+                            <child>
+                              <object class="GtkButton" id="system_packages_button">
+                                <property name="label">System Packages</property>
+                                <property name="tooltip-text">View and manage system packages</property>
+                                <signal name="clicked" handler="on_system_packages_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="preferences_button">
+                                <property name="label">Preferences</property>
+                                <property name="tooltip-text">Configure application settings</property>
+                                <signal name="clicked" handler="on_preferences_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkButton" id="tour_button">
+                                <property name="label">Take Tour</property>
+                                <property name="tooltip-text">Learn how to use Paru GUI</property>
+                                <signal name="clicked" handler="on_tour_clicked"/>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Seção de Projetos Recentes -->
+                    <child>
+                      <object class="GtkBox" id="recent_section">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <property name="margin-top">24</property>
+
+                        <child>
+                          <object class="GtkLabel" id="recent_dirs_label">
+                            <property name="label">Recent Projects</property>
+                            <property name="halign">center</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkScrolledWindow" id="recent_scroll">
+                            <property name="height-request">150</property>
+                            <property name="hscrollbar-policy">automatic</property>
+                            <property name="vscrollbar-policy">never</property>
+                            <child>
+                              <object class="GtkFlowBox" id="recent_dirs_flowbox">
+                                <property name="max-children-per-line">4</property>
+                                <property name="min-children-per-line">2</property>
+                                <property name="selection-mode">none</property>
+                                <property name="column-spacing">12</property>
+                                <property name="row-spacing">8</property>
+                                <property name="halign">center</property>
+                                <property name="homogeneous">True</property>
+                                <accessibility>
+                                  <property name="label">Recent projects</property>
+                                  <property name="description">List of recently accessed projects</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <!-- Página de Conteúdo do Projeto -->
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">content</property>
+                <property name="title">Project Content</property>
+                <property name="icon-name">folder-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="content_view">
+                    <property name="orientation">vertical</property>
+
+                    <!-- Cabeçalho do Conteúdo -->
+                    <child>
+                      <object class="GtkBox" id="content_header">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">8</property>
+
+                        <child>
+                          <object class="GtkLabel" id="content_path_label">
+                            <property name="label">Project Path</property>
+                            <property name="xalign">0</property>
+                            <property name="ellipsize">middle</property>
+                            <property name="hexpand">True</property>
+                            <property name="selectable">True</property>
+                            <style>
+                              <class name="caption"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="refresh_content_button">
+                            <property name="icon-name">view-refresh-symbolic</property>
+                            <property name="tooltip-text">Refresh content (F5)</property>
+                            <signal name="clicked" handler="on_refresh_content_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkMenuButton" id="content_options_button">
+                            <property name="icon-name">view-more-horizontal-symbolic</property>
+                            <property name="tooltip-text">Content options</property>
+                            <property name="menu-model">content_menu</property>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Área Rolável de Conteúdo -->
+                    <child>
+                      <object class="GtkScrolledWindow" id="content_scroll">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkFlowBox" id="content_cards">
+                            <property name="column-spacing">16</property>
+                            <property name="row-spacing">16</property>
+                            <property name="margin-start">16</property>
+                            <property name="margin-end">16</property>
+                            <property name="margin-top">8</property>
+                            <property name="margin-bottom">16</property>
+                            <property name="max-children-per-line">3</property>
+                            <property name="min-children-per-line">1</property>
+                            <property name="selection-mode">none</property>
+                            <property name="valign">start</property>
+                            <property name="homogeneous">False</property>
+                            <accessibility>
+                              <property name="label">Project content</property>
+                              <property name="description">Cards displaying project files and information</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Barra de Ações do Conteúdo -->
+                    <child>
+                      <object class="GtkActionBar" id="content_action_bar">
+                        <property name="revealed">True</property>
+
+                        <child type="start">
+                          <object class="GtkButton" id="back_button">
+                            <property name="label">Back to Welcome</property>
+                            <property name="tooltip-text">Return to welcome screen (Alt+Home)</property>
+                            <signal name="clicked" handler="on_back_to_welcome_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child type="center">
+                          <object class="GtkBox" id="status_container">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="halign">center</property>
+
+                            <child>
+                              <object class="GtkSpinner" id="status_spinner">
+                                <property name="visible">False</property>
+                                <property name="spinning">False</property>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="status_label">
+                                <property name="label">Ready</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child type="end">
+                          <object class="GtkButton" id="action_button">
+                            <property name="label">Primary Action</property>
+                            <property name="tooltip-text">Execute primary action</property>
+                            <property name="sensitive">False</property>
+                            <signal name="clicked" handler="on_primary_action_clicked"/>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <!-- Página de Processamento -->
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">processing</property>
+                <property name="title">Processing</property>
+                <property name="icon-name">system-run-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="processing_screen">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">24</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="margin-start">48</property>
+                    <property name="margin-end">48</property>
+                    <property name="margin-top">48</property>
+                    <property name="margin-bottom">48</property>
+
+                    <!-- Spinner de Processamento -->
+                    <child>
+                      <object class="GtkSpinner" id="processing_spinner">
+                        <property name="height-request">64</property>
+                        <property name="width-request">64</property>
+                        <property name="spinning">True</property>
+                        <property name="halign">center</property>
+                      </object>
+                    </child>
+
+                    <!-- Título do Processamento -->
+                    <child>
+                      <object class="GtkLabel" id="processing_label">
+                        <property name="label">Processing Operation...</property>
+                        <property name="halign">center</property>
+                        <style>
+                          <class name="title-2"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <!-- Detalhes do Processamento -->
+                    <child>
+                      <object class="GtkLabel" id="processing_details">
+                        <property name="label">Please wait while the operation completes</property>
+                        <property name="halign">center</property>
+                        <property name="wrap">True</property>
+                        <property name="justify">center</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+
+                    <!-- Barra de Progresso -->
+                    <child>
+                      <object class="GtkProgressBar" id="processing_progress">
+                        <property name="show-text">True</property>
+                        <property name="width-request">400</property>
+                        <property name="halign">center</property>
+                        <property name="text">0%</property>
+                        <accessibility>
+                          <property name="label">Operation progress</property>
+                          <property name="description">Progress bar showing current operation status</property>
+                        </accessibility>
+                      </object>
+                    </child>
+
+                    <!-- Expansor de Log -->
+                    <child>
+                      <object class="GtkExpander" id="log_expander">
+                        <property name="label">View Details</property>
+                        <property name="halign">center</property>
+                        <child>
+                          <object class="GtkFrame" id="log_frame">
+                            <property name="width-request">600</property>
+                            <property name="height-request">200</property>
+                            <style>
+                              <class name="view"/>
+                            </style>
+                            <child>
+                              <object class="GtkScrolledWindow" id="log_scroll">
+                                <property name="hscrollbar-policy">automatic</property>
+                                <property name="vscrollbar-policy">automatic</property>
+                                <child>
+                                  <object class="GtkTextView" id="log_textview">
+                                    <property name="editable">False</property>
+                                    <property name="monospace">True</property>
+                                    <property name="wrap-mode">word</property>
+                                    <property name="cursor-visible">False</property>
+                                    <property name="left-margin">8</property>
+                                    <property name="right-margin">8</property>
+                                    <property name="top-margin">8</property>
+                                    <property name="bottom-margin">8</property>
+                                    <style>
+                                      <class name="monospace"/>
+                                    </style>
+                                    <accessibility>
+                                      <property name="label">Operation log</property>
+                                      <property name="description">Detailed log of the current operation</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Ações de Processamento -->
+                    <child>
+                      <object class="GtkBox" id="processing_actions">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">12</property>
+                        <property name="halign">center</property>
+                        <property name="margin-top">16</property>
+
+                        <child>
+                          <object class="GtkButton" id="cancel_button">
+                            <property name="label">Cancel Operation</property>
+                            <property name="tooltip-text">Cancel the current operation (Escape)</property>
+                            <signal name="clicked" handler="on_cancel_operation_clicked"/>
+                            <style>
+                              <class name="destructive-action"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton" id="background_button">
+                            <property name="label">Run in Background</property>
+                            <property name="tooltip-text">Continue operation in background</property>
+                            <signal name="clicked" handler="on_background_operation_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <!-- Página de Atualizações Upstream -->
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">upstream_updates</property>
+                <property name="title">Upstream Updates</property>
+                <property name="icon-name">software-update-available-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="upstream_updates_view">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">16</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+
+                    <!-- Cabeçalho de Atualizações -->
+                    <child>
+                      <object class="GtkBox" id="updates_header">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">16</property>
+
+                        <child>
+                          <object class="GtkBox" id="updates_title_section">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+                            <property name="hexpand">True</property>
+
+                            <child>
+                              <object class="GtkLabel" id="updates_title">
+                                <property name="label">Upstream Updates</property>
+                                <property name="xalign">0</property>
+                                <style>
+                                  <class name="title-2"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel" id="updates_subtitle">
+                                <property name="label">Check for updates from upstream sources</property>
+                                <property name="xalign">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox" id="updates_controls">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">8</property>
+                            <property name="valign">center</property>
+
+                            <child>
+                              <object class="GtkButton" id="refresh_updates_button">
+                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="label">Refresh Updates</property>
+                                <property name="tooltip-text">Check for new updates (Ctrl+R)</property>
+                                <signal name="clicked" handler="on_refresh_updates_clicked"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkMenuButton" id="update_options_button">
+                                <property name="icon-name">preferences-other-symbolic</property>
+                                <property name="tooltip-text">Update options</property>
+                                <property name="menu-model">update_menu</property>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Área Rolável de Atualizações -->
+                    <child>
+                      <object class="GtkScrolledWindow" id="updates_scroll">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkFlowBox" id="upstream_update_cards">
+                            <property name="column-spacing">20</property>
+                            <property name="row-spacing">20</property>
+                            <property name="margin-start">20</property>
+                            <property name="margin-end">20</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">20</property>
+                            <property name="max-children-per-line">3</property>
+                            <property name="min-children-per-line">1</property>
+                            <property name="selection-mode">none</property>
+                            <property name="valign">start</property>
+                            <property name="homogeneous">False</property>
+                            <accessibility>
+                              <property name="label">Available updates</property>
+                              <property name="description">List of available upstream updates</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Barra de Ações de Atualizações -->
+                    <child>
+                      <object class="GtkActionBar" id="updates_action_bar">
+                        <property name="revealed">True</property>
+
+                        <child type="start">
+                          <object class="GtkButton" id="back_from_updates_button">
+                            <property name="label">Back</property>
+                            <property name="tooltip-text">Return to previous view</property>
+                            <signal name="clicked" handler="on_back_from_updates_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+
+                        <child type="end">
+                          <object class="GtkButton" id="update_all_button">
+                            <property name="label">Update All</property>
+                            <property name="tooltip-text">Update all available packages</property>
+                            <property name="sensitive">False</property>
+                            <signal name="clicked" handler="on_update_all_clicked"/>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Barra de Status -->
+        <child>
+          <object class="GtkStatusbar" id="status_bar">
+            <property name="margin-start">8</property>
+            <property name="margin-end">8</property>
+            <property name="margin-bottom">4</property>
+            <accessibility>
+              <property name="label">Status bar</property>
+              <property name="description">Application status information</property>
+            </accessibility>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <!-- Menu Principal da Aplicação -->
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="action">app.system</attribute>
+        <attribute name="label">System Packages</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;&lt;Shift&gt;S</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.statistics</attribute>
+        <attribute name="label">Package Statistics</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;&lt;Shift&gt;T</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.arch-news</attribute>
+        <attribute name="label">Arch Linux News</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;&lt;Shift&gt;N</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">app.clean-cache</attribute>
+        <attribute name="label">Clean Package Cache</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.update-system</attribute>
+        <attribute name="label">Update System</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;U</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.show-upstream-updates</attribute>
+        <attribute name="label">Check Upstream Updates</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;R</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label">Package Trust</attribute>
+        <item>
+          <attribute name="action">app.show-trust-icons</attribute>
+          <attribute name="label">Show Trust Icons</attribute>
+        </item>
+        <item>
+          <attribute name="action">app.block-unvoted</attribute>
+          <attribute name="label">Block Unvoted Packages</attribute>
+        </item>
+        <item>
+          <attribute name="action">app.consider-update-time</attribute>
+          <attribute name="label">Consider Update Time</attribute>
+        </item>
+        <item>
+          <attribute name="action">app.check-comments</attribute>
+          <attribute name="label">Check Recent Comments</attribute>
+        </item>
+      </submenu>
+      <submenu>
+        <attribute name="label">View Mode</attribute>
+        <item>
+          <attribute name="action">app.hide-advanced</attribute>
+          <attribute name="label">Simplified Mode</attribute>
+          <attribute name="accel">&lt;Ctrl&gt;&lt;Shift&gt;M</attribute>
+        </item>
+        <item>
+          <attribute name="action">app.show-terminal</attribute>
+          <attribute name="label">Show Terminal Output</attribute>
+          <attribute name="accel">&lt;Ctrl&gt;&lt;Shift&gt;T</attribute>
+        </item>
+      </submenu>
+      <submenu>
+        <attribute name="label">Developer Tools</attribute>
+        <item>
+          <attribute name="action">app.install-debug</attribute>
+          <attribute name="label">Install Debug Packages</attribute>
+        </item>
+        <item>
+          <attribute name="action">app.show-warnings</attribute>
+          <attribute name="label">Show Detailed Warnings</attribute>
+        </item>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">app.action-history</attribute>
+        <attribute name="label">Action History</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;H</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.preferences</attribute>
+        <attribute name="label">Preferences</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;comma</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">app.initial-tour</attribute>
+        <attribute name="label">Take Application Tour</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.shortcuts</attribute>
+        <attribute name="label">Keyboard Shortcuts</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;question</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.about</attribute>
+        <attribute name="label">About Paru GUI</attribute>
+        <attribute name="accel">F1</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <!-- Menu de Visualização -->
+  <menu id="view_menu">
+    <section>
+      <item>
+        <attribute name="action">view.grid</attribute>
+        <attribute name="label">Grid View</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;1</attribute>
+      </item>
+      <item>
+        <attribute name="action">view.list</attribute>
+        <attribute name="label">List View</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;2</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">view.zoom-in</attribute>
+        <attribute name="label">Zoom In</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;plus</attribute>
+      </item>
+      <item>
+        <attribute name="action">view.zoom-out</attribute>
+        <attribute name="label">Zoom Out</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;minus</attribute>
+      </item>
+      <item>
+        <attribute name="action">view.zoom-normal</attribute>
+        <attribute name="label">Normal Size</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;0</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <!-- Menu de Conteúdo -->
+  <menu id="content_menu">
+    <section>
+      <item>
+        <attribute name="action">content.refresh</attribute>
+        <attribute name="label">Refresh Content</attribute>
+        <attribute name="accel">F5</attribute>
+      </item>
+      <item>
+        <attribute name="action">content.reload</attribute>
+        <attribute name="label">Reload from Disk</attribute>
+        <attribute name="accel">&lt;Ctrl&gt;F5</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">content.export</attribute>
+        <attribute name="label">Export Project</attribute>
+      </item>
+      <item>
+        <attribute name="action">content.properties</attribute>
+        <attribute name="label">Project Properties</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <!-- Menu de Atualizações -->
+  <menu id="update_menu">
+    <section>
+      <item>
+        <attribute name="action">update.auto-check</attribute>
+        <attribute name="label">Auto-check Updates</attribute>
+      </item>
+      <item>
+        <attribute name="action">update.notifications</attribute>
+        <attribute name="label">Update Notifications</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="action">update.check-interval</attribute>
+        <attribute name="label">Check Interval</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

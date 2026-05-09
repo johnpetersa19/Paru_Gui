@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.10"/>
   <requires lib="gio" version="2.0"/>
-  <requires lib="adw" version="1"/>
+  <requires lib="libadwaita" version="1.4"/>
 
   <template class="FileChooserDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Select Files</property>
-    <property name="modal">True</property>
-    <property name="default-width">1000</property>
-    <property name="default-height">700</property>
+    <!-- PROPRIEDADES MANTIDAS - Comentadas para compatibilidade com AdwDialog -->
+    <!-- AdwDialog é modal por padrão, propriedade não necessária -->
+    <!-- <property name="modal">True</property> -->
+    <!-- AdwDialog usa content-width/content-height em vez de default-width/default-height -->
+    <!-- <property name="default-width">1000</property> -->
+    <!-- <property name="default-height">700</property> -->
     <property name="content-width">1000</property>
     <property name="content-height">700</property>
     <accessibility>
@@ -693,3 +696,4 @@
     </child>
   </template>
 </interface>
+

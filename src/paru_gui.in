@@ -1,9 +1,0 @@
-#!/usr/bin/env @PYTHON@
-import sys
-import os
-sys.path.insert(0, '@moduledir@')
-os.environ['PARU_GUI_VERSION'] = '@VERSION@'
-from gear.main import main
-
-if __name__ == "__main__":
-    sys.exit(main())

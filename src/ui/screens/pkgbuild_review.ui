@@ -35,6 +35,9 @@
                   <class name="flat"/>
                   <class name="circular"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate back to file list</property>
+                </accessibility>
               </object>
             </child>
 
@@ -60,18 +63,24 @@
                   <class name="flat"/>
                   <class name="circular"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Open source directory in editor</property>
+                </accessibility>
               </object>
             </child>
           </object>
         </child>
 
         <child>
-          <object class="GtkSeparator"/>
+          <object class="GtkSeparator">
+            <property name="orientation">horizontal</property>
+          </object>
         </child>
 
         <child>
           <object class="GtkScrolledWindow">
             <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
             <property name="vexpand">true</property>
 
             <child>
@@ -94,6 +103,9 @@
                         <property name="icon-name">text-x-script-symbolic</property>
                         <property name="pixel-size">64</property>
                         <property name="valign">start</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Package build script icon</property>
+                        </accessibility>
                       </object>
                     </child>
 
@@ -173,10 +185,12 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="label" translatable="yes">Current:</property>
+                                        <property name="halign">start</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="dim-label"/>
@@ -186,6 +200,7 @@
                                     <child>
                                       <object class="GtkLabel" id="current_version_label">
                                         <property name="label">1.0.0</property>
+                                        <property name="halign">start</property>
                                         <style>
                                           <class name="caption"/>
                                         </style>
@@ -196,10 +211,12 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="label" translatable="yes">New:</property>
+                                        <property name="halign">start</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="dim-label"/>
@@ -209,6 +226,7 @@
                                     <child>
                                       <object class="GtkLabel" id="new_version_label">
                                         <property name="label">1.1.0</property>
+                                        <property name="halign">start</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="accent"/>
@@ -319,6 +337,7 @@
                                 <property name="label" translatable="yes">Review critical changes in the PKGBUILD that may affect security and functionality.</property>
                                 <property name="halign">start</property>
                                 <property name="wrap">true</property>
+                                <property name="wrap-mode">word</property>
                                 <style>
                                   <class name="dim-label"/>
                                 </style>
@@ -332,10 +351,11 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Source URLs &amp; Dependencies</property>
+                                        <property name="label" translatable="yes">Source URLs and Dependencies</property>
                                         <property name="halign">start</property>
                                         <property name="hexpand">true</property>
                                         <style>
@@ -375,6 +395,7 @@
                                             <property name="margin-bottom">8</property>
                                             <property name="margin-start">8</property>
                                             <property name="margin-end">8</property>
+                                            <property name="wrap-mode">none</property>
                                           </object>
                                         </child>
                                       </object>
@@ -391,7 +412,7 @@
 
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Build Functions &amp; Scripts</property>
+                                    <property name="label" translatable="yes">Build Functions and Scripts</property>
                                     <property name="halign">start</property>
                                     <style>
                                       <class name="heading"/>
@@ -417,6 +438,7 @@
                                             <property name="margin-bottom">8</property>
                                             <property name="margin-start">8</property>
                                             <property name="margin-end">8</property>
+                                            <property name="wrap-mode">none</property>
                                           </object>
                                         </child>
                                       </object>
@@ -645,7 +667,9 @@
         </child>
 
         <child>
-          <object class="GtkSeparator"/>
+          <object class="GtkSeparator">
+            <property name="orientation">horizontal</property>
+          </object>
         </child>
 
         <child>
