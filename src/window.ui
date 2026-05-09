@@ -238,206 +238,6 @@
             <property name="vhomogeneous">False</property>
             <signal name="notify::visible-child" handler="on_stack_changed"/>
 
-            <!-- Página de Boas-vindas -->
-            <child>
-              <object class="GtkStackPage">
-                <property name="name">welcome</property>
-                <property name="title">Welcome</property>
-                <property name="icon-name">go-home-symbolic</property>
-                <property name="child">
-                  <object class="GtkBox" id="welcome_screen">
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">32</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <style>
-                      <class name="view-section"/>
-                    </style>
-
-                    <!-- Cabeçalho de Boas-vindas -->
-                    <child>
-                      <object class="GtkBox" id="welcome_header">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">16</property>
-                        <property name="halign">center</property>
-
-                        <!-- Ícone Principal -->
-                        <child>
-                          <object class="GtkImage" id="welcome_icon">
-                            <property name="icon-name">package-x-generic-symbolic</property>
-                            <property name="pixel-size">128</property>
-                            <property name="halign">center</property>
-                            <style>
-                              <class name="dim-label"/>
-                              <class name="welcome-icon"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <!-- Título -->
-                        <child>
-                          <object class="GtkLabel" id="welcome_title">
-                            <property name="label">Paru Package Manager</property>
-                            <property name="halign">center</property>
-                            <style>
-                              <class name="title-1"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <!-- Subtítulo -->
-                        <child>
-                          <object class="GtkLabel" id="welcome_subtitle">
-                            <property name="label">Modern Arch Linux package management made simple</property>
-                            <property name="halign">center</property>
-                            <property name="wrap">True</property>
-                            <property name="justify">center</property>
-                            <style>
-                              <class name="subtitle"/>
-                              <class name="dim-label"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-
-                    <!-- Ações de Boas-vindas -->
-                    <child>
-                      <object class="GtkBox" id="welcome_actions">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">16</property>
-                        <property name="halign">center</property>
-
-                        <!-- Ações Primárias -->
-                        <child>
-                          <object class="GtkBox" id="primary_actions">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">12</property>
-                            <property name="halign">center</property>
-
-                            <child>
-                              <object class="GtkButton" id="select_file_button">
-                                <property name="label">Select PKGBUILD File</property>
-                                <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
-                                <signal name="clicked" handler="on_select_file_clicked"/>
-                                <style>
-                                  <class name="suggested-action"/>
-                                  <class name="pill"/>
-                                </style>
-                                <accessibility>
-                                  <property name="label">Select PKGBUILD file</property>
-                                  <property name="description">Choose a PKGBUILD file to manage</property>
-                                </accessibility>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkButton" id="select_folder_button">
-                                <property name="label">Select Project Folder</property>
-                                <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
-                                <signal name="clicked" handler="on_select_folder_clicked"/>
-                                <style>
-                                  <class name="suggested-action"/>
-                                  <class name="pill"/>
-                                </style>
-                                <accessibility>
-                                  <property name="label">Select project folder</property>
-                                  <property name="description">Choose a project directory to manage</property>
-                                </accessibility>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
-                        <!-- Ações Secundárias -->
-                        <child>
-                          <object class="GtkBox" id="secondary_actions">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">8</property>
-                            <property name="halign">center</property>
-
-                            <child>
-                              <object class="GtkButton" id="system_packages_button">
-                                <property name="label">System Packages</property>
-                                <property name="tooltip-text">View and manage system packages</property>
-                                <signal name="clicked" handler="on_system_packages_clicked"/>
-                                <style>
-                                  <class name="flat"/>
-                                </style>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkButton" id="preferences_button">
-                                <property name="label">Preferences</property>
-                                <property name="tooltip-text">Configure application settings</property>
-                                <signal name="clicked" handler="on_preferences_clicked"/>
-                                <style>
-                                  <class name="flat"/>
-                                </style>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkButton" id="tour_button">
-                                <property name="label">Take Tour</property>
-                                <property name="tooltip-text">Learn how to use Paru GUI</property>
-                                <signal name="clicked" handler="on_tour_clicked"/>
-                                <style>
-                                  <class name="flat"/>
-                                </style>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-
-                    <!-- Seção de Projetos Recentes -->
-                    <child>
-                      <object class="GtkBox" id="recent_section">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">16</property>
-                        <property name="margin-top">24</property>
-
-                        <child>
-                          <object class="GtkLabel" id="recent_dirs_label">
-                            <property name="label">Recent Projects</property>
-                            <property name="halign">center</property>
-                            <style>
-                              <class name="heading"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkScrolledWindow" id="recent_scroll">
-                            <property name="height-request">150</property>
-                            <property name="hscrollbar-policy">automatic</property>
-                            <property name="vscrollbar-policy">never</property>
-                            <child>
-                              <object class="GtkFlowBox" id="recent_dirs_flowbox">
-                                <property name="max-children-per-line">4</property>
-                                <property name="min-children-per-line">2</property>
-                                <property name="selection-mode">none</property>
-                                <property name="column-spacing">12</property>
-                                <property name="row-spacing">8</property>
-                                <property name="halign">center</property>
-                                <property name="homogeneous">True</property>
-                                <accessibility>
-                                  <property name="label">Recent projects</property>
-                                  <property name="description">List of recently accessed projects</property>
-                                </accessibility>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </property>
-              </object>
-            </child>
 
             <!-- Página de Conteúdo do Projeto -->
             <child>
@@ -531,12 +331,21 @@
                     <child>
                       <object class="GtkActionBar" id="content_action_bar">
                         <property name="revealed">True</property>
-
                         <child type="start">
-                          <object class="GtkButton" id="back_button">
-                            <property name="label">Back to Welcome</property>
-                            <property name="tooltip-text">Return to welcome screen (Alt+Home)</property>
-                            <signal name="clicked" handler="on_back_to_welcome_clicked"/>
+                          <object class="GtkButton" id="open_file_button">
+                            <property name="label">Open PKGBUILD...</property>
+                            <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
+                            <signal name="clicked" handler="on_select_file_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child type="start">
+                          <object class="GtkButton" id="open_folder_button">
+                            <property name="label">Open Folder...</property>
+                            <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
+                            <signal name="clicked" handler="on_select_folder_clicked"/>
                             <style>
                               <class name="flat"/>
                             </style>
@@ -842,11 +651,21 @@
                       <object class="GtkActionBar" id="updates_action_bar">
                         <property name="revealed">True</property>
 
+                                                <child type="start">
+                          <object class="GtkButton" id="open_file_button">
+                            <property name="label">Open PKGBUILD...</property>
+                            <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
+                            <signal name="clicked" handler="on_select_file_clicked"/>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
                         <child type="start">
-                          <object class="GtkButton" id="back_from_updates_button">
-                            <property name="label">Back</property>
-                            <property name="tooltip-text">Return to previous view</property>
-                            <signal name="clicked" handler="on_back_from_updates_clicked"/>
+                          <object class="GtkButton" id="open_folder_button">
+                            <property name="label">Open Folder...</property>
+                            <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
+                            <signal name="clicked" handler="on_select_folder_clicked"/>
                             <style>
                               <class name="flat"/>
                             </style>

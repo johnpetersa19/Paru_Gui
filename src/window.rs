@@ -18,34 +18,34 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-use gtk::prelude::*;
+use crate::config::VERSION;
 use adw::subclass::prelude::*;
+use gtk::prelude::*;
 use gtk::{gio, glib};
 use std::cell::RefCell;
-use crate::config::VERSION;
 
-use crate::gear::preferences_manager::PreferencesManager;
-use crate::gear::history_manager::HistoryManager;
-use crate::gear::tour_guide::TourGuide;
-use crate::gear::terminal_manager::TerminalManager;
 use crate::gear::chroot_manager::ChrootManager;
 use crate::gear::error_handler::ErrorHandler;
 use crate::gear::file_utils::FileUtils;
+use crate::gear::history_manager::HistoryManager;
 use crate::gear::lazy_cache_manager::LazyCacheManager;
 use crate::gear::paru_stats_manager::ParuStatsManager;
 use crate::gear::pkgbuild_analyzer::PKGBUILDAnalyzer;
+use crate::gear::preferences_manager::PreferencesManager;
 use crate::gear::repo_manager::RepoManager;
 use crate::gear::sandboxing::SandboxManager;
 use crate::gear::security_analyzer::SecurityAnalyzer;
 use crate::gear::signature_verifier::SignatureVerifier;
+use crate::gear::terminal_manager::TerminalManager;
+use crate::gear::tour_guide::TourGuide;
 use crate::gear::upstream_checker::UniversalUpstreamChecker;
 
-use crate::ui::managers::ui_manager::UiManager;
 use crate::ui::managers::action_handlers::ActionHandlers;
 use crate::ui::managers::content_view_manager::ContentViewManager;
 use crate::ui::managers::file_operations::FileOperations;
 use crate::ui::managers::preferences_dialog_manager::PreferencesDialogManager;
 use crate::ui::managers::search_manager::SearchManager;
+use crate::ui::managers::ui_manager::UiManager;
 
 mod imp {
     use super::*;
@@ -153,12 +153,6 @@ mod imp {
                 tg.restart_tour();
             }
         }
-
-        #[template_callback]
-        fn on_back_to_welcome_clicked(&self, _button: &gtk::Button) {
-            self.main_stack.set_visible_child_name("welcome");
-        }
-
         #[template_callback]
         fn on_nav_back_clicked(&self, _button: &gtk::Button) {
             println!("Nav back clicked");
