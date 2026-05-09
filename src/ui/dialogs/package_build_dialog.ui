@@ -16,6 +16,11 @@
           <object class="AdwHeaderBar" id="dialog_header_bar">
             <property name="centering-policy">strict</property>
             <property name="show-title">true</property>
+            <property name="title-widget">
+              <object class="AdwWindowTitle" id="dialog_title">
+                <property name="title" translatable="yes">Build Package</property>
+              </object>
+            </property>
             <child type="start">
               <object class="GtkBox" id="navigation_start_box">
                 <property name="spacing">6</property>
@@ -28,11 +33,7 @@
                     </style>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkSeparator">
-                    <property name="orientation">vertical</property>
-                  </object>
-                </child>
+                
                 <child>
                   <object class="GtkButton" id="back_to_file_button">
                     <property name="label" translatable="yes">Back to File</property>
@@ -62,26 +63,25 @@
             <property name="orientation">vertical</property>
 
             <child>
-              <object class="GtkBox" id="breadcrumb_navigation">
-                <property name="margin-end">24</property>
-                <property name="margin-start">24</property>
-                <property name="margin-top">18</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
-
-                <child>
-                  <object class="GtkBox" id="breadcrumb_box">
+              <object class="GtkBox" id="review_warning_container">
+<property name="margin-top">12</property>
+<property name="margin-bottom">12</property>
+<property name="margin-start">24</property>
+<property name="margin-end">24</property>
+<child>
+<object class="GtkBox" id="review_warning_box">
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkButton" id="breadcrumb_content">
-                        <property name="label" translatable="yes">Content</property>
-                        <property name="tooltip-text" translatable="yes">Return to content management</property>
+                      <object class="GtkImage">
+                        <property name="icon-name">dialog-warning-symbolic</property>
+                        <property name="pixel-size">16</property>
                         <style>
-                          <class name="flat"/>
-                          <class name="caption"/>
+                          <class name="warning"/>
                         </style>
                       </object>
                     </child>
+</object>
+</child>
                     <child>
                       <object class="GtkLabel">
                         <property name="label">›</property>
@@ -173,14 +173,7 @@
               </object>
             </child>
 
-            <child>
-              <object class="GtkSeparator">
-                <property name="margin-bottom">12</property>
-                <property name="margin-end">24</property>
-                <property name="margin-start">24</property>
-                <property name="margin-top">12</property>
-              </object>
-            </child>
+            
 
             <child>
               <object class="AdwViewStack" id="build_view_stack">
@@ -248,29 +241,31 @@
                         </child>
 
                         <child>
-                          <object class="GtkBox" id="pkgbuild_metadata_box">
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">6</property>
-                            <style>
-                              <class name="card"/>
-                            </style>
+                          <object class="AdwPreferencesGroup" id="pkgbuild_metadata_box">
                             <child>
-                              <object class="GtkBox" id="package_name_box">
-                                <property name="spacing">12</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-start">12</property>
-                                <property name="margin-end">12</property>
-                                <child>
-                                  <object class="GtkLabel" id="package_name_label">
-                                    <property name="label" translatable="yes">Package:</property>
-                                    <property name="halign">start</property>
-                                    <property name="width-chars">12</property>
-                                    <style>
-                                      <class name="caption-heading"/>
-                                    </style>
-                                  </object>
-                                </child>
+                              <object class="AdwActionRow" id="package_name_row">
+                                <property name="title" translatable="yes">Package</property>
+                                <property name="subtitle" id="package_name_value">example-package</property>
+                                <property name="subtitle-selectable">true</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwActionRow" id="package_version_row">
+                                <property name="title" translatable="yes">Version</property>
+                                <property name="subtitle" id="package_version_value">1.0.0-1</property>
+                                <property name="subtitle-selectable">true</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwActionRow" id="package_description_row">
+                                <property name="title" translatable="yes">Description</property>
+                                <property name="subtitle" id="package_description_value">Package description</property>
+                                <property name="subtitle-selectable">true</property>
+                                <property name="subtitle-lines">0</property>
+                              </object>
+                            </child>
+                          </object>
+</child>
                                 <child>
                                   <object class="GtkLabel" id="package_name_value">
                                     <property name="label">example-package</property>
@@ -687,47 +682,43 @@
         </child>
 
         <child type="bottom">
-          <object class="AdwActionRow" id="action_bar">
-            <property name="title" translatable="yes">Build Actions</property>
-            <child type="suffix">
-              <object class="GtkBox" id="action_buttons_box">
-                <property name="spacing">6</property>
-                <property name="margin-top">6</property>
-                <property name="margin-bottom">6</property>
-                <child>
-                  <object class="GtkButton" id="clean_button">
-                    <property name="label" translatable="yes">Clean</property>
-                    <property name="tooltip-text" translatable="yes">Clean build directory and remove old files</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="install_deps_button">
-                    <property name="label" translatable="yes">Install Dependencies</property>
-                    <property name="tooltip-text" translatable="yes">Install all build and runtime dependencies</property>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="build_button">
-                    <property name="label" translatable="yes">Build Package</property>
-                    <property name="tooltip-text" translatable="yes">Start building the package from source</property>
-                    <style>
-                      <class name="suggested-action"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="install_button">
-                    <property name="label" translatable="yes">Build &amp; Install</property>
-                    <property name="tooltip-text" translatable="yes">Build package and install it to the system</property>
-                    <style>
-                      <class name="destructive-action"/>
-                    </style>
-                  </object>
-                </child>
+          <object class="GtkActionBar" id="action_bar">
+            <child type="end">
+              <object class="GtkButton" id="install_button">
+                <property name="label" translatable="yes">Build &amp; Install</property>
+                <property name="tooltip-text" translatable="yes">Build package and install it to the system</property>
+                <style>
+                  <class name="destructive-action"/>
+                </style>
               </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="build_button">
+                <property name="label" translatable="yes">Build Package</property>
+                <property name="tooltip-text" translatable="yes">Start building the package from source</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="install_deps_button">
+                <property name="label" translatable="yes">Install Dependencies</property>
+                <property name="tooltip-text" translatable="yes">Install all build and runtime dependencies</property>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkButton" id="clean_button">
+                <property name="label" translatable="yes">Clean</property>
+                <property name="tooltip-text" translatable="yes">Clean build directory and remove old files</property>
+              </object>
+            </child>
+          </object>
+</child>
+      </object>
             </child>
           </object>
         </child>

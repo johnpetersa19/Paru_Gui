@@ -14,11 +14,7 @@
         <child type="top">
           <object class="AdwHeaderBar">
             <child type="start">
-              <object class="GtkBox" id="navigation_header">
-                <property name="spacing">8</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkButton" id="back_to_package_management_button">
+              <object class="GtkButton" id="back_to_package_management_button">
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to Package Management</property>
                     <signal name="clicked" handler="on_back_to_package_management_clicked" swapped="true"/>
@@ -27,18 +23,6 @@
                       <class name="circular"/>
                     </style>
                   </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="breadcrumb_label">
-                    <property name="label" translatable="yes">Main › AUR Tools › Operations</property>
-                    <property name="ellipsize">end</property>
-                    <style>
-                      <class name="caption"/>
-                      <class name="dim-label"/>
-                    </style>
-                  </object>
-                </child>
-              </object>
             </child>
             <property name="title-widget">
               <object class="AdwWindowTitle">
@@ -77,11 +61,7 @@
         </child>
 
         <property name="content">
-          <object class="GtkScrolledWindow">
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">automatic</property>
-            <child>
-              <object class="AdwPreferencesPage">
+          <object class="AdwPreferencesPage">
                 
                 
                 <child>
@@ -356,30 +336,18 @@
                         </child>
 
                         <child>
-                          <object class="AdwActionRow">
+                          <object class="AdwEntryRow" id="clonedir_entry">
                             <property name="title" translatable="yes">Clone Directory</property>
-                            
+                            <property name="text"></property>
+                            <signal name="changed" handler="on_clonedir_changed" swapped="true"/>
                             <child type="suffix">
-                              <object class="GtkBox">
-                                <property name="spacing">8</property>
-                                <child>
-                                  <object class="GtkEntry" id="clonedir_entry">
-                                    <property name="placeholder-text" translatable="yes">/tmp/paru</property>
-                                    <property name="width-chars">30</property>
-                                    <signal name="changed" handler="on_clonedir_changed" swapped="true"/>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="clonedir_button">
-                                    <property name="icon-name">folder-open-symbolic</property>
-                                    <property name="tooltip-text" translatable="yes">Select Build Directory</property>
-                                    <style>
-                                      <class name="flat"/>
-                                      <class name="circular"/>
-                                    </style>
-                                    <signal name="clicked" handler="on_clonedir_select_clicked" swapped="true"/>
-                                  </object>
-                                </child>
+                              <object class="GtkButton" id="clonedir_button">
+                                <property name="icon-name">folder-open-symbolic</property>
+                                <property name="valign">center</property>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                                <signal name="clicked" handler="on_clonedir_select_clicked" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -571,8 +539,6 @@
                   </object>
                 </child>
               </object>
-            </child>
-          </object>
         </property>
 
         <child type="bottom">
