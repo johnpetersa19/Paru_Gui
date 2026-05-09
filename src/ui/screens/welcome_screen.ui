@@ -126,7 +126,10 @@
           <object class="GtkBox" id="get_started_section">
             <property name="orientation">vertical</property>
             <property name="spacing">20</property>
-            <property name="width-request">400</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="view-section"/>
+            </style>
 
             <child>
               <object class="GtkLabel">
