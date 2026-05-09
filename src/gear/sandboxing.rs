@@ -104,7 +104,7 @@ impl SandboxManager {
             process_cmd.current_dir(dir);
         }
 
-        let child = match process_cmd.spawn() {
+        let mut child = match process_cmd.spawn() {
             Ok(c) => c,
             Err(e) => return SandboxResult {
                 return_code: -1,
@@ -117,30 +117,55 @@ impl SandboxManager {
             },
         };
 
-        // For simplicity, we'll wait for the process to finish and collect output.
-        // Real-time output handling would require threads or async.
-        let output = match child.wait_with_output() {
-            Ok(o) => o,
-            Err(e) => return SandboxResult {
-                return_code: -1,
-                stdout: String::new(),
-                stderr: e.to_string(),
-                status: SandboxStatus::Failed,
-                execution_time: start_time.elapsed().as_secs_f64(),
-                warnings: Vec::new(),
-                errors: vec![format!("Error waiting for process: {}", e)],
-            },
+        let result = if let Some(timeout_secs) = _timeout {
+            let timeout_dur = std::time::Duration::from_secs(timeout_secs);
+            let mut status = SandboxStatus::Running;
+            let mut output_res = Option::None;
+
+            while start_time.elapsed() < timeout_dur {
+                match child.try_wait() {
+                    Ok(Some(s)) => {
+                        status = if s.success() { SandboxStatus::Completed } else { SandboxStatus::Failed };
+                        output_res = Some(s);
+                        break;
+                    }
+                    Ok(Option::None) => {
+                        std::thread::sleep(std::time::Duration::from_millis(100));
+                    }
+                    Err(_e) => {
+                        status = SandboxStatus::Failed;
+                        break;
+                    }
+                }
+            }
+
+            if output_res.is_none() && status == SandboxStatus::Running {
+                let _ = child.kill();
+                status = SandboxStatus::Timeout;
+            }
+            
+            // Collect output after wait/kill
+            let output = child.wait_with_output().ok();
+            (status, output)
+        } else {
+            let output = child.wait_with_output().ok();
+            let status = match &output {
+                Some(o) => if o.status.success() { SandboxStatus::Completed } else { SandboxStatus::Failed },
+                Option::None => SandboxStatus::Failed,
+            };
+            (status, output)
         };
 
-        let stdout_str = String::from_utf8_lossy(&output.stdout).to_string();
-        let stderr_str = String::from_utf8_lossy(&output.stderr).to_string();
-        let return_code = output.status.code().unwrap_or(-1);
+        let (status, output) = result;
+        let stdout_str = output.as_ref().map(|o| String::from_utf8_lossy(&o.stdout).to_string()).unwrap_or_default();
+        let stderr_str = output.as_ref().map(|o| String::from_utf8_lossy(&o.stderr).to_string()).unwrap_or_default();
+        let return_code = output.as_ref().and_then(|o| o.status.code()).unwrap_or(-1);
 
         SandboxResult {
             return_code,
             stdout: stdout_str.clone(),
             stderr: stderr_str.clone(),
-            status: if output.status.success() { SandboxStatus::Completed } else { SandboxStatus::Failed },
+            status,
             execution_time: start_time.elapsed().as_secs_f64(),
             warnings: self._extract_warnings(&stdout_str, &stderr_str),
             errors: self._extract_errors(&stderr_str),
@@ -165,7 +190,12 @@ impl SandboxManager {
                 }
             }
             IsolationLevel::Medium => {
-                args.extend(vec!["--unshare-user".to_string(), "--unshare-ipc".to_string()]);
+                args.extend(vec![
+                    "--unshare-user".to_string(),
+                    "--unshare-ipc".to_string(),
+                    "--unshare-pid".to_string(),
+                    "--unshare-net".to_string(),
+                ]);
             }
             IsolationLevel::Minimal => {}
         }

@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::fs;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use reqwest::blocking::Client;
 // use chrono::{DateTime, Utc, Duration};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -53,8 +52,6 @@ pub struct SecurityAnalyzer {
     insecure_patterns: Vec<(Regex, RiskLevel, String)>,
     #[allow(dead_code)]
     trusted_domains: Vec<String>,
-    #[allow(dead_code)]
-    client: Client,
 }
 
 impl SecurityAnalyzer {
@@ -76,7 +73,6 @@ impl SecurityAnalyzer {
                 "github.com".to_string(), "gitlab.com".to_string(), "aur.archlinux.org".to_string(),
                 "archlinux.org".to_string(), "kernel.org".to_string(),
             ],
-            client: Client::new(),
         }
     }
 

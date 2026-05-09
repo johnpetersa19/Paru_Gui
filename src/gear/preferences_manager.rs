@@ -18,8 +18,6 @@ pub enum EditorChoice {
     Emacs,
     #[serde(rename = "code")]
     VsCode,
-    #[serde(rename = "atom")]
-    Atom,
     #[serde(rename = "subl")]
     Sublime,
     #[serde(rename = "custom")]
@@ -107,7 +105,13 @@ impl PreferencesManager {
 
     fn _get_string(&self, key: &str, default: &str) -> String {
         self.settings.as_ref()
-            .map(|s| s.string(key).to_string())
+            .and_then(|s| {
+                if s.settings_schema().map(|sch| sch.has_key(key)).unwrap_or(false) {
+                    Some(s.string(key).to_string())
+                } else {
+                    None
+                }
+            })
             .unwrap_or_else(|| default.to_string())
     }
 
@@ -119,7 +123,13 @@ impl PreferencesManager {
 
     fn _get_boolean(&self, key: &str, default: bool) -> bool {
         self.settings.as_ref()
-            .map(|s| s.boolean(key))
+            .and_then(|s| {
+                if s.settings_schema().map(|sch| sch.has_key(key)).unwrap_or(false) {
+                    Some(s.boolean(key))
+                } else {
+                    None
+                }
+            })
             .unwrap_or(default)
     }
 
@@ -131,7 +141,13 @@ impl PreferencesManager {
 
     fn _get_int(&self, key: &str, default: i32) -> i32 {
         self.settings.as_ref()
-            .map(|s| s.int(key))
+            .and_then(|s| {
+                if s.settings_schema().map(|sch| sch.has_key(key)).unwrap_or(false) {
+                    Some(s.int(key))
+                } else {
+                    None
+                }
+            })
             .unwrap_or(default)
     }
 
@@ -168,7 +184,6 @@ impl PreferencesManager {
             "vim" => EditorChoice::Vim,
             "emacs" => EditorChoice::Emacs,
             "code" => EditorChoice::VsCode,
-            "atom" => EditorChoice::Atom,
             "subl" => EditorChoice::Sublime,
             _ => EditorChoice::Custom,
         }
@@ -181,7 +196,6 @@ impl PreferencesManager {
             EditorChoice::Vim => "vim",
             EditorChoice::Emacs => "emacs",
             EditorChoice::VsCode => "code",
-            EditorChoice::Atom => "atom",
             EditorChoice::Sublime => "subl",
             EditorChoice::Custom => "custom",
         };
@@ -305,20 +319,19 @@ impl PreferencesManager {
             EditorChoice::Vim => "vim".to_string(),
             EditorChoice::Emacs => "emacs".to_string(),
             EditorChoice::VsCode => "code".to_string(),
-            EditorChoice::Atom => "atom".to_string(),
             EditorChoice::Sublime => "subl".to_string(),
         }
     }
 
     pub fn reset_to_defaults(&self) -> bool {
-        /*
         if let Some(settings) = &self.settings {
-            for key in settings.keys() {
-                settings.reset(&key);
+            if let Some(schema) = settings.settings_schema() {
+                for key in schema.list_keys() {
+                    settings.reset(&key);
+                }
+                return true;
             }
-            return true;
         }
-        */
         false
     }
 

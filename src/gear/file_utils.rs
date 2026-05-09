@@ -1,6 +1,7 @@
 use std::fs;
 use std::path::Path;
 use std::process::Command;
+use std::collections::HashMap;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tempfile::TempDir;
@@ -139,11 +140,59 @@ impl Default for PackageType {
 #[derive(Debug)]
 pub struct FileUtils {
     pub supported_compressions: Vec<String>,
-    pub dangerous_commands: Vec<String>,
+    single_patterns: HashMap<String, Regex>,
+    array_patterns: HashMap<String, Regex>,
+    func_patterns: Vec<(String, Regex)>,
 }
 
 impl FileUtils {
     pub fn new() -> Self {
+        let mut single_patterns = HashMap::new();
+        let singles = [
+            ("pkgname", r"(?m)^\s*pkgname=(.+?)$"),
+            ("pkgver", r"(?m)^\s*pkgver=(.+?)$"),
+            ("pkgrel", r"(?m)^\s*pkgrel=(.+?)$"),
+            ("pkgdesc", r"(?m)^\s*pkgdesc=(.+?)$"),
+            ("url", r"(?m)^\s*url=(.+?)$"),
+            ("install", r"(?m)^\s*install=(.+?)$"),
+            ("changelog", r"(?m)^\s*changelog=(.+?)$"),
+            ("epoch", r"(?m)^\s*epoch=(.+?)$"),
+            ("pkgbase", r"(?m)^\s*pkgbase=(.+?)$"),
+        ];
+        for (k, v) in singles {
+            single_patterns.insert(k.to_string(), Regex::new(v).unwrap());
+        }
+
+        let mut array_patterns = HashMap::new();
+        let arrays = [
+            ("arch", r"(?s)arch=\((.*?)\)"),
+            ("license", r"(?s)license=\((.*?)\)"),
+            ("depends", r"(?s)depends=\((.*?)\)"),
+            ("makedepends", r"(?s)makedepends=\((.*?)\)"),
+            ("optdepends", r"(?s)optdepends=\((.*?)\)"),
+            ("provides", r"(?s)provides=\((.*?)\)"),
+            ("conflicts", r"(?s)conflicts=\((.*?)\)"),
+            ("replaces", r"(?s)replaces=\((.*?)\)"),
+            ("source", r"(?s)source=\((.*?)\)"),
+            ("sha256sums", r"(?s)sha256sums=\((.*?)\)"),
+            ("md5sums", r"(?s)md5sums=\((.*?)\)"),
+            ("sha512sums", r"(?s)sha512sums=\((.*?)\)"),
+            ("backup", r"(?s)backup=\((.*?)\)"),
+            ("options", r"(?s)options=\((.*?)\)"),
+            ("groups", r"(?s)groups=\((.*?)\)"),
+            ("validpgpkeys", r"(?s)validpgpkeys=\((.*?)\)"),
+        ];
+        for (k, v) in arrays {
+            array_patterns.insert(k.to_string(), Regex::new(v).unwrap());
+        }
+
+        let func_patterns = vec![
+            ("build".to_string(), Regex::new(r"(?m)^build\s*\(\s*\)\s*\{").unwrap()),
+            ("package".to_string(), Regex::new(r"(?m)^package(?:_[\w]+)?\s*\(\s*\)\s*\{").unwrap()),
+            ("prepare".to_string(), Regex::new(r"(?m)^prepare\s*\(\s*\)\s*\{").unwrap()),
+            ("check".to_string(), Regex::new(r"(?m)^check\s*\(\s*\)\s*\{").unwrap()),
+        ];
+
         Self {
             supported_compressions: vec![
                 ".xz".to_string(),
@@ -151,20 +200,9 @@ impl FileUtils {
                 ".gz".to_string(),
                 ".bz2".to_string(),
             ],
-            dangerous_commands: vec![
-                "rm -rf".to_string(),
-                "sudo".to_string(),
-                "su ".to_string(),
-                "wget".to_string(),
-                "curl".to_string(),
-                "git clone".to_string(),
-                "chmod +x".to_string(),
-                "chown".to_string(),
-                "dd ".to_string(),
-                "mkfs".to_string(),
-                "mount".to_string(),
-                "umount".to_string(),
-            ],
+            single_patterns,
+            array_patterns,
+            func_patterns,
         }
     }
 
@@ -183,8 +221,6 @@ impl FileUtils {
         let content = match fs::read_to_string(path) {
             Ok(c) => c,
             Err(e) => {
-                // Try Latin-1 if UTF-8 fails (though Rust's read_to_string is strictly UTF-8)
-                // For simplicity, we'll just report the error for now.
                 info.errors.push(format!("Failed to read file: {}", e));
                 return info;
             }
@@ -192,93 +228,65 @@ impl FileUtils {
 
         info = self._parse_pkgbuild_content(&content, info);
         info = self._validate_pkgbuild(info);
-        info = self._analyze_security(&content, info);
+        // Security analysis should be handled by SecurityAnalyzer separately or 
+        // through a coordinator to avoid logic duplication.
 
         info
     }
 
     fn _parse_pkgbuild_content(&self, content: &str, mut info: PKGBUILDInfo) -> PKGBUILDInfo {
-        let single_patterns = [
-            ("pkgname", r"(?m)^pkgname=(.+?)$"),
-            ("pkgver", r"(?m)^pkgver=(.+?)$"),
-            ("pkgrel", r"(?m)^pkgrel=(.+?)$"),
-            ("pkgdesc", r"(?m)^pkgdesc=(.+?)$"),
-            ("url", r"(?m)^url=(.+?)$"),
-            ("install", r"(?m)^install=(.+?)$"),
-            ("changelog", r"(?m)^changelog=(.+?)$"),
-            ("epoch", r"(?m)^epoch=(.+?)$"),
-            ("pkgbase", r"(?m)^pkgbase=(.+?)$"),
-        ];
-
-        for (field, pattern) in single_patterns {
-            if let Ok(re) = Regex::new(pattern) {
-                if let Some(caps) = re.captures(content) {
-                    let val = self._clean_quoted_string(&caps[1]);
-                    match field {
-                        "pkgname" => info.pkgname = val,
-                        "pkgver" => info.pkgver = val,
-                        "pkgrel" => info.pkgrel = val,
-                        "pkgdesc" => info.pkgdesc = val,
-                        "url" => info.url = val,
-                        "install" => info.install = val,
-                        "changelog" => info.changelog = val,
-                        "epoch" => info.epoch = val,
-                        _ => {}
-                    }
+        for (field, re) in &self.single_patterns {
+            if let Some(caps) = re.captures(content) {
+                let val = self._clean_quoted_string(&caps[1]);
+                match field.as_str() {
+                    "pkgname" => info.pkgname = val,
+                    "pkgver" => info.pkgver = val,
+                    "pkgrel" => info.pkgrel = val,
+                    "pkgdesc" => info.pkgdesc = val,
+                    "url" => info.url = val,
+                    "install" => info.install = val,
+                    "changelog" => info.changelog = val,
+                    "epoch" => info.epoch = val,
+                    _ => {}
                 }
             }
         }
 
-        let array_patterns = [
-            ("arch", r"(?m)^arch=\(([^)]+)\)$"),
-            ("license", r"(?m)^license=\(([^)]+)\)$"),
-            ("depends", r"(?m)^depends=\(([^)]+)\)$"),
-            ("makedepends", r"(?m)^makedepends=\(([^)]+)\)$"),
-            ("optdepends", r"(?m)^optdepends=\(([^)]+)\)$"),
-            ("provides", r"(?m)^provides=\(([^)]+)\)$"),
-            ("conflicts", r"(?m)^conflicts=\(([^)]+)\)$"),
-            ("replaces", r"(?m)^replaces=\(([^)]+)\)$"),
-            ("source", r"(?m)^source=\(([^)]+)\)$"),
-            ("sha256sums", r"(?m)^sha256sums=\(([^)]+)\)$"),
-            ("md5sums", r"(?m)^md5sums=\(([^)]+)\)$"),
-            ("sha512sums", r"(?m)^sha512sums=\(([^)]+)\)$"),
-            ("backup", r"(?m)^backup=\(([^)]+)\)$"),
-            ("options", r"(?m)^options=\(([^)]+)\)$"),
-            ("groups", r"(?m)^groups=\(([^)]+)\)$"),
-            ("validpgpkeys", r"(?m)^validpgpkeys=\(([^)]+)\)$"),
-        ];
-
-        for (field, pattern) in array_patterns {
-            if let Ok(re) = Regex::new(pattern) {
-                if let Some(caps) = re.captures(content) {
-                    let items = self._parse_bash_array(&caps[1]);
-                    match field {
-                        "arch" => info.arch = items,
-                        "license" => info.license = items,
-                        "depends" => info.depends = items,
-                        "makedepends" => info.makedepends = items,
-                        "optdepends" => info.optdepends = items,
-                        "provides" => info.provides = items,
-                        "conflicts" => info.conflicts = items,
-                        "replaces" => info.replaces = items,
-                        "source" => info.source = items,
-                        "sha256sums" => info.sha256sums = items,
-                        "md5sums" => info.md5sums = items,
-                        "sha512sums" => info.sha512sums = items,
-                        "backup" => info.backup = items,
-                        "options" => info.options = items,
-                        "groups" => info.groups = items,
-                        "validpgpkeys" => info.validpgpkeys = items,
-                        _ => {}
-                    }
+        for (field, re) in &self.array_patterns {
+            if let Some(caps) = re.captures(content) {
+                let items = self._parse_bash_array(&caps[1]);
+                match field.as_str() {
+                    "arch" => info.arch = items,
+                    "license" => info.license = items,
+                    "depends" => info.depends = items,
+                    "makedepends" => info.makedepends = items,
+                    "optdepends" => info.optdepends = items,
+                    "provides" => info.provides = items,
+                    "conflicts" => info.conflicts = items,
+                    "replaces" => info.replaces = items,
+                    "source" => info.source = items,
+                    "sha256sums" => info.sha256sums = items,
+                    "md5sums" => info.md5sums = items,
+                    "sha512sums" => info.sha512sums = items,
+                    "backup" => info.backup = items,
+                    "options" => info.options = items,
+                    "groups" => info.groups = items,
+                    "validpgpkeys" => info.validpgpkeys = items,
+                    _ => {}
                 }
             }
         }
 
-        info.has_build_function = Regex::new(r"(?m)^build\s*\(\s*\)\s*\{").unwrap().is_match(content);
-        info.has_package_function = Regex::new(r"(?m)^package(?:_[\w]+)?\s*\(\s*\)\s*\{").unwrap().is_match(content);
-        info.has_prepare_function = Regex::new(r"(?m)^prepare\s*\(\s*\)\s*\{").unwrap().is_match(content);
-        info.has_check_function = Regex::new(r"(?m)^check\s*\(\s*\)\s*\{").unwrap().is_match(content);
+        for (field, re) in &self.func_patterns {
+            let has_func = re.is_match(content);
+            match field.as_str() {
+                "build" => info.has_build_function = has_func,
+                "package" => info.has_package_function = has_func,
+                "prepare" => info.has_prepare_function = has_func,
+                "check" => info.has_check_function = has_func,
+                _ => {}
+            }
+        }
 
         info
     }
@@ -310,35 +318,7 @@ impl FileUtils {
         info
     }
 
-    fn _analyze_security(&self, content: &str, mut info: PKGBUILDInfo) -> PKGBUILDInfo {
-        let mut security_score = 0;
-
-        for dangerous_cmd in &self.dangerous_commands {
-            if content.contains(dangerous_cmd) {
-                info.warnings.push(format!("Contains potentially dangerous command: {}", dangerous_cmd));
-                security_score += 2;
-            }
-        }
-
-        if Regex::new(r"curl.*\|\s*bash").unwrap().is_match(content) || Regex::new(r"wget.*\|\s*sh").unwrap().is_match(content) {
-            info.warnings.push("Downloads and executes scripts directly".to_string());
-            security_score += 3;
-        }
-
-        if content.contains("sudo") {
-            info.warnings.push("Uses sudo - requires elevated privileges".to_string());
-            security_score += 2;
-        }
-
-        info.security_level = match security_score {
-            0 => SecurityLevel::Safe,
-            1..=2 => SecurityLevel::Caution,
-            3..=4 => SecurityLevel::Warning,
-            _ => SecurityLevel::Danger,
-        };
-
-        info
-    }
+    // Removed _analyze_security to avoid duplication with SecurityAnalyzer
 
     fn _clean_quoted_string(&self, s: &str) -> String {
         let s = s.trim();

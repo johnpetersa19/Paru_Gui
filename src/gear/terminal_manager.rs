@@ -82,7 +82,54 @@ impl TerminalManager {
                 new_window: vec!["--new-window".to_string()],
                 new_tab: vec!["--new-tab".to_string()],
             }),
-            // Add more as needed...
+            (TerminalType::Alacritty, TerminalConfig {
+                execute: vec!["-e".to_string(), "bash".to_string(), "-c".to_string()],
+                title: vec!["-t".to_string()],
+                working_dir: vec!["--working-directory".to_string()],
+                hold: vec!["--hold".to_string()],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::Kitty, TerminalConfig {
+                execute: vec!["bash".to_string(), "-c".to_string()],
+                title: vec!["--title".to_string()],
+                working_dir: vec!["--directory".to_string()],
+                hold: vec!["--hold".to_string()],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::Terminator, TerminalConfig {
+                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                title: vec!["-T".to_string()],
+                working_dir: vec!["--working-directory".to_string()],
+                hold: vec![],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::Tilix, TerminalConfig {
+                execute: vec!["-e".to_string(), "bash".to_string(), "-c".to_string()],
+                title: vec!["-t".to_string()],
+                working_dir: vec!["-w".to_string()],
+                hold: vec![],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::MateTerminal, TerminalConfig {
+                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                title: vec!["-t".to_string()],
+                working_dir: vec!["--working-directory".to_string()],
+                hold: vec![],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::XfceTerminal, TerminalConfig {
+                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                title: vec!["-T".to_string()],
+                working_dir: vec!["--working-directory".to_string()],
+                hold: vec!["-H".to_string()],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
         ];
 
         for (t, cfg) in configs {
@@ -120,10 +167,16 @@ impl TerminalManager {
     }
 
     fn _get_terminal_type(&self, name: &str) -> Option<TerminalType> {
+        let name = name.to_lowercase();
         if name.contains("gnome-terminal") { Some(TerminalType::GnomeTerminal) }
         else if name.contains("konsole") { Some(TerminalType::Konsole) }
         else if name.contains("alacritty") { Some(TerminalType::Alacritty) }
         else if name.contains("kitty") { Some(TerminalType::Kitty) }
+        else if name.contains("terminator") { Some(TerminalType::Terminator) }
+        else if name.contains("tilix") { Some(TerminalType::Tilix) }
+        else if name.contains("mate-terminal") { Some(TerminalType::MateTerminal) }
+        else if name.contains("xfce4-terminal") || name.contains("xfce-terminal") { Some(TerminalType::XfceTerminal) }
+        else if name.contains("xterm") { Some(TerminalType::Xterm) }
         else { None }
     }
 
@@ -174,12 +227,13 @@ impl TerminalManager {
             
             if !cfg.execute.is_empty() {
                 args.extend(cfg.execute.clone());
-                let mut cmd_str = command.iter()
-            .map(|s| shlex::try_quote(s).unwrap_or_else(|_| std::borrow::Cow::Borrowed(s)).into_owned())
-            .collect::<Vec<_>>()
-            .join(" ");
+                let mut cmd_parts = Vec::new();
+                for part in command {
+                    cmd_parts.push(shlex::try_quote(part).unwrap_or_else(|_| std::borrow::Cow::Borrowed(part)).into_owned());
+                }
+                let mut cmd_str = cmd_parts.join(" ");
                 if hold_open && cfg.hold.is_empty() {
-                    cmd_str.push_str("; exec bash");
+                    cmd_str.push_str("; echo -e \"\\nProcess finished. Press Enter to close...\"; read");
                 }
                 args.push(cmd_str);
             } else {

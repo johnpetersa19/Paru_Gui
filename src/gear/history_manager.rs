@@ -38,20 +38,21 @@ impl ActionType {
         }
     }
 
-    pub fn from_str(s: &str) -> Self {
+    pub fn from_str(s: &str) -> Result<Self, String> {
         match s {
-            "PKGBUILD Build" => Self::PkgbuildBuild,
-            "Package Install" => Self::PackageInstall,
-            "Package Uninstall" => Self::PackageUninstall,
-            "Patch Apply" => Self::PatchApply,
-            "Command Execution" => Self::CommandExecution,
-            "Security Alert" => Self::SecurityAlert,
-            "Risk Ignored" => Self::RiskIgnored,
-            "UI Interaction" => Self::UiInteraction,
-            "System Update" => Self::SystemUpdate,
-            "Cache Clean" => Self::CacheClean,
-            "Upstream Check" => Self::UpstreamCheck,
-            _ => Self::Other,
+            "PKGBUILD Build" => Ok(Self::PkgbuildBuild),
+            "Package Install" => Ok(Self::PackageInstall),
+            "Package Uninstall" => Ok(Self::PackageUninstall),
+            "Patch Apply" => Ok(Self::PatchApply),
+            "Command Execution" => Ok(Self::CommandExecution),
+            "Security Alert" => Ok(Self::SecurityAlert),
+            "Risk Ignored" => Ok(Self::RiskIgnored),
+            "UI Interaction" => Ok(Self::UiInteraction),
+            "System Update" => Ok(Self::SystemUpdate),
+            "Cache Clean" => Ok(Self::CacheClean),
+            "Upstream Check" => Ok(Self::UpstreamCheck),
+            "Other" => Ok(Self::Other),
+            _ => Err(format!("Unknown ActionType: {}", s)),
         }
     }
 }
@@ -78,15 +79,15 @@ impl ActionStatus {
         }
     }
 
-    pub fn from_str(s: &str) -> Self {
+    pub fn from_str(s: &str) -> Result<Self, String> {
         match s {
-            "Success" => Self::Success,
-            "Failed" => Self::Failed,
-            "Warning" => Self::Warning,
-            "Info" => Self::Info,
-            "Canceled" => Self::Canceled,
-            "Undone" => Self::Undone,
-            _ => Self::Info,
+            "Success" => Ok(Self::Success),
+            "Failed" => Ok(Self::Failed),
+            "Warning" => Ok(Self::Warning),
+            "Info" => Ok(Self::Info),
+            "Canceled" => Ok(Self::Canceled),
+            "Undone" => Ok(Self::Undone),
+            _ => Err(format!("Unknown ActionStatus: {}", s)),
         }
     }
 }
@@ -106,7 +107,7 @@ pub struct HistoryEntry {
 
 #[derive(Debug)]
 pub struct HistoryManager {
-    db_path: String,
+    connection: std::sync::Mutex<Connection>,
 }
 
 impl HistoryManager {
@@ -123,15 +124,16 @@ impl HistoryManager {
             data_dir.join("history.db")
         };
 
+        let conn = Connection::open(&path)?;
         let manager = Self {
-            db_path: path.to_string_lossy().to_string(),
+            connection: std::sync::Mutex::new(conn),
         };
         manager._initialize_db()?;
         Ok(manager)
     }
 
     fn _initialize_db(&self) -> Result<()> {
-        let conn = Connection::open(&self.db_path)?;
+        let conn = self.connection.lock().unwrap();
         conn.execute(
             "CREATE TABLE IF NOT EXISTS actions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -150,7 +152,7 @@ impl HistoryManager {
     }
 
     pub fn add_action(&self, entry: &HistoryEntry) -> Result<i64> {
-        let conn = Connection::open(&self.db_path)?;
+        let conn = self.connection.lock().unwrap();
         conn.execute(
             "INSERT INTO actions (timestamp, action_type, summary, status, details, is_undoable, related_pkg, user_initiated)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -169,7 +171,7 @@ impl HistoryManager {
     }
 
     pub fn get_history(&self, limit: i64, offset: i64) -> Result<Vec<HistoryEntry>> {
-        let conn = Connection::open(&self.db_path)?;
+        let conn = self.connection.lock().unwrap();
         let mut stmt = conn.prepare(
             "SELECT id, timestamp, action_type, summary, status, details, is_undoable, related_pkg, user_initiated
              FROM actions ORDER BY timestamp DESC LIMIT ? OFFSET ?"
@@ -180,9 +182,9 @@ impl HistoryManager {
                 timestamp: DateTime::parse_from_rfc3339(&row.get::<_, String>(1)?)
                     .unwrap_or_else(|_| DateTime::parse_from_rfc3339("1970-01-01T00:00:00Z").unwrap())
                     .with_timezone(&Utc),
-                action_type: ActionType::from_str(&row.get::<_, String>(2)?),
+                action_type: ActionType::from_str(&row.get::<_, String>(2)?).unwrap_or(ActionType::Other),
                 summary: row.get(3)?,
-                status: ActionStatus::from_str(&row.get::<_, String>(4)?),
+                status: ActionStatus::from_str(&row.get::<_, String>(4)?).unwrap_or(ActionStatus::Info),
                 details: row.get::<_, Option<String>>(5)?.unwrap_or_default(),
                 is_undoable: row.get::<_, i32>(6)? != 0,
                 related_pkg: row.get(7)?,

@@ -72,8 +72,6 @@ impl PKGBUILDAnalyzer {
         }
 
         let content = fs::read_to_string(pkgbuild_path).ok()?;
-        let content_no_comments = Regex::new(r"(?m)#.*$").unwrap().replace_all(&content, "").to_string();
-
         let mut metadata = PkgbuildMetadata {
             pkgname: "unknown".to_string(),
             pkgver: "unknown".to_string(),
@@ -81,13 +79,52 @@ impl PKGBUILDAnalyzer {
             ..Default::default()
         };
 
-        // Extract basic variables
-        let var_names = vec!["pkgname", "pkgver", "pkgrel", "epoch", "url", "license", "arch"];
-        for var_name in var_names {
-            let pattern = format!(r"(?m)^\s*{}\s*=\s*(.*?)\s*$", var_name);
-            if let Ok(re) = Regex::new(&pattern) {
-                if let Some(caps) = re.captures(&content_no_comments) {
-                    let value = caps[1].trim().trim_matches(|c| c == '\'' || c == '"' || c == '(' || c == ')').to_string();
+        let lines: Vec<&str> = content.lines().collect();
+        let mut in_function = false;
+        let mut brace_count = 0;
+        let mut current_func_name = String::new();
+        let mut func_content = String::new();
+        let mut func_start_line = 0;
+
+        for (i, line) in lines.iter().enumerate() {
+            let line_no_comment = if let Some(pos) = line.find('#') {
+                &line[..pos]
+            } else {
+                line
+            };
+            let trimmed = line_no_comment.trim();
+
+            if !in_function {
+                if let Some(caps) = self._function_re.captures(trimmed) {
+                    in_function = true;
+                    current_func_name = caps[1].to_string();
+                    func_content = String::new();
+                    func_start_line = i + 1;
+                    brace_count = trimmed.chars().filter(|&c| c == '{').count() as i32 - trimmed.chars().filter(|&c| c == '}').count() as i32;
+                    continue;
+                }
+
+                // Parse global variables only when not in a function
+                if let Some(caps) = self._array_var_re.captures(line_no_comment) {
+                    let var_name = &caps[1];
+                    let raw_content = &caps[2];
+                    let items: Vec<String> = raw_content.split_whitespace()
+                        .map(|s| s.trim_matches(|c| c == '\'' || c == '"').to_string())
+                        .filter(|s| !s.is_empty())
+                        .collect();
+
+                    match var_name {
+                        "depends" => metadata.depends.extend(items),
+                        "makedepends" => metadata.makedepends.extend(items),
+                        "checkdepends" => metadata.checkdepends.extend(items),
+                        "optdepends" => metadata.optdepends.extend(items),
+                        "arch" => metadata.arch.extend(items),
+                        "source" => metadata.source.extend(items),
+                        _ => {}
+                    }
+                } else if let Some(caps) = self._single_var_re.captures(line_no_comment) {
+                    let var_name = &caps[1];
+                    let value = caps[2].trim().trim_matches(|c| c == '\'' || c == '"').to_string();
                     match var_name {
                         "pkgname" => metadata.pkgname = value,
                         "pkgver" => metadata.pkgver = value,
@@ -95,29 +132,28 @@ impl PKGBUILDAnalyzer {
                         "epoch" => metadata.epoch = Some(value),
                         "url" => metadata.url = Some(value),
                         "license" => metadata.license = Some(value),
-                        "arch" => metadata.arch = value.split_whitespace().map(|s| s.to_string()).collect(),
                         _ => {}
                     }
                 }
-            }
-        }
+            } else {
+                // Inside a function
+                func_content.push_str(line);
+                func_content.push('\n');
+                
+                brace_count += trimmed.chars().filter(|&c| c == '{').count() as i32;
+                brace_count -= trimmed.chars().filter(|&c| c == '}').count() as i32;
 
-        // Extract array variables
-        for caps in self._array_var_re.captures_iter(&content_no_comments) {
-            let var_name = &caps[1];
-            let raw_content = &caps[2];
-            let items: Vec<String> = raw_content.split_whitespace()
-                .map(|s| s.trim_matches(|c| c == '\'' || c == '"').to_string())
-                .filter(|s| !s.is_empty())
-                .collect();
-
-            match var_name {
-                "depends" => metadata.depends.extend(items),
-                "makedepends" => metadata.makedepends.extend(items),
-                "checkdepends" => metadata.checkdepends.extend(items),
-                "optdepends" => metadata.optdepends.extend(items),
-                "source" => metadata.source.extend(items),
-                _ => {}
+                if brace_count <= 0 {
+                    metadata.functions.insert(current_func_name.clone(), PkgbuildFunction {
+                        name: current_func_name.clone(),
+                        content: func_content.clone(),
+                        start_line: func_start_line,
+                        end_line: i + 1,
+                    });
+                    in_function = false;
+                    current_func_name = String::new();
+                    func_content = String::new();
+                }
             }
         }
 
@@ -125,52 +161,6 @@ impl PKGBUILDAnalyzer {
         metadata.source = metadata.source.iter()
             .map(|s| s.replace("$pkgname", &metadata.pkgname).replace("$pkgver", &metadata.pkgver))
             .collect();
-
-        // Extract functions
-        let lines: Vec<&str> = content.lines().collect();
-        let mut in_function = false;
-        let mut current_func_name = String::new();
-        let mut func_content = String::new();
-        let mut func_start_line = 0;
-
-        for (i, line) in lines.iter().enumerate() {
-            if let Some(caps) = self._function_re.captures(line) {
-                if in_function {
-                    metadata.functions.insert(current_func_name.clone(), PkgbuildFunction {
-                        name: current_func_name.clone(),
-                        content: func_content.clone(),
-                        start_line: func_start_line,
-                        end_line: i,
-                    });
-                }
-                in_function = true;
-                current_func_name = caps[1].to_string();
-                func_content = String::new();
-                func_start_line = i + 1;
-            } else if in_function && self._func_end_re.is_match(line) {
-                metadata.functions.insert(current_func_name.clone(), PkgbuildFunction {
-                    name: current_func_name.clone(),
-                    content: func_content.clone(),
-                    start_line: func_start_line,
-                    end_line: i + 1,
-                });
-                in_function = false;
-                current_func_name = String::new();
-                func_content = String::new();
-            } else if in_function {
-                func_content.push_str(line);
-                func_content.push('\n');
-            }
-        }
-
-        if in_function {
-            metadata.functions.insert(current_func_name.clone(), PkgbuildFunction {
-                name: current_func_name.clone(),
-                content: func_content.clone(),
-                start_line: func_start_line,
-                end_line: lines.len(),
-            });
-        }
 
         Some(metadata)
     }

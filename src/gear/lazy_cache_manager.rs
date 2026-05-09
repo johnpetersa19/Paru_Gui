@@ -43,12 +43,10 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     {
         let mut cache = self.cache.lock().unwrap();
         
+        self._cleanup_expired_locked(&mut cache);
+
         if let Some(entry) = cache.get_mut(key) {
-            if !entry.is_expired() {
-                return Some(entry.access().clone());
-            } else {
-                cache.remove(key);
-            }
+            return Some(entry.access().clone());
         }
 
         let value = factory();
@@ -68,23 +66,28 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     }
 
     fn _evict_lru(&self, cache: &mut HashMap<String, CacheEntry<T>>) {
-        let mut lru_key: Option<String> = None;
-        let mut oldest_access = Instant::now();
-
-        for (key, entry) in cache.iter() {
-            if entry.last_access < oldest_access {
-                oldest_access = entry.last_access;
-                lru_key = Some(key.clone());
-            }
-        }
+        let lru_key = cache.iter()
+            .min_by_key(|(_, e)| e.last_access)
+            .map(|(k, _)| k.clone());
 
         if let Some(key) = lru_key {
             cache.remove(&key);
         }
     }
 
+    pub fn cleanup_expired(&self) {
+        let mut cache = self.cache.lock().unwrap();
+        self._cleanup_expired_locked(&mut cache);
+    }
+
+    fn _cleanup_expired_locked(&self, cache: &mut HashMap<String, CacheEntry<T>>) {
+        cache.retain(|_, entry| !entry.is_expired());
+    }
+
     pub fn set(&self, key: &str, value: T) {
         let mut cache = self.cache.lock().unwrap();
+        self._cleanup_expired_locked(&mut cache);
+        
         if cache.len() >= self.max_size {
             self._evict_lru(&mut cache);
         }

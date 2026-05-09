@@ -110,9 +110,9 @@ impl SignatureVerifier {
         self._parse_verification_output(returncode, &stdout, &stderr, signature_path.unwrap_or(file_path))
     }
 
-    fn _parse_verification_output(&self, _returncode: i32, stdout: &str, _stderr: &str, signature_file: &str) -> SignatureInfo {
+    fn _parse_verification_output(&self, returncode: i32, stdout: &str, _stderr: &str, signature_file: &str) -> SignatureInfo {
         let mut info = SignatureInfo {
-            status: SignatureStatus::Unknown,
+            status: if returncode == 0 { SignatureStatus::Valid } else { SignatureStatus::Error },
             key_id: String::new(),
             signer: "Unknown".to_string(),
             timestamp: None,
@@ -121,6 +121,10 @@ impl SignatureVerifier {
             error_message: None,
             signature_file: Some(signature_file.to_string()),
         };
+
+        if returncode != 0 {
+            info.status = SignatureStatus::Error;
+        }
 
         for line in stdout.lines() {
             if line.starts_with("[GNUPG:] GOODSIG") {
@@ -139,7 +143,45 @@ impl SignatureVerifier {
             } else if line.starts_with("[GNUPG:] NOSIG") {
                 info.status = SignatureStatus::Missing;
                 info.error_message = Some("No signature found".to_string());
+            } else if line.starts_with("[GNUPG:] EXPKEYSIG") {
+                info.status = SignatureStatus::Expired;
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 {
+                    info.key_id = parts[2].to_string();
+                }
+                info.error_message = Some("Expired key signature".to_string());
+            } else if line.starts_with("[GNUPG:] REVKEYSIG") || line.starts_with("[GNUPG:] KEYREVOKED") {
+                info.status = SignatureStatus::Revoked;
+                info.error_message = Some("Revoked key signature".to_string());
+            } else if line.starts_with("[GNUPG:] VALIDSIG") {
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 {
+                    info.fingerprint = parts[2].to_string();
+                }
+                if parts.len() >= 5 {
+                    if let Ok(ts) = parts[4].parse::<i64>() {
+                        info.timestamp = Some(ts);
+                    }
+                }
+            } else if line.starts_with("[GNUPG:] TRUST_") {
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 {
+                    info.trust_level = match parts[2] {
+                        "UNDEFINED" => KeyTrust::Undefined,
+                        "NEVER" => KeyTrust::Never,
+                        "MARGINAL" => KeyTrust::Marginal,
+                        "FULLY" => KeyTrust::Full,
+                        "ULTIMATE" => KeyTrust::Ultimate,
+                        _ => KeyTrust::Unknown,
+                    };
+                }
             }
+        }
+
+        // Final status adjustment based on returncode if no clear status was found
+        if info.status == SignatureStatus::Valid && returncode != 0 {
+            info.status = SignatureStatus::Error;
+            info.error_message = Some(format!("GPG returned error code: {}", returncode));
         }
 
         info

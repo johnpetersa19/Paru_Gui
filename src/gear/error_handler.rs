@@ -68,15 +68,15 @@ impl ErrorHandler {
         }
     }
 
-    pub fn handle_error(&mut self, title: &str, message: &str, context: &str) -> String {
+    pub fn handle_error(&mut self, level: ErrorLevel, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
         let error_id = format!("{:x}", md5::compute(format!("{}{}{}", title, message, context)));
         let error_id = &error_id[..8];
 
         let report = ErrorReport {
             timestamp: Utc::now().format("%Y-%m-%d %H:%M:%S").to_string(),
             error_id: error_id.to_string(),
-            level: ErrorLevel::High,
-            category: ErrorCategory::Unknown,
+            level,
+            category,
             title: title.to_string(),
             message: message.to_string(),
             context: context.to_string(),
@@ -92,6 +92,10 @@ impl ErrorHandler {
         self._log_to_file(&report);
         
         error_id.to_string()
+    }
+
+    pub fn get_error_counts(&self) -> &HashMap<String, usize> {
+        &self.error_counts
     }
 
     fn _log_to_file(&self, report: &ErrorReport) {

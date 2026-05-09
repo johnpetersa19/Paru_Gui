@@ -96,12 +96,10 @@ impl UniversalUpstreamChecker {
                     });
                 }
             } else if url.contains("gitlab") {
-                let re = Regex::new(r"(gitlab\.[\w\.-]+)/([^/]+)/([^/]+)").unwrap();
-                if let Some(caps) = re.captures(&url) {
-                    let host = &caps[1];
-                    let owner = &caps[2];
-                    let repo = caps[3].trim_end_matches(".git");
-                    let path = format!("{}/{}", owner, repo);
+                let re = Regex::new(r"gitlab\.[\w\.-]+/([\w\.-]+(?:/[\w\.-]+)*)/([\w\.-]+?)(?:\.git)?$").unwrap();
+                if let Some(caps) = re.captures(&url.trim_end_matches('/')) {
+                    let host = url.split('/').nth(2).unwrap_or("gitlab.com");
+                    let path = format!("{}/{}", &caps[1], &caps[2]);
                     let encoded_path = urlencoding::encode(&path);
                     detected.push(UpstreamSource {
                         name: "GitLab".to_string(),
@@ -231,13 +229,30 @@ impl UniversalUpstreamChecker {
     }
 
     fn _is_newer_version(&self, current: &str, candidate: &str) -> bool {
-        self._version_to_tuple(candidate) > self._version_to_tuple(current)
+        self._compare_versions(candidate, current) == std::cmp::Ordering::Greater
     }
 
-    fn _version_to_tuple(&self, version: &str) -> Vec<i32> {
-        let version = version.trim_start_matches(|c: char| !c.is_numeric());
-        version.split('.')
-            .map(|s| s.chars().take_while(|c| c.is_numeric()).collect::<String>().parse::<i32>().unwrap_or(0))
-            .collect()
+    fn _compare_versions(&self, v1: &str, v2: &str) -> std::cmp::Ordering {
+        let t1 = self._version_to_tuple(v1);
+        let t2 = self._version_to_tuple(v2);
+        t1.cmp(&t2)
+    }
+
+    fn _version_to_tuple(&self, version: &str) -> (i32, Vec<i32>, String) {
+        let (epoch, rest) = if let Some((e, r)) = version.split_once(':') {
+            (e.parse::<i32>().unwrap_or(0), r)
+        } else {
+            (0, version)
+        };
+
+        let rest = rest.trim_start_matches(|c: char| !c.is_numeric());
+        let parts: Vec<i32> = rest.split(|c: char| !c.is_numeric())
+            .filter(|s| !s.is_empty())
+            .map(|s| s.parse::<i32>().unwrap_or(0))
+            .collect();
+        
+        let suffix = rest.chars().skip_while(|c| c.is_numeric() || *c == '.').collect::<String>();
+        
+        (epoch, parts, suffix)
     }
 }

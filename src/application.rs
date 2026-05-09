@@ -97,7 +97,7 @@ impl ParuGuiApplication {
         let window = self.active_window().unwrap();
         let about = adw::AboutDialog::builder()
             .application_name("Paru-gui")
-            .application_icon("org/gnome/paru-gui")
+            .application_icon("org.gnome.paru-gui")
             .developer_name("Unknown")
             .version(VERSION)
             .developers(vec!["Unknown"])
