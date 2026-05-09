@@ -116,7 +116,6 @@ mod imp {
         #[template_callback]
         fn on_select_file_clicked(&self, _button: &gtk::Button) {
             println!("Select file clicked");
-            // Integration with FileOperations manager would go here
         }
 
         #[template_callback]
@@ -127,7 +126,6 @@ mod imp {
         #[template_callback]
         fn on_search_changed(&self, entry: &gtk::SearchEntry) {
             let _text = entry.text().to_string();
-            // Integration with SearchManager would go here
         }
 
         #[template_callback]
@@ -151,6 +149,7 @@ mod imp {
                 tg.restart_tour();
             }
         }
+
         #[template_callback]
         fn on_nav_back_clicked(&self, _button: &gtk::Button) {
             println!("Nav back clicked");
@@ -177,15 +176,18 @@ mod imp {
         }
 
         #[template_callback]
-        fn on_notification_response(&self, _info_bar: &glib::Object, _response_id: i32) {
+        fn on_notification_response(&self, _response_id: i32) {
             self.notification_revealer.set_reveal_child(false);
         }
 
         #[template_callback]
-        fn on_stack_changed(&self, stack: &gtk::Stack, _param: &glib::ParamSpec) {
-            if let Some(name) = stack.visible_child_name() {
-                println!("Stack changed to: {}", name);
-            }
+        fn on_stack_changed(&self, _stack: &gtk::Stack, _param: &glib::ParamSpec) {
+            // Stack change logic
+        }
+
+        #[template_callback]
+        fn on_update_all_clicked(&self, _button: &gtk::Button) {
+            println!("Update all clicked");
         }
 
         #[template_callback]
@@ -248,7 +250,7 @@ mod imp {
 
 glib::wrapper! {
     pub struct ParuGuiWindow(ObjectSubclass<imp::ParuGuiWindow>)
-        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow,
+        @extends adw::ApplicationWindow, gtk::ApplicationWindow, gtk::Window, gtk::Widget,
         @implements gio::ActionGroup, gio::ActionMap;
 }
 
