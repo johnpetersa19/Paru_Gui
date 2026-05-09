@@ -59,9 +59,7 @@ mod imp {
         #[template_child]
         pub search_entry: TemplateChild<gtk::SearchEntry>,
         #[template_child]
-        pub notification_revealer: TemplateChild<gtk::Revealer>,
-        #[template_child]
-        pub notification_label: TemplateChild<gtk::Label>,
+        pub toast_overlay: TemplateChild<adw::ToastOverlay>,
         #[template_child]
         pub status_label: TemplateChild<gtk::Label>,
         #[template_child]
@@ -176,11 +174,6 @@ mod imp {
         }
 
         #[template_callback]
-        fn on_notification_response(&self, _response_id: i32) {
-            self.notification_revealer.set_reveal_child(false);
-        }
-
-        #[template_callback]
         fn on_stack_changed(&self, _stack: &gtk::Stack, _param: &glib::ParamSpec) {
             // Stack change logic
         }
@@ -262,8 +255,7 @@ impl ParuGuiWindow {
     }
 
     pub fn show_notification(&self, message: &str) {
-        let imp = self.imp();
-        imp.notification_label.set_label(message);
-        imp.notification_revealer.set_reveal_child(true);
+        let toast = adw::Toast::new(message);
+        self.imp().toast_overlay.add_toast(toast);
     }
 }

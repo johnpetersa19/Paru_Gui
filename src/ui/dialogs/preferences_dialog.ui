@@ -1,717 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface domain="paru-gui">
+<interface>
   <requires lib="gtk" version="4.10"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="libadwaita" version="1.5"/>
 
-  <template class="PreferencesDialog" parent="AdwWindow">
+  <template class="PreferencesDialog" parent="AdwPreferencesDialog">
     <property name="title" translatable="yes">Preferences</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="default-width">900</property>
-    <property name="default-height">700</property>
-    <property name="width-request">600</property>
-    <property name="height-request">500</property>
-    <accessibility>
-      <property name="label" translatable="yes">Application preferences and settings dialog</property>
-    </accessibility>
 
     <child>
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar">
-            <property name="title-widget">
-              <object class="AdwWindowTitle" id="header_title">
-                <property name="title" translatable="yes">Preferences</property>
-                <property name="subtitle" id="breadcrumb_subtitle">Main › Preferences › General</property>
-              </object>
-            </property>
-
-            <child type="start">
-              <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">6</property>
-
-                <child>
-                  <object class="GtkButton" id="back_to_main_button">
-                    <property name="icon-name">go-previous-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Return to main interface</property>
-                    <signal name="clicked" handler="on_back_to_main_clicked" swapped="no"/>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Navigate back to main interface</property>
-                    </accessibility>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">General</property>
+        <property name="icon-name">preferences-other-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">General Settings</property>
+            <property name="description" translatable="yes">Basic application behavior and interface options</property>
+            <child>
+              <object class="AdwComboRow" id="editor_combo_row">
+                <property name="title" translatable="yes">Default Editor</property>
+                <property name="subtitle" translatable="yes">Text editor for viewing and editing files</property>
+                <property name="icon-name">accessories-text-editor-symbolic</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Gedit</item>
+                      <item translatable="yes">VS Code</item>
+                      <item translatable="yes">Nano</item>
+                      <item translatable="yes">Vim</item>
+                    </items>
                   </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="help_button">
-                    <property name="icon-name">help-browser-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Show help for current category</property>
-                    <signal name="clicked" handler="on_help_clicked" swapped="no"/>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Show contextual help</property>
-                    </accessibility>
-                  </object>
-                </child>
+                </property>
               </object>
             </child>
-
-            <child type="end">
-              <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">6</property>
-
-                <child>
-                  <object class="GtkButton" id="reset_category_button">
-                    <property name="icon-name">edit-undo-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Reset current category to defaults</property>
-                    <signal name="clicked" handler="on_reset_category_clicked" swapped="no"/>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Reset current category settings</property>
-                    </accessibility>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="search_button">
-                    <property name="icon-name">system-search-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Search preferences</property>
-                    <signal name="clicked" handler="on_search_clicked" swapped="no"/>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Search in preferences</property>
-                    </accessibility>
-                  </object>
-                </child>
+            <child>
+              <object class="AdwSwitchRow" id="simplified_mode_switch_row">
+                <property name="title" translatable="yes">Simplified Interface</property>
+                <property name="subtitle" translatable="yes">Hide advanced options and use simplified workflows</property>
+                <property name="icon-name">view-dual-symbolic</property>
+                <property name="active">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="auto_refresh_switch_row">
+                <property name="title" translatable="yes">Auto Refresh Updates</property>
+                <property name="subtitle" translatable="yes">Automatically check for package updates on startup</property>
+                <property name="icon-name">view-refresh-symbolic</property>
               </object>
             </child>
           </object>
         </child>
+      </object>
+    </child>
 
-        <property name="content">
-          <object class="AdwNavigationSplitView" id="navigation_split_view">
-            <property name="min-sidebar-width">200</property>
-            <property name="max-sidebar-width">300</property>
-            <property name="sidebar-width-fraction">0.25</property>
-
-            <property name="sidebar">
-              <object class="AdwNavigationPage">
-                <property name="title" translatable="yes">Categories</property>
-                <property name="child">
-                  <object class="AdwToolbarView">
-                    <child type="top">
-                      <object class="AdwHeaderBar">
-                        <property name="show-title">false</property>
-                        <property name="show-start-title-buttons">false</property>
-                        <property name="show-end-title-buttons">false</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="label" translatable="yes">Categories</property>
-                            <style>
-                              <class name="heading"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-
-                    <property name="content">
-                      <object class="GtkScrolledWindow">
-                        <property name="hscrollbar-policy">never</property>
-                        <property name="vscrollbar-policy">automatic</property>
-                        <property name="child">
-                          <object class="GtkListBox" id="categories_listbox">
-                            <property name="selection-mode">single</property>
-                            <signal name="row-selected" handler="on_category_selected" swapped="no"/>
-                            <style>
-                              <class name="navigation-sidebar"/>
-                            </style>
-                            <accessibility>
-                              <property name="label" translatable="yes">Preferences categories</property>
-                              <property name="description" translatable="yes">Select a category to view its settings</property>
-                            </accessibility>
-
-                            <child>
-                              <object class="AdwActionRow" id="general_category_row">
-                                <property name="title" translatable="yes">General</property>
-                                <property name="subtitle" translatable="yes">Basic application settings</property>
-                                <property name="icon-name">preferences-other-symbolic</property>
-                                <property name="activatable">true</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwActionRow" id="trust_category_row">
-                                <property name="title" translatable="yes">Trust & Security</property>
-                                <property name="subtitle" translatable="yes">Package trust and safety</property>
-                                <property name="icon-name">security-high-symbolic</property>
-                                <property name="activatable">true</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwActionRow" id="developer_category_row">
-                                <property name="title" translatable="yes">Developer</property>
-                                <property name="subtitle" translatable="yes">Advanced development tools</property>
-                                <property name="icon-name">applications-development-symbolic</property>
-                                <property name="activatable">true</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwActionRow" id="build_category_row">
-                                <property name="title" translatable="yes">Build System</property>
-                                <property name="subtitle" translatable="yes">Compilation and build settings</property>
-                                <property name="icon-name">builder-symbolic</property>
-                                <property name="activatable">true</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwActionRow" id="advanced_category_row">
-                                <property name="title" translatable="yes">Advanced</property>
-                                <property name="subtitle" translatable="yes">Expert configuration options</property>
-                                <property name="icon-name">preferences-system-symbolic</property>
-                                <property name="activatable">true</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </property>
-                  </object>
-                </property>
-              </object>
-            </property>
-
-            <property name="content">
-              <object class="AdwNavigationPage" id="content_page">
-                <property name="title" translatable="yes">Settings</property>
-                <property name="child">
-                  <object class="AdwToolbarView">
-                    <child type="top">
-                      <object class="AdwHeaderBar">
-                        <property name="show-title">false</property>
-                        <property name="show-start-title-buttons">false</property>
-                        <property name="show-end-title-buttons">false</property>
-
-                        <child>
-                          <object class="GtkRevealer" id="search_revealer">
-                            <property name="reveal-child">false</property>
-                            <property name="transition-type">slide-down</property>
-                            <property name="child">
-                              <object class="GtkSearchEntry" id="search_entry">
-                                <property name="placeholder-text" translatable="yes">Search preferences...</property>
-                                <property name="margin-start">12</property>
-                                <property name="margin-end">12</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <signal name="search-changed" handler="on_search_changed" swapped="no"/>
-                                <accessibility>
-                                  <property name="label" translatable="yes">Search preferences and settings</property>
-                                </accessibility>
-                              </object>
-                            </property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-
-                    <property name="content">
-                      <object class="GtkScrolledWindow">
-                        <property name="hscrollbar-policy">never</property>
-                        <property name="vscrollbar-policy">automatic</property>
-
-                        <child>
-                          <object class="AdwClamp">
-                            <property name="maximum-size">700</property>
-                            <property name="tightening-threshold">500</property>
-
-                            <child>
-                              <object class="GtkStack" id="settings_stack">
-                                <property name="transition-type">slide-left-right</property>
-                                <property name="transition-duration">300</property>
-
-                                <child>
-                                  <object class="GtkStackPage">
-                                    <property name="name">general</property>
-                                    <property name="title" translatable="yes">General</property>
-                                    <property name="child">
-                                      <object class="GtkBox">
-                                        <property name="orientation">vertical</property>
-                                        <property name="spacing">24</property>
-                                        <property name="margin-top">24</property>
-                                        <property name="margin-bottom">24</property>
-                                        <property name="margin-start">24</property>
-                                        <property name="margin-end">24</property>
-
-                                        <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <property name="title" translatable="yes">General Settings</property>
-                                            <property name="description" translatable="yes">Basic application behavior and interface options</property>
-
-                                            <child>
-                                              <object class="AdwComboRow" id="editor_combo_row">
-                                                <property name="title" translatable="yes">Default Editor</property>
-                                                <property name="subtitle" translatable="yes">Text editor for viewing and editing files</property>
-                                                <property name="icon-name">accessories-text-editor-symbolic</property>
-                                                <property name="model">
-                                                  <object class="GtkStringList">
-                                                    <items>
-                                                      <item translatable="yes">Gedit</item>
-                                                      <item translatable="yes">VS Code</item>
-                                                      <item translatable="yes">Nano</item>
-                                                      <item translatable="yes">Vim</item>
-                                                      <item translatable="yes">Custom...</item>
-                                                    </items>
-                                                  </object>
-                                                </property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="editor_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Default Editor</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_editor_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="simplified_mode_switch_row">
-                                                <property name="title" translatable="yes">Simplified Interface</property>
-                                                <property name="subtitle" translatable="yes">Hide advanced options and use simplified workflows</property>
-                                                <property name="icon-name">view-dual-symbolic</property>
-                                                <property name="active">true</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="simplified_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Simplified Interface</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_simplified_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="auto_refresh_switch_row">
-                                                <property name="title" translatable="yes">Auto Refresh Updates</property>
-                                                <property name="subtitle" translatable="yes">Automatically check for package updates on startup</property>
-                                                <property name="icon-name">view-refresh-symbolic</property>
-                                                <property name="active">false</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="refresh_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Auto Refresh</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_refresh_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkStackPage">
-                                    <property name="name">trust</property>
-                                    <property name="title" translatable="yes">Trust & Security</property>
-                                    <property name="child">
-                                      <object class="GtkBox">
-                                        <property name="orientation">vertical</property>
-                                        <property name="spacing">24</property>
-                                        <property name="margin-top">24</property>
-                                        <property name="margin-bottom">24</property>
-                                        <property name="margin-start">24</property>
-                                        <property name="margin-end">24</property>
-
-                                        <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <property name="title" translatable="yes">Package Trust Settings</property>
-                                            <property name="description" translatable="yes">Control package verification and trust indicators</property>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="trust_icons_switch_row">
-                                                <property name="title" translatable="yes">Show Trust Icons</property>
-                                                <property name="subtitle" translatable="yes">Display trust level indicators for packages</property>
-                                                <property name="icon-name">security-high-symbolic</property>
-                                                <property name="active">true</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="trust_icons_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Trust Icons</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_trust_icons_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="block_unvoted_switch_row">
-                                                <property name="title" translatable="yes">Block Unvoted Packages</property>
-                                                <property name="subtitle" translatable="yes">Prevent installation of packages with no community votes</property>
-                                                <property name="icon-name">action-unavailable-symbolic</property>
-                                                <property name="active">false</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="unvoted_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Unvoted Packages</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_unvoted_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSpinRow" id="trust_score_spin_row">
-                                                <property name="title" translatable="yes">Minimum Trust Score</property>
-                                                <property name="subtitle" translatable="yes">Required minimum trust score for package installation</property>
-                                                <property name="icon-name">starred-symbolic</property>
-                                                <property name="adjustment">
-                                                  <object class="GtkAdjustment">
-                                                    <property name="lower">0</property>
-                                                    <property name="upper">100</property>
-                                                    <property name="step-increment">1</property>
-                                                    <property name="page-increment">10</property>
-                                                    <property name="value">50</property>
-                                                  </object>
-                                                </property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="trust_score_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Trust Score</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_trust_score_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkStackPage">
-                                    <property name="name">developer</property>
-                                    <property name="title" translatable="yes">Developer</property>
-                                    <property name="child">
-                                      <object class="GtkBox">
-                                        <property name="orientation">vertical</property>
-                                        <property name="spacing">24</property>
-                                        <property name="margin-top">24</property>
-                                        <property name="margin-bottom">24</property>
-                                        <property name="margin-start">24</property>
-                                        <property name="margin-end">24</property>
-
-                                        <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <property name="title" translatable="yes">Developer Settings</property>
-                                            <property name="description" translatable="yes">Advanced options for package development and debugging</property>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="clean_after_build_switch_row">
-                                                <property name="title" translatable="yes">Clean After Build</property>
-                                                <property name="subtitle" translatable="yes">Remove build directory after successful compilation</property>
-                                                <property name="icon-name">edit-clear-all-symbolic</property>
-                                                <property name="active">true</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="clean_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Clean After Build</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_clean_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="terminal_switch_row">
-                                                <property name="title" translatable="yes">Show Real-time Terminal</property>
-                                                <property name="subtitle" translatable="yes">Display live terminal output during operations</property>
-                                                <property name="icon-name">utilities-terminal-symbolic</property>
-                                                <property name="active">false</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="terminal_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Real-time Terminal</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_terminal_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="debug_mode_switch_row">
-                                                <property name="title" translatable="yes">Debug Mode</property>
-                                                <property name="subtitle" translatable="yes">Enable verbose debug output and logging</property>
-                                                <property name="icon-name">applications-debugging-symbolic</property>
-                                                <property name="active">false</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="debug_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Debug Mode</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_debug_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkStackPage">
-                                    <property name="name">build</property>
-                                    <property name="title" translatable="yes">Build System</property>
-                                    <property name="child">
-                                      <object class="GtkBox">
-                                        <property name="orientation">vertical</property>
-                                        <property name="spacing">24</property>
-                                        <property name="margin-top">24</property>
-                                        <property name="margin-bottom">24</property>
-                                        <property name="margin-start">24</property>
-                                        <property name="margin-end">24</property>
-
-                                        <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <property name="title" translatable="yes">Build Configuration</property>
-                                            <property name="description" translatable="yes">Settings for package compilation and build process</property>
-
-                                            <child>
-                                              <object class="AdwSpinRow" id="parallel_jobs_spin_row">
-                                                <property name="title" translatable="yes">Parallel Jobs</property>
-                                                <property name="subtitle" translatable="yes">Number of concurrent compilation processes</property>
-                                                <property name="icon-name">system-run-symbolic</property>
-                                                <property name="adjustment">
-                                                  <object class="GtkAdjustment">
-                                                    <property name="lower">1</property>
-                                                    <property name="upper">32</property>
-                                                    <property name="step-increment">1</property>
-                                                    <property name="page-increment">4</property>
-                                                    <property name="value">4</property>
-                                                  </object>
-                                                </property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="parallel_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Parallel Jobs</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_parallel_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwEntryRow" id="build_dir_entry_row">
-                                                <property name="title" translatable="yes">Build Directory</property>
-                                                <property name="subtitle" translatable="yes">Location for temporary build files</property>
-                                                <property name="icon-name">folder-symbolic</property>
-                                                <property name="text">/tmp/makepkg</property>
-                                                <child type="suffix">
-                                                  <object class="GtkBox">
-                                                    <property name="orientation">horizontal</property>
-                                                    <property name="spacing">6</property>
-
-                                                    <child>
-                                                      <object class="GtkButton" id="browse_build_dir_button">
-                                                        <property name="icon-name">folder-open-symbolic</property>
-                                                        <property name="tooltip-text" translatable="yes">Browse for directory</property>
-                                                        <property name="valign">center</property>
-                                                        <signal name="clicked" handler="on_browse_build_dir_clicked" swapped="no"/>
-                                                        <style>
-                                                          <class name="flat"/>
-                                                        </style>
-                                                      </object>
-                                                    </child>
-
-                                                    <child>
-                                                      <object class="GtkButton" id="build_dir_help_button">
-                                                        <property name="icon-name">help-browser-symbolic</property>
-                                                        <property name="tooltip-text" translatable="yes">Help: Build Directory</property>
-                                                        <property name="valign">center</property>
-                                                        <signal name="clicked" handler="on_build_dir_help_clicked" swapped="no"/>
-                                                        <style>
-                                                          <class name="flat"/>
-                                                        </style>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-
-                                            <child>
-                                              <object class="AdwSwitchRow" id="keep_source_switch_row">
-                                                <property name="title" translatable="yes">Keep Source Files</property>
-                                                <property name="subtitle" translatable="yes">Preserve downloaded source files after build completion</property>
-                                                <property name="icon-name">document-save-symbolic</property>
-                                                <property name="active">false</property>
-                                                <child type="suffix">
-                                                  <object class="GtkButton" id="keep_source_help_button">
-                                                    <property name="icon-name">help-browser-symbolic</property>
-                                                    <property name="tooltip-text" translatable="yes">Help: Keep Source Files</property>
-                                                    <property name="valign">center</property>
-                                                    <signal name="clicked" handler="on_keep_source_help_clicked" swapped="no"/>
-                                                    <style>
-                                                      <class name="flat"/>
-                                                    </style>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </property>
-              </object>
-            </property>
-          </object>
-        </property>
-
-        <child type="bottom">
-          <object class="AdwHeaderBar">
-            <property name="show-title">false</property>
-            <child type="start">
-              <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">12</property>
-
-                <child>
-                  <object class="GtkButton" id="reset_all_button">
-                    <property name="label" translatable="yes">Reset All to Defaults</property>
-                    <property name="tooltip-text" translatable="yes">Reset all preferences to default values</property>
-                    <property name="icon-name">edit-undo-symbolic</property>
-                    <signal name="clicked" handler="on_reset_all_clicked" swapped="no"/>
-                    <style>
-                      <class name="destructive-action"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Reset all preferences to defaults</property>
-                    </accessibility>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="import_button">
-                    <property name="label" translatable="yes">Import Settings</property>
-                    <property name="tooltip-text" translatable="yes">Import preferences from file</property>
-                    <property name="icon-name">document-open-symbolic</property>
-                    <signal name="clicked" handler="on_import_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Import preferences from file</property>
-                    </accessibility>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="export_button">
-                    <property name="label" translatable="yes">Export Settings</property>
-                    <property name="tooltip-text" translatable="yes">Export preferences to file</property>
-                    <property name="icon-name">document-save-symbolic</property>
-                    <signal name="clicked" handler="on_export_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Export preferences to file</property>
-                    </accessibility>
-                  </object>
-                </child>
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Trust &amp; Security</property>
+        <property name="icon-name">security-high-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Package Trust</property>
+            <child>
+              <object class="AdwSwitchRow" id="trust_icons_switch_row">
+                <property name="title" translatable="yes">Show Trust Icons</property>
+                <property name="subtitle" translatable="yes">Display trust level indicators for packages</property>
+                <property name="icon-name">security-high-symbolic</property>
+                <property name="active">True</property>
               </object>
             </child>
-            <child type="end">
-              <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="spacing">12</property>
-
-                <child>
-                  <object class="GtkButton" id="apply_button">
-                    <property name="label" translatable="yes">Apply</property>
-                    <property name="tooltip-text" translatable="yes">Apply changes and keep preferences open</property>
-                    <signal name="clicked" handler="on_apply_clicked" swapped="no"/>
-                    <accessibility>
-                      <property name="label" translatable="yes">Apply preference changes</property>
-                    </accessibility>
+            <child>
+              <object class="AdwSwitchRow" id="block_unvoted_switch_row">
+                <property name="title" translatable="yes">Block Unvoted Packages</property>
+                <property name="subtitle" translatable="yes">Prevent installation of packages with no community votes</property>
+                <property name="icon-name">action-unavailable-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="trust_score_spin_row">
+                <property name="title" translatable="yes">Minimum Trust Score</property>
+                <property name="subtitle" translatable="yes">Required minimum trust score for package installation</property>
+                <property name="icon-name">starred-symbolic</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">0</property>
+                    <property name="upper">100</property>
+                    <property name="step-increment">1</property>
+                    <property name="value">50</property>
                   </object>
-                </child>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
 
-                <child>
-                  <object class="GtkButton" id="apply_and_return_button">
-                    <property name="label" translatable="yes">Apply & Return</property>
-                    <property name="tooltip-text" translatable="yes">Apply changes and return to main interface</property>
-                    <signal name="clicked" handler="on_apply_and_return_clicked" swapped="no"/>
-                    <style>
-                      <class name="suggested-action"/>
-                    </style>
-                    <accessibility>
-                      <property name="label" translatable="yes">Apply changes and return to main interface</property>
-                    </accessibility>
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Developer</property>
+        <property name="icon-name">applications-development-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Developer Tools</property>
+            <child>
+              <object class="AdwSwitchRow" id="clean_after_build_switch_row">
+                <property name="title" translatable="yes">Clean After Build</property>
+                <property name="subtitle" translatable="yes">Remove build directory after successful compilation</property>
+                <property name="icon-name">edit-clear-all-symbolic</property>
+                <property name="active">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="terminal_switch_row">
+                <property name="title" translatable="yes">Show Real-time Terminal</property>
+                <property name="subtitle" translatable="yes">Display live terminal output during operations</property>
+                <property name="icon-name">utilities-terminal-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="debug_mode_switch_row">
+                <property name="title" translatable="yes">Debug Mode</property>
+                <property name="subtitle" translatable="yes">Enable verbose debug output and logging</property>
+                <property name="icon-name">applications-debugging-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Build System</property>
+        <property name="icon-name">builder-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Build Configuration</property>
+            <child>
+              <object class="AdwSpinRow" id="parallel_jobs_spin_row">
+                <property name="title" translatable="yes">Parallel Jobs</property>
+                <property name="subtitle" translatable="yes">Number of concurrent compilation processes</property>
+                <property name="icon-name">system-run-symbolic</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1</property>
+                    <property name="upper">32</property>
+                    <property name="step-increment">1</property>
+                    <property name="value">4</property>
                   </object>
-                </child>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow" id="build_dir_entry_row">
+                <property name="title" translatable="yes">Build Directory</property>
+                <property name="subtitle" translatable="yes">Location for temporary build files</property>
+                <property name="icon-name">folder-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="keep_source_switch_row">
+                <property name="title" translatable="yes">Keep Source Files</property>
+                <property name="subtitle" translatable="yes">Preserve downloaded source files after build</property>
+                <property name="icon-name">document-save-symbolic</property>
               </object>
             </child>
           </object>

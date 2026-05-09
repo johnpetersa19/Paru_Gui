@@ -5,7 +5,6 @@
     <style>
       <class name="card"/>
       <class name="package-card"/>
-      <class name="context-package-management"/>
     </style>
     <property name="margin-bottom">4</property>
     <property name="margin-end">4</property>
@@ -13,16 +12,12 @@
     <property name="margin-top">4</property>
     <property name="width-request">220</property>
     <property name="height-request">350</property>
-    <property name="hexpand">False</property>
-    <property name="vexpand">False</property>
     <property name="child">
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
-        <property name="spacing">0</property>
 
         <child>
           <object class="GtkBox" id="navigation_header">
-            <property name="orientation">horizontal</property>
             <property name="spacing">6</property>
             <property name="margin-top">8</property>
             <property name="margin-bottom">6</property>
@@ -33,41 +28,18 @@
               <object class="GtkButton" id="back_to_list_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text">Back to Package List</property>
-                <property name="has-frame">false</property>
-                <property name="halign">start</property>
+                <property name="has-frame">False</property>
                 <style>
                   <class name="flat"/>
-                  <class name="return-navigation"/>
                 </style>
               </object>
             </child>
 
             <child>
               <object class="GtkBox" id="breadcrumb_box">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">3</property>
-                <property name="hexpand">true</property>
+                <property name="hexpand">True</property>
                 <property name="halign">center</property>
-
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label">Main</property>
-                    <style>
-                      <class name="caption"/>
-                      <class name="dim-label"/>
-                    </style>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label">›</property>
-                    <style>
-                      <class name="breadcrumb-separator"/>
-                    </style>
-                  </object>
-                </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label">Packages</property>
@@ -77,16 +49,11 @@
                     </style>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel">
                     <property name="label">›</property>
-                    <style>
-                      <class name="breadcrumb-separator"/>
-                    </style>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel" id="package_name_breadcrumb">
                     <property name="label">Package</property>
@@ -98,18 +65,6 @@
                     </style>
                   </object>
                 </child>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="help_button">
-                <property name="icon-name">help-contents-symbolic</property>
-                <property name="tooltip-text">Package Help</property>
-                <property name="has-frame">false</property>
-                <property name="halign">end</property>
-                <style>
-                  <class name="flat"/>
-                </style>
               </object>
             </child>
           </object>
@@ -134,32 +89,24 @@
             <child>
               <object class="GtkBox" id="header_box">
                 <property name="spacing">8</property>
-
                 <child>
                   <object class="GtkImage" id="file_icon">
-                    <property name="icon-size">4</property>
                     <property name="icon-name">package-x-generic</property>
                     <property name="pixel-size">32</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkBox" id="signature_container">
                     <property name="halign">end</property>
                     <property name="hexpand">True</property>
                     <property name="spacing">4</property>
-
                     <child>
                       <object class="GtkImage" id="signature_icon">
-                        <property name="icon-size">1</property>
                         <property name="pixel-size">16</property>
-                        <property name="visible">True</property>
                       </object>
                     </child>
-
                     <child>
                       <object class="GtkLabel" id="signature_label">
-                        <property name="visible">True</property>
                         <property name="ellipsize">end</property>
                         <style>
                           <class name="caption"/>
@@ -189,7 +136,6 @@
 
             <child>
               <object class="GtkLabel" id="version_label">
-                <property name="wrap">False</property>
                 <property name="justify">center</property>
                 <property name="ellipsize">end</property>
                 <style>
@@ -224,110 +170,32 @@
               <object class="GtkBox" id="actions_box">
                 <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
-
                 <child>
                   <object class="GtkButton" id="install_button">
                     <property name="label">Install Package</property>
-                    <property name="tooltip-text">Install → Installation Dialog → Progress → Complete</property>
+                    <property name="tooltip-text">Install package</property>
                     <signal name="clicked" handler="on_install_clicked"/>
                     <style>
                       <class name="suggested-action"/>
-                      <class name="small-button"/>
                       <class name="pill"/>
                     </style>
                   </object>
                 </child>
-
-                <child>
-                  <object class="GtkMenuButton" id="install_sandbox_button">
-                    <property name="label">Install with Sandboxing</property>
-                    <property name="tooltip-text">Install in isolated environment → Sandbox Configuration → Install</property>
-                    <style>
-                      <class name="flat"/>
-                      <class name="pill"/>
-                    </style>
-
-                    <property name="popover">
-                      <object class="GtkPopover">
-                        <property name="position">bottom</property>
-
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">8</property>
-                            <property name="margin-top">8</property>
-                            <property name="margin-bottom">8</property>
-                            <property name="margin-start">8</property>
-                            <property name="margin-end">8</property>
-
-                            <style>
-                              <class name="popover-content"/>
-                            </style>
-
-                            <child>
-                              <object class="GtkComboBoxText" id="package_sandbox_level_combo">
-                                <property name="valign">center</property>
-                                <property name="hexpand">true</property>
-                                <property name="active">1</property>
-                                <items>
-                                  <item id="strict">Strict Isolation</item>
-                                  <item id="medium">Medium Isolation</item>
-                                  <item id="minimal">Minimal Isolation</item>
-                                </items>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkCheckButton" id="package_sandbox_network_check">
-                                <property name="label">Enable network access</property>
-                                <property name="active">false</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkCheckButton" id="package_sandbox_filesystem_check">
-                                <property name="label">Allow access to home directory</property>
-                                <property name="active">false</property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkButton" id="confirm_package_sandbox_install">
-                                <property name="label">Start Install</property>
-                                <style>
-                                  <class name="suggested-action"/>
-                                  <class name="pill"/>
-                                  <class name="small-button"/>
-                                </style>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-
                 <child>
                   <object class="GtkButton" id="info_button">
                     <property name="label">View Information</property>
-                    <property name="tooltip-text">View Details → Package Information Dialog → Dependencies/Files</property>
                     <signal name="clicked" handler="on_info_clicked"/>
                     <style>
-                      <class name="small-button"/>
                       <class name="flat"/>
                       <class name="pill"/>
                     </style>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkButton" id="verify_button">
                     <property name="label">Verify Signature</property>
-                    <property name="tooltip-text">Verify → Signature Check → Validation Result</property>
                     <signal name="clicked" handler="on_verify_clicked"/>
                     <style>
-                      <class name="small-button"/>
                       <class name="flat"/>
                       <class name="pill"/>
                     </style>
@@ -340,49 +208,28 @@
 
         <child>
           <object class="GtkRevealer" id="progress_revealer">
-            <property name="reveal-child">false</property>
             <property name="transition-type">slide-down</property>
-
             <child>
               <object class="GtkBox" id="progress_container">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <property name="margin-top">6</property>
                 <property name="margin-bottom">8</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
-
-                <style>
-                  <class name="progress-container"/>
-                </style>
-
                 <child>
                   <object class="GtkSpinner" id="operation_spinner">
-                    <property name="spinning">true</property>
+                    <property name="spinning">True</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkLabel" id="operation_status">
                     <property name="label">Processing...</property>
-                    <property name="hexpand">true</property>
-                    <property name="halign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="xalign">0</property>
                     <property name="ellipsize">end</property>
                     <style>
                       <class name="caption"/>
                       <class name="dim-label"/>
-                    </style>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkButton" id="cancel_operation_button">
-                    <property name="icon-name">process-stop-symbolic</property>
-                    <property name="tooltip-text">Cancel Operation</property>
-                    <property name="has-frame">false</property>
-                    <style>
-                      <class name="flat"/>
-                      <class name="destructive-action"/>
                     </style>
                   </object>
                 </child>
@@ -393,20 +240,17 @@
 
         <child>
           <object class="GtkBox" id="status_indicator">
-            <property name="orientation">horizontal</property>
             <property name="spacing">4</property>
             <property name="margin-start">12</property>
             <property name="margin-end">12</property>
             <property name="margin-bottom">8</property>
             <property name="halign">center</property>
-
             <child>
               <object class="GtkImage" id="status_icon">
                 <property name="icon-name">emblem-ok-symbolic</property>
                 <property name="pixel-size">12</property>
               </object>
             </child>
-
             <child>
               <object class="GtkLabel" id="status_text">
                 <property name="label">Ready to install</property>

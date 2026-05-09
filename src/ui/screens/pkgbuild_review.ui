@@ -7,687 +7,256 @@
     <property name="title" translatable="yes">PKGBUILD Security Review</property>
     <property name="content-width">750</property>
     <property name="content-height">800</property>
-    <property name="can-close">true</property>
+    <property name="can-close">True</property>
 
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">0</property>
-
-        <child>
-          <object class="GtkBox" id="navigation_header">
-            <property name="orientation">horizontal</property>
-            <property name="spacing">12</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
-            <property name="margin-top">16</property>
-            <property name="margin-bottom">12</property>
-            <style>
-              <class name="navigation-breadcrumb"/>
-            </style>
-
-            <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <child type="start">
               <object class="GtkButton" id="back_to_files_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to file list</property>
                 <signal name="clicked" handler="on_back_to_files_clicked"/>
                 <style>
                   <class name="flat"/>
-                  <class name="circular"/>
                 </style>
-                <accessibility>
-                  <property name="label" translatable="yes">Navigate back to file list</property>
-                </accessibility>
               </object>
             </child>
 
-            <child>
+            <property name="title-widget">
               <object class="GtkLabel" id="breadcrumb_label">
                 <property name="label" translatable="yes">Content › Build Directory › PKGBUILD › Review</property>
-                <property name="halign">start</property>
-                <property name="hexpand">true</property>
                 <property name="ellipsize">middle</property>
                 <style>
-                  <class name="breadcrumb"/>
                   <class name="caption"/>
                 </style>
               </object>
-            </child>
+            </property>
 
-            <child>
+            <child type="end">
               <object class="GtkButton" id="view_source_button">
                 <property name="icon-name">text-editor-symbolic</property>
                 <property name="tooltip-text" translatable="yes">View source directory</property>
                 <signal name="clicked" handler="on_view_source_clicked"/>
                 <style>
                   <class name="flat"/>
-                  <class name="circular"/>
                 </style>
-                <accessibility>
-                  <property name="label" translatable="yes">Open source directory in editor</property>
-                </accessibility>
               </object>
             </child>
           </object>
         </child>
 
-        <child>
-          <object class="GtkSeparator">
-            <property name="orientation">horizontal</property>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkScrolledWindow">
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="vexpand">true</property>
-
-            <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">20</property>
-                <property name="margin-top">16</property>
-                <property name="margin-bottom">16</property>
-                <property name="margin-start">16</property>
-                <property name="margin-end">16</property>
-                <style>
-                  <class name="view-section"/>
-                </style>
-
-                <child>
-                  <object class="GtkBox" id="package_header">
-                    <property name="orientation">horizontal</property>
-                    <property name="spacing">16</property>
-                    <property name="halign">fill</property>
-
-                    <child>
-                      <object class="GtkImage" id="package_icon">
-                        <property name="icon-name">text-x-script-symbolic</property>
-                        <property name="pixel-size">64</property>
-                        <property name="valign">start</property>
-                        <accessibility>
-                          <property name="label" translatable="yes">Package build script icon</property>
-                        </accessibility>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkBox" id="package_details">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <property name="hexpand">true</property>
-                        <property name="valign">start</property>
-
-                        <child>
-                          <object class="GtkLabel" id="package_name_label">
-                            <property name="label">package-name</property>
-                            <property name="halign">start</property>
-                            <property name="ellipsize">end</property>
-                            <style>
-                              <class name="title-2"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkLabel" id="package_version_label">
-                            <property name="label">Version: 1.0.0</property>
-                            <property name="halign">start</property>
-                            <style>
-                              <class name="subtitle"/>
-                              <class name="dim-label"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkLabel" id="package_metadata_label">
-                            <property name="label">Source: AUR | Votes: 100 | Popularity: 0.5</property>
-                            <property name="halign">start</property>
-                            <property name="ellipsize">end</property>
-                            <style>
-                              <class name="caption"/>
-                              <class name="dim-label"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkBox" id="version_comparison_container">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">8</property>
-                        <property name="valign">start</property>
-                        <property name="visible">false</property>
-
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="label" translatable="yes">Version Comparison</property>
-                            <property name="halign">start</property>
-                            <style>
-                              <class name="heading"/>
-                            </style>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkFrame" id="version_comparison_frame">
-                            <style>
-                              <class name="view"/>
-                            </style>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">4</property>
-                                <property name="margin-top">8</property>
-                                <property name="margin-bottom">8</property>
-                                <property name="margin-start">12</property>
-                                <property name="margin-end">12</property>
-
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
-                                    <property name="spacing">8</property>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Current:</property>
-                                        <property name="halign">start</property>
-                                        <style>
-                                          <class name="caption"/>
-                                          <class name="dim-label"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="current_version_label">
-                                        <property name="label">1.0.0</property>
-                                        <property name="halign">start</property>
-                                        <style>
-                                          <class name="caption"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
-                                    <property name="spacing">8</property>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="label" translatable="yes">New:</property>
-                                        <property name="halign">start</property>
-                                        <style>
-                                          <class name="caption"/>
-                                          <class name="dim-label"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="new_version_label">
-                                        <property name="label">1.1.0</property>
-                                        <property name="halign">start</property>
-                                        <style>
-                                          <class name="caption"/>
-                                          <class name="accent"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkBox" id="edit_flow_container">
-                    <property name="orientation">horizontal</property>
-                    <property name="spacing">12</property>
-                    <property name="halign">center</property>
-                    <style>
-                      <class name="linked"/>
-                    </style>
-
-                    <child>
-                      <object class="GtkButton" id="edit_pkgbuild_button">
-                        <property name="label" translatable="yes">Edit PKGBUILD</property>
-                        <property name="tooltip-text" translatable="yes">Open PKGBUILD in editor for modifications</property>
-                        <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">→</property>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkButton" id="save_changes_button">
-                        <property name="label" translatable="yes">Save Changes</property>
-                        <property name="tooltip-text" translatable="yes">Save modifications and continue review</property>
-                        <property name="sensitive">false</property>
-                        <signal name="clicked" handler="on_save_changes_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                          <class name="suggested-action"/>
-                        </style>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">→</property>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="GtkButton" id="continue_review_button">
-                        <property name="label" translatable="yes">Continue Review</property>
-                        <property name="tooltip-text" translatable="yes">Proceed with security review</property>
-                        <signal name="clicked" handler="on_continue_review_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="AdwViewSwitcher" id="review_switcher">
-                    <property name="stack">review_stack</property>
-                    <property name="policy">wide</property>
-                    <style>
-                      <class name="view-switcher"/>
-                    </style>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="AdwViewStack" id="review_stack">
-                    <property name="vexpand">true</property>
-
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="name">diff-review</property>
-                        <property name="title" translatable="yes">Changes Analysis</property>
-                        <property name="icon-name">edit-find-replace-symbolic</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">16</property>
-
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label" translatable="yes">Review critical changes in the PKGBUILD that may affect security and functionality.</property>
-                                <property name="halign">start</property>
-                                <property name="wrap">true</property>
-                                <property name="wrap-mode">word</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">8</property>
-
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="orientation">horizontal</property>
-                                    <property name="spacing">8</property>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="label" translatable="yes">Source URLs and Dependencies</property>
-                                        <property name="halign">start</property>
-                                        <property name="hexpand">true</property>
-                                        <style>
-                                          <class name="heading"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="view_full_diff_button">
-                                        <property name="label" translatable="yes">View Full Diff</property>
-                                        <property name="tooltip-text" translatable="yes">Open complete diff in external viewer</property>
-                                        <signal name="clicked" handler="on_view_full_diff_clicked"/>
-                                        <style>
-                                          <class name="flat"/>
-                                          <class name="pill"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkFrame">
-                                    <style>
-                                      <class name="view"/>
-                                    </style>
-                                    <child>
-                                      <object class="GtkScrolledWindow">
-                                        <property name="height-request">200</property>
-                                        <property name="hscrollbar-policy">automatic</property>
-                                        <property name="vscrollbar-policy">automatic</property>
-                                        <child>
-                                          <object class="GtkTextView" id="source_diff_view">
-                                            <property name="editable">false</property>
-                                            <property name="monospace">true</property>
-                                            <property name="margin-top">8</property>
-                                            <property name="margin-bottom">8</property>
-                                            <property name="margin-start">8</property>
-                                            <property name="margin-end">8</property>
-                                            <property name="wrap-mode">none</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">8</property>
-
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Build Functions and Scripts</property>
-                                    <property name="halign">start</property>
-                                    <style>
-                                      <class name="heading"/>
-                                    </style>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="GtkFrame">
-                                    <style>
-                                      <class name="view"/>
-                                    </style>
-                                    <child>
-                                      <object class="GtkScrolledWindow">
-                                        <property name="height-request">150</property>
-                                        <property name="hscrollbar-policy">automatic</property>
-                                        <property name="vscrollbar-policy">automatic</property>
-                                        <child>
-                                          <object class="GtkTextView" id="build_functions_view">
-                                            <property name="editable">false</property>
-                                            <property name="monospace">true</property>
-                                            <property name="margin-top">8</property>
-                                            <property name="margin-bottom">8</property>
-                                            <property name="margin-start">8</property>
-                                            <property name="margin-end">8</property>
-                                            <property name="wrap-mode">none</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="name">security-analysis</property>
-                        <property name="title" translatable="yes">Security Checklist</property>
-                        <property name="icon-name">security-high-symbolic</property>
-                        <property name="child">
-                          <object class="AdwPreferencesPage">
-                            <child>
-                              <object class="AdwPreferencesGroup">
-                                <property name="title" translatable="yes">Critical Security Risks</property>
-                                <property name="description" translatable="yes">Review these potential security issues before building.</property>
-
-                                <child>
-                                  <object class="AdwSwitchRow" id="risk_sudo_commands">
-                                    <property name="title" translatable="yes">Contains sudo or privileged commands</property>
-                                    <property name="subtitle" translatable="yes">Package may request elevated privileges during build</property>
-                                    <property name="icon-name">dialog-warning-symbolic</property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="AdwSwitchRow" id="risk_unverified_sources">
-                                    <property name="title" translatable="yes">Unverified or suspicious source URLs</property>
-                                    <property name="subtitle" translatable="yes">Sources from non-standard or untrustworthy locations</property>
-                                    <property name="icon-name">dialog-error-symbolic</property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="AdwSwitchRow" id="risk_network_access">
-                                    <property name="title" translatable="yes">Network access during build</property>
-                                    <property name="subtitle" translatable="yes">Build process may download additional content</property>
-                                    <property name="icon-name">network-wireless-symbolic</property>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="AdwSwitchRow" id="risk_system_modification">
-                                    <property name="title" translatable="yes">Potential system file modification</property>
-                                    <property name="subtitle" translatable="yes">May modify files outside package directory</property>
-                                    <property name="icon-name">folder-open-symbolic</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwPreferencesGroup">
-                                <property name="title" translatable="yes">Security Analysis Report</property>
-
-                                <child>
-                                  <object class="GtkFrame">
-                                    <style>
-                                      <class name="view"/>
-                                    </style>
-                                    <child>
-                                      <object class="GtkScrolledWindow">
-                                        <property name="height-request">180</property>
-                                        <property name="hscrollbar-policy">never</property>
-                                        <property name="vscrollbar-policy">automatic</property>
-                                        <child>
-                                          <object class="GtkTextView" id="security_analysis_view">
-                                            <property name="editable">false</property>
-                                            <property name="wrap-mode">word</property>
-                                            <property name="margin-top">12</property>
-                                            <property name="margin-bottom">12</property>
-                                            <property name="margin-start">12</property>
-                                            <property name="margin-end">12</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="name">build-configuration</property>
-                        <property name="title" translatable="yes">Build Settings</property>
-                        <property name="icon-name">applications-engineering-symbolic</property>
-                        <property name="child">
-                          <object class="AdwPreferencesPage">
-                            <child>
-                              <object class="AdwPreferencesGroup">
-                                <property name="title" translatable="yes">Build Environment Configuration</property>
-
-                                <child>
-                                  <object class="AdwExpanderRow" id="sandbox_settings">
-                                    <property name="title" translatable="yes">Sandbox Isolation</property>
-                                    <property name="subtitle" translatable="yes">Isolate build process from system</property>
-                                    <property name="show-enable-switch">true</property>
-                                    <property name="enable-expansion">true</property>
-
-                                    <child type="row">
-                                      <object class="AdwComboRow" id="isolation_level_row">
-                                        <property name="title" translatable="yes">Isolation Level</property>
-                                        <property name="model">
-                                          <object class="GtkStringList">
-                                            <items>
-                                              <item translatable="yes">Strict Isolation</item>
-                                              <item translatable="yes">Medium Isolation (Recommended)</item>
-                                              <item translatable="yes">Minimal Isolation</item>
-                                            </items>
-                                          </object>
-                                        </property>
-                                        <property name="selected">1</property>
-                                      </object>
-                                    </child>
-
-                                    <child type="row">
-                                      <object class="AdwSwitchRow" id="clean_after_build">
-                                        <property name="title" translatable="yes">Clean after build (--cleanafter)</property>
-                                        <property name="subtitle" translatable="yes">Remove sources and build directory after successful build</property>
-                                        <property name="active">true</property>
-                                      </object>
-                                    </child>
-
-                                    <child type="row">
-                                      <object class="AdwSwitchRow" id="force_rebuild">
-                                        <property name="title" translatable="yes">Force rebuild (--rebuild)</property>
-                                        <property name="subtitle" translatable="yes">Re-download sources and force complete rebuild</property>
-                                        <property name="active">false</property>
-                                      </object>
-                                    </child>
-
-                                    <child type="row">
-                                      <object class="AdwSwitchRow" id="no_network_access">
-                                        <property name="title" translatable="yes">Disable network access</property>
-                                        <property name="subtitle" translatable="yes">Block network connections during build</property>
-                                        <property name="active">false</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="AdwActionRow" id="build_options_row">
-                                    <property name="title" translatable="yes">Additional Build Options</property>
-                                    <property name="subtitle" translatable="yes">Custom flags and arguments</property>
-
-                                    <child type="suffix">
-                                      <object class="GtkButton" id="configure_options_button">
-                                        <property name="label" translatable="yes">Configure</property>
-                                        <property name="tooltip-text" translatable="yes">Configure additional build options</property>
-                                        <signal name="clicked" handler="on_configure_options_clicked"/>
-                                        <style>
-                                          <class name="flat"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwPreferencesGroup">
-                                <property name="title" translatable="yes">Build Shortcuts</property>
-
-                                <child>
-                                  <object class="AdwActionRow" id="skip_review_row">
-                                    <property name="title" translatable="yes">Skip review (--skipreview)</property>
-                                    <property name="subtitle" translatable="yes">Bypass security review for trusted packages</property>
-
-                                    <child type="suffix">
-                                      <object class="GtkButton" id="skip_review_build_button">
-                                        <property name="label" translatable="yes">Build Now</property>
-                                        <property name="tooltip-text" translatable="yes">Skip review and build immediately</property>
-                                        <signal name="clicked" handler="on_skip_review_build_clicked"/>
-                                        <style>
-                                          <class name="flat"/>
-                                          <class name="destructive-action"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-
-                                <child>
-                                  <object class="AdwActionRow" id="skip_devel_row">
-                                    <property name="title" translatable="yes">Skip development dependencies (--nodevel)</property>
-                                    <property name="subtitle" translatable="yes">Build without updating development packages</property>
-
-                                    <child type="suffix">
-                                      <object class="GtkButton" id="skip_devel_build_button">
-                                        <property name="label" translatable="yes">Build</property>
-                                        <property name="tooltip-text" translatable="yes">Build without development dependencies</property>
-                                        <signal name="clicked" handler="on_skip_devel_build_clicked"/>
-                                        <style>
-                                          <class name="flat"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkSeparator">
-            <property name="orientation">horizontal</property>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkBox" id="action_area">
-            <property name="orientation">horizontal</property>
-            <property name="spacing">8</property>
+        <property name="content">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
             <property name="margin-top">16</property>
             <property name="margin-bottom">16</property>
             <property name="margin-start">16</property>
             <property name="margin-end">16</property>
 
             <child>
+              <object class="GtkBox" id="package_header">
+                <property name="spacing">16</property>
+                <child>
+                  <object class="GtkImage" id="package_icon">
+                    <property name="icon-name">text-x-script-symbolic</property>
+                    <property name="pixel-size">64</property>
+                    <property name="valign">start</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkBox" id="package_details">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkLabel" id="package_name_label">
+                        <property name="label">package-name</property>
+                        <property name="halign">start</property>
+                        <property name="ellipsize">end</property>
+                        <style>
+                          <class name="title-2"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="package_version_label">
+                        <property name="label">Version: 1.0.0</property>
+                        <property name="halign">start</property>
+                        <style>
+                          <class name="subtitle"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="edit_flow_container">
+                <property name="spacing">12</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="linked"/>
+                </style>
+                <child>
+                  <object class="GtkButton" id="edit_pkgbuild_button">
+                    <property name="label" translatable="yes">Edit PKGBUILD</property>
+                    <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="save_changes_button">
+                    <property name="label" translatable="yes">Save Changes</property>
+                    <property name="sensitive">False</property>
+                    <signal name="clicked" handler="on_save_changes_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="continue_review_button">
+                    <property name="label" translatable="yes">Continue Review</property>
+                    <signal name="clicked" handler="on_continue_review_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwViewSwitcher" id="review_switcher">
+                <property name="stack">review_stack</property>
+                <property name="policy">wide</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwViewStack" id="review_stack">
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">diff-review</property>
+                    <property name="title" translatable="yes">Changes Analysis</property>
+                    <property name="icon-name">edit-find-replace-symbolic</property>
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">16</property>
+                        <child>
+                          <object class="GtkFrame">
+                            <style>
+                              <class name="view"/>
+                            </style>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="height-request">200</property>
+                                <child>
+                                  <object class="GtkTextView" id="source_diff_view">
+                                    <property name="editable">False</property>
+                                    <property name="monospace">True</property>
+                                    <property name="margin-top">8</property>
+                                    <property name="margin-bottom">8</property>
+                                    <property name="margin-start">8</property>
+                                    <property name="margin-end">8</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">security-analysis</property>
+                    <property name="title" translatable="yes">Security Checklist</property>
+                    <property name="icon-name">security-high-symbolic</property>
+                    <property name="child">
+                      <object class="AdwPreferencesPage">
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Critical Security Risks</property>
+                            <child>
+                              <object class="AdwSwitchRow" id="risk_sudo_commands">
+                                <property name="title" translatable="yes">Contains sudo commands</property>
+                                <property name="icon-name">dialog-warning-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwSwitchRow" id="risk_unverified_sources">
+                                <property name="title" translatable="yes">Unverified source URLs</property>
+                                <property name="icon-name">dialog-error-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">build-configuration</property>
+                    <property name="title" translatable="yes">Build Settings</property>
+                    <property name="icon-name">applications-engineering-symbolic</property>
+                    <property name="child">
+                      <object class="AdwPreferencesPage">
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <property name="title" translatable="yes">Build Environment</property>
+                            <child>
+                              <object class="AdwExpanderRow" id="sandbox_settings">
+                                <property name="title" translatable="yes">Sandbox Isolation</property>
+                                <property name="show-enable-switch">True</property>
+                                <child type="row">
+                                  <object class="AdwComboRow" id="isolation_level_row">
+                                    <property name="title" translatable="yes">Isolation Level</property>
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item translatable="yes">Strict</item>
+                                          <item translatable="yes">Medium</item>
+                                          <item translatable="yes">Minimal</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+
+        <child type="bottom">
+          <object class="GtkActionBar" id="action_area">
+            <child type="start">
               <object class="GtkButton" id="cancel_review_button">
-                <property name="label" translatable="yes">Cancel Review</property>
-                <property name="tooltip-text" translatable="yes">Cancel security review and return to package list</property>
+                <property name="label" translatable="yes">Cancel</property>
                 <signal name="clicked" handler="on_cancel_review_clicked"/>
                 <style>
                   <class name="pill"/>
@@ -695,45 +264,39 @@
               </object>
             </child>
 
-            <child>
-              <object class="GtkBox" id="spacer_box">
-                <property name="hexpand">true</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="previous_step_button">
-                <property name="label" translatable="yes">Previous</property>
-                <property name="tooltip-text" translatable="yes">Go to previous review step</property>
-                <property name="visible">false</property>
-                <signal name="clicked" handler="on_previous_step_clicked"/>
-                <style>
-                  <class name="pill"/>
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="next_step_button">
-                <property name="label" translatable="yes">Next</property>
-                <property name="tooltip-text" translatable="yes">Go to next review step</property>
-                <signal name="clicked" handler="on_next_step_clicked"/>
-                <style>
-                  <class name="pill"/>
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="build_after_review_button">
-                <property name="label" translatable="yes">Build Package</property>
-                <property name="tooltip-text" translatable="yes">Proceed with package build after completing security review</property>
-                <property name="visible">false</property>
-                <signal name="clicked" handler="on_build_after_review_clicked"/>
-                <style>
-                  <class name="suggested-action"/>
-                  <class name="pill"/>
-                </style>
+            <child type="end">
+              <object class="GtkBox">
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="previous_step_button">
+                    <property name="label" translatable="yes">Previous</property>
+                    <property name="visible">False</property>
+                    <signal name="clicked" handler="on_previous_step_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="next_step_button">
+                    <property name="label" translatable="yes">Next</property>
+                    <signal name="clicked" handler="on_next_step_clicked"/>
+                    <style>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="build_after_review_button">
+                    <property name="label" translatable="yes">Build Package</property>
+                    <property name="visible">False</property>
+                    <signal name="clicked" handler="on_build_after_review_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
