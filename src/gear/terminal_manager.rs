@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::process::{Command, Child};
-use std::path::Path;
 use std::env;
 use which::which;
 use shlex;
@@ -173,7 +172,10 @@ impl TerminalManager {
             
             if !cfg.execute.is_empty() {
                 args.extend(cfg.execute.clone());
-                let mut cmd_str = command.iter().map(|s| shlex::quote(s)).collect::<Vec<_>>().join(" ");
+                let mut cmd_str = command.iter()
+            .map(|s| shlex::try_quote(s).unwrap_or_else(|_| std::borrow::Cow::Borrowed(s)).into_owned())
+            .collect::<Vec<_>>()
+            .join(" ");
                 if hold_open && cfg.hold.is_empty() {
                     cmd_str.push_str("; exec bash");
                 }

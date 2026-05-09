@@ -1,6 +1,5 @@
 use rusqlite::{params, Connection, Result};
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::fs;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};

@@ -1,5 +1,5 @@
 use gtk::prelude::*;
-use adw::prelude::*;
+// use adw::prelude::*;
 use gtk::gio::Settings;
 use std::sync::{Arc, Mutex};
 

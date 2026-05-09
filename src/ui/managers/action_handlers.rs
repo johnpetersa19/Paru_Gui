@@ -1,4 +1,3 @@
-use gtk::prelude::*;
 
 pub struct ActionHandlers {
 }

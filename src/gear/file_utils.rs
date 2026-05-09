@@ -1,7 +1,6 @@
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
-use std::io::{self, Read};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tempfile::TempDir;

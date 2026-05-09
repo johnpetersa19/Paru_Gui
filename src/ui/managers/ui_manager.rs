@@ -1,5 +1,3 @@
-use gtk::prelude::*;
-use adw::prelude::*;
 
 pub struct UiManager {
     // UI components and state

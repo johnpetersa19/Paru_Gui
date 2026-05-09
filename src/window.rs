@@ -147,7 +147,7 @@ mod imp {
         }
 
         #[template_callback]
-        fn on_notification_response(&self, _info_bar: &gtk::InfoBar, _response_id: i32) {
+        fn on_notification_response(&self, _info_bar: &glib::Object, _response_id: i32) {
             self.notification_revealer.set_reveal_child(false);
         }
 

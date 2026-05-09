@@ -1,13 +1,7 @@
-use std::collections::HashMap;
-use std::process::Command;
-use std::path::Path;
 use std::fs;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use reqwest::blocking::Client;
-use chrono::{DateTime, Utc, Duration};
-use scraper::{Html, Selector};
-use url::{Url};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum UpdateSourceType {

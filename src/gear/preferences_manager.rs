@@ -1,10 +1,8 @@
-use gtk::{gio, glib};
-use gtk::gio::prelude::*;
-use adw::prelude::*;
-use serde::{Deserialize, Serialize};
+use gtk::gio;
 use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
+use gtk::gio::prelude::*;
+// use adw::prelude::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EditorChoice {

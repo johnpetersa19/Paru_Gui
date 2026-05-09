@@ -1,6 +1,5 @@
-    Blocking waiting for file lock on build directory
-   4.950443071s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru-gui) target="paru-gui"}: cargo::core::compiler::fingerprint: fingerprint error for paru-gui v0.1.0 (/home/john/Projects/Paru-gui)/Check { test: false }/TargetInner { name: "paru-gui", doc: true, ..: with_path("/home/john/Projects/Paru-gui/src/main.rs", Edition2021) }
-   4.950487735s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru-gui) target="paru-gui"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru-gui/target/debug/.fingerprint/paru-gui-a29aeae96928acdc/bin-paru-gui`
+   0.209071334s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru_Gui) target="paru-gui"}: cargo::core::compiler::fingerprint: fingerprint error for paru-gui v0.1.0 (/home/john/Projects/Paru_Gui)/Check { test: false }/TargetInner { name: "paru-gui", doc: true, ..: with_path("/home/john/Projects/Paru_Gui/src/main.rs", Edition2021) }
+   0.209107557s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru_Gui) target="paru-gui"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/paru-gui-66c183a2a876a9f0/bin-paru-gui`
 
 Caused by:
     No such file or directory (os error 2)
@@ -23,8 +22,8 @@ Stack backtrace:
   14: <unknown>
   15: __libc_start_main
   16: <unknown>
-   5.069512093s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru-gui) target="paru-gui"}: cargo::core::compiler::fingerprint: fingerprint error for paru-gui v0.1.0 (/home/john/Projects/Paru-gui)/Check { test: true }/TargetInner { name: "paru-gui", doc: true, ..: with_path("/home/john/Projects/Paru-gui/src/main.rs", Edition2021) }
-   5.069542446s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru-gui) target="paru-gui"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru-gui/target/debug/.fingerprint/paru-gui-fa8bda9d954e9041/test-bin-paru-gui`
+   0.211969485s  INFO prepare_target{force=false package_id=chrono v0.4.44 target="chrono"}: cargo::core::compiler::fingerprint: fingerprint error for chrono v0.4.44/Check { test: false }/TargetInner { ..: lib_target("chrono", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/chrono-0.4.44/src/lib.rs", Edition2021) }
+   0.211990604s  INFO prepare_target{force=false package_id=chrono v0.4.44 target="chrono"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/chrono-3e623ccae938f014/lib-chrono`
 
 Caused by:
     No such file or directory (os error 2)
@@ -45,9 +44,4726 @@ Stack backtrace:
   12: <unknown>
   13: <unknown>
   14: <unknown>
-  15: __libc_start_main
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.212285281s  INFO prepare_target{force=false package_id=iana-time-zone v0.1.65 target="iana_time_zone"}: cargo::core::compiler::fingerprint: fingerprint error for iana-time-zone v0.1.65/Check { test: false }/TargetInner { ..: lib_target("iana_time_zone", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/iana-time-zone-0.1.65/src/lib.rs", Edition2021) }
+   0.212298575s  INFO prepare_target{force=false package_id=iana-time-zone v0.1.65 target="iana_time_zone"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/iana-time-zone-7bdbdea62e30a0f9/lib-iana_time_zone`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
   16: <unknown>
-    Checking paru-gui v0.1.0 (/home/john/Projects/Paru-gui)
-error: could not compile `paru-gui` (bin "paru-gui") due to 1 previous error; 41 warnings emitted
-warning: build failed, waiting for other jobs to finish...
-error: could not compile `paru-gui` (bin "paru-gui" test) due to 1 previous error; 41 warnings emitted
+  17: __libc_start_main
+  18: <unknown>
+   0.212456033s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint: fingerprint error for num-traits v0.2.19/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_traits", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/num-traits-0.2.19/src/lib.rs", Edition2021) }
+   0.212468629s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/num-traits-6e309479e9ca12ce/lib-num_traits`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.212957319s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs", Edition2021) }
+   0.212971577s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/serde-6826ba7d3e268171/lib-serde`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.213337152s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_core-1.0.228/src/lib.rs", Edition2021) }
+   0.213349614s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/serde_core-5998f595952b7bd6/lib-serde_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.214911704s  INFO prepare_target{force=false package_id=dirs v5.0.1 target="dirs"}: cargo::core::compiler::fingerprint: fingerprint error for dirs v5.0.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("dirs", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/dirs-5.0.1/src/lib.rs", Edition2015) }
+   0.214931631s  INFO prepare_target{force=false package_id=dirs v5.0.1 target="dirs"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/dirs-2b2b694f1dfdf3d6/lib-dirs`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.215128954s  INFO prepare_target{force=false package_id=dirs-sys v0.4.1 target="dirs_sys"}: cargo::core::compiler::fingerprint: fingerprint error for dirs-sys v0.4.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("dirs_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/dirs-sys-0.4.1/src/lib.rs", Edition2015) }
+   0.215141551s  INFO prepare_target{force=false package_id=dirs-sys v0.4.1 target="dirs_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/dirs-sys-b324b625f363f689/lib-dirs_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.215320715s  INFO prepare_target{force=false package_id=libc v0.2.186 target="libc"}: cargo::core::compiler::fingerprint: fingerprint error for libc v0.2.186/Check { test: false }/TargetInner { ..: lib_target("libc", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.186/src/lib.rs", Edition2021) }
+   0.215332625s  INFO prepare_target{force=false package_id=libc v0.2.186 target="libc"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/libc-2a67098796e23e8d/lib-libc`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.215676753s  INFO prepare_target{force=false package_id=option-ext v0.2.0 target="option_ext"}: cargo::core::compiler::fingerprint: fingerprint error for option-ext v0.2.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("option_ext", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/option-ext-0.2.0/src/lib.rs", Edition2015) }
+   0.215691968s  INFO prepare_target{force=false package_id=option-ext v0.2.0 target="option_ext"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/option-ext-37062a31808ac664/lib-option_ext`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.215857251s  INFO prepare_target{force=false package_id=gettext-rs v0.7.7 target="gettextrs"}: cargo::core::compiler::fingerprint: fingerprint error for gettext-rs v0.7.7/Check { test: false }/TargetInner { ..: lib_target("gettextrs", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gettext-rs-0.7.7/src/lib.rs", Edition2015) }
+   0.215870374s  INFO prepare_target{force=false package_id=gettext-rs v0.7.7 target="gettextrs"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gettext-rs-eb56bbfbd7d05862/lib-gettextrs`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.216077695s  INFO prepare_target{force=false package_id=gettext-sys v0.26.0 target="gettext_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gettext-sys v0.26.0/Check { test: false }/TargetInner { ..: lib_target("gettext_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gettext-sys-0.26.0/lib.rs", Edition2015) }
+   0.216090828s  INFO prepare_target{force=false package_id=gettext-sys v0.26.0 target="gettext_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gettext-sys-63e784bf0762a9b9/lib-gettext_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.216508417s  INFO prepare_target{force=false package_id=locale_config v0.3.0 target="locale_config"}: cargo::core::compiler::fingerprint: fingerprint error for locale_config v0.3.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("locale_config", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/locale_config-0.3.0/src/lib.rs", Edition2015) }
+   0.216522522s  INFO prepare_target{force=false package_id=locale_config v0.3.0 target="locale_config"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/locale_config-72c1bbf8491b421f/lib-locale_config`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.216699576s  INFO prepare_target{force=false package_id=lazy_static v1.5.0 target="lazy_static"}: cargo::core::compiler::fingerprint: fingerprint error for lazy_static v1.5.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("lazy_static", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lazy_static-1.5.0/src/lib.rs", Edition2015) }
+   0.216709531s  INFO prepare_target{force=false package_id=lazy_static v1.5.0 target="lazy_static"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/lazy_static-55d89f621a41f331/lib-lazy_static`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.216853007s  INFO prepare_target{force=false package_id=regex v1.12.3 target="regex"}: cargo::core::compiler::fingerprint: fingerprint error for regex v1.12.3/Check { test: false }/TargetInner { ..: lib_target("regex", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-1.12.3/src/lib.rs", Edition2021) }
+   0.216862414s  INFO prepare_target{force=false package_id=regex v1.12.3 target="regex"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/regex-bb16b53e3c5cbd41/lib-regex`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.217088522s  INFO prepare_target{force=false package_id=aho-corasick v1.1.4 target="aho_corasick"}: cargo::core::compiler::fingerprint: fingerprint error for aho-corasick v1.1.4/Check { test: false }/TargetInner { ..: lib_target("aho_corasick", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aho-corasick-1.1.4/src/lib.rs", Edition2021) }
+   0.217098507s  INFO prepare_target{force=false package_id=aho-corasick v1.1.4 target="aho_corasick"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/aho-corasick-34983702fd389315/lib-aho_corasick`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.217267283s  INFO prepare_target{force=false package_id=memchr v2.8.0 target="memchr"}: cargo::core::compiler::fingerprint: fingerprint error for memchr v2.8.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("memchr", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/memchr-2.8.0/src/lib.rs", Edition2021) }
+   0.217277013s  INFO prepare_target{force=false package_id=memchr v2.8.0 target="memchr"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/memchr-53adac4fd3b6f540/lib-memchr`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.217420892s  INFO prepare_target{force=false package_id=regex-automata v0.4.14 target="regex_automata"}: cargo::core::compiler::fingerprint: fingerprint error for regex-automata v0.4.14/Check { test: false }/TargetInner { benched: false, ..: lib_target("regex_automata", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-automata-0.4.14/src/lib.rs", Edition2021) }
+   0.217430509s  INFO prepare_target{force=false package_id=regex-automata v0.4.14 target="regex_automata"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/regex-automata-b15b64530dc7d271/lib-regex_automata`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.217645861s  INFO prepare_target{force=false package_id=regex-syntax v0.8.10 target="regex_syntax"}: cargo::core::compiler::fingerprint: fingerprint error for regex-syntax v0.8.10/Check { test: false }/TargetInner { ..: lib_target("regex_syntax", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-syntax-0.8.10/src/lib.rs", Edition2021) }
+   0.217655327s  INFO prepare_target{force=false package_id=regex-syntax v0.8.10 target="regex_syntax"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/regex-syntax-ef38442beb9b0980/lib-regex_syntax`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.217815748s  INFO prepare_target{force=false package_id=gtk4 v0.9.7 target="gtk4"}: cargo::core::compiler::fingerprint: fingerprint error for gtk4 v0.9.7/Check { test: false }/TargetInner { ..: lib_target("gtk4", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gtk4-0.9.7/src/lib.rs", Edition2021) }
+   0.217826374s  INFO prepare_target{force=false package_id=gtk4 v0.9.7 target="gtk4"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gtk4-d7a3de8ecedf13c7/lib-gtk4`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.219244608s  INFO prepare_target{force=false package_id=cairo-rs v0.20.12 target="cairo"}: cargo::core::compiler::fingerprint: fingerprint error for cairo-rs v0.20.12/Check { test: false }/TargetInner { ..: lib_target("cairo", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cairo-rs-0.20.12/src/lib.rs", Edition2021) }
+   0.219261116s  INFO prepare_target{force=false package_id=cairo-rs v0.20.12 target="cairo"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/cairo-rs-09d038572f3b8a29/lib-cairo`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.219550686s  INFO prepare_target{force=false package_id=bitflags v2.11.1 target="bitflags"}: cargo::core::compiler::fingerprint: fingerprint error for bitflags v2.11.1/Check { test: false }/TargetInner { ..: lib_target("bitflags", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bitflags-2.11.1/src/lib.rs", Edition2021) }
+   0.219563159s  INFO prepare_target{force=false package_id=bitflags v2.11.1 target="bitflags"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/bitflags-18d525356b852ea8/lib-bitflags`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.219729015s  INFO prepare_target{force=false package_id=cairo-sys-rs v0.20.10 target="cairo_sys"}: cargo::core::compiler::fingerprint: fingerprint error for cairo-sys-rs v0.20.10/Check { test: false }/TargetInner { ..: lib_target("cairo_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cairo-sys-rs-0.20.10/src/lib.rs", Edition2021) }
+   0.219753194s  INFO prepare_target{force=false package_id=cairo-sys-rs v0.20.10 target="cairo_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/cairo-sys-rs-1e5a32ef19763977/lib-cairo_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.221144364s  INFO prepare_target{force=false package_id=glib-sys v0.20.10 target="glib_sys"}: cargo::core::compiler::fingerprint: fingerprint error for glib-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("glib_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glib-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.221162855s  INFO prepare_target{force=false package_id=glib-sys v0.20.10 target="glib_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/glib-sys-dcde4ab78a74a07b/lib-glib_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.225217045s  INFO prepare_target{force=false package_id=glib v0.20.12 target="glib"}: cargo::core::compiler::fingerprint: fingerprint error for glib v0.20.12/Check { test: false }/TargetInner { ..: lib_target("glib", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glib-0.20.12/src/lib.rs", Edition2021) }
+   0.225242641s  INFO prepare_target{force=false package_id=glib v0.20.12 target="glib"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/glib-3cbb0b2660e14283/lib-glib`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.225825261s  INFO prepare_target{force=false package_id=futures-channel v0.3.32 target="futures_channel"}: cargo::core::compiler::fingerprint: fingerprint error for futures-channel v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_channel", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-channel-0.3.32/src/lib.rs", Edition2018) }
+   0.225838748s  INFO prepare_target{force=false package_id=futures-channel v0.3.32 target="futures_channel"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-channel-4b49f0c82c8c70f4/lib-futures_channel`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.226965400s  INFO prepare_target{force=false package_id=futures-core v0.3.32 target="futures_core"}: cargo::core::compiler::fingerprint: fingerprint error for futures-core v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_core", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-core-0.3.32/src/lib.rs", Edition2018) }
+   0.226983679s  INFO prepare_target{force=false package_id=futures-core v0.3.32 target="futures_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-core-60b2f492e60f0ae9/lib-futures_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.227158824s  INFO prepare_target{force=false package_id=futures-executor v0.3.32 target="futures_executor"}: cargo::core::compiler::fingerprint: fingerprint error for futures-executor v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_executor", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-executor-0.3.32/src/lib.rs", Edition2018) }
+   0.227171588s  INFO prepare_target{force=false package_id=futures-executor v0.3.32 target="futures_executor"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-executor-8f70c6920ee0cc07/lib-futures_executor`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.227417382s  INFO prepare_target{force=false package_id=futures-task v0.3.32 target="futures_task"}: cargo::core::compiler::fingerprint: fingerprint error for futures-task v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_task", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-task-0.3.32/src/lib.rs", Edition2018) }
+   0.227429755s  INFO prepare_target{force=false package_id=futures-task v0.3.32 target="futures_task"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-task-f7dccb1cafc266c9/lib-futures_task`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.227575611s  INFO prepare_target{force=false package_id=futures-util v0.3.32 target="futures_util"}: cargo::core::compiler::fingerprint: fingerprint error for futures-util v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_util", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-util-0.3.32/src/lib.rs", Edition2018) }
+   0.227588424s  INFO prepare_target{force=false package_id=futures-util v0.3.32 target="futures_util"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-util-6f28443283e691f3/lib-futures_util`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.227906896s  INFO prepare_target{force=false package_id=futures-io v0.3.32 target="futures_io"}: cargo::core::compiler::fingerprint: fingerprint error for futures-io v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_io", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-io-0.3.32/src/lib.rs", Edition2018) }
+   0.227920415s  INFO prepare_target{force=false package_id=futures-io v0.3.32 target="futures_io"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-io-07cf26bb65ccadc1/lib-futures_io`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.228125708s  INFO prepare_target{force=false package_id=pin-project-lite v0.2.17 target="pin_project_lite"}: cargo::core::compiler::fingerprint: fingerprint error for pin-project-lite v0.2.17/Check { test: false }/TargetInner { doc_scrape_examples: Disabled, ..: lib_target("pin_project_lite", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pin-project-lite-0.2.17/src/lib.rs", Edition2018) }
+   0.228136763s  INFO prepare_target{force=false package_id=pin-project-lite v0.2.17 target="pin_project_lite"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/pin-project-lite-0f77cb9466ca8496/lib-pin_project_lite`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.228308886s  INFO prepare_target{force=false package_id=slab v0.4.12 target="slab"}: cargo::core::compiler::fingerprint: fingerprint error for slab v0.4.12/Check { test: false }/TargetInner { ..: lib_target("slab", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/slab-0.4.12/src/lib.rs", Edition2018) }
+   0.228318110s  INFO prepare_target{force=false package_id=slab v0.4.12 target="slab"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/slab-df7c0f7a502344fc/lib-slab`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.228457370s  INFO prepare_target{force=false package_id=gio-sys v0.20.10 target="gio_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gio-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("gio_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.228466575s  INFO prepare_target{force=false package_id=gio-sys v0.20.10 target="gio_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gio-sys-c659e5932a43a312/lib-gio_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.228981298s  INFO prepare_target{force=false package_id=gobject-sys v0.20.10 target="gobject_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gobject-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("gobject_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gobject-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.228992132s  INFO prepare_target{force=false package_id=gobject-sys v0.20.10 target="gobject_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gobject-sys-5683220267111832/lib-gobject_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.229805262s  INFO prepare_target{force=false package_id=smallvec v1.15.1 target="smallvec"}: cargo::core::compiler::fingerprint: fingerprint error for smallvec v1.15.1/Check { test: false }/TargetInner { ..: lib_target("smallvec", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/smallvec-1.15.1/src/lib.rs", Edition2018) }
+   0.229817304s  INFO prepare_target{force=false package_id=smallvec v1.15.1 target="smallvec"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/smallvec-ac8bc85739427647/lib-smallvec`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.230363054s  INFO prepare_target{force=false package_id=field-offset v0.3.6 target="field_offset"}: cargo::core::compiler::fingerprint: fingerprint error for field-offset v0.3.6/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("field_offset", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/field-offset-0.3.6/src/lib.rs", Edition2015) }
+   0.230378087s  INFO prepare_target{force=false package_id=field-offset v0.3.6 target="field_offset"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/field-offset-f82f1485d2a39ae5/lib-field_offset`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.230813454s  INFO prepare_target{force=false package_id=memoffset v0.9.1 target="memoffset"}: cargo::core::compiler::fingerprint: fingerprint error for memoffset v0.9.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("memoffset", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/memoffset-0.9.1/src/lib.rs", Edition2015) }
+   0.230827990s  INFO prepare_target{force=false package_id=memoffset v0.9.1 target="memoffset"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/memoffset-ad07cd47b4f01ae8/lib-memoffset`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.231114239s  INFO prepare_target{force=false package_id=gdk-pixbuf v0.20.10 target="gdk_pixbuf"}: cargo::core::compiler::fingerprint: fingerprint error for gdk-pixbuf v0.20.10/Check { test: false }/TargetInner { ..: lib_target("gdk_pixbuf", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gdk-pixbuf-0.20.10/src/lib.rs", Edition2021) }
+   0.231128449s  INFO prepare_target{force=false package_id=gdk-pixbuf v0.20.10 target="gdk_pixbuf"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gdk-pixbuf-34f35bb605eaad54/lib-gdk_pixbuf`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.231434153s  INFO prepare_target{force=false package_id=gdk-pixbuf-sys v0.20.10 target="gdk_pixbuf_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gdk-pixbuf-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("gdk_pixbuf_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gdk-pixbuf-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.231447175s  INFO prepare_target{force=false package_id=gdk-pixbuf-sys v0.20.10 target="gdk_pixbuf_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gdk-pixbuf-sys-18badf9ba33db5d1/lib-gdk_pixbuf_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.231913851s  INFO prepare_target{force=false package_id=gio v0.20.12 target="gio"}: cargo::core::compiler::fingerprint: fingerprint error for gio v0.20.12/Check { test: false }/TargetInner { ..: lib_target("gio", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-0.20.12/src/lib.rs", Edition2021) }
+   0.231928389s  INFO prepare_target{force=false package_id=gio v0.20.12 target="gio"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gio-4f3d998aa1f26e31/lib-gio`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.232499305s  INFO prepare_target{force=false package_id=gdk4 v0.9.6 target="gdk4"}: cargo::core::compiler::fingerprint: fingerprint error for gdk4 v0.9.6/Check { test: false }/TargetInner { ..: lib_target("gdk4", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gdk4-0.9.6/src/lib.rs", Edition2021) }
+   0.232512568s  INFO prepare_target{force=false package_id=gdk4 v0.9.6 target="gdk4"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gdk4-a2019d73ec26ae98/lib-gdk4`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.235867588s  INFO prepare_target{force=false package_id=gdk4-sys v0.9.6 target="gdk4_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gdk4-sys v0.9.6/Check { test: false }/TargetInner { ..: lib_target("gdk4_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gdk4-sys-0.9.6/src/lib.rs", Edition2021) }
+   0.235891483s  INFO prepare_target{force=false package_id=gdk4-sys v0.9.6 target="gdk4_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gdk4-sys-83e625db92de75d4/lib-gdk4_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.236689293s  INFO prepare_target{force=false package_id=pango-sys v0.20.10 target="pango_sys"}: cargo::core::compiler::fingerprint: fingerprint error for pango-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("pango_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pango-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.236703943s  INFO prepare_target{force=false package_id=pango-sys v0.20.10 target="pango_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/pango-sys-253f79369cefddcc/lib-pango_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.237308254s  INFO prepare_target{force=false package_id=pango v0.20.12 target="pango"}: cargo::core::compiler::fingerprint: fingerprint error for pango v0.20.12/Check { test: false }/TargetInner { ..: lib_target("pango", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pango-0.20.12/src/lib.rs", Edition2021) }
+   0.237323846s  INFO prepare_target{force=false package_id=pango v0.20.12 target="pango"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/pango-202e9fbbc195fad1/lib-pango`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.237952210s  INFO prepare_target{force=false package_id=graphene-rs v0.20.10 target="graphene"}: cargo::core::compiler::fingerprint: fingerprint error for graphene-rs v0.20.10/Check { test: false }/TargetInner { ..: lib_target("graphene", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/graphene-rs-0.20.10/src/lib.rs", Edition2021) }
+   0.237970592s  INFO prepare_target{force=false package_id=graphene-rs v0.20.10 target="graphene"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/graphene-rs-28f5ee87a6f0aada/lib-graphene`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.241024481s  INFO prepare_target{force=false package_id=graphene-sys v0.20.10 target="graphene_sys"}: cargo::core::compiler::fingerprint: fingerprint error for graphene-sys v0.20.10/Check { test: false }/TargetInner { ..: lib_target("graphene_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/graphene-sys-0.20.10/src/lib.rs", Edition2021) }
+   0.241048636s  INFO prepare_target{force=false package_id=graphene-sys v0.20.10 target="graphene_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/graphene-sys-b2b27fc5b62d20c2/lib-graphene_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.241539020s  INFO prepare_target{force=false package_id=gsk4 v0.9.6 target="gsk4"}: cargo::core::compiler::fingerprint: fingerprint error for gsk4 v0.9.6/Check { test: false }/TargetInner { ..: lib_target("gsk4", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gsk4-0.9.6/src/lib.rs", Edition2021) }
+   0.241554135s  INFO prepare_target{force=false package_id=gsk4 v0.9.6 target="gsk4"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gsk4-e902adddf6b31733/lib-gsk4`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.241993905s  INFO prepare_target{force=false package_id=gsk4-sys v0.9.6 target="gsk4_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gsk4-sys v0.9.6/Check { test: false }/TargetInner { ..: lib_target("gsk4_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gsk4-sys-0.9.6/src/lib.rs", Edition2021) }
+   0.242009159s  INFO prepare_target{force=false package_id=gsk4-sys v0.9.6 target="gsk4_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gsk4-sys-6017f610edd3110e/lib-gsk4_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.242654094s  INFO prepare_target{force=false package_id=gtk4-sys v0.9.6 target="gtk4_sys"}: cargo::core::compiler::fingerprint: fingerprint error for gtk4-sys v0.9.6/Check { test: false }/TargetInner { ..: lib_target("gtk4_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gtk4-sys-0.9.6/src/lib.rs", Edition2021) }
+   0.242670371s  INFO prepare_target{force=false package_id=gtk4-sys v0.9.6 target="gtk4_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/gtk4-sys-98559ab4cddce50e/lib-gtk4_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.245047724s  INFO prepare_target{force=false package_id=libadwaita v0.7.2 target="libadwaita"}: cargo::core::compiler::fingerprint: fingerprint error for libadwaita v0.7.2/Check { test: false }/TargetInner { ..: lib_target("libadwaita", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libadwaita-0.7.2/src/lib.rs", Edition2021) }
+   0.245070650s  INFO prepare_target{force=false package_id=libadwaita v0.7.2 target="libadwaita"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/libadwaita-44273a0cbdd19be8/lib-libadwaita`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.245534151s  INFO prepare_target{force=false package_id=libadwaita-sys v0.7.2 target="libadwaita_sys"}: cargo::core::compiler::fingerprint: fingerprint error for libadwaita-sys v0.7.2/Check { test: false }/TargetInner { ..: lib_target("libadwaita_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libadwaita-sys-0.7.2/src/lib.rs", Edition2021) }
+   0.245549287s  INFO prepare_target{force=false package_id=libadwaita-sys v0.7.2 target="libadwaita_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/libadwaita-sys-5877ed002367c6d1/lib-libadwaita_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.251283833s  INFO prepare_target{force=false package_id=md5 v0.7.0 target="md5"}: cargo::core::compiler::fingerprint: fingerprint error for md5 v0.7.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("md5", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/md5-0.7.0/src/lib.rs", Edition2015) }
+   0.251312890s  INFO prepare_target{force=false package_id=md5 v0.7.0 target="md5"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/md5-7b29974ebba31333/lib-md5`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.251946904s  INFO prepare_target{force=false package_id=reqwest v0.11.27 target="reqwest"}: cargo::core::compiler::fingerprint: fingerprint error for reqwest v0.11.27/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("reqwest", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.11.27/src/lib.rs", Edition2021) }
+   0.251961578s  INFO prepare_target{force=false package_id=reqwest v0.11.27 target="reqwest"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/reqwest-70297792b393f352/lib-reqwest`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.253514171s  INFO prepare_target{force=false package_id=base64 v0.21.7 target="base64"}: cargo::core::compiler::fingerprint: fingerprint error for base64 v0.21.7/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("base64", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/base64-0.21.7/src/lib.rs", Edition2018) }
+   0.253538867s  INFO prepare_target{force=false package_id=base64 v0.21.7 target="base64"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/base64-41ff74419718d837/lib-base64`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.254563755s  INFO prepare_target{force=false package_id=bytes v1.11.1 target="bytes"}: cargo::core::compiler::fingerprint: fingerprint error for bytes v1.11.1/Check { test: false }/TargetInner { ..: lib_target("bytes", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bytes-1.11.1/src/lib.rs", Edition2021) }
+   0.254586857s  INFO prepare_target{force=false package_id=bytes v1.11.1 target="bytes"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/bytes-b94889880decca3e/lib-bytes`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.254853139s  INFO prepare_target{force=false package_id=encoding_rs v0.8.35 target="encoding_rs"}: cargo::core::compiler::fingerprint: fingerprint error for encoding_rs v0.8.35/Check { test: false }/TargetInner { ..: lib_target("encoding_rs", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/encoding_rs-0.8.35/src/lib.rs", Edition2018) }
+   0.254867640s  INFO prepare_target{force=false package_id=encoding_rs v0.8.35 target="encoding_rs"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/encoding_rs-3761ccd772be1d43/lib-encoding_rs`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.256355642s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.4/src/lib.rs", Edition2018) }
+   0.256393348s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/cfg-if-56caeeb7ff8c350c/lib-cfg_if`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.257001951s  INFO prepare_target{force=false package_id=h2 v0.3.27 target="h2"}: cargo::core::compiler::fingerprint: fingerprint error for h2 v0.3.27/Check { test: false }/TargetInner { ..: lib_target("h2", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/h2-0.3.27/src/lib.rs", Edition2018) }
+   0.257053665s  INFO prepare_target{force=false package_id=h2 v0.3.27 target="h2"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/h2-520827afb7f51d3f/lib-h2`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.257782076s  INFO prepare_target{force=false package_id=fnv v1.0.7 target="fnv"}: cargo::core::compiler::fingerprint: fingerprint error for fnv v1.0.7/Check { test: false }/TargetInner { ..: lib_target("fnv", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fnv-1.0.7/lib.rs", Edition2015) }
+   0.257809759s  INFO prepare_target{force=false package_id=fnv v1.0.7 target="fnv"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/fnv-28deaf0a22878824/lib-fnv`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.260622736s  INFO prepare_target{force=false package_id=futures-sink v0.3.32 target="futures_sink"}: cargo::core::compiler::fingerprint: fingerprint error for futures-sink v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_sink", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-sink-0.3.32/src/lib.rs", Edition2018) }
+   0.260709360s  INFO prepare_target{force=false package_id=futures-sink v0.3.32 target="futures_sink"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futures-sink-7480dcfefb767612/lib-futures_sink`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.261349687s  INFO prepare_target{force=false package_id=http v0.2.12 target="http"}: cargo::core::compiler::fingerprint: fingerprint error for http v0.2.12/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("http", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/http-0.2.12/src/lib.rs", Edition2018) }
+   0.261372955s  INFO prepare_target{force=false package_id=http v0.2.12 target="http"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/http-18b432dbde4e0a3b/lib-http`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.261819404s  INFO prepare_target{force=false package_id=itoa v1.0.18 target="itoa"}: cargo::core::compiler::fingerprint: fingerprint error for itoa v1.0.18/Check { test: false }/TargetInner { ..: lib_target("itoa", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/itoa-1.0.18/src/lib.rs", Edition2021) }
+   0.261837873s  INFO prepare_target{force=false package_id=itoa v1.0.18 target="itoa"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/itoa-d6cea3a3d027b01d/lib-itoa`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.262740054s  INFO prepare_target{force=false package_id=indexmap v2.14.0 target="indexmap"}: cargo::core::compiler::fingerprint: fingerprint error for indexmap v2.14.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("indexmap", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/indexmap-2.14.0/src/lib.rs", Edition2024) }
+   0.262756885s  INFO prepare_target{force=false package_id=indexmap v2.14.0 target="indexmap"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/indexmap-3bc5323e64d5c3ee/lib-indexmap`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.263026205s  INFO prepare_target{force=false package_id=equivalent v1.0.2 target="equivalent"}: cargo::core::compiler::fingerprint: fingerprint error for equivalent v1.0.2/Check { test: false }/TargetInner { ..: lib_target("equivalent", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/equivalent-1.0.2/src/lib.rs", Edition2015) }
+   0.263043505s  INFO prepare_target{force=false package_id=equivalent v1.0.2 target="equivalent"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/equivalent-12826706f14d0499/lib-equivalent`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.263190684s  INFO prepare_target{force=false package_id=hashbrown v0.17.0 target="hashbrown"}: cargo::core::compiler::fingerprint: fingerprint error for hashbrown v0.17.0/Check { test: false }/TargetInner { ..: lib_target("hashbrown", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashbrown-0.17.0/src/lib.rs", Edition2024) }
+   0.263203633s  INFO prepare_target{force=false package_id=hashbrown v0.17.0 target="hashbrown"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/hashbrown-968a7a0647497cec/lib-hashbrown`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.263395837s  INFO prepare_target{force=false package_id=tokio v1.52.3 target="tokio"}: cargo::core::compiler::fingerprint: fingerprint error for tokio v1.52.3/Check { test: false }/TargetInner { ..: lib_target("tokio", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.52.3/src/lib.rs", Edition2021) }
+   0.263407559s  INFO prepare_target{force=false package_id=tokio v1.52.3 target="tokio"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tokio-5829d3904566d1f0/lib-tokio`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.263865836s  INFO prepare_target{force=false package_id=mio v1.2.0 target="mio"}: cargo::core::compiler::fingerprint: fingerprint error for mio v1.2.0/Check { test: false }/TargetInner { ..: lib_target("mio", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/mio-1.2.0/src/lib.rs", Edition2021) }
+   0.263880031s  INFO prepare_target{force=false package_id=mio v1.2.0 target="mio"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/mio-1abfa875d0496a97/lib-mio`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.264101017s  INFO prepare_target{force=false package_id=socket2 v0.6.3 target="socket2"}: cargo::core::compiler::fingerprint: fingerprint error for socket2 v0.6.3/Check { test: false }/TargetInner { ..: lib_target("socket2", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.3/src/lib.rs", Edition2021) }
+   0.264110346s  INFO prepare_target{force=false package_id=socket2 v0.6.3 target="socket2"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/socket2-55689aa2517e1b6d/lib-socket2`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.264300020s  INFO prepare_target{force=false package_id=tokio-util v0.7.18 target="tokio_util"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-util v0.7.18/Check { test: false }/TargetInner { ..: lib_target("tokio_util", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-util-0.7.18/src/lib.rs", Edition2021) }
+   0.264317165s  INFO prepare_target{force=false package_id=tokio-util v0.7.18 target="tokio_util"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tokio-util-ef3102ef9e950cdc/lib-tokio_util`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.264616053s  INFO prepare_target{force=false package_id=tracing v0.1.44 target="tracing"}: cargo::core::compiler::fingerprint: fingerprint error for tracing v0.1.44/Check { test: false }/TargetInner { ..: lib_target("tracing", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-0.1.44/src/lib.rs", Edition2018) }
+   0.264628964s  INFO prepare_target{force=false package_id=tracing v0.1.44 target="tracing"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tracing-b56ecc5c60ab531f/lib-tracing`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.264874608s  INFO prepare_target{force=false package_id=tracing-core v0.1.36 target="tracing_core"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-core v0.1.36/Check { test: false }/TargetInner { ..: lib_target("tracing_core", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-core-0.1.36/src/lib.rs", Edition2018) }
+   0.264888136s  INFO prepare_target{force=false package_id=tracing-core v0.1.36 target="tracing_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tracing-core-07e6974667eea4fa/lib-tracing_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.265081010s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.4/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.21.4/src/lib.rs", Edition2021) }
+   0.265093749s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/once_cell-6faaf2d0772d22f0/lib-once_cell`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.265265938s  INFO prepare_target{force=false package_id=http-body v0.4.6 target="http_body"}: cargo::core::compiler::fingerprint: fingerprint error for http-body v0.4.6/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("http_body", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/http-body-0.4.6/src/lib.rs", Edition2018) }
+   0.265279088s  INFO prepare_target{force=false package_id=http-body v0.4.6 target="http_body"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/http-body-8a725ea64f48cecf/lib-http_body`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.265487445s  INFO prepare_target{force=false package_id=hyper v0.14.32 target="hyper"}: cargo::core::compiler::fingerprint: fingerprint error for hyper v0.14.32/Check { test: false }/TargetInner { ..: lib_target("hyper", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-0.14.32/src/lib.rs", Edition2018) }
+   0.265501776s  INFO prepare_target{force=false package_id=hyper v0.14.32 target="hyper"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/hyper-e02e360be51fd36f/lib-hyper`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.266839316s  INFO prepare_target{force=false package_id=httparse v1.10.1 target="httparse"}: cargo::core::compiler::fingerprint: fingerprint error for httparse v1.10.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("httparse", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/httparse-1.10.1/src/lib.rs", Edition2018) }
+   0.266861687s  INFO prepare_target{force=false package_id=httparse v1.10.1 target="httparse"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/httparse-9e333e40ae9d22db/lib-httparse`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.267220100s  INFO prepare_target{force=false package_id=httpdate v1.0.3 target="httpdate"}: cargo::core::compiler::fingerprint: fingerprint error for httpdate v1.0.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("httpdate", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/httpdate-1.0.3/src/lib.rs", Edition2021) }
+   0.267230399s  INFO prepare_target{force=false package_id=httpdate v1.0.3 target="httpdate"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/httpdate-951293ed59b9afc6/lib-httpdate`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.267962773s  INFO prepare_target{force=false package_id=socket2 v0.5.10 target="socket2"}: cargo::core::compiler::fingerprint: fingerprint error for socket2 v0.5.10/Check { test: false }/TargetInner { ..: lib_target("socket2", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.5.10/src/lib.rs", Edition2021) }
+   0.267979241s  INFO prepare_target{force=false package_id=socket2 v0.5.10 target="socket2"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/socket2-082ad0fd7d1cf29f/lib-socket2`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.268189879s  INFO prepare_target{force=false package_id=tower-service v0.3.3 target="tower_service"}: cargo::core::compiler::fingerprint: fingerprint error for tower-service v0.3.3/Check { test: false }/TargetInner { ..: lib_target("tower_service", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tower-service-0.3.3/src/lib.rs", Edition2018) }
+   0.268202031s  INFO prepare_target{force=false package_id=tower-service v0.3.3 target="tower_service"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tower-service-c34e7a39b0242668/lib-tower_service`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.268356523s  INFO prepare_target{force=false package_id=want v0.3.1 target="want"}: cargo::core::compiler::fingerprint: fingerprint error for want v0.3.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("want", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/want-0.3.1/src/lib.rs", Edition2018) }
+   0.268368412s  INFO prepare_target{force=false package_id=want v0.3.1 target="want"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/want-2641e94693cdc808/lib-want`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.268532884s  INFO prepare_target{force=false package_id=try-lock v0.2.5 target="try_lock"}: cargo::core::compiler::fingerprint: fingerprint error for try-lock v0.2.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("try_lock", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/try-lock-0.2.5/src/lib.rs", Edition2015) }
+   0.268545091s  INFO prepare_target{force=false package_id=try-lock v0.2.5 target="try_lock"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/try-lock-5b8e495d1c1c6c8f/lib-try_lock`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.268695970s  INFO prepare_target{force=false package_id=hyper-tls v0.5.0 target="hyper_tls"}: cargo::core::compiler::fingerprint: fingerprint error for hyper-tls v0.5.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hyper_tls", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-tls-0.5.0/src/lib.rs", Edition2018) }
+   0.268708525s  INFO prepare_target{force=false package_id=hyper-tls v0.5.0 target="hyper_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/hyper-tls-c9d55cd4ff2dfd89/lib-hyper_tls`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.269281011s  INFO prepare_target{force=false package_id=native-tls v0.2.18 target="native_tls"}: cargo::core::compiler::fingerprint: fingerprint error for native-tls v0.2.18/Check { test: false }/TargetInner { ..: lib_target("native_tls", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/native-tls-0.2.18/src/lib.rs", Edition2021) }
+   0.269294493s  INFO prepare_target{force=false package_id=native-tls v0.2.18 target="native_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/native-tls-34eb9a92ba8b5a0d/lib-native_tls`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.269566598s  INFO prepare_target{force=false package_id=log v0.4.29 target="log"}: cargo::core::compiler::fingerprint: fingerprint error for log v0.4.29/Check { test: false }/TargetInner { ..: lib_target("log", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs", Edition2021) }
+   0.269579404s  INFO prepare_target{force=false package_id=log v0.4.29 target="log"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/log-b2aab449e3cc76d7/lib-log`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.271119251s  INFO prepare_target{force=false package_id=openssl v0.10.79 target="openssl"}: cargo::core::compiler::fingerprint: fingerprint error for openssl v0.10.79/Check { test: false }/TargetInner { ..: lib_target("openssl", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/openssl-0.10.79/src/lib.rs", Edition2021) }
+   0.271136210s  INFO prepare_target{force=false package_id=openssl v0.10.79 target="openssl"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/openssl-92208df1d948f6b1/lib-openssl`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.271707958s  INFO prepare_target{force=false package_id=foreign-types v0.3.2 target="foreign_types"}: cargo::core::compiler::fingerprint: fingerprint error for foreign-types v0.3.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("foreign_types", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foreign-types-0.3.2/src/lib.rs", Edition2015) }
+   0.271722268s  INFO prepare_target{force=false package_id=foreign-types v0.3.2 target="foreign_types"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/foreign-types-420692861497ac2d/lib-foreign_types`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.271915270s  INFO prepare_target{force=false package_id=foreign-types-shared v0.1.1 target="foreign_types_shared"}: cargo::core::compiler::fingerprint: fingerprint error for foreign-types-shared v0.1.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("foreign_types_shared", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foreign-types-shared-0.1.1/src/lib.rs", Edition2015) }
+   0.271928409s  INFO prepare_target{force=false package_id=foreign-types-shared v0.1.1 target="foreign_types_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/foreign-types-shared-300706fb87bd9773/lib-foreign_types_shared`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.272322101s  INFO prepare_target{force=false package_id=openssl-sys v0.9.115 target="openssl_sys"}: cargo::core::compiler::fingerprint: fingerprint error for openssl-sys v0.9.115/Check { test: false }/TargetInner { ..: lib_target("openssl_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/openssl-sys-0.9.115/src/lib.rs", Edition2021) }
+   0.272336362s  INFO prepare_target{force=false package_id=openssl-sys v0.9.115 target="openssl_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/openssl-sys-052d279bf13b1c14/lib-openssl_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.272550910s  INFO prepare_target{force=false package_id=openssl-probe v0.2.1 target="openssl_probe"}: cargo::core::compiler::fingerprint: fingerprint error for openssl-probe v0.2.1/Check { test: false }/TargetInner { ..: lib_target("openssl_probe", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/openssl-probe-0.2.1/src/lib.rs", Edition2021) }
+   0.272564303s  INFO prepare_target{force=false package_id=openssl-probe v0.2.1 target="openssl_probe"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/openssl-probe-af1f0c50871bafeb/lib-openssl_probe`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.272728349s  INFO prepare_target{force=false package_id=tokio-native-tls v0.3.1 target="tokio_native_tls"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-native-tls v0.3.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tokio_native_tls", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-native-tls-0.3.1/src/lib.rs", Edition2018) }
+   0.272745893s  INFO prepare_target{force=false package_id=tokio-native-tls v0.3.1 target="tokio_native_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tokio-native-tls-532f9bdec5e71add/lib-tokio_native_tls`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.273002625s  INFO prepare_target{force=false package_id=ipnet v2.12.0 target="ipnet"}: cargo::core::compiler::fingerprint: fingerprint error for ipnet v2.12.0/Check { test: false }/TargetInner { ..: lib_target("ipnet", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ipnet-2.12.0/src/lib.rs", Edition2018) }
+   0.273015414s  INFO prepare_target{force=false package_id=ipnet v2.12.0 target="ipnet"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/ipnet-fd3a3fc85525cba5/lib-ipnet`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.273179387s  INFO prepare_target{force=false package_id=mime v0.3.17 target="mime"}: cargo::core::compiler::fingerprint: fingerprint error for mime v0.3.17/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("mime", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/mime-0.3.17/src/lib.rs", Edition2015) }
+   0.273191981s  INFO prepare_target{force=false package_id=mime v0.3.17 target="mime"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/mime-3892401da761d84a/lib-mime`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.273333945s  INFO prepare_target{force=false package_id=percent-encoding v2.3.2 target="percent_encoding"}: cargo::core::compiler::fingerprint: fingerprint error for percent-encoding v2.3.2/Check { test: false }/TargetInner { ..: lib_target("percent_encoding", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/percent-encoding-2.3.2/src/lib.rs", Edition2018) }
+   0.273345665s  INFO prepare_target{force=false package_id=percent-encoding v2.3.2 target="percent_encoding"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/percent-encoding-4658bdc38d5cdb5d/lib-percent_encoding`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.273503498s  INFO prepare_target{force=false package_id=rustls-pemfile v1.0.4 target="rustls_pemfile"}: cargo::core::compiler::fingerprint: fingerprint error for rustls-pemfile v1.0.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rustls_pemfile", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-pemfile-1.0.4/src/lib.rs", Edition2018) }
+   0.273516439s  INFO prepare_target{force=false package_id=rustls-pemfile v1.0.4 target="rustls_pemfile"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/rustls-pemfile-19c861df59fb2ade/lib-rustls_pemfile`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.273681025s  INFO prepare_target{force=false package_id=serde_json v1.0.149 target="serde_json"}: cargo::core::compiler::fingerprint: fingerprint error for serde_json v1.0.149/Check { test: false }/TargetInner { ..: lib_target("serde_json", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_json-1.0.149/src/lib.rs", Edition2021) }
+   0.273693664s  INFO prepare_target{force=false package_id=serde_json v1.0.149 target="serde_json"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/serde_json-a45a3834d8d03e4d/lib-serde_json`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.274915714s  INFO prepare_target{force=false package_id=zmij v1.0.21 target="zmij"}: cargo::core::compiler::fingerprint: fingerprint error for zmij v1.0.21/Check { test: false }/TargetInner { ..: lib_target("zmij", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs", Edition2021) }
+   0.274933904s  INFO prepare_target{force=false package_id=zmij v1.0.21 target="zmij"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/zmij-01d9860f15d9e1b7/lib-zmij`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.275267695s  INFO prepare_target{force=false package_id=serde_urlencoded v0.7.1 target="serde_urlencoded"}: cargo::core::compiler::fingerprint: fingerprint error for serde_urlencoded v0.7.1/Check { test: false }/TargetInner { name_inferred: true, tested: false, ..: lib_target("serde_urlencoded", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_urlencoded-0.7.1/src/lib.rs", Edition2018) }
+   0.275278893s  INFO prepare_target{force=false package_id=serde_urlencoded v0.7.1 target="serde_urlencoded"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/serde_urlencoded-d681c18c501efdfc/lib-serde_urlencoded`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.275519202s  INFO prepare_target{force=false package_id=form_urlencoded v1.2.2 target="form_urlencoded"}: cargo::core::compiler::fingerprint: fingerprint error for form_urlencoded v1.2.2/Check { test: false }/TargetInner { tested: false, ..: lib_target("form_urlencoded", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/form_urlencoded-1.2.2/src/lib.rs", Edition2018) }
+   0.275528737s  INFO prepare_target{force=false package_id=form_urlencoded v1.2.2 target="form_urlencoded"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/form_urlencoded-f0b67b4631d6f5a8/lib-form_urlencoded`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.275693205s  INFO prepare_target{force=false package_id=ryu v1.0.23 target="ryu"}: cargo::core::compiler::fingerprint: fingerprint error for ryu v1.0.23/Check { test: false }/TargetInner { ..: lib_target("ryu", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ryu-1.0.23/src/lib.rs", Edition2021) }
+   0.275702405s  INFO prepare_target{force=false package_id=ryu v1.0.23 target="ryu"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/ryu-026bc8a45fdff437/lib-ryu`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.275880056s  INFO prepare_target{force=false package_id=sync_wrapper v0.1.2 target="sync_wrapper"}: cargo::core::compiler::fingerprint: fingerprint error for sync_wrapper v0.1.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("sync_wrapper", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sync_wrapper-0.1.2/src/lib.rs", Edition2018) }
+   0.275889665s  INFO prepare_target{force=false package_id=sync_wrapper v0.1.2 target="sync_wrapper"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/sync_wrapper-22905fb265d74b67/lib-sync_wrapper`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.276038271s  INFO prepare_target{force=false package_id=url v2.5.8 target="url"}: cargo::core::compiler::fingerprint: fingerprint error for url v2.5.8/Check { test: false }/TargetInner { ..: lib_target("url", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/url-2.5.8/src/lib.rs", Edition2018) }
+   0.276046952s  INFO prepare_target{force=false package_id=url v2.5.8 target="url"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/url-981e18d2aa2b40b8/lib-url`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.276328710s  INFO prepare_target{force=false package_id=idna v1.1.0 target="idna"}: cargo::core::compiler::fingerprint: fingerprint error for idna v1.1.0/Check { test: false }/TargetInner { doctest: false, ..: lib_target("idna", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/idna-1.1.0/src/lib.rs", Edition2018) }
+   0.276338363s  INFO prepare_target{force=false package_id=idna v1.1.0 target="idna"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/idna-9d49639762f75e5a/lib-idna`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.276602273s  INFO prepare_target{force=false package_id=idna_adapter v1.2.2 target="idna_adapter"}: cargo::core::compiler::fingerprint: fingerprint error for idna_adapter v1.2.2/Check { test: false }/TargetInner { ..: lib_target("idna_adapter", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/idna_adapter-1.2.2/src/lib.rs", Edition2024) }
+   0.276616330s  INFO prepare_target{force=false package_id=idna_adapter v1.2.2 target="idna_adapter"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/idna_adapter-1051606d4819a85c/lib-idna_adapter`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.278745146s  INFO prepare_target{force=false package_id=icu_normalizer v2.2.0 target="icu_normalizer"}: cargo::core::compiler::fingerprint: fingerprint error for icu_normalizer v2.2.0/Check { test: false }/TargetInner { ..: lib_target("icu_normalizer", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_normalizer-2.2.0/src/lib.rs", Edition2021) }
+   0.278766971s  INFO prepare_target{force=false package_id=icu_normalizer v2.2.0 target="icu_normalizer"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_normalizer-6ab601913e43a2f2/lib-icu_normalizer`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.279180703s  INFO prepare_target{force=false package_id=icu_collections v2.2.0 target="icu_collections"}: cargo::core::compiler::fingerprint: fingerprint error for icu_collections v2.2.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_collections", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_collections-2.2.0/src/lib.rs", Edition2021) }
+   0.279191500s  INFO prepare_target{force=false package_id=icu_collections v2.2.0 target="icu_collections"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_collections-af983879cab5d58b/lib-icu_collections`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.279608752s  INFO prepare_target{force=false package_id=potential_utf v0.1.5 target="potential_utf"}: cargo::core::compiler::fingerprint: fingerprint error for potential_utf v0.1.5/Check { test: false }/TargetInner { ..: lib_target("potential_utf", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/potential_utf-0.1.5/src/lib.rs", Edition2021) }
+   0.279619516s  INFO prepare_target{force=false package_id=potential_utf v0.1.5 target="potential_utf"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/potential_utf-7e62a09f8ff210d7/lib-potential_utf`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: __libc_start_main
+  23: <unknown>
+   0.279869315s  INFO prepare_target{force=false package_id=zerovec v0.11.6 target="zerovec"}: cargo::core::compiler::fingerprint: fingerprint error for zerovec v0.11.6/Check { test: false }/TargetInner { benched: false, ..: lib_target("zerovec", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerovec-0.11.6/src/lib.rs", Edition2021) }
+   0.279880173s  INFO prepare_target{force=false package_id=zerovec v0.11.6 target="zerovec"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/zerovec-c47aecdb3e087643/lib-zerovec`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: __libc_start_main
+  24: <unknown>
+   0.280168517s  INFO prepare_target{force=false package_id=yoke v0.8.2 target="yoke"}: cargo::core::compiler::fingerprint: fingerprint error for yoke v0.8.2/Check { test: false }/TargetInner { ..: lib_target("yoke", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yoke-0.8.2/src/lib.rs", Edition2021) }
+   0.280177928s  INFO prepare_target{force=false package_id=yoke v0.8.2 target="yoke"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/yoke-721a937fe1979d42/lib-yoke`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: __libc_start_main
+  25: <unknown>
+   0.280444737s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint: fingerprint error for stable_deref_trait v1.2.1/Check { test: false }/TargetInner { ..: lib_target("stable_deref_trait", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs", Edition2015) }
+   0.280454677s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/stable_deref_trait-c213f1cdc91ebedf/lib-stable_deref_trait`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.280823420s  INFO prepare_target{force=false package_id=zerofrom v0.1.7 target="zerofrom"}: cargo::core::compiler::fingerprint: fingerprint error for zerofrom v0.1.7/Check { test: false }/TargetInner { ..: lib_target("zerofrom", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerofrom-0.1.7/src/lib.rs", Edition2021) }
+   0.280834330s  INFO prepare_target{force=false package_id=zerofrom v0.1.7 target="zerofrom"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/zerofrom-ba8f11ad53de3c7d/lib-zerofrom`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.281204361s  INFO prepare_target{force=false package_id=utf8_iter v1.0.4 target="utf8_iter"}: cargo::core::compiler::fingerprint: fingerprint error for utf8_iter v1.0.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("utf8_iter", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/lib.rs", Edition2021) }
+   0.281218946s  INFO prepare_target{force=false package_id=utf8_iter v1.0.4 target="utf8_iter"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/utf8_iter-ee54d3bbc237e6e4/lib-utf8_iter`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: __libc_start_main
+  23: <unknown>
+   0.281388353s  INFO prepare_target{force=false package_id=icu_normalizer_data v2.2.0 target="icu_normalizer_data"}: cargo::core::compiler::fingerprint: fingerprint error for icu_normalizer_data v2.2.0/Check { test: false }/TargetInner { ..: lib_target("icu_normalizer_data", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_normalizer_data-2.2.0/src/lib.rs", Edition2021) }
+   0.281398371s  INFO prepare_target{force=false package_id=icu_normalizer_data v2.2.0 target="icu_normalizer_data"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_normalizer_data-0bf0333772312d15/lib-icu_normalizer_data`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.281764477s  INFO prepare_target{force=false package_id=icu_provider v2.2.0 target="icu_provider"}: cargo::core::compiler::fingerprint: fingerprint error for icu_provider v2.2.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_provider", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_provider-2.2.0/src/lib.rs", Edition2021) }
+   0.281778022s  INFO prepare_target{force=false package_id=icu_provider v2.2.0 target="icu_provider"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_provider-cd93674f39fb2a5a/lib-icu_provider`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.282344040s  INFO prepare_target{force=false package_id=icu_locale_core v2.2.0 target="icu_locale_core"}: cargo::core::compiler::fingerprint: fingerprint error for icu_locale_core v2.2.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_locale_core", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_locale_core-2.2.0/src/lib.rs", Edition2021) }
+   0.282358133s  INFO prepare_target{force=false package_id=icu_locale_core v2.2.0 target="icu_locale_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_locale_core-fab700f7a6468688/lib-icu_locale_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: __libc_start_main
+  23: <unknown>
+   0.282684082s  INFO prepare_target{force=false package_id=litemap v0.8.2 target="litemap"}: cargo::core::compiler::fingerprint: fingerprint error for litemap v0.8.2/Check { test: false }/TargetInner { benched: false, ..: lib_target("litemap", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/litemap-0.8.2/src/lib.rs", Edition2021) }
+   0.282693851s  INFO prepare_target{force=false package_id=litemap v0.8.2 target="litemap"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/litemap-378f9e9c58f07f71/lib-litemap`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: __libc_start_main
+  24: <unknown>
+   0.282899834s  INFO prepare_target{force=false package_id=tinystr v0.8.3 target="tinystr"}: cargo::core::compiler::fingerprint: fingerprint error for tinystr v0.8.3/Check { test: false }/TargetInner { benched: false, ..: lib_target("tinystr", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.8.3/src/lib.rs", Edition2021) }
+   0.282913613s  INFO prepare_target{force=false package_id=tinystr v0.8.3 target="tinystr"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tinystr-a9559e746d165fd9/lib-tinystr`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: __libc_start_main
+  24: <unknown>
+   0.283210454s  INFO prepare_target{force=false package_id=writeable v0.6.3 target="writeable"}: cargo::core::compiler::fingerprint: fingerprint error for writeable v0.6.3/Check { test: false }/TargetInner { benched: false, ..: lib_target("writeable", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/writeable-0.6.3/src/lib.rs", Edition2021) }
+   0.283224661s  INFO prepare_target{force=false package_id=writeable v0.6.3 target="writeable"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/writeable-d3d051d36cbbb1ba/lib-writeable`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: __libc_start_main
+  24: <unknown>
+   0.283414907s  INFO prepare_target{force=false package_id=zerotrie v0.2.4 target="zerotrie"}: cargo::core::compiler::fingerprint: fingerprint error for zerotrie v0.2.4/Check { test: false }/TargetInner { benched: false, ..: lib_target("zerotrie", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerotrie-0.2.4/src/lib.rs", Edition2021) }
+   0.283434253s  INFO prepare_target{force=false package_id=zerotrie v0.2.4 target="zerotrie"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/zerotrie-1fe736e628c36e1a/lib-zerotrie`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: __libc_start_main
+  23: <unknown>
+   0.283723538s  INFO prepare_target{force=false package_id=icu_properties v2.2.0 target="icu_properties"}: cargo::core::compiler::fingerprint: fingerprint error for icu_properties v2.2.0/Check { test: false }/TargetInner { ..: lib_target("icu_properties", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_properties-2.2.0/src/lib.rs", Edition2021) }
+   0.283745852s  INFO prepare_target{force=false package_id=icu_properties v2.2.0 target="icu_properties"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_properties-d42bcb179fb93b3d/lib-icu_properties`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.284096978s  INFO prepare_target{force=false package_id=icu_properties_data v2.2.0 target="icu_properties_data"}: cargo::core::compiler::fingerprint: fingerprint error for icu_properties_data v2.2.0/Check { test: false }/TargetInner { ..: lib_target("icu_properties_data", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/icu_properties_data-2.2.0/src/lib.rs", Edition2021) }
+   0.284111750s  INFO prepare_target{force=false package_id=icu_properties_data v2.2.0 target="icu_properties_data"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/icu_properties_data-f46be7ae7ca34256/lib-icu_properties_data`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.284447691s  INFO prepare_target{force=false package_id=rusqlite v0.29.0 target="rusqlite"}: cargo::core::compiler::fingerprint: fingerprint error for rusqlite v0.29.0/Check { test: false }/TargetInner { ..: lib_target("rusqlite", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.29.0/src/lib.rs", Edition2018) }
+   0.284462441s  INFO prepare_target{force=false package_id=rusqlite v0.29.0 target="rusqlite"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/rusqlite-8fcbf02d91d6da38/lib-rusqlite`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.284827235s  INFO prepare_target{force=false package_id=fallible-iterator v0.2.0 target="fallible_iterator"}: cargo::core::compiler::fingerprint: fingerprint error for fallible-iterator v0.2.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fallible_iterator", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fallible-iterator-0.2.0/src/lib.rs", Edition2018) }
+   0.284838657s  INFO prepare_target{force=false package_id=fallible-iterator v0.2.0 target="fallible_iterator"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/fallible-iterator-6ffc17fd996cadaa/lib-fallible_iterator`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.284985542s  INFO prepare_target{force=false package_id=fallible-streaming-iterator v0.1.9 target="fallible_streaming_iterator"}: cargo::core::compiler::fingerprint: fingerprint error for fallible-streaming-iterator v0.1.9/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fallible_streaming_iterator", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fallible-streaming-iterator-0.1.9/src/lib.rs", Edition2015) }
+   0.284999735s  INFO prepare_target{force=false package_id=fallible-streaming-iterator v0.1.9 target="fallible_streaming_iterator"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/fallible-streaming-iterator-a48adf5b63c8e288/lib-fallible_streaming_iterator`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.285658775s  INFO prepare_target{force=false package_id=hashlink v0.8.4 target="hashlink"}: cargo::core::compiler::fingerprint: fingerprint error for hashlink v0.8.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hashlink", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.8.4/src/lib.rs", Edition2018) }
+   0.285676226s  INFO prepare_target{force=false package_id=hashlink v0.8.4 target="hashlink"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/hashlink-15aa6c824ee607ee/lib-hashlink`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.287180381s  INFO prepare_target{force=false package_id=hashbrown v0.14.5 target="hashbrown"}: cargo::core::compiler::fingerprint: fingerprint error for hashbrown v0.14.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hashbrown", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashbrown-0.14.5/src/lib.rs", Edition2021) }
+   0.287256553s  INFO prepare_target{force=false package_id=hashbrown v0.14.5 target="hashbrown"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/hashbrown-39f94488da5d2945/lib-hashbrown`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.289424111s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint: fingerprint error for ahash v0.8.12/Check { test: false }/TargetInner { ..: lib_target("ahash", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ahash-0.8.12/src/lib.rs", Edition2018) }
+   0.289463483s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/ahash-afa32b0905d58cd7/lib-ahash`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.290983791s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.3.4/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.3.4/src/lib.rs", Edition2021) }
+   0.291040642s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/getrandom-0d23461629ab05f6/lib-getrandom`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.292371261s  INFO prepare_target{force=false package_id=zerocopy v0.8.48 target="zerocopy"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy v0.8.48/Check { test: false }/TargetInner { ..: lib_target("zerocopy", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.8.48/src/lib.rs", Edition2021) }
+   0.292395244s  INFO prepare_target{force=false package_id=zerocopy v0.8.48 target="zerocopy"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/zerocopy-d9709c5f74d18b43/lib-zerocopy`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.292967635s  INFO prepare_target{force=false package_id=allocator-api2 v0.2.21 target="allocator_api2"}: cargo::core::compiler::fingerprint: fingerprint error for allocator-api2 v0.2.21/Check { test: false }/TargetInner { ..: lib_target("allocator_api2", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/allocator-api2-0.2.21/src/lib.rs", Edition2018) }
+   0.292998506s  INFO prepare_target{force=false package_id=allocator-api2 v0.2.21 target="allocator_api2"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/allocator-api2-292f11cc6ffa2381/lib-allocator_api2`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.293184807s  INFO prepare_target{force=false package_id=libsqlite3-sys v0.26.0 target="libsqlite3_sys"}: cargo::core::compiler::fingerprint: fingerprint error for libsqlite3-sys v0.26.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("libsqlite3_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.26.0/src/lib.rs", Edition2018) }
+   0.293202293s  INFO prepare_target{force=false package_id=libsqlite3-sys v0.26.0 target="libsqlite3_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/libsqlite3-sys-ec3f4d0d62448f6e/lib-libsqlite3_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.294690031s  INFO prepare_target{force=false package_id=scraper v0.18.1 target="scraper"}: cargo::core::compiler::fingerprint: fingerprint error for scraper v0.18.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("scraper", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scraper-0.18.1/src/lib.rs", Edition2021) }
+   0.294717034s  INFO prepare_target{force=false package_id=scraper v0.18.1 target="scraper"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/scraper-de1687a9bf78a815/lib-scraper`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.296054682s  INFO prepare_target{force=false package_id=cssparser v0.31.2 target="cssparser"}: cargo::core::compiler::fingerprint: fingerprint error for cssparser v0.31.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("cssparser", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cssparser-0.31.2/src/lib.rs", Edition2018) }
+   0.296113925s  INFO prepare_target{force=false package_id=cssparser v0.31.2 target="cssparser"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/cssparser-3ec4d654f3849895/lib-cssparser`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.296549833s  INFO prepare_target{force=false package_id=dtoa-short v0.3.5 target="dtoa_short"}: cargo::core::compiler::fingerprint: fingerprint error for dtoa-short v0.3.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("dtoa_short", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/dtoa-short-0.3.5/src/lib.rs", Edition2015) }
+   0.296564747s  INFO prepare_target{force=false package_id=dtoa-short v0.3.5 target="dtoa_short"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/dtoa-short-4797987e6cad0da7/lib-dtoa_short`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.297171812s  INFO prepare_target{force=false package_id=dtoa v1.0.11 target="dtoa"}: cargo::core::compiler::fingerprint: fingerprint error for dtoa v1.0.11/Check { test: false }/TargetInner { ..: lib_target("dtoa", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/dtoa-1.0.11/src/lib.rs", Edition2021) }
+   0.297189408s  INFO prepare_target{force=false package_id=dtoa v1.0.11 target="dtoa"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/dtoa-e85f80796be1d301/lib-dtoa`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.297440586s  INFO prepare_target{force=false package_id=phf v0.11.3 target="phf"}: cargo::core::compiler::fingerprint: fingerprint error for phf v0.11.3/Check { test: false }/TargetInner { tested: false, ..: lib_target("phf", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/phf-0.11.3/src/lib.rs", Edition2021) }
+   0.297453654s  INFO prepare_target{force=false package_id=phf v0.11.3 target="phf"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/phf-794ecc696795eb71/lib-phf`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.298573761s  INFO prepare_target{force=false package_id=phf_shared v0.11.3 target="phf_shared"}: cargo::core::compiler::fingerprint: fingerprint error for phf_shared v0.11.3/Check { test: false }/TargetInner { tested: false, ..: lib_target("phf_shared", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/phf_shared-0.11.3/src/lib.rs", Edition2021) }
+   0.298591865s  INFO prepare_target{force=false package_id=phf_shared v0.11.3 target="phf_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/phf_shared-a20e26505953cea3/lib-phf_shared`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.298795677s  INFO prepare_target{force=false package_id=siphasher v1.0.3 target="siphasher"}: cargo::core::compiler::fingerprint: fingerprint error for siphasher v1.0.3/Check { test: false }/TargetInner { ..: lib_target("siphasher", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/siphasher-1.0.3/src/lib.rs", Edition2018) }
+   0.298808251s  INFO prepare_target{force=false package_id=siphasher v1.0.3 target="siphasher"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/siphasher-9c0e3c330c000938/lib-siphasher`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.298973356s  INFO prepare_target{force=false package_id=ego-tree v0.6.3 target="ego_tree"}: cargo::core::compiler::fingerprint: fingerprint error for ego-tree v0.6.3/Check { test: false }/TargetInner { ..: lib_target("ego_tree", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ego-tree-0.6.3/src/lib.rs", Edition2015) }
+   0.298986207s  INFO prepare_target{force=false package_id=ego-tree v0.6.3 target="ego_tree"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/ego-tree-68827dcd49ff336b/lib-ego_tree`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.299132424s  INFO prepare_target{force=false package_id=getopts v0.2.24 target="getopts"}: cargo::core::compiler::fingerprint: fingerprint error for getopts v0.2.24/Check { test: false }/TargetInner { ..: lib_target("getopts", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getopts-0.2.24/src/lib.rs", Edition2021) }
+   0.299144688s  INFO prepare_target{force=false package_id=getopts v0.2.24 target="getopts"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/getopts-3031ee5e8990e49e/lib-getopts`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.299312563s  INFO prepare_target{force=false package_id=unicode-width v0.2.2 target="unicode_width"}: cargo::core::compiler::fingerprint: fingerprint error for unicode-width v0.2.2/Check { test: false }/TargetInner { ..: lib_target("unicode_width", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/unicode-width-0.2.2/src/lib.rs", Edition2021) }
+   0.299325067s  INFO prepare_target{force=false package_id=unicode-width v0.2.2 target="unicode_width"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/unicode-width-865a8df280eeed44/lib-unicode_width`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.299478782s  INFO prepare_target{force=false package_id=html5ever v0.26.0 target="html5ever"}: cargo::core::compiler::fingerprint: fingerprint error for html5ever v0.26.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("html5ever", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/html5ever-0.26.0/src/lib.rs", Edition2018) }
+   0.299492265s  INFO prepare_target{force=false package_id=html5ever v0.26.0 target="html5ever"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/html5ever-f6f18d991bbcbdc8/lib-html5ever`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.300169618s  INFO prepare_target{force=false package_id=mac v0.1.1 target="mac"}: cargo::core::compiler::fingerprint: fingerprint error for mac v0.1.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("mac", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/mac-0.1.1/src/lib.rs", Edition2015) }
+   0.300187663s  INFO prepare_target{force=false package_id=mac v0.1.1 target="mac"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/mac-604fd1f5ac3c2a6a/lib-mac`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.300328469s  INFO prepare_target{force=false package_id=markup5ever v0.11.0 target="markup5ever"}: cargo::core::compiler::fingerprint: fingerprint error for markup5ever v0.11.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("markup5ever", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/markup5ever-0.11.0/lib.rs", Edition2018) }
+   0.300341296s  INFO prepare_target{force=false package_id=markup5ever v0.11.0 target="markup5ever"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/markup5ever-edbc753179b5aa6e/lib-markup5ever`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.301406523s  INFO prepare_target{force=false package_id=phf v0.10.1 target="phf"}: cargo::core::compiler::fingerprint: fingerprint error for phf v0.10.1/Check { test: false }/TargetInner { tested: false, ..: lib_target("phf", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/phf-0.10.1/src/lib.rs", Edition2018) }
+   0.301426355s  INFO prepare_target{force=false package_id=phf v0.10.1 target="phf"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/phf-d4ff8b4263570011/lib-phf`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.301642615s  INFO prepare_target{force=false package_id=phf_shared v0.10.0 target="phf_shared"}: cargo::core::compiler::fingerprint: fingerprint error for phf_shared v0.10.0/Check { test: false }/TargetInner { tested: false, ..: lib_target("phf_shared", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/phf_shared-0.10.0/src/lib.rs", Edition2018) }
+   0.301667616s  INFO prepare_target{force=false package_id=phf_shared v0.10.0 target="phf_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/phf_shared-620328d295c5bb19/lib-phf_shared`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.302581896s  INFO prepare_target{force=false package_id=siphasher v0.3.11 target="siphasher"}: cargo::core::compiler::fingerprint: fingerprint error for siphasher v0.3.11/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("siphasher", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/siphasher-0.3.11/src/lib.rs", Edition2018) }
+   0.302599146s  INFO prepare_target{force=false package_id=siphasher v0.3.11 target="siphasher"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/siphasher-25cf6cbe544b58a0/lib-siphasher`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.302793576s  INFO prepare_target{force=false package_id=string_cache v0.8.9 target="string_cache"}: cargo::core::compiler::fingerprint: fingerprint error for string_cache v0.8.9/Check { test: false }/TargetInner { ..: lib_target("string_cache", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/string_cache-0.8.9/src/lib.rs", Edition2018) }
+   0.302803773s  INFO prepare_target{force=false package_id=string_cache v0.8.9 target="string_cache"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/string_cache-7bc9cd6d98791de3/lib-string_cache`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.303116759s  INFO prepare_target{force=false package_id=new_debug_unreachable v1.0.6 target="debug_unreachable"}: cargo::core::compiler::fingerprint: fingerprint error for new_debug_unreachable v1.0.6/Check { test: false }/TargetInner { ..: lib_target("debug_unreachable", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/new_debug_unreachable-1.0.6/src/lib.rs", Edition2021) }
+   0.303129278s  INFO prepare_target{force=false package_id=new_debug_unreachable v1.0.6 target="debug_unreachable"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/new_debug_unreachable-d84d912d9877344d/lib-debug_unreachable`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.303279969s  INFO prepare_target{force=false package_id=parking_lot v0.12.5 target="parking_lot"}: cargo::core::compiler::fingerprint: fingerprint error for parking_lot v0.12.5/Check { test: false }/TargetInner { ..: lib_target("parking_lot", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/parking_lot-0.12.5/src/lib.rs", Edition2021) }
+   0.303289385s  INFO prepare_target{force=false package_id=parking_lot v0.12.5 target="parking_lot"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/parking_lot-2f4fe72eef758524/lib-parking_lot`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.303497351s  INFO prepare_target{force=false package_id=lock_api v0.4.14 target="lock_api"}: cargo::core::compiler::fingerprint: fingerprint error for lock_api v0.4.14/Check { test: false }/TargetInner { ..: lib_target("lock_api", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lock_api-0.4.14/src/lib.rs", Edition2021) }
+   0.303513177s  INFO prepare_target{force=false package_id=lock_api v0.4.14 target="lock_api"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/lock_api-f55307b7e0195fb3/lib-lock_api`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.303688065s  INFO prepare_target{force=false package_id=scopeguard v1.2.0 target="scopeguard"}: cargo::core::compiler::fingerprint: fingerprint error for scopeguard v1.2.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("scopeguard", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs", Edition2015) }
+   0.303700754s  INFO prepare_target{force=false package_id=scopeguard v1.2.0 target="scopeguard"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/scopeguard-f7d96c04bc217dda/lib-scopeguard`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: __libc_start_main
+  23: <unknown>
+   0.303852975s  INFO prepare_target{force=false package_id=parking_lot_core v0.9.12 target="parking_lot_core"}: cargo::core::compiler::fingerprint: fingerprint error for parking_lot_core v0.9.12/Check { test: false }/TargetInner { ..: lib_target("parking_lot_core", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/parking_lot_core-0.9.12/src/lib.rs", Edition2021) }
+   0.303862389s  INFO prepare_target{force=false package_id=parking_lot_core v0.9.12 target="parking_lot_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/parking_lot_core-03205024ad9f30bf/lib-parking_lot_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: __libc_start_main
+  22: <unknown>
+   0.304635914s  INFO prepare_target{force=false package_id=precomputed-hash v0.1.1 target="precomputed_hash"}: cargo::core::compiler::fingerprint: fingerprint error for precomputed-hash v0.1.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("precomputed_hash", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/precomputed-hash-0.1.1/src/lib.rs", Edition2015) }
+   0.304659147s  INFO prepare_target{force=false package_id=precomputed-hash v0.1.1 target="precomputed_hash"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/precomputed-hash-70f2122e0fa45e7a/lib-precomputed_hash`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.304921690s  INFO prepare_target{force=false package_id=tendril v0.4.3 target="tendril"}: cargo::core::compiler::fingerprint: fingerprint error for tendril v0.4.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tendril", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tendril-0.4.3/src/lib.rs", Edition2015) }
+   0.304936389s  INFO prepare_target{force=false package_id=tendril v0.4.3 target="tendril"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tendril-63ae3af641497232/lib-tendril`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.305327264s  INFO prepare_target{force=false package_id=futf v0.1.5 target="futf"}: cargo::core::compiler::fingerprint: fingerprint error for futf v0.1.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("futf", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futf-0.1.5/src/lib.rs", Edition2015) }
+   0.305344836s  INFO prepare_target{force=false package_id=futf v0.1.5 target="futf"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/futf-e0c727e6400d1d5d/lib-futf`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.305532475s  INFO prepare_target{force=false package_id=utf-8 v0.7.6 target="utf8"}: cargo::core::compiler::fingerprint: fingerprint error for utf-8 v0.7.6/Check { test: false }/TargetInner { tested: false, benched: false, ..: lib_target("utf8", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lib.rs", Edition2015) }
+   0.305545843s  INFO prepare_target{force=false package_id=utf-8 v0.7.6 target="utf8"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/utf-8-ed1d8dded21a40e5/lib-utf8`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: __libc_start_main
+  21: <unknown>
+   0.305685383s  INFO prepare_target{force=false package_id=selectors v0.25.0 target="selectors"}: cargo::core::compiler::fingerprint: fingerprint error for selectors v0.25.0/Check { test: false }/TargetInner { ..: lib_target("selectors", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/selectors-0.25.0/lib.rs", Edition2015) }
+   0.305700853s  INFO prepare_target{force=false package_id=selectors v0.25.0 target="selectors"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/selectors-9ae45fec5c294e70/lib-selectors`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.306467356s  INFO prepare_target{force=false package_id=fxhash v0.2.1 target="fxhash"}: cargo::core::compiler::fingerprint: fingerprint error for fxhash v0.2.1/Check { test: false }/TargetInner { ..: lib_target("fxhash", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fxhash-0.2.1/lib.rs", Edition2015) }
+   0.306483339s  INFO prepare_target{force=false package_id=fxhash v0.2.1 target="fxhash"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/fxhash-e2322bfaf25d0721/lib-fxhash`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.306726660s  INFO prepare_target{force=false package_id=byteorder v1.5.0 target="byteorder"}: cargo::core::compiler::fingerprint: fingerprint error for byteorder v1.5.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("byteorder", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/byteorder-1.5.0/src/lib.rs", Edition2021) }
+   0.306744500s  INFO prepare_target{force=false package_id=byteorder v1.5.0 target="byteorder"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/byteorder-c69a45e2cd01d506/lib-byteorder`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: __libc_start_main
+  20: <unknown>
+   0.307071822s  INFO prepare_target{force=false package_id=servo_arc v0.3.0 target="servo_arc"}: cargo::core::compiler::fingerprint: fingerprint error for servo_arc v0.3.0/Check { test: false }/TargetInner { ..: lib_target("servo_arc", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/servo_arc-0.3.0/lib.rs", Edition2015) }
+   0.307085964s  INFO prepare_target{force=false package_id=servo_arc v0.3.0 target="servo_arc"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/servo_arc-a7d1f6c98fe75fab/lib-servo_arc`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.307270112s  INFO prepare_target{force=false package_id=shlex v1.3.0 target="shlex"}: cargo::core::compiler::fingerprint: fingerprint error for shlex v1.3.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("shlex", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/shlex-1.3.0/src/lib.rs", Edition2015) }
+   0.307283357s  INFO prepare_target{force=false package_id=shlex v1.3.0 target="shlex"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/shlex-607d28f4ac3142ab/lib-shlex`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.307430200s  INFO prepare_target{force=false package_id=similar v2.7.0 target="similar"}: cargo::core::compiler::fingerprint: fingerprint error for similar v2.7.0/Check { test: false }/TargetInner { ..: lib_target("similar", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/similar-2.7.0/src/lib.rs", Edition2018) }
+   0.307442901s  INFO prepare_target{force=false package_id=similar v2.7.0 target="similar"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/similar-f481877102a4ed79/lib-similar`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.307614922s  INFO prepare_target{force=false package_id=tempfile v3.27.0 target="tempfile"}: cargo::core::compiler::fingerprint: fingerprint error for tempfile v3.27.0/Check { test: false }/TargetInner { ..: lib_target("tempfile", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tempfile-3.27.0/src/lib.rs", Edition2021) }
+   0.307629720s  INFO prepare_target{force=false package_id=tempfile v3.27.0 target="tempfile"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/tempfile-7ac1061c3afccb14/lib-tempfile`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.307935458s  INFO prepare_target{force=false package_id=fastrand v2.4.1 target="fastrand"}: cargo::core::compiler::fingerprint: fingerprint error for fastrand v2.4.1/Check { test: false }/TargetInner { ..: lib_target("fastrand", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fastrand-2.4.1/src/lib.rs", Edition2018) }
+   0.307949543s  INFO prepare_target{force=false package_id=fastrand v2.4.1 target="fastrand"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/fastrand-2457bfa202238d06/lib-fastrand`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.308123437s  INFO prepare_target{force=false package_id=getrandom v0.4.2 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.4.2/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.4.2/src/lib.rs", Edition2024) }
+   0.308136431s  INFO prepare_target{force=false package_id=getrandom v0.4.2 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/getrandom-53f8e094f5f77fca/lib-getrandom`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.308547720s  INFO prepare_target{force=false package_id=rustix v1.1.4 target="rustix"}: cargo::core::compiler::fingerprint: fingerprint error for rustix v1.1.4/Check { test: false }/TargetInner { ..: lib_target("rustix", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustix-1.1.4/src/lib.rs", Edition2021) }
+   0.308565192s  INFO prepare_target{force=false package_id=rustix v1.1.4 target="rustix"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/rustix-023e01b267d62d11/lib-rustix`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.308829469s  INFO prepare_target{force=false package_id=linux-raw-sys v0.12.1 target="linux_raw_sys"}: cargo::core::compiler::fingerprint: fingerprint error for linux-raw-sys v0.12.1/Check { test: false }/TargetInner { ..: lib_target("linux_raw_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/linux-raw-sys-0.12.1/src/lib.rs", Edition2021) }
+   0.308842880s  INFO prepare_target{force=false package_id=linux-raw-sys v0.12.1 target="linux_raw_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/linux-raw-sys-1aa1b95db841ca48/lib-linux_raw_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.309191896s  INFO prepare_target{force=false package_id=urlencoding v2.1.3 target="urlencoding"}: cargo::core::compiler::fingerprint: fingerprint error for urlencoding v2.1.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("urlencoding", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/urlencoding-2.1.3/src/lib.rs", Edition2021) }
+   0.309206002s  INFO prepare_target{force=false package_id=urlencoding v2.1.3 target="urlencoding"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/urlencoding-96f76f786a65c0e6/lib-urlencoding`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.309357589s  INFO prepare_target{force=false package_id=which v6.0.3 target="which"}: cargo::core::compiler::fingerprint: fingerprint error for which v6.0.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("which", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/which-6.0.3/src/lib.rs", Edition2021) }
+   0.309370984s  INFO prepare_target{force=false package_id=which v6.0.3 target="which"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/which-753fc6b46f43b84f/lib-which`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: __libc_start_main
+  17: <unknown>
+   0.309581096s  INFO prepare_target{force=false package_id=either v1.15.0 target="either"}: cargo::core::compiler::fingerprint: fingerprint error for either v1.15.0/Check { test: false }/TargetInner { ..: lib_target("either", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.15.0/src/lib.rs", Edition2021) }
+   0.309594109s  INFO prepare_target{force=false package_id=either v1.15.0 target="either"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/either-06d32fa71f01ff5f/lib-either`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.309751108s  INFO prepare_target{force=false package_id=home v0.5.12 target="home"}: cargo::core::compiler::fingerprint: fingerprint error for home v0.5.12/Check { test: false }/TargetInner { ..: lib_target("home", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/home-0.5.12/src/lib.rs", Edition2024) }
+   0.309766225s  INFO prepare_target{force=false package_id=home v0.5.12 target="home"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/home-852a9c6bad407cbd/lib-home`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.309910886s  INFO prepare_target{force=false package_id=rustix v0.38.44 target="rustix"}: cargo::core::compiler::fingerprint: fingerprint error for rustix v0.38.44/Check { test: false }/TargetInner { ..: lib_target("rustix", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustix-0.38.44/src/lib.rs", Edition2021) }
+   0.309926090s  INFO prepare_target{force=false package_id=rustix v0.38.44 target="rustix"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/rustix-eb1123b3a684075f/lib-rustix`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: __libc_start_main
+  18: <unknown>
+   0.310920133s  INFO prepare_target{force=false package_id=linux-raw-sys v0.4.15 target="linux_raw_sys"}: cargo::core::compiler::fingerprint: fingerprint error for linux-raw-sys v0.4.15/Check { test: false }/TargetInner { ..: lib_target("linux_raw_sys", ["lib"], "/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/linux-raw-sys-0.4.15/src/lib.rs", Edition2021) }
+   0.310939049s  INFO prepare_target{force=false package_id=linux-raw-sys v0.4.15 target="linux_raw_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/linux-raw-sys-178163f8b11ddf96/lib-linux_raw_sys`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: __libc_start_main
+  19: <unknown>
+   0.311600717s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru_Gui) target="paru-gui"}: cargo::core::compiler::fingerprint: fingerprint error for paru-gui v0.1.0 (/home/john/Projects/Paru_Gui)/Check { test: true }/TargetInner { name: "paru-gui", doc: true, ..: with_path("/home/john/Projects/Paru_Gui/src/main.rs", Edition2021) }
+   0.311639687s  INFO prepare_target{force=false package_id=paru-gui v0.1.0 (/home/john/Projects/Paru_Gui) target="paru-gui"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/john/Projects/Paru_Gui/target/debug/.fingerprint/paru-gui-b4dabd779600f939/test-bin-paru-gui`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>

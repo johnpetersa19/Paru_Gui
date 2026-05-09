@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
-use crate::gear::preferences_manager::PreferencesManager;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ErrorLevel {

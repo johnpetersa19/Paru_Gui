@@ -1,0 +1,15 @@
+/home/john/Projects/Paru_Gui/target/debug/deps/target_lexicon-9bd58ed5e307dec1.d: /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/lib.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/data_model.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/host.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/parse_error.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/targets.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/triple.rs /home/john/Projects/Paru_Gui/target/debug/build/target-lexicon-44074ef76450eddd/out/host.rs
+
+/home/john/Projects/Paru_Gui/target/debug/deps/libtarget_lexicon-9bd58ed5e307dec1.rlib: /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/lib.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/data_model.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/host.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/parse_error.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/targets.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/triple.rs /home/john/Projects/Paru_Gui/target/debug/build/target-lexicon-44074ef76450eddd/out/host.rs
+
+/home/john/Projects/Paru_Gui/target/debug/deps/libtarget_lexicon-9bd58ed5e307dec1.rmeta: /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/lib.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/data_model.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/host.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/parse_error.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/targets.rs /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/triple.rs /home/john/Projects/Paru_Gui/target/debug/build/target-lexicon-44074ef76450eddd/out/host.rs
+
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/lib.rs:
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/data_model.rs:
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/host.rs:
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/parse_error.rs:
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/targets.rs:
+/home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.3/src/triple.rs:
+/home/john/Projects/Paru_Gui/target/debug/build/target-lexicon-44074ef76450eddd/out/host.rs:
+
+# env-dep:OUT_DIR=/home/john/Projects/Paru_Gui/target/debug/build/target-lexicon-44074ef76450eddd/out

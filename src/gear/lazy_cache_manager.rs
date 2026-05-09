@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
-use std::thread;
 
 struct CacheEntry<T> {
     value: T,
