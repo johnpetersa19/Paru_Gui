@@ -1,0 +1,156 @@
+warning: unused import: `PKGDATADIR`
+  --> src/main.rs:29:42
+   |
+29 | use config::{GETTEXT_PACKAGE, LOCALEDIR, PKGDATADIR};
+   |                                          ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: static `PKGDATADIR` is never used
+ --> src/config.rs:4:12
+  |
+4 | pub static PKGDATADIR: &str = "/app/share/paru-gui";
+  |            ^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `paru-gui` (bin "paru-gui") generated 2 warnings (run `cargo fix --bin "paru-gui" -p paru-gui` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `target/debug/paru-gui`
+ParuGuiWindow constructed and managers initialized
+
+(paru-gui:7978): Gdk-WARNING **: 18:32:05.661: Vulkan: Loader Message: setup_loader_term_phys_devs:  Failed to detect any valid GPUs in the current config
+
+(paru-gui:7978): Gdk-WARNING **: 18:32:05.661: vkEnumeratePhysicalDevices(): Initialization of an object could not be completed for implementation-specific reasons. (VK_ERROR_INITIALIZATION_FAILED) (-3)
+
+thread 'main' (7978) panicked at src/window.rs:112:5:
+Wrong type for `self` in template callback `on_select_file_clicked`: WrongValueType(ValueTypeMismatchError { actual: GtkButton, requested: ParuGuiWindow })
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: <paru_gui::window::imp::ParuGuiWindow as gtk4::subclass::widget::CompositeTemplateCallbacks>::CALLBACKS::{{closure}}::{{closure}}
+             at ./src/window.rs:112:5
+   3: core::result::Result<T,E>::unwrap_or_else
+             at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/result.rs:1622:23
+   4: <paru_gui::window::imp::ParuGuiWindow as gtk4::subclass::widget::CompositeTemplateCallbacks>::CALLBACKS::{{closure}}
+             at ./src/window.rs:112:5
+   5: core::ops::function::FnOnce::call_once
+             at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/ops/function.rs:250:5
+   6: core::ops::function::Fn::call
+             at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/ops/function.rs:79:5
+   7: core::ops::function::impls::<impl core::ops::function::Fn<A> for &F>::call
+             at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/ops/function.rs:263:22
+   8: <gtk4::builder_rust_scope::imp::BuilderRustScope as gtk4::subclass::builder_scope::BuilderScopeImpl>::create_closure::{{closure}}::{{closure}}
+   9: glib::closure::Closure::new_local::{{closure}}
+  10: glib::closure::Closure::new_unsafe::marshal
+  11: g_closure_invoke
+  12: <unknown>
+  13: <unknown>
+  14: g_signal_emit_valist
+  15: g_signal_emit
+  16: <unknown>
+  17: <unknown>
+  18: g_signal_emit_valist
+  19: g_signal_emit
+  20: <unknown>
+  21: g_cclosure_marshal_VOID__BOXEDv
+  22: <unknown>
+  23: g_signal_emit_valist
+  24: g_signal_emit
+  25: <unknown>
+  26: <unknown>
+  27: <unknown>
+  28: <unknown>
+  29: <unknown>
+  30: <unknown>
+  31: <unknown>
+  32: <unknown>
+  33: <unknown>
+  34: <unknown>
+  35: g_signal_emit_valist
+  36: g_signal_emit
+  37: <unknown>
+  38: <unknown>
+  39: <unknown>
+  40: <unknown>
+  41: g_main_context_iteration
+  42: g_application_run
+  43: gio::application::ApplicationExtManual::run_with_args
+             at /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-0.20.12/src/application.rs:29:13
+  44: gio::application::ApplicationExtManual::run
+             at /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-0.20.12/src/application.rs:22:14
+  45: paru_gui::main
+             at ./src/main.rs:54:9
+  46: core::ops::function::FnOnce::call_once
+             at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/ops/function.rs:250:5
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+
+thread 'main' (7978) panicked at library/core/src/panicking.rs:225:5:
+panic in a function that cannot unwind
+stack backtrace:
+   0:     0x5607fe50e0ba - <<std[a765fd5928b5b598]::sys::backtrace::BacktraceLock>::print::DisplayBacktrace as core[35a6834026b90a1d]::fmt::Display>::fmt
+   1:     0x5607fe52413a - core[35a6834026b90a1d]::fmt::write
+   2:     0x5607fe512b92 - <std[a765fd5928b5b598]::sys::stdio::unix::Stderr as std[a765fd5928b5b598]::io::Write>::write_fmt
+   3:     0x5607fe4f05bf - std[a765fd5928b5b598]::panicking::default_hook::{closure#0}
+   4:     0x5607fe508ad1 - std[a765fd5928b5b598]::panicking::default_hook
+   5:     0x5607fe508d4b - std[a765fd5928b5b598]::panicking::panic_with_hook
+   6:     0x5607fe4f06aa - std[a765fd5928b5b598]::panicking::panic_handler::{closure#0}
+   7:     0x5607fe4e8029 - std[a765fd5928b5b598]::sys::backtrace::__rust_end_short_backtrace::<std[a765fd5928b5b598]::panicking::panic_handler::{closure#0}, !>
+   8:     0x5607fe4f11cd - __rustc[168cb6d8736c2077]::rust_begin_unwind
+   9:     0x5607fe5248bd - core[35a6834026b90a1d]::panicking::panic_nounwind_fmt
+  10:     0x5607fe52483b - core[35a6834026b90a1d]::panicking::panic_nounwind
+  11:     0x5607fe5249c7 - core[35a6834026b90a1d]::panicking::panic_cannot_unwind
+  12:     0x5607fe295151 - glib::closure::Closure::new_unsafe::marshal::h359654188268345b
+  13:     0x7f4e927a9bcc - g_closure_invoke
+  14:     0x7f4e927c984b - <unknown>
+  15:     0x7f4e927cba34 - <unknown>
+  16:     0x7f4e927cbcd9 - g_signal_emit_valist
+  17:     0x7f4e927cbd94 - g_signal_emit
+  18:     0x7f4e9148faa8 - <unknown>
+  19:     0x7f4e927cbb7a - <unknown>
+  20:     0x7f4e927cbcd9 - g_signal_emit_valist
+  21:     0x7f4e927cbd94 - g_signal_emit
+  22:     0x7f4e91550bb5 - <unknown>
+  23:     0x7f4e927ade63 - g_cclosure_marshal_VOID__BOXEDv
+  24:     0x7f4e927cbb7a - <unknown>
+  25:     0x7f4e927cbcd9 - g_signal_emit_valist
+  26:     0x7f4e927cbd94 - g_signal_emit
+  27:     0x7f4e9155376e - <unknown>
+  28:     0x7f4e91555efb - <unknown>
+  29:     0x7f4e91556cbb - <unknown>
+  30:     0x7f4e916e102b - <unknown>
+  31:     0x7f4e916e1570 - <unknown>
+  32:     0x7f4e9159cbf2 - <unknown>
+  33:     0x7f4e9159d7c3 - <unknown>
+  34:     0x7f4e918b0038 - <unknown>
+  35:     0x7f4e91959a8b - <unknown>
+  36:     0x7f4e927cbb7a - <unknown>
+  37:     0x7f4e927cbcd9 - g_signal_emit_valist
+  38:     0x7f4e927cbd94 - g_signal_emit
+  39:     0x7f4e91960832 - <unknown>
+  40:     0x7f4e918b66fc - <unknown>
+  41:     0x7f4e91110bfd - <unknown>
+  42:     0x7f4e91112e57 - <unknown>
+  43:     0x7f4e91112fe5 - g_main_context_iteration
+  44:     0x7f4e912fbc36 - g_application_run
+  45:     0x5607fde32fd3 - gio::application::ApplicationExtManual::run_with_args::he865450211ac2553
+                               at /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-0.20.12/src/application.rs:29:13
+  46:     0x5607fde330ae - gio::application::ApplicationExtManual::run::h611f8a26e9d7227e
+                               at /home/john/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gio-0.20.12/src/application.rs:22:14
+  47:     0x5607fde4fc89 - paru_gui::main::ha41667befb16fe1c
+                               at /home/john/Projects/Paru_Gui/src/main.rs:54:9
+  48:     0x5607fde3bee3 - core::ops::function::FnOnce::call_once::h4aeaa32fbd1dc573
+                               at /usr/src/debug/rust/rustc-1.95.0-src/library/core/src/ops/function.rs:250:5
+  49:     0x5607fde33986 - std::sys::backtrace::__rust_begin_short_backtrace::h76fc5a604d7c409c
+                               at /usr/src/debug/rust/rustc-1.95.0-src/library/std/src/sys/backtrace.rs:166:18
+  50:     0x5607fde47d99 - std::rt::lang_start::{{closure}}::he22b95e0adacb120
+                               at /usr/src/debug/rust/rustc-1.95.0-src/library/std/src/rt.rs:206:18
+  51:     0x5607fe5077c4 - std[a765fd5928b5b598]::rt::lang_start_internal
+  52:     0x5607fde47d81 - std::rt::lang_start::ha7c1e64e788820ca
+                               at /usr/src/debug/rust/rustc-1.95.0-src/library/std/src/rt.rs:205:5
+  53:     0x5607fde4fcfe - main
+  54:     0x7f4e90c27741 - <unknown>
+  55:     0x7f4e90c27879 - __libc_start_main
+  56:     0x5607fde23bf5 - _start
+  57:                0x0 - <unknown>
+thread caused non-unwinding panic. aborting.

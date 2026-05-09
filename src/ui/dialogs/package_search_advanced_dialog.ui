@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="PackageSearchAdvancedDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Advanced Package Search</property>
     <property name="content-width">800</property>
     <property name="content-height">750</property>
-    <property name="can-close">true</property>
+    
 
     <child>
       <object class="AdwToolbarView">
@@ -65,7 +65,7 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to Search Results</property>
-                <signal name="clicked" handler="on_back_clicked"/>
+                <signal name="clicked" handler="on_back_clicked" swapped="true"/>
               </object>
             </child>
             <child type="end">
@@ -110,9 +110,9 @@
             <property name="hscrollbar-policy">never</property>
             <property name="vscrollbar-policy">automatic</property>
             <property name="child">
-              <object class="AdwClamp">
-                <property name="maximum-size">750</property>
-                <property name="tightening-threshold">500</property>
+              <object class="AdwPreferencesPage">
+                
+                
                 <property name="child">
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -145,7 +145,7 @@
                             <property name="title" translatable="yes">Search Term</property>
                             <property name="text"></property>
                             <property name="tooltip-text" translatable="yes">Enter package name or keywords to search</property>
-                            <signal name="changed" handler="on_search_term_changed"/>
+                            <signal name="changed" handler="on_search_term_changed" swapped="true"/>
                             <child type="suffix">
                               <object class="GtkButton" id="search_button">
                                 <property name="label" translatable="yes">Search</property>
@@ -154,7 +154,7 @@
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
-                                <signal name="clicked" handler="on_search_clicked"/>
+                                <signal name="clicked" handler="on_search_clicked" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -163,7 +163,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Search Source</property>
-                            <property name="subtitle" translatable="yes">Select where to search for packages</property>
+                            
                             <child type="suffix">
                               <object class="GtkDropDown" id="source_dropdown">
                                 <property name="model">
@@ -177,7 +177,7 @@
                                 </property>
                                 <property name="selected">0</property>
                                 <property name="tooltip-text" translatable="yes">Choose search scope: all sources, AUR only, or repositories only</property>
-                                <signal name="notify::selected" handler="on_source_changed"/>
+                                <signal name="notify::selected" handler="on_source_changed" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -193,7 +193,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Package Category</property>
-                            <property name="subtitle" translatable="yes">Filter by package group or category</property>
+                            
                             <child type="suffix">
                               <object class="GtkDropDown" id="category_dropdown">
                                 <property name="model">
@@ -219,7 +219,7 @@
                                 </property>
                                 <property name="selected">0</property>
                                 <property name="tooltip-text" translatable="yes">Filter packages by category or group</property>
-                                <signal name="notify::selected" handler="on_category_changed"/>
+                                <signal name="notify::selected" handler="on_category_changed" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -228,27 +228,27 @@
                         <child>
                           <object class="AdwSwitchRow" id="installed_only_switch">
                             <property name="title" translatable="yes">Installed Packages Only</property>
-                            <property name="subtitle" translatable="yes">Show only currently installed packages</property>
+                            
                             <property name="tooltip-text" translatable="yes">Filter to show only packages currently installed on your system</property>
-                            <signal name="notify::active" handler="on_filter_changed"/>
+                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="orphaned_switch">
                             <property name="title" translatable="yes">Orphaned Packages</property>
-                            <property name="subtitle" translatable="yes">Show packages with no dependencies</property>
+                            
                             <property name="tooltip-text" translatable="yes">Display packages that are no longer needed by other packages</property>
-                            <signal name="notify::active" handler="on_filter_changed"/>
+                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="outdated_switch">
                             <property name="title" translatable="yes">Updates Available</property>
-                            <property name="subtitle" translatable="yes">Show packages with available updates</property>
+                            
                             <property name="tooltip-text" translatable="yes">Display only packages that have newer versions available</property>
-                            <signal name="notify::active" handler="on_filter_changed"/>
+                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
                           </object>
                         </child>
 
@@ -257,7 +257,7 @@
                             <property name="title" translatable="yes">Keyword Filter</property>
                             <property name="text"></property>
                             <property name="tooltip-text" translatable="yes">Additional keywords to filter search results</property>
-                            <signal name="changed" handler="on_keyword_filter_changed"/>
+                            <signal name="changed" handler="on_keyword_filter_changed" swapped="true"/>
                           </object>
                         </child>
                       </object>
@@ -300,7 +300,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_view_all_results_clicked"/>
+                                        <signal name="clicked" handler="on_view_all_results_clicked" swapped="true"/>
                                       </object>
                                     </child>
                                   </object>
@@ -308,7 +308,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    <property name="height-request">250</property>
+                                    
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="margin-start">12</property>
@@ -375,7 +375,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_copy_command_clicked"/>
+                                        <signal name="clicked" handler="on_copy_command_clicked" swapped="true"/>
                                       </object>
                                     </child>
                                     <child>
@@ -386,7 +386,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_run_terminal_clicked"/>
+                                        <signal name="clicked" handler="on_run_terminal_clicked" swapped="true"/>
                                       </object>
                                     </child>
                                   </object>
@@ -425,7 +425,7 @@
                                     <property name="selected">0</property>
                                     <property name="hexpand">true</property>
                                     <property name="tooltip-text" translatable="yes">Load a previously saved search configuration</property>
-                                    <signal name="notify::selected" handler="on_saved_search_selected"/>
+                                    <signal name="notify::selected" handler="on_saved_search_selected" swapped="true"/>
                                   </object>
                                 </child>
                                 <child>
@@ -436,7 +436,7 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_save_current_clicked"/>
+                                    <signal name="clicked" handler="on_save_current_clicked" swapped="true"/>
                                   </object>
                                 </child>
                               </object>
@@ -462,14 +462,14 @@
                   <object class="GtkButton" id="simple_search_button">
                     <property name="label" translatable="yes">Simple Search</property>
                     <property name="tooltip-text" translatable="yes">Switch to Simple Search mode</property>
-                    <signal name="clicked" handler="on_simple_search_clicked"/>
+                    <signal name="clicked" handler="on_simple_search_clicked" swapped="true"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="cancel_button">
                     <property name="label" translatable="yes">Cancel</property>
                     <property name="tooltip-text" translatable="yes">Close dialog without executing search</property>
-                    <signal name="clicked" handler="on_cancel_clicked"/>
+                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>
@@ -484,7 +484,7 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <signal name="clicked" handler="on_reset_clicked"/>
+                    <signal name="clicked" handler="on_reset_clicked" swapped="true"/>
                   </object>
                 </child>
                 <child>
@@ -494,7 +494,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_clicked"/>
+                    <signal name="clicked" handler="on_execute_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>

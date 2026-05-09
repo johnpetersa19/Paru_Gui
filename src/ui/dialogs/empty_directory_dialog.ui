@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.4"/>
-  <template class="EmptyDirectoryDialog" parent="AdwWindow">
-    <property name="width-request">800</property>
-    <property name="height-request">700</property>
-    <property name="default-width">900</property>
-    <property name="default-height">800</property>
-    <property name="modal">True</property>
-    <property name="resizable">True</property>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
+  <template class="EmptyDirectoryDialog" parent="AdwDialog">
+    
+    
+    <property name="content-width">900</property>
+    <property name="content-height">800</property>
+    
+    
     <property name="content">
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
@@ -25,7 +25,7 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text">Return to Directory Browser</property>
-                <signal name="clicked" handler="on_back_clicked"/>
+                <signal name="clicked" handler="on_back_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -57,7 +57,7 @@
               <object class="GtkButton" id="breadcrumb_main">
                 <property name="label">Main</property>
                 <property name="tooltip-text">Return to Main Menu</property>
-                <signal name="clicked" handler="on_breadcrumb_main_clicked"/>
+                <signal name="clicked" handler="on_breadcrumb_main_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                   <class name="breadcrumb-button"/>
@@ -76,7 +76,7 @@
               <object class="GtkButton" id="breadcrumb_projects">
                 <property name="label">Projects</property>
                 <property name="tooltip-text">Return to Project List</property>
-                <signal name="clicked" handler="on_breadcrumb_projects_clicked"/>
+                <signal name="clicked" handler="on_breadcrumb_projects_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                   <class name="breadcrumb-button"/>
@@ -211,8 +211,8 @@
                         <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkFrame" id="create_new_frame">
-                            <property name="width-request">350</property>
-                            <property name="height-request">120</property>
+                            
+                            
                             <style>
                               <class name="card"/>
                               <class name="action-card"/>
@@ -222,7 +222,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="tooltip-text">Create a new PKGBUILD file from template</property>
-                                <signal name="clicked" handler="on_create_new_clicked"/>
+                                <signal name="clicked" handler="on_create_new_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="card-button"/>
@@ -258,8 +258,8 @@
                         </child>
                         <child>
                           <object class="GtkFrame" id="import_template_frame">
-                            <property name="width-request">350</property>
-                            <property name="height-request">120</property>
+                            
+                            
                             <style>
                               <class name="card"/>
                               <class name="action-card"/>
@@ -269,7 +269,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="tooltip-text">Import and customize from available templates</property>
-                                <signal name="clicked" handler="on_import_template_clicked"/>
+                                <signal name="clicked" handler="on_import_template_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="card-button"/>
@@ -305,8 +305,8 @@
                         </child>
                         <child>
                           <object class="GtkFrame" id="browse_files_frame">
-                            <property name="width-request">350</property>
-                            <property name="height-request">120</property>
+                            
+                            
                             <style>
                               <class name="card"/>
                               <class name="action-card"/>
@@ -316,7 +316,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="tooltip-text">Browse and import existing files or archives</property>
-                                <signal name="clicked" handler="on_browse_files_clicked"/>
+                                <signal name="clicked" handler="on_browse_files_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="card-button"/>
@@ -352,8 +352,8 @@
                         </child>
                         <child>
                           <object class="GtkFrame" id="change_directory_frame">
-                            <property name="width-request">350</property>
-                            <property name="height-request">120</property>
+                            
+                            
                             <style>
                               <class name="card"/>
                               <class name="action-card"/>
@@ -363,7 +363,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="tooltip-text">Select a different project directory</property>
-                                <signal name="clicked" handler="on_change_directory_clicked"/>
+                                <signal name="clicked" handler="on_change_directory_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="card-button"/>
@@ -484,14 +484,14 @@
                                 <property name="placeholder-text">Search AUR packages...</property>
                                 <property name="hexpand">True</property>
                                 <property name="tooltip-text">Enter package name to search in AUR</property>
-                                <signal name="activate" handler="on_aur_search_activate"/>
+                                <signal name="activate" handler="on_aur_search_activate" swapped="true"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="aur_search_button">
                                 <property name="label">Search AUR</property>
                                 <property name="tooltip-text">Search for packages in AUR</property>
-                                <signal name="clicked" handler="on_aur_search_clicked"/>
+                                <signal name="clicked" handler="on_aur_search_clicked" swapped="true"/>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
@@ -501,7 +501,7 @@
                               <object class="GtkButton" id="aur_browse_button">
                                 <property name="label">Browse All</property>
                                 <property name="tooltip-text">Browse all available AUR packages</property>
-                                <signal name="clicked" handler="on_aur_browse_clicked"/>
+                                <signal name="clicked" handler="on_aur_browse_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -639,7 +639,7 @@
                                   <object class="GtkButton" id="create_preview_button">
                                     <property name="label">Preview Template</property>
                                     <property name="tooltip-text">Preview the template before creating</property>
-                                    <signal name="clicked" handler="on_create_preview_clicked"/>
+                                    <signal name="clicked" handler="on_create_preview_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -649,7 +649,7 @@
                                   <object class="GtkButton" id="create_pkgbuild_button">
                                     <property name="label">Create PKGBUILD</property>
                                     <property name="tooltip-text">Create the PKGBUILD file with selected template</property>
-                                    <signal name="clicked" handler="on_create_pkgbuild_clicked"/>
+                                    <signal name="clicked" handler="on_create_pkgbuild_clicked" swapped="true"/>
                                     <style>
                                       <class name="suggested-action"/>
                                     </style>
@@ -700,7 +700,7 @@
               <object class="GtkButton" id="help_button">
                 <property name="label">Getting Started Guide</property>
                 <property name="tooltip-text">Open help documentation for new projects</property>
-                <signal name="clicked" handler="on_help_clicked"/>
+                <signal name="clicked" handler="on_help_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -710,7 +710,7 @@
               <object class="GtkButton" id="close_button">
                 <property name="label">Close</property>
                 <property name="tooltip-text">Close this dialog and return</property>
-                <signal name="clicked" handler="on_close_clicked"/>
+                <signal name="clicked" handler="on_close_clicked" swapped="true"/>
                 <style>
                   <class name="suggested-action"/>
                   <class name="pill"/>

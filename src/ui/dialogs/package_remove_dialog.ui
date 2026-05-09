@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="PackageRemoveDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Remove Package</property>
@@ -15,7 +15,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Remove Package</property>
-                <property name="subtitle" translatable="yes">Review package removal impact and options</property>
+                
               </object>
             </property>
             <child type="start">
@@ -25,7 +25,7 @@
                 <style>
                   <class name="flat"/>
                 </style>
-                <signal name="clicked" handler="on_back_to_details_clicked"/>
+                <signal name="clicked" handler="on_back_to_details_clicked" swapped="true"/>
               </object>
             </child>
           </object>
@@ -55,7 +55,7 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <signal name="clicked" handler="on_breadcrumb_packages_clicked"/>
+                        <signal name="clicked" handler="on_breadcrumb_packages_clicked" swapped="true"/>
                       </object>
                     </child>
                     <child>
@@ -74,7 +74,7 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
-                        <signal name="clicked" handler="on_breadcrumb_package_clicked"/>
+                        <signal name="clicked" handler="on_breadcrumb_package_clicked" swapped="true"/>
                       </object>
                     </child>
                     <child>
@@ -154,7 +154,7 @@
                         <child>
                           <object class="AdwActionRow" id="target_package_row">
                             <property name="title" translatable="yes">Target Package</property>
-                            <property name="subtitle" translatable="yes">Loading package information...</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">package-x-generic-symbolic</property>
@@ -344,7 +344,7 @@
                         <child>
                           <object class="AdwExpanderRow" id="affected_packages_expander">
                             <property name="title" translatable="yes">Affected Dependencies</property>
-                            <property name="subtitle" translatable="yes">Packages that depend on this package</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">package-x-generic-symbolic</property>
@@ -368,7 +368,7 @@
                         <child>
                           <object class="AdwExpanderRow" id="orphaned_packages_expander">
                             <property name="title" translatable="yes">Orphaned Dependencies</property>
-                            <property name="subtitle" translatable="yes">Dependencies that will become orphaned</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">edit-delete-symbolic</property>
@@ -399,7 +399,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="remove_deps_switch">
                             <property name="title" translatable="yes">Remove Unused Dependencies</property>
-                            <property name="subtitle" translatable="yes">Automatically remove dependencies that are no longer needed (paru -Rs)</property>
+                            
                             <property name="active">true</property>
                             <child type="prefix">
                               <object class="GtkImage">
@@ -416,7 +416,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="keep_config_switch">
                             <property name="title" translatable="yes">Keep Configuration Files</property>
-                            <property name="subtitle" translatable="yes">Preserve configuration files for potential reinstallation</property>
+                            
                             <property name="active">true</property>
                             <child type="prefix">
                               <object class="GtkImage">
@@ -433,7 +433,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="remove_config_switch">
                             <property name="title" translatable="yes">Remove Configuration Files</property>
-                            <property name="subtitle" translatable="yes">Completely remove all configuration files (paru -Rn)</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">edit-delete-symbolic</property>
@@ -449,7 +449,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="force_remove_switch">
                             <property name="title" translatable="yes">Force Remove</property>
-                            <property name="subtitle" translatable="yes">Force removal even if there are dependency conflicts (paru -Rdd)</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">dialog-warning-symbolic</property>
@@ -472,7 +472,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="clean_cache_switch">
                             <property name="title" translatable="yes">Clean Package Cache</property>
-                            <property name="subtitle" translatable="yes">Remove downloaded package files from cache</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">edit-clear-symbolic</property>
@@ -488,7 +488,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="clean_orphans_switch">
                             <property name="title" translatable="yes">Remove Orphaned Packages</property>
-                            <property name="subtitle" translatable="yes">Automatically remove packages that are no longer needed by any installed package</property>
+                            
                             <property name="active">true</property>
                             <child type="prefix">
                               <object class="GtkImage">
@@ -505,7 +505,7 @@
                         <child>
                           <object class="AdwSwitchRow" id="update_databases_switch">
                             <property name="title" translatable="yes">Update Package Databases</property>
-                            <property name="subtitle" translatable="yes">Refresh package databases after removal</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">view-refresh-symbolic</property>
@@ -576,7 +576,7 @@
                           <object class="GtkButton" id="cancel_button">
                             <property name="label" translatable="yes">Cancel</property>
                             <property name="tooltip-text" translatable="yes">Cancel removal and return to package details</property>
-                            <signal name="clicked" handler="on_cancel_clicked"/>
+                            <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
                           </object>
                         </child>
 
@@ -584,7 +584,7 @@
                           <object class="GtkButton" id="simulate_button">
                             <property name="label" translatable="yes">Simulate Removal</property>
                             <property name="tooltip-text" translatable="yes">Perform a dry run to see what would be removed</property>
-                            <signal name="clicked" handler="on_simulate_clicked"/>
+                            <signal name="clicked" handler="on_simulate_clicked" swapped="true"/>
                           </object>
                         </child>
 
@@ -595,7 +595,7 @@
                             <style>
                               <class name="destructive-action"/>
                             </style>
-                            <signal name="clicked" handler="on_remove_clicked"/>
+                            <signal name="clicked" handler="on_remove_clicked" swapped="true"/>
                           </object>
                         </child>
                       </object>

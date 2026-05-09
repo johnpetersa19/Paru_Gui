@@ -31,6 +31,9 @@ incremental = true
 opt-level = 0
 debug = false
 
+[build-dependencies]
+glib-build-tools = "0.22.0"
+
 [dependencies.adw]
 package = "libadwaita"
 version = "0.7"

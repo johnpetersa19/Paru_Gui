@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.10"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
-  <object class="AdwWindow" id="pkgbuild_downloader_dialog">
+  <object class="AdwDialog" id="pkgbuild_downloader_dialog">
     <property name="title" translatable="yes">Download PKGBUILD</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="default-width">800</property>
-    <property name="default-height">650</property>
+    
+    
+    <property name="content-width">800</property>
+    <property name="content-height">650</property>
     <property name="destroy-with-parent">true</property>
 
     <child>
@@ -28,7 +28,7 @@
             <child type="title">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Download PKGBUILD</property>
-                <property name="subtitle" translatable="yes">Main › Tools › Download PKGBUILD</property>
+                
               </object>
             </child>
 
@@ -86,14 +86,14 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Package Name</property>
-                                <property name="subtitle" translatable="yes">Enter the name of an AUR package</property>
+                                
                                 <child type="suffix">
                                   <object class="GtkBox">
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkEntry" id="package_name_entry">
                                         <property name="placeholder-text" translatable="yes">e.g., yay-git</property>
-                                        <property name="width-request">200</property>
+                                        
                                       </object>
                                     </child>
                                     <child>
@@ -110,7 +110,7 @@
                             <child>
                               <object class="AdwActionRow" id="package_info_row">
                                 <property name="title" translatable="yes">Package Information</property>
-                                <property name="subtitle" translatable="yes">Enter a package name above to get started</property>
+                                
                                 <property name="sensitive">false</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
@@ -133,14 +133,14 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Download Directory</property>
-                                <property name="subtitle" translatable="yes">Location where PKGBUILDs will be saved</property>
+                                
                                 <child type="suffix">
                                   <object class="GtkBox">
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkEntry" id="download_dir_entry">
                                         <property name="text">~/Downloads</property>
-                                        <property name="width-request">200</property>
+                                        
                                       </object>
                                     </child>
                                     <child>
@@ -157,7 +157,7 @@
                             <child>
                               <object class="AdwSwitchRow" id="ssh_clone_row">
                                 <property name="title" translatable="yes">Clone via SSH</property>
-                                <property name="subtitle" translatable="yes">Use SSH for git clone (paru -Gs)</property>
+                                
                                 <property name="active">false</property>
                               </object>
                             </child>
@@ -165,7 +165,7 @@
                             <child>
                               <object class="AdwSwitchRow" id="download_deps_row">
                                 <property name="title" translatable="yes">Download Dependencies</property>
-                                <property name="subtitle" translatable="yes">Also download PKGBUILDs for dependencies</property>
+                                
                                 <property name="active">false</property>
                               </object>
                             </child>
@@ -173,7 +173,7 @@
                             <child>
                               <object class="AdwSwitchRow" id="open_after_row">
                                 <property name="title" translatable="yes">Open After Download</property>
-                                <property name="subtitle" translatable="yes">Open downloaded directory in file manager</property>
+                                
                                 <property name="active">true</property>
                               </object>
                             </child>
@@ -258,7 +258,7 @@
                                   <object class="GtkEntry" id="command_preview_entry">
                                     <property name="editable">false</property>
                                     <property name="text">paru -G</property>
-                                    <property name="width-request">250</property>
+                                    
                                     <style>
                                       <class name="monospace"/>
                                     </style>
@@ -284,7 +284,7 @@
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">12</property>
                                     <property name="halign">center</property>
-                                    <property name="width-request">300</property>
+                                    
                                     <child>
                                       <object class="GtkLabel" id="progress_label">
                                         <property name="label" translatable="yes">Initializing download...</property>
@@ -407,8 +407,8 @@
                                 <child>
                                   <object class="GtkSpinner">
                                     <property name="spinning">true</property>
-                                    <property name="width-request">32</property>
-                                    <property name="height-request">32</property>
+                                    
+                                    
                                   </object>
                                 </child>
                               </object>

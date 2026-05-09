@@ -1,49 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="SystemUpgradeDialog" parent="AdwDialog">
     <property name="title" translatable="yes">System Upgrade</property>
     <property name="content-width">900</property>
     <property name="content-height">750</property>
-    <property name="can-close">true</property>
+    
 
     <child>
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
             <child type="start">
-              <object class="GtkBox" id="navigation_header">
-                <property name="spacing">8</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkButton" id="back_to_system_button">
-                    <property name="icon-name">go-previous-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Back to System Menu</property>
-                    <signal name="clicked" handler="on_back_to_system_clicked"/>
-                    <style>
-                      <class name="flat"/>
-                      <class name="circular"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="breadcrumb_label">
-                    <property name="label" translatable="yes">Main › System › System Upgrade</property>
-                    <property name="ellipsize">end</property>
-                    <style>
-                      <class name="caption"/>
-                      <class name="dim-label"/>
-                    </style>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <property name="title-widget">
+              <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">System Upgrade</property>
-                <property name="subtitle" translatable="yes">Comprehensive system update with backup and analysis</property>
+                
               </object>
             </property>
             <child type="end">
@@ -53,7 +27,7 @@
                   <object class="GtkButton" id="create_backup_button">
                     <property name="icon-name">drive-harddisk-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Create System Backup Before Upgrade</property>
-                    <signal name="clicked" handler="on_create_backup_clicked"/>
+                    <signal name="clicked" handler="on_create_backup_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -64,7 +38,7 @@
                   <object class="GtkButton" id="help_button">
                     <property name="icon-name">help-contents-symbolic</property>
                     <property name="tooltip-text" translatable="yes">System Upgrade Help</property>
-                    <signal name="clicked" handler="on_help_clicked"/>
+                    <signal name="clicked" handler="on_help_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -81,9 +55,9 @@
             <property name="hscrollbar-policy">never</property>
             <property name="vscrollbar-policy">automatic</property>
             <child>
-              <object class="AdwClamp">
-                <property name="maximum-size">800</property>
-                <property name="tightening-threshold">600</property>
+              <object class="AdwPreferencesPage">
+                
+                
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -101,7 +75,7 @@
                           <object class="AdwBanner" id="backup_status_banner">
                             <property name="title" translatable="yes">Backup Status</property>
                             <property name="button-label" translatable="yes">View Details</property>
-                            <signal name="button-clicked" handler="on_backup_details_clicked"/>
+                            <signal name="button-clicked" handler="on_backup_details_clicked" swapped="true"/>
                           </object>
                         </child>
                       </object>
@@ -115,7 +89,7 @@
                         <child>
                           <object class="AdwActionRow" id="system_health_row">
                             <property name="title" translatable="yes">System Health Check</property>
-                            <property name="subtitle" translatable="yes">Verify system integrity before upgrade</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage" id="health_status_icon">
                                 <property name="icon-name">dialog-question-symbolic</property>
@@ -141,7 +115,7 @@
                                   <object class="GtkButton" id="run_analysis_button">
                                     <property name="label" translatable="yes">Run Analysis</property>
                                     <property name="tooltip-text" translatable="yes">Perform comprehensive pre-upgrade analysis</property>
-                                    <signal name="clicked" handler="on_run_analysis_clicked"/>
+                                    <signal name="clicked" handler="on_run_analysis_clicked" swapped="true"/>
                                     <style>
                                       <class name="suggested-action"/>
                                     </style>
@@ -155,7 +129,7 @@
                         <child>
                           <object class="AdwActionRow" id="disk_space_row">
                             <property name="title" translatable="yes">Available Disk Space</property>
-                            <property name="subtitle" translatable="yes">Ensure sufficient space for upgrade</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage" id="disk_status_icon">
                                 <property name="icon-name">drive-harddisk-symbolic</property>
@@ -180,7 +154,7 @@
                         <child>
                           <object class="AdwActionRow" id="update_size_row">
                             <property name="title" translatable="yes">Estimated Download Size</property>
-                            <property name="subtitle" translatable="yes">Total size of packages to be updated</property>
+                            
                             <child type="prefix">
                               <object class="GtkImage" id="download_status_icon">
                                 <property name="icon-name">folder-download-symbolic</property>
@@ -212,16 +186,16 @@
                         <child>
                           <object class="AdwSwitchRow" id="auto_backup_switch">
                             <property name="title" translatable="yes">Automatic Backup</property>
-                            <property name="subtitle" translatable="yes">Create system backup automatically before upgrade</property>
+                            
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_backup_option_changed"/>
+                            <signal name="notify::active" handler="on_backup_option_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwActionRow" id="backup_location_row">
                             <property name="title" translatable="yes">Backup Location</property>
-                            <property name="subtitle" translatable="yes">Choose backup destination</property>
+                            
                             <child type="suffix">
                               <object class="GtkBox" id="backup_location_actions">
                                 <property name="spacing">8</property>
@@ -238,7 +212,7 @@
                                   <object class="GtkButton" id="choose_backup_location_button">
                                     <property name="label" translatable="yes">Choose</property>
                                     <property name="tooltip-text" translatable="yes">Select backup destination folder</property>
-                                    <signal name="clicked" handler="on_choose_backup_location_clicked"/>
+                                    <signal name="clicked" handler="on_choose_backup_location_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -252,12 +226,12 @@
                         <child>
                           <object class="AdwActionRow" id="manual_backup_row">
                             <property name="title" translatable="yes">Create Backup Now</property>
-                            <property name="subtitle" translatable="yes">Manually create system backup before upgrade</property>
+                            
                             <child type="suffix">
                               <object class="GtkButton" id="manual_backup_button">
                                 <property name="label" translatable="yes">Create Backup</property>
                                 <property name="tooltip-text" translatable="yes">Create system backup manually</property>
-                                <signal name="clicked" handler="on_create_backup_clicked"/>
+                                <signal name="clicked" handler="on_create_backup_clicked" swapped="true"/>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
@@ -276,12 +250,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Complete System Upgrade</property>
-                            <property name="subtitle" translatable="yes">Update all packages including AUR packages (paru -Syu)</property>
+                            
                             <property name="activatable-widget">update_complete_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="update_complete_radio">
                                 <property name="active">true</property>
-                                <signal name="toggled" handler="on_update_type_changed"/>
+                                <signal name="toggled" handler="on_update_type_changed" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -290,12 +264,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Repository Packages Only</property>
-                            <property name="subtitle" translatable="yes">Update only official repository packages (paru -Su --repo)</property>
+                            
                             <property name="activatable-widget">update_repos_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="update_repos_radio">
                                 <property name="group">update_complete_radio</property>
-                                <signal name="toggled" handler="on_update_type_changed"/>
+                                <signal name="toggled" handler="on_update_type_changed" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -304,12 +278,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">AUR Packages Only</property>
-                            <property name="subtitle" translatable="yes">Update only AUR packages (paru -Su --aur)</property>
+                            
                             <property name="activatable-widget">update_aur_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="update_aur_radio">
                                 <property name="group">update_complete_radio</property>
-                                <signal name="toggled" handler="on_update_type_changed"/>
+                                <signal name="toggled" handler="on_update_type_changed" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -325,34 +299,34 @@
                         <child>
                           <object class="AdwSwitchRow" id="force_db_switch">
                             <property name="title" translatable="yes">Force Database Refresh</property>
-                            <property name="subtitle" translatable="yes">Force refresh of package databases (--refresh)</property>
+                            
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_option_changed"/>
+                            <signal name="notify::active" handler="on_option_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="devel_switch">
                             <property name="title" translatable="yes">Include Development Packages</property>
-                            <property name="subtitle" translatable="yes">Update VCS packages: *-git, *-svn, *-hg (--devel)</property>
-                            <signal name="notify::active" handler="on_option_changed"/>
+                            
+                            <signal name="notify::active" handler="on_option_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="noconfirm_switch">
                             <property name="title" translatable="yes">Automatic Mode</property>
-                            <property name="subtitle" translatable="yes">Skip interactive prompts during upgrade (--noconfirm)</property>
-                            <signal name="notify::active" handler="on_option_changed"/>
+                            
+                            <signal name="notify::active" handler="on_option_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="needed_switch">
                             <property name="title" translatable="yes">Skip Up-to-date Packages</property>
-                            <property name="subtitle" translatable="yes">Do not reinstall up-to-date packages (--needed)</property>
+                            
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_option_changed"/>
+                            <signal name="notify::active" handler="on_option_changed" swapped="true"/>
                           </object>
                         </child>
                       </object>
@@ -367,7 +341,7 @@
                           <object class="AdwEntryRow" id="ignore_packages_entry">
                             <property name="title" translatable="yes">Ignored Package List</property>
                             <property name="text"></property>
-                            <signal name="changed" handler="on_ignore_packages_changed"/>
+                            <signal name="changed" handler="on_ignore_packages_changed" swapped="true"/>
                             <child type="suffix">
                               <object class="GtkButton" id="ignore_help_button">
                                 <property name="icon-name">help-about-symbolic</property>
@@ -377,7 +351,7 @@
                                   <class name="flat"/>
                                   <class name="circular"/>
                                 </style>
-                                <signal name="clicked" handler="on_ignore_help_clicked"/>
+                                <signal name="clicked" handler="on_ignore_help_clicked" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -508,7 +482,7 @@
                                             </child>
                                           </object>
                                         </child>
-                                        <signal name="clicked" handler="on_copy_command_clicked"/>
+                                        <signal name="clicked" handler="on_copy_command_clicked" swapped="true"/>
                                       </object>
                                     </child>
                                     <child>
@@ -518,7 +492,7 @@
                                         <style>
                                           <class name="pill"/>
                                         </style>
-                                        <signal name="clicked" handler="on_test_command_clicked"/>
+                                        <signal name="clicked" handler="on_test_command_clicked" swapped="true"/>
                                       </object>
                                     </child>
                                   </object>
@@ -538,25 +512,21 @@
                         <child>
                           <object class="AdwSwitchRow" id="post_check_switch">
                             <property name="title" translatable="yes">Enable Post-Upgrade Check</property>
-                            <property name="subtitle" translatable="yes">Verify system integrity after upgrade</property>
+                            
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_post_check_changed"/>
+                            <signal name="notify::active" handler="on_post_check_changed" swapped="true"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="reboot_reminder_switch">
                             <property name="title" translatable="yes">Reboot Reminder</property>
-                            <property name="subtitle" translatable="yes">Show reminder to reboot after critical updates</property>
+                            
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_reboot_reminder_changed"/>
+                            <signal name="notify::active" handler="on_reboot_reminder_changed" swapped="true"/>
                           </object>
                         </child>
                       </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
             </child>
           </object>
         </property>
@@ -568,7 +538,7 @@
               <object class="GtkButton" id="system_menu_button">
                 <property name="label" translatable="yes">Back to System Menu</property>
                 <property name="tooltip-text" translatable="yes">Return to main system menu</property>
-                <signal name="clicked" handler="on_back_to_system_clicked"/>
+                <signal name="clicked" handler="on_back_to_system_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -577,7 +547,7 @@
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_cancel_clicked"/>
+                <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
               </object>
             </child>
             <child type="end">
@@ -587,7 +557,7 @@
                   <object class="GtkButton" id="dry_run_button">
                     <property name="label" translatable="yes">Dry Run</property>
                     <property name="tooltip-text" translatable="yes">Preview upgrade without making changes</property>
-                    <signal name="clicked" handler="on_dry_run_clicked"/>
+                    <signal name="clicked" handler="on_dry_run_clicked" swapped="true"/>
                   </object>
                 </child>
                 <child>
@@ -597,7 +567,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_clicked"/>
+                    <signal name="clicked" handler="on_execute_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>

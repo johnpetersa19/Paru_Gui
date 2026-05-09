@@ -39,9 +39,8 @@ fn main() -> glib::ExitCode {
     textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
 
     // Load resources
-    let resources = gio::Resource::load(PKGDATADIR.to_owned() + "/paru-gui.gresource")
+    gio::resources_register_include!("paru-gui.gresource")
         .expect("Could not load resources");
-    gio::resources_register(&resources);
 
     // Create a new GtkApplication. The application manages our main loop,
     // application windows, integration with the window manager/compositor, and

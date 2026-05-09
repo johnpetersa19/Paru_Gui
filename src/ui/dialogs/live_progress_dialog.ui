@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="LiveProgressDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Operation Progress</property>
     <property name="content-width">860</property>
     <property name="content-height">780</property>
-    <property name="can-close">false</property>
+    
     <accessibility>
       <property name="label" translatable="yes">Live Progress Dialog</property>
       <property name="description" translatable="yes">Monitor real-time progress of package operations</property>
@@ -20,7 +20,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle" id="operation_title">
                 <property name="title" translatable="yes">Operation Progress</property>
-                <property name="subtitle" translatable="yes">Processing packages...</property>
+                
               </object>
             </property>
 
@@ -33,7 +33,7 @@
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Return to originating view</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_back_to_origin_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_back_to_origin_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -44,7 +44,7 @@
                   <object class="GtkButton" id="minimize_button">
                     <property name="icon-name">window-minimize-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Continue in background</property>
-                    <signal name="clicked" handler="on_minimize_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_minimize_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -61,7 +61,7 @@
                   <object class="GtkButton" id="details_toggle_button">
                     <property name="icon-name">view-more-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Toggle detailed view</property>
-                    <signal name="clicked" handler="on_details_toggle_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_details_toggle_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -73,7 +73,7 @@
                     <property name="icon-name">document-save-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Export operation log</property>
                     <property name="sensitive">false</property>
-                    <signal name="clicked" handler="on_save_log_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_save_log_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -159,7 +159,7 @@
                                 <style>
                                   <class name="flat"/>
                                 </style>
-                                <signal name="clicked" handler="on_view_source_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_view_source_clicked" swapped="true"/>
                               </object>
                             </child>
                           </object>
@@ -196,8 +196,8 @@
                               <object class="GtkSpinner" id="operation_spinner">
                                 <property name="spinning">true</property>
                                 <property name="valign">center</property>
-                                <property name="width-request">24</property>
-                                <property name="height-request">24</property>
+                                
+                                
                               </object>
                             </child>
 
@@ -323,7 +323,7 @@
                     <property name="css-classes">card</property>
                     <property name="child">
                       <object class="GtkScrolledWindow">
-                        <property name="height-request">160</property>
+                        
                         <property name="hscrollbar-policy">automatic</property>
                         <property name="vscrollbar-policy">automatic</property>
                         <property name="child">
@@ -444,7 +444,7 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="toggled" handler="on_autoscroll_toggled" swapped="no"/>
+                                    <signal name="toggled" handler="on_autoscroll_toggled" swapped="true"/>
                                   </object>
                                 </child>
 
@@ -455,7 +455,7 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_copy_output_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_copy_output_clicked" swapped="true"/>
                                   </object>
                                 </child>
 
@@ -466,7 +466,7 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_clear_log_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_clear_log_clicked" swapped="true"/>
                                   </object>
                                 </child>
                               </object>
@@ -474,7 +474,7 @@
 
                             <child>
                               <object class="GtkScrolledWindow">
-                                <property name="height-request">180</property>
+                                
                                 <property name="hscrollbar-policy">automatic</property>
                                 <property name="vscrollbar-policy">automatic</property>
                                 <property name="child">
@@ -522,7 +522,7 @@
                     <property name="icon-name">media-playback-pause-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Pause current operation</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_pause_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_pause_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -532,7 +532,7 @@
                     <property name="icon-name">media-playback-start-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Resume paused operation</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_resume_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_resume_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>
@@ -545,7 +545,7 @@
                   <object class="GtkButton" id="background_button">
                     <property name="label" translatable="yes">Continue in Background</property>
                     <property name="tooltip-text" translatable="yes">Hide progress and continue operation in background</property>
-                    <signal name="clicked" handler="on_background_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_background_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -556,7 +556,7 @@
                     <style>
                       <class name="destructive-action"/>
                     </style>
-                    <signal name="clicked" handler="on_cancel_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -568,7 +568,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.10"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="PkgbuildReviewDialog" parent="AdwDialog">
     <property name="title" translatable="yes">PKGBUILD Security Review</property>
     <property name="content-width">750</property>
     <property name="content-height">800</property>
-    <property name="can-close">True</property>
 
     <child>
       <object class="AdwToolbarView">
@@ -17,28 +16,18 @@
               <object class="GtkButton" id="back_to_files_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to file list</property>
-                <signal name="clicked" handler="on_back_to_files_clicked"/>
+                <signal name="clicked" handler="on_back_to_files_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                 </style>
               </object>
             </child>
 
-            <property name="title-widget">
-              <object class="GtkLabel" id="breadcrumb_label">
-                <property name="label" translatable="yes">Content › Build Directory › PKGBUILD › Review</property>
-                <property name="ellipsize">middle</property>
-                <style>
-                  <class name="caption"/>
-                </style>
-              </object>
-            </property>
-
             <child type="end">
               <object class="GtkButton" id="view_source_button">
                 <property name="icon-name">text-editor-symbolic</property>
                 <property name="tooltip-text" translatable="yes">View source directory</property>
-                <signal name="clicked" handler="on_view_source_clicked"/>
+                <signal name="clicked" handler="on_view_source_clicked" swapped="true"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -107,7 +96,7 @@
                 <child>
                   <object class="GtkButton" id="edit_pkgbuild_button">
                     <property name="label" translatable="yes">Edit PKGBUILD</property>
-                    <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
+                    <signal name="clicked" handler="on_edit_pkgbuild_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                     </style>
@@ -117,7 +106,7 @@
                   <object class="GtkButton" id="save_changes_button">
                     <property name="label" translatable="yes">Save Changes</property>
                     <property name="sensitive">False</property>
-                    <signal name="clicked" handler="on_save_changes_clicked"/>
+                    <signal name="clicked" handler="on_save_changes_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                       <class name="suggested-action"/>
@@ -127,7 +116,7 @@
                 <child>
                   <object class="GtkButton" id="continue_review_button">
                     <property name="label" translatable="yes">Continue Review</property>
-                    <signal name="clicked" handler="on_continue_review_clicked"/>
+                    <signal name="clicked" handler="on_continue_review_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                     </style>
@@ -195,13 +184,11 @@
                             <child>
                               <object class="AdwSwitchRow" id="risk_sudo_commands">
                                 <property name="title" translatable="yes">Contains sudo commands</property>
-                                <property name="icon-name">dialog-warning-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="AdwSwitchRow" id="risk_unverified_sources">
                                 <property name="title" translatable="yes">Unverified source URLs</property>
-                                <property name="icon-name">dialog-error-symbolic</property>
                               </object>
                             </child>
                           </object>
@@ -257,7 +244,7 @@
             <child type="start">
               <object class="GtkButton" id="cancel_review_button">
                 <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_cancel_review_clicked"/>
+                <signal name="clicked" handler="on_cancel_review_clicked" swapped="true"/>
                 <style>
                   <class name="pill"/>
                 </style>
@@ -271,7 +258,7 @@
                   <object class="GtkButton" id="previous_step_button">
                     <property name="label" translatable="yes">Previous</property>
                     <property name="visible">False</property>
-                    <signal name="clicked" handler="on_previous_step_clicked"/>
+                    <signal name="clicked" handler="on_previous_step_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                     </style>
@@ -280,7 +267,7 @@
                 <child>
                   <object class="GtkButton" id="next_step_button">
                     <property name="label" translatable="yes">Next</property>
-                    <signal name="clicked" handler="on_next_step_clicked"/>
+                    <signal name="clicked" handler="on_next_step_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                     </style>
@@ -290,7 +277,7 @@
                   <object class="GtkButton" id="build_after_review_button">
                     <property name="label" translatable="yes">Build Package</property>
                     <property name="visible">False</property>
-                    <signal name="clicked" handler="on_build_after_review_clicked"/>
+                    <signal name="clicked" handler="on_build_after_review_clicked" swapped="true"/>
                     <style>
                       <class name="suggested-action"/>
                       <class name="pill"/>

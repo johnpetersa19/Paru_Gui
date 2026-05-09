@@ -4,7 +4,7 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.4"/>
 
-  <object class="AdwApplicationWindow" id="window">
+  <template class="ParuGuiWindow" parent="AdwApplicationWindow">
     <property name="default-height">700</property>
     <property name="default-width">1000</property>
     <property name="title">Paru GUI</property>
@@ -28,7 +28,7 @@
                         <property name="icon-name">go-previous-symbolic</property>
                         <property name="tooltip-text">Go Back (Alt+Left)</property>
                         <property name="sensitive">False</property>
-                        <signal name="clicked" handler="on_nav_back_clicked"/>
+                        <signal name="clicked" handler="on_nav_back_clicked" swapped="true"/>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -40,7 +40,7 @@
                         <property name="icon-name">go-next-symbolic</property>
                         <property name="tooltip-text">Go Forward (Alt+Right)</property>
                         <property name="sensitive">False</property>
-                        <signal name="clicked" handler="on_nav_forward_clicked"/>
+                        <signal name="clicked" handler="on_nav_forward_clicked" swapped="true"/>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -72,8 +72,8 @@
                         <property name="hexpand">True</property>
                         <property name="max-width-chars">40</property>
                         <property name="tooltip-text">Search packages (Ctrl+F)</property>
-                        <signal name="search-changed" handler="on_search_changed"/>
-                        <signal name="activate" handler="on_search_activate"/>
+                        <signal name="search-changed" handler="on_search_changed" swapped="true"/>
+                        <signal name="activate" handler="on_search_activate" swapped="true"/>
                       </object>
                     </child>
 
@@ -108,7 +108,7 @@
                         <property name="icon-name">view-grid-symbolic</property>
                         <property name="tooltip-text">Switch View (Ctrl+Tab)</property>
                         <property name="visible">False</property>
-                        <signal name="clicked" handler="on_view_switcher_clicked"/>
+                        <signal name="clicked" handler="on_view_switcher_clicked" swapped="true"/>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -130,7 +130,7 @@
                       <object class="GtkButton" id="help_button">
                         <property name="icon-name">help-about-symbolic</property>
                         <property name="tooltip-text">Help (F1)</property>
-                        <signal name="clicked" handler="on_help_clicked"/>
+                        <signal name="clicked" handler="on_help_clicked" swapped="true"/>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -145,7 +145,7 @@
               <object class="GtkStack" id="main_stack">
                 <property name="transition-type">slide-left-right</property>
                 <property name="transition-duration">250</property>
-                <signal name="notify::visible-child" handler="on_stack_changed"/>
+                <signal name="notify::visible-child" handler="on_stack_changed" swapped="true"/>
 
                 <child>
                   <object class="GtkStackPage">
@@ -185,7 +185,7 @@
                               <object class="GtkButton" id="refresh_content_button">
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text">Refresh content (F5)</property>
-                                <signal name="clicked" handler="on_refresh_content_clicked"/>
+                                <signal name="clicked" handler="on_refresh_content_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -233,7 +233,7 @@
                               <object class="GtkButton" id="open_file_button">
                                 <property name="label">Open PKGBUILD...</property>
                                 <property name="tooltip-text">Select a PKGBUILD file to manage (Ctrl+O)</property>
-                                <signal name="clicked" handler="on_select_file_clicked"/>
+                                <signal name="clicked" handler="on_select_file_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -243,7 +243,7 @@
                               <object class="GtkButton" id="open_folder_button">
                                 <property name="label">Open Folder...</property>
                                 <property name="tooltip-text">Select a project directory (Ctrl+Shift+O)</property>
-                                <signal name="clicked" handler="on_select_folder_clicked"/>
+                                <signal name="clicked" handler="on_select_folder_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -275,7 +275,7 @@
                                 <property name="label">Primary Action</property>
                                 <property name="tooltip-text">Execute primary action</property>
                                 <property name="sensitive">False</property>
-                                <signal name="clicked" handler="on_primary_action_clicked"/>
+                                <signal name="clicked" handler="on_primary_action_clicked" swapped="true"/>
                                 <style>
                                   <class name="suggested-action"/>
                                   <class name="pill"/>
@@ -385,7 +385,7 @@
                               <object class="GtkButton" id="cancel_button">
                                 <property name="label">Cancel Operation</property>
                                 <property name="tooltip-text">Cancel the current operation (Escape)</property>
-                                <signal name="clicked" handler="on_cancel_operation_clicked"/>
+                                <signal name="clicked" handler="on_cancel_operation_clicked" swapped="true"/>
                                 <style>
                                   <class name="destructive-action"/>
                                 </style>
@@ -395,7 +395,7 @@
                               <object class="GtkButton" id="background_button">
                                 <property name="label">Run in Background</property>
                                 <property name="tooltip-text">Continue operation in background</property>
-                                <signal name="clicked" handler="on_background_operation_clicked"/>
+                                <signal name="clicked" handler="on_background_operation_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -459,7 +459,7 @@
                                     <property name="icon-name">view-refresh-symbolic</property>
                                     <property name="label">Refresh Updates</property>
                                     <property name="tooltip-text">Check for new updates (Ctrl+R)</property>
-                                    <signal name="clicked" handler="on_refresh_updates_clicked"/>
+                                    <signal name="clicked" handler="on_refresh_updates_clicked" swapped="true"/>
                                     <style>
                                       <class name="suggested-action"/>
                                     </style>
@@ -509,7 +509,7 @@
                                 <property name="label">Update All</property>
                                 <property name="tooltip-text">Update all available packages</property>
                                 <property name="sensitive">False</property>
-                                <signal name="clicked" handler="on_update_all_clicked"/>
+                                <signal name="clicked" handler="on_update_all_clicked" swapped="true"/>
                                 <style>
                                   <class name="suggested-action"/>
                                   <class name="pill"/>
@@ -528,7 +528,7 @@
         </property>
       </object>
     </property>
-  </object>
+  </template>
 
   <menu id="primary_menu">
     <section>

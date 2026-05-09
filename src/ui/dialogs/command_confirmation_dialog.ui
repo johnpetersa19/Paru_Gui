@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="CommandConfirmationDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Confirm Operation</property>
     <property name="content-width">850</property>
     <property name="content-height">750</property>
-    <property name="can-close">true</property>
+    
 
     <child>
       <object class="AdwToolbarView">
@@ -23,7 +23,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle" id="dialog_title">
                 <property name="title" translatable="yes">Confirm Operation</property>
-                <property name="subtitle" translatable="yes">Review changes before proceeding</property>
+                
               </object>
             </property>
           </object>
@@ -36,9 +36,9 @@
                 <property name="hscrollbar-policy">never</property>
                 <property name="vscrollbar-policy">automatic</property>
                 <property name="child">
-                  <object class="AdwClamp">
-                    <property name="maximum-size">800</property>
-                    <property name="tightening-threshold">500</property>
+                  <object class="AdwPreferencesPage">
+                    
+                    
                     <property name="child">
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
@@ -53,7 +53,7 @@
                             <property name="title" translatable="yes">High Risk Operation - Review Carefully</property>
                             <property name="button-label" translatable="yes">Safety Tips</property>
                             <property name="revealed">false</property>
-                            <signal name="button-clicked" handler="on_safety_tips_clicked"/>
+                            <signal name="button-clicked" handler="on_safety_tips_clicked" swapped="true"/>
                             <style>
                               <class name="warning"/>
                             </style>
@@ -68,7 +68,7 @@
                             <child>
                               <object class="AdwActionRow" id="origin_row">
                                 <property name="title" translatable="yes">Requested From</property>
-                                <property name="subtitle" translatable="yes">Package Manager Main Window</property>
+                                
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">go-jump-symbolic</property>
@@ -93,7 +93,7 @@
                             <child>
                               <object class="AdwActionRow" id="user_action_row">
                                 <property name="title" translatable="yes">User Action</property>
-                                <property name="subtitle" translatable="yes">Install selected packages</property>
+                                
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">input-mouse-symbolic</property>
@@ -106,7 +106,7 @@
                             <child>
                               <object class="AdwActionRow" id="timestamp_row">
                                 <property name="title" translatable="yes">Request Time</property>
-                                <property name="subtitle" translatable="yes">Just now</property>
+                                
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">preferences-system-time-symbolic</property>
@@ -342,7 +342,7 @@
                             <child>
                               <object class="AdwActionRow" id="operation_type_row">
                                 <property name="title" translatable="yes">Operation Type</property>
-                                <property name="subtitle" translatable="yes">Package installation</property>
+                                
                                 <child type="prefix">
                                   <object class="GtkImage" id="operation_icon">
                                     <property name="icon-name">software-install-symbolic</property>
@@ -355,14 +355,14 @@
                             <child>
                               <object class="AdwActionRow" id="package_count_row">
                                 <property name="title" translatable="yes">Packages Affected</property>
-                                <property name="subtitle" translatable="yes">0 packages selected</property>
+                                
                               </object>
                             </child>
 
                             <child>
                               <object class="AdwActionRow" id="total_size_row">
                                 <property name="title" translatable="yes">Total Size</property>
-                                <property name="subtitle" translatable="yes">0 MB</property>
+                                
                               </object>
                             </child>
                           </object>
@@ -429,7 +429,7 @@
                                 <property name="css-classes">card</property>
                                 <property name="child">
                                   <object class="GtkScrolledWindow">
-                                    <property name="height-request">200</property>
+                                    
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="child">
@@ -457,7 +457,7 @@
                                 <property name="css-classes">card</property>
                                 <property name="child">
                                   <object class="GtkScrolledWindow">
-                                    <property name="height-request">180</property>
+                                    
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="child">
@@ -485,7 +485,7 @@
                                 <property name="css-classes">card</property>
                                 <property name="child">
                                   <object class="GtkScrolledWindow">
-                                    <property name="height-request">150</property>
+                                    
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="child">
@@ -522,7 +522,7 @@
                   <object class="GtkButton" id="cancel_go_back_button">
                     <property name="label" translatable="yes">Cancel &amp; Go Back</property>
                     <property name="tooltip-text" translatable="yes">Cancel this operation and return to the previous screen</property>
-                    <signal name="clicked" handler="on_cancel_clicked"/>
+                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
                     <style>
                       <class name="pill"/>
                       <class name="destructive-action"/>
@@ -536,7 +536,7 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <signal name="clicked" handler="on_details_clicked"/>
+                    <signal name="clicked" handler="on_details_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>
@@ -553,7 +553,7 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <signal name="clicked" handler="on_simulate_clicked"/>
+                    <signal name="clicked" handler="on_simulate_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -565,7 +565,7 @@
                       <class name="suggested-action"/>
                       <class name="pill"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_monitor_clicked"/>
+                    <signal name="clicked" handler="on_execute_monitor_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
-  <template class="SystemStatsDialog" parent="AdwWindow">
+  <template class="SystemStatsDialog" parent="AdwDialog">
     <property name="title" translatable="yes">System Statistics</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="default-width">850</property>
-    <property name="default-height">700</property>
-    <property name="width-request">600</property>
-    <property name="height-request">500</property>
+    
+    
+    <property name="content-width">850</property>
+    <property name="content-height">700</property>
+    
+    
 
     <child>
       <object class="AdwToolbarView">
@@ -19,7 +19,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">System Statistics</property>
-                <property name="subtitle" translatable="yes">Main › System › Statistics</property>
+                
               </object>
             </property>
 
@@ -31,7 +31,7 @@
                   <object class="GtkButton" id="back_to_system_button">
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to System Menu</property>
-                    <signal name="clicked" handler="on_back_to_system_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_back_to_system_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -42,7 +42,7 @@
                   <object class="GtkButton" id="back_to_main_button">
                     <property name="icon-name">go-home-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to Main Interface</property>
-                    <signal name="clicked" handler="on_back_to_main_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_back_to_main_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -59,7 +59,7 @@
                   <object class="GtkButton" id="refresh_button">
                     <property name="icon-name">view-refresh-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Refresh all statistics</property>
-                    <signal name="clicked" handler="on_refresh_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_refresh_clicked" swapped="true"/>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -85,7 +85,7 @@
                               <object class="GtkButton" id="export_text_button">
                                 <property name="label" translatable="yes">Export as Text</property>
                                 <property name="icon-name">text-x-generic-symbolic</property>
-                                <signal name="clicked" handler="on_export_text_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_export_text_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -96,7 +96,7 @@
                               <object class="GtkButton" id="export_json_button">
                                 <property name="label" translatable="yes">Export as JSON</property>
                                 <property name="icon-name">application-json-symbolic</property>
-                                <signal name="clicked" handler="on_export_json_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_export_json_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -111,7 +111,7 @@
                               <object class="GtkButton" id="copy_to_clipboard_button">
                                 <property name="label" translatable="yes">Copy to Clipboard</property>
                                 <property name="icon-name">edit-copy-symbolic</property>
-                                <signal name="clicked" handler="on_copy_to_clipboard_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_copy_to_clipboard_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -122,7 +122,7 @@
                               <object class="GtkButton" id="share_online_button">
                                 <property name="label" translatable="yes">Share Online</property>
                                 <property name="icon-name">network-transmit-symbolic</property>
-                                <signal name="clicked" handler="on_share_online_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_share_online_clicked" swapped="true"/>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -149,19 +149,7 @@
             <property name="vscrollbar-policy">automatic</property>
 
             <child>
-              <object class="AdwClamp">
-                <property name="maximum-size">900</property>
-                <property name="tightening-threshold">700</property>
-
-                <child>
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">24</property>
-                    <property name="margin-top">24</property>
-                    <property name="margin-bottom">24</property>
-                    <property name="margin-start">24</property>
-                    <property name="margin-end">24</property>
-
+              <object class="AdwPreferencesPage">
                     <child>
                       <object class="AdwPreferencesGroup">
                         <property name="title" translatable="yes">Package Statistics</property>
@@ -170,10 +158,10 @@
                         <child>
                           <object class="AdwActionRow" id="total_packages_row">
                             <property name="title" translatable="yes">Total Packages</property>
-                            <property name="subtitle" translatable="yes">All packages installed on the system</property>
+                            
                             <property name="icon-name">package-x-generic-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_total_packages_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_total_packages_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -194,7 +182,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View detailed package list</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_total_packages_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_total_packages_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -208,10 +196,10 @@
                         <child>
                           <object class="AdwActionRow" id="explicit_packages_row">
                             <property name="title" translatable="yes">Explicitly Installed</property>
-                            <property name="subtitle" translatable="yes">Packages installed by user request</property>
+                            
                             <property name="icon-name">starred-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_explicit_packages_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_explicit_packages_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -232,7 +220,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View explicit packages list</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_explicit_packages_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_explicit_packages_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -246,10 +234,10 @@
                         <child>
                           <object class="AdwActionRow" id="aur_packages_row">
                             <property name="title" translatable="yes">AUR Packages</property>
-                            <property name="subtitle" translatable="yes">Packages from Arch User Repository</property>
+                            
                             <property name="icon-name">network-server-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_aur_packages_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_aur_packages_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -270,7 +258,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View AUR packages list</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_aur_packages_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_aur_packages_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -284,10 +272,10 @@
                         <child>
                           <object class="AdwActionRow" id="orphan_packages_row">
                             <property name="title" translatable="yes">Orphan Packages</property>
-                            <property name="subtitle" translatable="yes">Packages no longer needed as dependencies</property>
+                            
                             <property name="icon-name">dialog-warning-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_orphan_packages_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_orphan_packages_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -308,7 +296,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View orphan packages list</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_orphan_packages_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_orphan_packages_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -329,10 +317,10 @@
                         <child>
                           <object class="AdwActionRow" id="cache_size_row">
                             <property name="title" translatable="yes">Cache Size</property>
-                            <property name="subtitle" translatable="yes">Total size of package cache directory</property>
+                            
                             <property name="icon-name">folder-download-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_cache_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_cache_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -353,7 +341,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View cache details</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_cache_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_cache_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -367,10 +355,10 @@
                         <child>
                           <object class="AdwActionRow" id="cached_packages_row">
                             <property name="title" translatable="yes">Cached Packages</property>
-                            <property name="subtitle" translatable="yes">Number of packages stored in cache</property>
+                            
                             <property name="icon-name">package-x-generic-symbolic</property>
                             <property name="activatable">true</property>
-                            <signal name="activated" handler="on_cached_packages_details_clicked" swapped="no"/>
+                            <signal name="activated" handler="on_cached_packages_details_clicked" swapped="true"/>
 
                             <child type="suffix">
                               <object class="GtkBox">
@@ -391,7 +379,7 @@
                                     <property name="icon-name">view-more-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">View cached packages list</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_cached_packages_details_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_cached_packages_details_clicked" swapped="true"/>
                                     <style>
                                       <class name="flat"/>
                                     </style>
@@ -412,7 +400,7 @@
                         <child>
                           <object class="AdwActionRow" id="pacman_version_row">
                             <property name="title" translatable="yes">Pacman Version</property>
-                            <property name="subtitle" translatable="yes">Package manager version and build info</property>
+                            
                             <property name="icon-name">application-x-executable-symbolic</property>
 
                             <child type="suffix">
@@ -430,7 +418,7 @@
                         <child>
                           <object class="AdwActionRow" id="paru_version_row">
                             <property name="title" translatable="yes">Paru Version</property>
-                            <property name="subtitle" translatable="yes">AUR helper version and build info</property>
+                            
                             <property name="icon-name">application-x-executable-symbolic</property>
 
                             <child type="suffix">
@@ -448,7 +436,7 @@
                         <child>
                           <object class="AdwActionRow" id="arch_version_row">
                             <property name="title" translatable="yes">Arch Linux Version</property>
-                            <property name="subtitle" translatable="yes">System release and kernel information</property>
+                            
                             <property name="icon-name">computer-symbolic</property>
 
                             <child type="suffix">
@@ -496,7 +484,7 @@
                                             <property name="label" translatable="yes">Clean Cache</property>
                                             <property name="tooltip-text" translatable="yes">Remove old package files from cache</property>
                                             <property name="icon-name">edit-clear-symbolic</property>
-                                            <signal name="clicked" handler="on_clean_cache_clicked" swapped="no"/>
+                                            <signal name="clicked" handler="on_clean_cache_clicked" swapped="true"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -512,7 +500,7 @@
                                             <property name="label" translatable="yes">Remove Orphans</property>
                                             <property name="tooltip-text" translatable="yes">Remove unused dependency packages</property>
                                             <property name="icon-name">user-trash-symbolic</property>
-                                            <signal name="clicked" handler="on_remove_orphans_clicked" swapped="no"/>
+                                            <signal name="clicked" handler="on_remove_orphans_clicked" swapped="true"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -528,7 +516,7 @@
                                             <property name="label" translatable="yes">Check Updates</property>
                                             <property name="tooltip-text" translatable="yes">Check for available package updates</property>
                                             <property name="icon-name">view-refresh-symbolic</property>
-                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="no"/>
+                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="true"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -544,7 +532,7 @@
                                             <property name="label" translatable="yes">System Info</property>
                                             <property name="tooltip-text" translatable="yes">View detailed system information</property>
                                             <property name="icon-name">computer-symbolic</property>
-                                            <signal name="clicked" handler="on_system_info_clicked" swapped="no"/>
+                                            <signal name="clicked" handler="on_system_info_clicked" swapped="true"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -559,10 +547,6 @@
                           </object>
                         </child>
                       </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
             </child>
           </object>
         </property>
@@ -579,7 +563,7 @@
                     <property name="label" translatable="yes">Generate Report</property>
                     <property name="tooltip-text" translatable="yes">Generate comprehensive system report</property>
                     <property name="icon-name">document-new-symbolic</property>
-                    <signal name="clicked" handler="on_generate_report_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_generate_report_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -588,7 +572,7 @@
                     <property name="label" translatable="yes">Schedule Maintenance</property>
                     <property name="tooltip-text" translatable="yes">Schedule automatic system maintenance</property>
                     <property name="icon-name">preferences-system-time-symbolic</property>
-                    <signal name="clicked" handler="on_schedule_maintenance_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_schedule_maintenance_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>
@@ -601,7 +585,7 @@
                   <object class="GtkButton" id="back_to_system_menu_button">
                     <property name="label" translatable="yes">Back to System Menu</property>
                     <property name="tooltip-text" translatable="yes">Return to system management menu</property>
-                    <signal name="clicked" handler="on_back_to_system_menu_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_back_to_system_menu_clicked" swapped="true"/>
                   </object>
                 </child>
 
@@ -612,7 +596,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
                   </object>
                 </child>
               </object>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
-  <requires lib="gtk" version="4.10"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <object class="GtkDialog" id="package_install_dialog">
-    <property name="default-height">700</property>
-    <property name="default-width">900</property>
+    <property name="content-height">700</property>
+    <property name="content-width">900</property>
     <property name="destroy-with-parent">true</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
+    
+    
     <property name="title">Package Installation Wizard</property>
 
     <child internal-child="content_area">
@@ -30,7 +30,7 @@
                       <class name="flat"/>
                       <class name="breadcrumb"/>
                     </style>
-                    <signal name="clicked" handler="on_breadcrumb_packages_clicked"/>
+                    <signal name="clicked" handler="on_breadcrumb_packages_clicked" swapped="true"/>
                   </object>
                 </child>
                 <child>
@@ -49,7 +49,7 @@
                       <class name="flat"/>
                       <class name="breadcrumb"/>
                     </style>
-                    <signal name="clicked" handler="on_breadcrumb_package_clicked"/>
+                    <signal name="clicked" handler="on_breadcrumb_package_clicked" swapped="true"/>
                   </object>
                 </child>
                 <child>
@@ -79,7 +79,7 @@
                   <class name="circular"/>
                   <class name="suggested-action"/>
                 </style>
-                <signal name="clicked" handler="on_back_to_package_details_clicked"/>
+                <signal name="clicked" handler="on_back_to_package_details_clicked" swapped="true"/>
               </object>
             </child>
 
@@ -90,8 +90,8 @@
                 <property name="child">
                   <object class="GtkSpinner" id="operation_spinner">
                     <property name="spinning">false</property>
-                    <property name="width-request">16</property>
-                    <property name="height-request">16</property>
+                    
+                    
                   </object>
                 </property>
               </object>
@@ -119,8 +119,8 @@
                     <child>
                       <object class="GtkLabel" id="step1_number">
                         <property name="label">1</property>
-                        <property name="width-request">24</property>
-                        <property name="height-request">24</property>
+                        
+                        
                         <style>
                           <class name="circular"/>
                           <class name="suggested-action"/>
@@ -154,8 +154,8 @@
                     <child>
                       <object class="GtkLabel" id="step2_number">
                         <property name="label">2</property>
-                        <property name="width-request">24</property>
-                        <property name="height-request">24</property>
+                        
+                        
                         <style>
                           <class name="circular"/>
                           <class name="step-inactive"/>
@@ -188,8 +188,8 @@
                     <child>
                       <object class="GtkLabel" id="step3_number">
                         <property name="label">3</property>
-                        <property name="width-request">24</property>
-                        <property name="height-request">24</property>
+                        
+                        
                         <style>
                           <class name="circular"/>
                           <class name="step-inactive"/>
@@ -480,8 +480,8 @@
                         <child>
                           <object class="GtkSpinner" id="install_spinner">
                             <property name="spinning">true</property>
-                            <property name="width-request">48</property>
-                            <property name="height-request">48</property>
+                            
+                            
                           </object>
                         </child>
 
@@ -510,14 +510,14 @@
                         <property name="fraction">0.3</property>
                         <property name="show-text">true</property>
                         <property name="text">30%</property>
-                        <property name="width-request">400</property>
+                        
                       </object>
                     </child>
 
                     <child>
                       <object class="GtkScrolledWindow" id="install_log_scroll">
-                        <property name="height-request">200</property>
-                        <property name="width-request">600</property>
+                        
+                        
                         <property name="hscrollbar-policy">automatic</property>
                         <property name="vscrollbar-policy">automatic</property>
                         <child>
@@ -603,7 +603,7 @@
                               <class name="suggested-action"/>
                               <class name="pill"/>
                             </style>
-                            <signal name="clicked" handler="on_install_another_clicked"/>
+                            <signal name="clicked" handler="on_install_another_clicked" swapped="true"/>
                           </object>
                         </child>
 
@@ -615,7 +615,7 @@
                               <class name="flat"/>
                               <class name="pill"/>
                             </style>
-                            <signal name="clicked" handler="on_view_installed_clicked"/>
+                            <signal name="clicked" handler="on_view_installed_clicked" swapped="true"/>
                           </object>
                         </child>
                       </object>
@@ -633,7 +633,7 @@
       <object class="GtkButton" id="wizard_cancel_button">
         <property name="label">Cancel</property>
         <property name="tooltip-text">Cancel installation and return to package details</property>
-        <signal name="clicked" handler="on_wizard_cancel_clicked"/>
+        <signal name="clicked" handler="on_wizard_cancel_clicked" swapped="true"/>
       </object>
     </child>
 
@@ -642,7 +642,7 @@
         <property name="label">Back</property>
         <property name="tooltip-text">Return to previous step</property>
         <property name="visible">false</property>
-        <signal name="clicked" handler="on_wizard_back_clicked"/>
+        <signal name="clicked" handler="on_wizard_back_clicked" swapped="true"/>
       </object>
     </child>
 
@@ -653,7 +653,7 @@
         <style>
           <class name="suggested-action"/>
         </style>
-        <signal name="clicked" handler="on_wizard_next_clicked"/>
+        <signal name="clicked" handler="on_wizard_next_clicked" swapped="true"/>
       </object>
     </child>
 

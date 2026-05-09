@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.14"/>
   <requires lib="gio" version="2.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="libadwaita" version="1.5"/>
 
   <template class="ContentView" parent="AdwBin">
     <style>
@@ -134,34 +134,17 @@
             <property name="orientation">vertical</property>
 
             <child>
-              <object class="GtkRevealer" id="search_revealer">
-        <property name="reveal-child">false</property>
-        <property name="transition-type">slide_down</property>
-        <property name="child">
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Search and Filter</property>
-            <property name="description" translatable="yes">Find specific files and filter by type</property>
-            <child>
-              <object class="AdwEntryRow" id="search_entry">
-                <property name="title" translatable="yes">Search Files</property>
-                <property name="text"></property>
-                <property name="tooltip-text" translatable="yes">Search for files by name or content</property>
-                <child type="suffix">
-                  <object class="GtkButton" id="clear_search_button">
-                    <property name="icon-name">edit-clear-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Clear search</property>
-                    <style>
-                      <class name="flat"/>
-                      <class name="circular"/>
-                    </style>
+              <object class="GtkSearchBar" id="search_bar">
+                <property name="search-mode-enabled">false</property>
+                <property name="show-close-button">true</property>
+                <property name="child">
+                  <object class="GtkSearchEntry" id="search_entry">
+                    <property name="placeholder-text" translatable="yes">Search Files</property>
+                    <property name="tooltip-text" translatable="yes">Search for files by name or content</property>
                   </object>
-                </child>
+                </property>
               </object>
             </child>
-          </object>
-        </property>
-      </object>
-    </child>
 
     <child>
       <object class="GtkBox" id="path_and_controls_bar">
@@ -270,8 +253,10 @@
         </style>
 
         <child>
-          <object class="GtkBox" id="filter_buttons">
-            <property name="spacing">6</property>
+          <object class="GtkFlowBox" id="filter_buttons">
+            <property name="column-spacing">6</property>
+            <property name="row-spacing">6</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkToggleButton" id="filter_pkgbuild">
                 <property name="active">true</property>
@@ -357,25 +342,9 @@
             </child>
 
             <child>
-              <object class="GtkBox" id="view_mode_buttons">
-                <property name="spacing">0</property>
-                <style>
-                  <class name="linked"/>
-                </style>
-                <child>
-                  <object class="GtkToggleButton" id="grid_view_button">
-                    <property name="icon-name">view-grid-symbolic</property>
-                    <property name="active">true</property>
-                    <property name="tooltip-text" translatable="yes">Grid view</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="list_view_button">
-                    <property name="icon-name">view-list-symbolic</property>
-                    <property name="group">grid_view_button</property>
-                    <property name="tooltip-text" translatable="yes">List view</property>
-                  </object>
-                </child>
+              <object class="AdwViewSwitcher" id="view_switcher">
+                <property name="stack">view_stack</property>
+                <property name="policy">narrow</property>
               </object>
             </child>
           </object>
