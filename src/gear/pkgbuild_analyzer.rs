@@ -50,19 +50,13 @@ pub struct DependencyAnalysisResult {
 
 #[derive(Debug)]
 pub struct PKGBUILDAnalyzer {
-    _array_var_re: Regex,
-    _single_var_re: Regex,
     _function_re: Regex,
-    _func_end_re: Regex,
 }
 
 impl PKGBUILDAnalyzer {
     pub fn new() -> Self {
         Self {
-            _array_var_re: Regex::new(r"(?m)^\s*(\w+)\s*=\s*\(([^)]*)\)").unwrap(),
-            _single_var_re: Regex::new(r"(?m)^\s*(\w+)\s*=\s*(.*?)\s*$").unwrap(),
             _function_re: Regex::new(r"(?m)^\s*(\w+)\s*\(\s*\)\s*\{").unwrap(),
-            _func_end_re: Regex::new(r"(?m)^\s*\}").unwrap(),
         }
     }
 
