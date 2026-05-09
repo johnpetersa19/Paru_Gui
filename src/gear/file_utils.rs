@@ -2,6 +2,7 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 use std::collections::HashMap;
+use std::sync::OnceLock;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tempfile::TempDir;
@@ -137,62 +138,13 @@ impl Default for PackageType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct FileUtils {
     pub supported_compressions: Vec<String>,
-    single_patterns: HashMap<String, Regex>,
-    array_patterns: HashMap<String, Regex>,
-    func_patterns: Vec<(String, Regex)>,
 }
 
 impl FileUtils {
     pub fn new() -> Self {
-        let mut single_patterns = HashMap::new();
-        let singles = [
-            ("pkgname", r"(?m)^\s*pkgname=(.+?)$"),
-            ("pkgver", r"(?m)^\s*pkgver=(.+?)$"),
-            ("pkgrel", r"(?m)^\s*pkgrel=(.+?)$"),
-            ("pkgdesc", r"(?m)^\s*pkgdesc=(.+?)$"),
-            ("url", r"(?m)^\s*url=(.+?)$"),
-            ("install", r"(?m)^\s*install=(.+?)$"),
-            ("changelog", r"(?m)^\s*changelog=(.+?)$"),
-            ("epoch", r"(?m)^\s*epoch=(.+?)$"),
-            ("pkgbase", r"(?m)^\s*pkgbase=(.+?)$"),
-        ];
-        for (k, v) in singles {
-            single_patterns.insert(k.to_string(), Regex::new(v).unwrap());
-        }
-
-        let mut array_patterns = HashMap::new();
-        let arrays = [
-            ("arch", r"(?s)arch=\((.*?)\)"),
-            ("license", r"(?s)license=\((.*?)\)"),
-            ("depends", r"(?s)depends=\((.*?)\)"),
-            ("makedepends", r"(?s)makedepends=\((.*?)\)"),
-            ("optdepends", r"(?s)optdepends=\((.*?)\)"),
-            ("provides", r"(?s)provides=\((.*?)\)"),
-            ("conflicts", r"(?s)conflicts=\((.*?)\)"),
-            ("replaces", r"(?s)replaces=\((.*?)\)"),
-            ("source", r"(?s)source=\((.*?)\)"),
-            ("sha256sums", r"(?s)sha256sums=\((.*?)\)"),
-            ("md5sums", r"(?s)md5sums=\((.*?)\)"),
-            ("sha512sums", r"(?s)sha512sums=\((.*?)\)"),
-            ("backup", r"(?s)backup=\((.*?)\)"),
-            ("options", r"(?s)options=\((.*?)\)"),
-            ("groups", r"(?s)groups=\((.*?)\)"),
-            ("validpgpkeys", r"(?s)validpgpkeys=\((.*?)\)"),
-        ];
-        for (k, v) in arrays {
-            array_patterns.insert(k.to_string(), Regex::new(v).unwrap());
-        }
-
-        let func_patterns = vec![
-            ("build".to_string(), Regex::new(r"(?m)^build\s*\(\s*\)\s*\{").unwrap()),
-            ("package".to_string(), Regex::new(r"(?m)^package(?:_[\w]+)?\s*\(\s*\)\s*\{").unwrap()),
-            ("prepare".to_string(), Regex::new(r"(?m)^prepare\s*\(\s*\)\s*\{").unwrap()),
-            ("check".to_string(), Regex::new(r"(?m)^check\s*\(\s*\)\s*\{").unwrap()),
-        ];
-
         Self {
             supported_compressions: vec![
                 ".xz".to_string(),
@@ -200,9 +152,6 @@ impl FileUtils {
                 ".gz".to_string(),
                 ".bz2".to_string(),
             ],
-            single_patterns,
-            array_patterns,
-            func_patterns,
         }
     }
 
@@ -235,10 +184,30 @@ impl FileUtils {
     }
 
     fn _parse_pkgbuild_content(&self, content: &str, mut info: PKGBUILDInfo) -> PKGBUILDInfo {
-        for (field, re) in &self.single_patterns {
+        static SINGLE_PATTERNS: OnceLock<HashMap<&'static str, Regex>> = OnceLock::new();
+        let single_patterns = SINGLE_PATTERNS.get_or_init(|| {
+            let mut m = HashMap::new();
+            let singles = [
+                ("pkgname", r"(?m)^\s*pkgname=(.+?)$"),
+                ("pkgver", r"(?m)^\s*pkgver=(.+?)$"),
+                ("pkgrel", r"(?m)^\s*pkgrel=(.+?)$"),
+                ("pkgdesc", r"(?m)^\s*pkgdesc=(.+?)$"),
+                ("url", r"(?m)^\s*url=(.+?)$"),
+                ("install", r"(?m)^\s*install=(.+?)$"),
+                ("changelog", r"(?m)^\s*changelog=(.+?)$"),
+                ("epoch", r"(?m)^\s*epoch=(.+?)$"),
+                ("pkgbase", r"(?m)^\s*pkgbase=(.+?)$"),
+            ];
+            for (k, v) in singles {
+                m.insert(k, Regex::new(v).unwrap());
+            }
+            m
+        });
+
+        for (field, re) in single_patterns {
             if let Some(caps) = re.captures(content) {
                 let val = self._clean_quoted_string(&caps[1]);
-                match field.as_str() {
+                match *field {
                     "pkgname" => info.pkgname = val,
                     "pkgver" => info.pkgver = val,
                     "pkgrel" => info.pkgrel = val,
@@ -252,10 +221,37 @@ impl FileUtils {
             }
         }
 
-        for (field, re) in &self.array_patterns {
+        static ARRAY_PATTERNS: OnceLock<HashMap<&'static str, Regex>> = OnceLock::new();
+        let array_patterns = ARRAY_PATTERNS.get_or_init(|| {
+            let mut m = HashMap::new();
+            let arrays = [
+                ("arch", r"(?s)arch=\((.*?)\)"),
+                ("license", r"(?s)license=\((.*?)\)"),
+                ("depends", r"(?s)depends=\((.*?)\)"),
+                ("makedepends", r"(?s)makedepends=\((.*?)\)"),
+                ("optdepends", r"(?s)optdepends=\((.*?)\)"),
+                ("provides", r"(?s)provides=\((.*?)\)"),
+                ("conflicts", r"(?s)conflicts=\((.*?)\)"),
+                ("replaces", r"(?s)replaces=\((.*?)\)"),
+                ("source", r"(?s)source=\((.*?)\)"),
+                ("sha256sums", r"(?s)sha256sums=\((.*?)\)"),
+                ("md5sums", r"(?s)md5sums=\((.*?)\)"),
+                ("sha512sums", r"(?s)sha512sums=\((.*?)\)"),
+                ("backup", r"(?s)backup=\((.*?)\)"),
+                ("options", r"(?s)options=\((.*?)\)"),
+                ("groups", r"(?s)groups=\((.*?)\)"),
+                ("validpgpkeys", r"(?s)validpgpkeys=\((.*?)\)"),
+            ];
+            for (k, v) in arrays {
+                m.insert(k, Regex::new(v).unwrap());
+            }
+            m
+        });
+
+        for (field, re) in array_patterns {
             if let Some(caps) = re.captures(content) {
                 let items = self._parse_bash_array(&caps[1]);
-                match field.as_str() {
+                match *field {
                     "arch" => info.arch = items,
                     "license" => info.license = items,
                     "depends" => info.depends = items,
@@ -277,9 +273,19 @@ impl FileUtils {
             }
         }
 
-        for (field, re) in &self.func_patterns {
+        static FUNC_PATTERNS: OnceLock<Vec<(&'static str, Regex)>> = OnceLock::new();
+        let func_patterns = FUNC_PATTERNS.get_or_init(|| {
+            vec![
+                ("build", Regex::new(r"(?m)^build\s*\(\s*\)\s*\{").unwrap()),
+                ("package", Regex::new(r"(?m)^package(?:_[\w]+)?\s*\(\s*\)\s*\{").unwrap()),
+                ("prepare", Regex::new(r"(?m)^prepare\s*\(\s*\)\s*\{").unwrap()),
+                ("check", Regex::new(r"(?m)^check\s*\(\s*\)\s*\{").unwrap()),
+            ]
+        });
+
+        for (field, re) in func_patterns {
             let has_func = re.is_match(content);
-            match field.as_str() {
+            match *field {
                 "build" => info.has_build_function = has_func,
                 "package" => info.has_package_function = has_func,
                 "prepare" => info.has_prepare_function = has_func,

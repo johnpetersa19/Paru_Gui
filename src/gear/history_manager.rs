@@ -1,6 +1,7 @@
 use rusqlite::{params, Connection, Result};
 use std::path::Path;
 use std::fs;
+use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -105,9 +106,9 @@ pub struct HistoryEntry {
     pub user_initiated: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct HistoryManager {
-    connection: std::sync::Mutex<Connection>,
+    connection: Arc<Mutex<Connection>>,
 }
 
 impl HistoryManager {
@@ -126,7 +127,7 @@ impl HistoryManager {
 
         let conn = Connection::open(&path)?;
         let manager = Self {
-            connection: std::sync::Mutex::new(conn),
+            connection: Arc::new(Mutex::new(conn)),
         };
         manager._initialize_db()?;
         Ok(manager)
