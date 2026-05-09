@@ -638,4 +638,28 @@
       </item>
     </section>
   </menu>
+
+  <menu id="view_menu">
+    <section>
+      <item>
+        <attribute name="label">View Options</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="content_menu">
+    <section>
+      <item>
+        <attribute name="label">Content Options</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="update_menu">
+    <section>
+      <item>
+        <attribute name="label">Update Options</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>
