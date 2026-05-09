@@ -15,6 +15,8 @@ pub enum TerminalType {
     Tilix,
     MateTerminal,
     XfceTerminal,
+    Foot,
+    WezTerm,
 }
 
 impl TerminalType {
@@ -29,6 +31,8 @@ impl TerminalType {
             Self::Tilix => "tilix",
             Self::MateTerminal => "mate-terminal",
             Self::XfceTerminal => "xfce4-terminal",
+            Self::Foot => "foot",
+            Self::WezTerm => "wezterm",
         }
     }
 }
@@ -99,7 +103,7 @@ impl TerminalManager {
                 new_tab: vec![],
             }),
             (TerminalType::Terminator, TerminalConfig {
-                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                execute: vec!["-e".to_string(), "bash".to_string(), "-c".to_string()],
                 title: vec!["-T".to_string()],
                 working_dir: vec!["--working-directory".to_string()],
                 hold: vec![],
@@ -115,7 +119,7 @@ impl TerminalManager {
                 new_tab: vec![],
             }),
             (TerminalType::MateTerminal, TerminalConfig {
-                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                execute: vec!["-e".to_string(), "bash".to_string(), "-c".to_string()],
                 title: vec!["-t".to_string()],
                 working_dir: vec!["--working-directory".to_string()],
                 hold: vec![],
@@ -123,10 +127,26 @@ impl TerminalManager {
                 new_tab: vec![],
             }),
             (TerminalType::XfceTerminal, TerminalConfig {
-                execute: vec!["-e".to_string(), "bash -c".to_string()],
+                execute: vec!["-e".to_string(), "bash".to_string(), "-c".to_string()],
                 title: vec!["-T".to_string()],
                 working_dir: vec!["--working-directory".to_string()],
                 hold: vec!["-H".to_string()],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::Foot, TerminalConfig {
+                execute: vec!["bash".to_string(), "-c".to_string()],
+                title: vec!["-t".to_string()],
+                working_dir: vec!["-D".to_string()],
+                hold: vec!["-H".to_string()],
+                new_window: vec![],
+                new_tab: vec![],
+            }),
+            (TerminalType::WezTerm, TerminalConfig {
+                execute: vec!["start".to_string(), "--".to_string(), "bash".to_string(), "-c".to_string()],
+                title: vec![],
+                working_dir: vec!["--cwd".to_string()],
+                hold: vec![],
                 new_window: vec![],
                 new_tab: vec![],
             }),
@@ -176,6 +196,8 @@ impl TerminalManager {
         else if name.contains("tilix") { Some(TerminalType::Tilix) }
         else if name.contains("mate-terminal") { Some(TerminalType::MateTerminal) }
         else if name.contains("xfce4-terminal") || name.contains("xfce-terminal") { Some(TerminalType::XfceTerminal) }
+        else if name.contains("foot") { Some(TerminalType::Foot) }
+        else if name.contains("wezterm") { Some(TerminalType::WezTerm) }
         else if name.contains("xterm") { Some(TerminalType::Xterm) }
         else { None }
     }

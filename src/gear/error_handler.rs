@@ -94,6 +94,26 @@ impl ErrorHandler {
         error_id.to_string()
     }
 
+    pub fn critical(&mut self, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
+        self.handle_error(ErrorLevel::Critical, category, title, message, context)
+    }
+
+    pub fn high(&mut self, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
+        self.handle_error(ErrorLevel::High, category, title, message, context)
+    }
+
+    pub fn medium(&mut self, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
+        self.handle_error(ErrorLevel::Medium, category, title, message, context)
+    }
+
+    pub fn low(&mut self, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
+        self.handle_error(ErrorLevel::Low, category, title, message, context)
+    }
+
+    pub fn info(&mut self, category: ErrorCategory, title: &str, message: &str, context: &str) -> String {
+        self.handle_error(ErrorLevel::Info, category, title, message, context)
+    }
+
     pub fn get_error_counts(&self) -> &HashMap<String, usize> {
         &self.error_counts
     }

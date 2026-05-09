@@ -105,34 +105,51 @@ impl PKGBUILDAnalyzer {
                 }
 
                 // Parse global variables only when not in a function
-                if let Some(caps) = self._array_var_re.captures(line_no_comment) {
-                    let var_name = &caps[1];
-                    let raw_content = &caps[2];
-                    let items: Vec<String> = raw_content.split_whitespace()
-                        .map(|s| s.trim_matches(|c| c == '\'' || c == '"').to_string())
-                        .filter(|s| !s.is_empty())
-                        .collect();
-
-                    match var_name {
-                        "depends" => metadata.depends.extend(items),
-                        "makedepends" => metadata.makedepends.extend(items),
-                        "checkdepends" => metadata.checkdepends.extend(items),
-                        "optdepends" => metadata.optdepends.extend(items),
-                        "arch" => metadata.arch.extend(items),
-                        "source" => metadata.source.extend(items),
-                        _ => {}
-                    }
-                } else if let Some(caps) = self._single_var_re.captures(line_no_comment) {
-                    let var_name = &caps[1];
-                    let value = caps[2].trim().trim_matches(|c| c == '\'' || c == '"').to_string();
-                    match var_name {
-                        "pkgname" => metadata.pkgname = value,
-                        "pkgver" => metadata.pkgver = value,
-                        "pkgrel" => metadata.pkgrel = value,
-                        "epoch" => metadata.epoch = Some(value),
-                        "url" => metadata.url = Some(value),
-                        "license" => metadata.license = Some(value),
-                        _ => {}
+                // Improved variable parsing
+                if let Some(pos) = line_no_comment.find('=') {
+                    let var_name = line_no_comment[..pos].trim();
+                    let remaining = line_no_comment[pos + 1..].trim();
+                    
+                    if remaining.starts_with('(') {
+                        // Array variable - handle balanced parentheses
+                        let mut brace_count = 0;
+                        let mut end_pos = None;
+                        for (j, c) in remaining.chars().enumerate() {
+                            if c == '(' { brace_count += 1; }
+                            else if c == ')' {
+                                brace_count -= 1;
+                                if brace_count == 0 {
+                                    end_pos = Some(j);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if let Some(ep) = end_pos {
+                            let raw_content = &remaining[1..ep];
+                            let items: Vec<String> = self._parse_bash_array(raw_content);
+                            match var_name {
+                                "depends" => metadata.depends.extend(items),
+                                "makedepends" => metadata.makedepends.extend(items),
+                                "checkdepends" => metadata.checkdepends.extend(items),
+                                "optdepends" => metadata.optdepends.extend(items),
+                                "arch" => metadata.arch.extend(items),
+                                "source" => metadata.source.extend(items),
+                                _ => {}
+                            }
+                        }
+                    } else {
+                        // Single variable
+                        let value = remaining.trim_matches(|c| c == '\'' || c == '"').to_string();
+                        match var_name {
+                            "pkgname" => metadata.pkgname = value,
+                            "pkgver" => metadata.pkgver = value,
+                            "pkgrel" => metadata.pkgrel = value,
+                            "epoch" => metadata.epoch = Some(value),
+                            "url" => metadata.url = Some(value),
+                            "license" => metadata.license = Some(value),
+                            _ => {}
+                        }
                     }
                 }
             } else {
@@ -262,5 +279,51 @@ impl PKGBUILDAnalyzer {
         }
 
         (true, "Version and architecture appear compatible.".to_string())
+    }
+
+    fn _parse_bash_array(&self, array_content: &str) -> Vec<String> {
+        let mut items = Vec::new();
+        let mut current_item = String::new();
+        let mut in_quotes = false;
+        let mut quote_char = None;
+
+        for char in array_content.chars() {
+            if !in_quotes {
+                if char == '"' || char == '\'' {
+                    in_quotes = true;
+                    quote_char = Some(char);
+                } else if char.is_whitespace() {
+                    if !current_item.trim().is_empty() {
+                        items.push(self._clean_quoted_string(&current_item));
+                        current_item = String::new();
+                    }
+                } else {
+                    current_item.push(char);
+                }
+            } else {
+                if Some(char) == quote_char {
+                    in_quotes = false;
+                    quote_char = None;
+                } else {
+                    current_item.push(char);
+                }
+            }
+        }
+
+        if !current_item.trim().is_empty() {
+            items.push(self._clean_quoted_string(&current_item));
+        }
+
+        items.into_iter().filter(|s| !s.is_empty()).collect()
+    }
+
+    fn _clean_quoted_string(&self, s: &str) -> String {
+        let s = s.trim();
+        if (s.starts_with('"') && s.ends_with('"')) || (s.starts_with('\'') && s.ends_with('\'')) {
+            if s.len() >= 2 {
+                return s[1..s.len()-1].to_string();
+            }
+        }
+        s.to_string()
     }
 }

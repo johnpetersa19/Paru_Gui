@@ -225,22 +225,22 @@ impl FileUtils {
         let array_patterns = ARRAY_PATTERNS.get_or_init(|| {
             let mut m = HashMap::new();
             let arrays = [
-                ("arch", r"(?s)arch=\((.*?)\)"),
-                ("license", r"(?s)license=\((.*?)\)"),
-                ("depends", r"(?s)depends=\((.*?)\)"),
-                ("makedepends", r"(?s)makedepends=\((.*?)\)"),
-                ("optdepends", r"(?s)optdepends=\((.*?)\)"),
-                ("provides", r"(?s)provides=\((.*?)\)"),
-                ("conflicts", r"(?s)conflicts=\((.*?)\)"),
-                ("replaces", r"(?s)replaces=\((.*?)\)"),
-                ("source", r"(?s)source=\((.*?)\)"),
-                ("sha256sums", r"(?s)sha256sums=\((.*?)\)"),
-                ("md5sums", r"(?s)md5sums=\((.*?)\)"),
-                ("sha512sums", r"(?s)sha512sums=\((.*?)\)"),
-                ("backup", r"(?s)backup=\((.*?)\)"),
-                ("options", r"(?s)options=\((.*?)\)"),
-                ("groups", r"(?s)groups=\((.*?)\)"),
-                ("validpgpkeys", r"(?s)validpgpkeys=\((.*?)\)"),
+                ("arch", r"(?s)arch=\(([^)]*)\)"),
+                ("license", r"(?s)license=\(([^)]*)\)"),
+                ("depends", r"(?s)depends=\(([^)]*)\)"),
+                ("makedepends", r"(?s)makedepends=\(([^)]*)\)"),
+                ("optdepends", r"(?s)optdepends=\(([^)]*)\)"),
+                ("provides", r"(?s)provides=\(([^)]*)\)"),
+                ("conflicts", r"(?s)conflicts=\(([^)]*)\)"),
+                ("replaces", r"(?s)replaces=\(([^)]*)\)"),
+                ("source", r"(?s)source=\(([^)]*)\)"),
+                ("sha256sums", r"(?s)sha256sums=\(([^)]*)\)"),
+                ("md5sums", r"(?s)md5sums=\(([^)]*)\)"),
+                ("sha512sums", r"(?s)sha512sums=\(([^)]*)\)"),
+                ("backup", r"(?s)backup=\(([^)]*)\)"),
+                ("options", r"(?s)options=\(([^)]*)\)"),
+                ("groups", r"(?s)groups=\(([^)]*)\)"),
+                ("validpgpkeys", r"(?s)validpgpkeys=\(([^)]*)\)"),
             ];
             for (k, v) in arrays {
                 m.insert(k, Regex::new(v).unwrap());

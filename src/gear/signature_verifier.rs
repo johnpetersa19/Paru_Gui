@@ -1,7 +1,6 @@
 use std::process::Command;
 use std::path::Path;
 use std::fs;
-// use chrono::{DateTime, Utc, TimeZone};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -149,10 +148,27 @@ impl SignatureVerifier {
                 if parts.len() >= 3 {
                     info.key_id = parts[2].to_string();
                 }
+                if parts.len() >= 4 {
+                    info.signer = parts[3..].join(" ");
+                }
                 info.error_message = Some("Expired key signature".to_string());
-            } else if line.starts_with("[GNUPG:] REVKEYSIG") || line.starts_with("[GNUPG:] KEYREVOKED") {
+            } else if line.starts_with("[GNUPG:] REVKEYSIG") {
                 info.status = SignatureStatus::Revoked;
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 {
+                    info.key_id = parts[2].to_string();
+                }
+                if parts.len() >= 4 {
+                    info.signer = parts[3..].join(" ");
+                }
                 info.error_message = Some("Revoked key signature".to_string());
+            } else if line.starts_with("[GNUPG:] KEYREVOKED") {
+                info.status = SignatureStatus::Revoked;
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 {
+                    info.key_id = parts[2].to_string();
+                }
+                info.error_message = Some("Key revoked".to_string());
             } else if line.starts_with("[GNUPG:] VALIDSIG") {
                 let parts: Vec<&str> = line.split_whitespace().collect();
                 if parts.len() >= 3 {

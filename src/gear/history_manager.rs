@@ -134,7 +134,7 @@ impl HistoryManager {
     }
 
     fn _initialize_db(&self) -> Result<()> {
-        let conn = self.connection.lock().unwrap();
+        let conn = self.connection.lock().unwrap_or_else(|e| e.into_inner());
         conn.execute(
             "CREATE TABLE IF NOT EXISTS actions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -153,7 +153,7 @@ impl HistoryManager {
     }
 
     pub fn add_action(&self, entry: &HistoryEntry) -> Result<i64> {
-        let conn = self.connection.lock().unwrap();
+        let conn = self.connection.lock().unwrap_or_else(|e| e.into_inner());
         conn.execute(
             "INSERT INTO actions (timestamp, action_type, summary, status, details, is_undoable, related_pkg, user_initiated)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -172,7 +172,7 @@ impl HistoryManager {
     }
 
     pub fn get_history(&self, limit: i64, offset: i64) -> Result<Vec<HistoryEntry>> {
-        let conn = self.connection.lock().unwrap();
+        let conn = self.connection.lock().unwrap_or_else(|e| e.into_inner());
         let mut stmt = conn.prepare(
             "SELECT id, timestamp, action_type, summary, status, details, is_undoable, related_pkg, user_initiated
              FROM actions ORDER BY timestamp DESC LIMIT ? OFFSET ?"

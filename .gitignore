@@ -18,3 +18,5 @@ build/
 # Flatpak-builder específico
 .flatpak-builder/
 
+# Rust / Cargo
+target/

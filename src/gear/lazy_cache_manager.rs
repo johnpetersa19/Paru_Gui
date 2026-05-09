@@ -41,7 +41,7 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     where
         F: FnOnce() -> T,
     {
-        let mut cache = self.cache.lock().unwrap();
+        let mut cache = self.cache.lock().unwrap_or_else(|e| e.into_inner());
         
         self._cleanup_expired_locked(&mut cache);
 
@@ -76,7 +76,7 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     }
 
     pub fn cleanup_expired(&self) {
-        let mut cache = self.cache.lock().unwrap();
+        let mut cache = self.cache.lock().unwrap_or_else(|e| e.into_inner());
         self._cleanup_expired_locked(&mut cache);
     }
 
@@ -85,7 +85,7 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     }
 
     pub fn set(&self, key: &str, value: T) {
-        let mut cache = self.cache.lock().unwrap();
+        let mut cache = self.cache.lock().unwrap_or_else(|e| e.into_inner());
         self._cleanup_expired_locked(&mut cache);
         
         if cache.len() >= self.max_size {
@@ -100,6 +100,6 @@ impl<T: Clone + Send + 'static> LazyCacheManager<T> {
     }
 
     pub fn clear(&self) {
-        self.cache.lock().unwrap().clear();
+        self.cache.lock().unwrap_or_else(|e| e.into_inner()).clear();
     }
 }
