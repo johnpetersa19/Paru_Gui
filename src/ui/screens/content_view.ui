@@ -16,7 +16,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Content Browser</property>
-                <property name="subtitle" translatable="yes">Browse and manage package files</property>
+                <property name="subtitle" translatable="yes">Main &#8250; Content &#8250; Files</property>
               </object>
             </property>
             <child type="start">
@@ -134,15 +134,35 @@
             <property name="orientation">vertical</property>
 
             <child>
-              <object class="GtkSearchBar" id="search_bar">
-                <property name="search-mode-enabled">false</property>
-                <property name="show-close-button">true</property>
-                <property name="child">
-                  <object class="GtkSearchEntry" id="search_entry">
-                    <property name="placeholder-text" translatable="yes">Search Files</property>
-                    <property name="tooltip-text" translatable="yes">Search for files by name or content</property>
+              <object class="AdwPreferencesGroup" id="search_group">
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
+                <child>
+                  <object class="AdwEntryRow" id="search_entry_row">
+                    <property name="title" translatable="yes">Search files...</property>
+                    <property name="show-apply-button">false</property>
+                    <property name="input-hints">no-spellcheck</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">system-search-symbolic</property>
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                    <child type="suffix">
+                      <object class="GtkButton" id="clear_file_search_button">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Clear search</property>
+                        <property name="valign">center</property>
+                        <style>
+                          <class name="flat"/>
+                          <class name="circular"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
-                </property>
+                </child>
               </object>
             </child>
 

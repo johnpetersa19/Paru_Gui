@@ -13,6 +13,7 @@
 
     <child>
       <object class="GtkBox" id="navigation_header">
+        <property name="orientation">horizontal</property>
         <property name="spacing">8</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
@@ -32,7 +33,15 @@
         </child>
 
         <child>
-          <object class="GtkBox"><property name="hexpand">true</property></object>
+          <object class="GtkLabel" id="breadcrumb_label">
+            <property name="label" translatable="yes">Main &#8250; Search</property>
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="caption"/>
+              <class name="dim-label"/>
+            </style>
+          </object>
         </child>
 
         <child>
