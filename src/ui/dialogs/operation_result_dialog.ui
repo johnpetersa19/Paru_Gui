@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwWindow" id="OperationResultDialog">
     <property name="title" translatable="yes">Operation Result</property>
@@ -23,7 +23,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle" id="header_title">
                 <property name="title" translatable="yes">Operation Complete</property>
-                <property name="subtitle"></property>
+                <property name="subtitle" translatable="yes"></property>
               </object>
             </property>
 
@@ -217,7 +217,7 @@
                         <child>
                           <object class="AdwActionRow" id="status_code_row">
                             <property name="title" translatable="yes">Result Status</property>
-                            <property name="subtitle">Success</property>
+                            <property name="subtitle" translatable="yes">Success</property>
                             <property name="icon-name">emblem-ok-symbolic</property>
                             <accessibility>
                               <property name="label" translatable="yes">Operation status information</property>
@@ -228,7 +228,7 @@
                         <child>
                           <object class="AdwActionRow" id="processed_packages_row">
                             <property name="title" translatable="yes">Packages Processed</property>
-                            <property name="subtitle">0</property>
+                            <property name="subtitle" translatable="yes">0</property>
                             <property name="icon-name">package-x-generic-symbolic</property>
                             <accessibility>
                               <property name="label" translatable="yes">Number of packages processed</property>
@@ -239,7 +239,7 @@
                         <child>
                           <object class="AdwActionRow" id="operation_duration_row">
                             <property name="title" translatable="yes">Total Duration</property>
-                            <property name="subtitle">00:00:00</property>
+                            <property name="subtitle" translatable="yes">00:00:00</property>
                             <property name="icon-name">preferences-system-time-symbolic</property>
                             <accessibility>
                               <property name="label" translatable="yes">Total operation duration</property>

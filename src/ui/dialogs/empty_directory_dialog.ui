@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
   <object class="AdwWindow" id="EmptyDirectoryDialog">
     <property name="width-request">800</property>
     <property name="height-request">700</property>
@@ -17,14 +17,14 @@
             <property name="show-end-title-buttons">True</property>
             <property name="title-widget">
               <object class="AdwWindowTitle" id="window_title">
-                <property name="title">Empty Directory</property>
-                <property name="subtitle">Set Up Your Project Workspace</property>
+                <property name="title" translatable="yes">Empty Directory</property>
+                <property name="subtitle" translatable="yes">Set Up Your Project Workspace</property>
               </object>
             </property>
             <child type="start">
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
-                <property name="tooltip-text">Return to Directory Browser</property>
+                <property name="tooltip-text" translatable="yes">Return to Directory Browser</property>
                 <signal name="clicked" handler="on_back_clicked"/>
                 <style>
                   <class name="flat"/>
@@ -34,7 +34,7 @@
             <child type="end">
               <object class="GtkMenuButton" id="menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text">Additional Options</property>
+                <property name="tooltip-text" translatable="yes">Additional Options</property>
                 <property name="menu-model">directory_menu</property>
                 <style>
                   <class name="flat"/>
@@ -56,8 +56,8 @@
             </style>
             <child>
               <object class="GtkButton" id="breadcrumb_main">
-                <property name="label">Main</property>
-                <property name="tooltip-text">Return to Main Menu</property>
+                <property name="label" translatable="yes">Main</property>
+                <property name="tooltip-text" translatable="yes">Return to Main Menu</property>
                 <signal name="clicked" handler="on_breadcrumb_main_clicked"/>
                 <style>
                   <class name="flat"/>
@@ -67,7 +67,7 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="label">›</property>
+                <property name="label" translatable="yes">›</property>
                 <style>
                   <class name="breadcrumb-separator"/>
                 </style>
@@ -75,8 +75,8 @@
             </child>
             <child>
               <object class="GtkButton" id="breadcrumb_projects">
-                <property name="label">Projects</property>
-                <property name="tooltip-text">Return to Project List</property>
+                <property name="label" translatable="yes">Projects</property>
+                <property name="tooltip-text" translatable="yes">Return to Project List</property>
                 <signal name="clicked" handler="on_breadcrumb_projects_clicked"/>
                 <style>
                   <class name="flat"/>
@@ -86,7 +86,7 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="label">›</property>
+                <property name="label" translatable="yes">›</property>
                 <style>
                   <class name="breadcrumb-separator"/>
                 </style>
@@ -94,7 +94,7 @@
             </child>
             <child>
               <object class="GtkLabel" id="breadcrumb_current">
-                <property name="label">Empty Directory Setup</property>
+                <property name="label" translatable="yes">Empty Directory Setup</property>
                 <style>
                   <class name="breadcrumb-current"/>
                 </style>
@@ -119,7 +119,7 @@
                 </style>
                 <child>
                   <object class="GtkLabel" id="progress_label">
-                    <property name="label">Setting up project workspace...</property>
+                    <property name="label" translatable="yes">Setting up project workspace...</property>
                     <property name="xalign">0</property>
                     <style>
                       <class name="caption"/>
@@ -167,7 +167,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="header_title">
-                        <property name="label">Empty Directory Detected</property>
+                        <property name="label" translatable="yes">Empty Directory Detected</property>
                         <property name="halign">center</property>
                         <style>
                           <class name="title-1"/>
@@ -176,7 +176,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="header_subtitle">
-                        <property name="label">This directory contains no PKGBUILD files or project content. Choose how you'd like to get started with your new project.</property>
+                        <property name="label" translatable="yes">This directory contains no PKGBUILD files or project content. Choose how you'd like to get started with your new project.</property>
                         <property name="wrap">True</property>
                         <property name="justify">center</property>
                         <property name="max-width-chars">60</property>
@@ -195,7 +195,7 @@
                     <property name="spacing">16</property>
                     <child>
                       <object class="GtkLabel" id="quick_actions_header">
-                        <property name="label">Quick Actions</property>
+                        <property name="label" translatable="yes">Quick Actions</property>
                         <property name="xalign">0</property>
                         <style>
                           <class name="title-3"/>
@@ -222,7 +222,7 @@
                               <object class="GtkButton" id="create_new_button">
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="tooltip-text">Create a new PKGBUILD file from template</property>
+                                <property name="tooltip-text" translatable="yes">Create a new PKGBUILD file from template</property>
                                 <signal name="clicked" handler="on_create_new_clicked"/>
                                 <style>
                                   <class name="flat"/>
@@ -245,7 +245,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label">Create New PKGBUILD</property>
+                                        <property name="label" translatable="yes">Create New PKGBUILD</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -269,7 +269,7 @@
                               <object class="GtkButton" id="import_template_button">
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="tooltip-text">Import and customize from available templates</property>
+                                <property name="tooltip-text" translatable="yes">Import and customize from available templates</property>
                                 <signal name="clicked" handler="on_import_template_clicked"/>
                                 <style>
                                   <class name="flat"/>
@@ -292,7 +292,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label">Import from Template</property>
+                                        <property name="label" translatable="yes">Import from Template</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -316,7 +316,7 @@
                               <object class="GtkButton" id="browse_files_button">
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="tooltip-text">Browse and import existing files or archives</property>
+                                <property name="tooltip-text" translatable="yes">Browse and import existing files or archives</property>
                                 <signal name="clicked" handler="on_browse_files_clicked"/>
                                 <style>
                                   <class name="flat"/>
@@ -339,7 +339,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label">Browse for Files</property>
+                                        <property name="label" translatable="yes">Browse for Files</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -363,7 +363,7 @@
                               <object class="GtkButton" id="change_directory_button">
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="tooltip-text">Select a different project directory</property>
+                                <property name="tooltip-text" translatable="yes">Select a different project directory</property>
                                 <signal name="clicked" handler="on_change_directory_clicked"/>
                                 <style>
                                   <class name="flat"/>
@@ -386,7 +386,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="label">Select Different Directory</property>
+                                        <property name="label" translatable="yes">Select Different Directory</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -414,7 +414,7 @@
                     <property name="spacing">20</property>
                     <child>
                       <object class="GtkLabel" id="detailed_actions_header">
-                        <property name="label">Detailed Setup Options</property>
+                        <property name="label" translatable="yes">Detailed Setup Options</property>
                         <property name="xalign">0</property>
                         <style>
                           <class name="title-3"/>
@@ -453,7 +453,7 @@
                                 <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="aur_title">
-                                    <property name="label">Download from AUR</property>
+                                    <property name="label" translatable="yes">Download from AUR</property>
                                     <property name="xalign">0</property>
                                     <style>
                                       <class name="title-4"/>
@@ -462,7 +462,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="aur_description">
-                                    <property name="label">Search and download PKGBUILD files from the Arch User Repository to get started with existing packages.</property>
+                                    <property name="label" translatable="yes">Search and download PKGBUILD files from the Arch User Repository to get started with existing packages.</property>
                                     <property name="wrap">True</property>
                                     <property name="xalign">0</property>
                                     <property name="max-width-chars">50</property>
@@ -484,16 +484,16 @@
                             <property name="margin-bottom">20</property>
                             <child>
                               <object class="GtkEntry" id="aur_search_entry">
-                                <property name="placeholder-text">Search AUR packages...</property>
+                                <property name="placeholder-text" translatable="yes">Search AUR packages...</property>
                                 <property name="hexpand">True</property>
-                                <property name="tooltip-text">Enter package name to search in AUR</property>
+                                <property name="tooltip-text" translatable="yes">Enter package name to search in AUR</property>
                                 <signal name="activate" handler="on_aur_search_activate"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="aur_search_button">
-                                <property name="label">Search AUR</property>
-                                <property name="tooltip-text">Search for packages in AUR</property>
+                                <property name="label" translatable="yes">Search AUR</property>
+                                <property name="tooltip-text" translatable="yes">Search for packages in AUR</property>
                                 <signal name="clicked" handler="on_aur_search_clicked"/>
                                 <style>
                                   <class name="suggested-action"/>
@@ -502,8 +502,8 @@
                             </child>
                             <child>
                               <object class="GtkButton" id="aur_browse_button">
-                                <property name="label">Browse All</property>
-                                <property name="tooltip-text">Browse all available AUR packages</property>
+                                <property name="label" translatable="yes">Browse All</property>
+                                <property name="tooltip-text" translatable="yes">Browse all available AUR packages</property>
                                 <signal name="clicked" handler="on_aur_browse_clicked"/>
                                 <style>
                                   <class name="flat"/>
@@ -546,7 +546,7 @@
                                 <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="create_title">
-                                    <property name="label">Create Sample PKGBUILD</property>
+                                    <property name="label" translatable="yes">Create Sample PKGBUILD</property>
                                     <property name="xalign">0</property>
                                     <style>
                                       <class name="title-4"/>
@@ -555,7 +555,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="create_description">
-                                    <property name="label">Generate a new PKGBUILD file from customizable templates with guided setup assistance.</property>
+                                    <property name="label" translatable="yes">Generate a new PKGBUILD file from customizable templates with guided setup assistance.</property>
                                     <property name="wrap">True</property>
                                     <property name="xalign">0</property>
                                     <property name="max-width-chars">50</property>
@@ -577,7 +577,7 @@
                             <property name="margin-bottom">20</property>
                             <child>
                               <object class="GtkLabel" id="package_name_label">
-                                <property name="label">Package Name:</property>
+                                <property name="label" translatable="yes">Package Name:</property>
                                 <property name="xalign">0</property>
                                 <layout>
                                   <property name="column">0</property>
@@ -587,9 +587,9 @@
                             </child>
                             <child>
                               <object class="GtkEntry" id="package_name_entry">
-                                <property name="placeholder-text">my-awesome-package</property>
+                                <property name="placeholder-text" translatable="yes">my-awesome-package</property>
                                 <property name="hexpand">True</property>
-                                <property name="tooltip-text">Enter the name for your new package</property>
+                                <property name="tooltip-text" translatable="yes">Enter the name for your new package</property>
                                 <layout>
                                   <property name="column">1</property>
                                   <property name="row">0</property>
@@ -598,7 +598,7 @@
                             </child>
                             <child>
                               <object class="GtkLabel" id="template_label">
-                                <property name="label">Template Type:</property>
+                                <property name="label" translatable="yes">Template Type:</property>
                                 <property name="xalign">0</property>
                                 <layout>
                                   <property name="column">0</property>
@@ -622,7 +622,7 @@
                                 </property>
                                 <property name="selected">0</property>
                                 <property name="hexpand">True</property>
-                                <property name="tooltip-text">Choose the type of package template</property>
+                                <property name="tooltip-text" translatable="yes">Choose the type of package template</property>
                                 <layout>
                                   <property name="column">1</property>
                                   <property name="row">1</property>
@@ -642,8 +642,8 @@
                                 </layout>
                                 <child>
                                   <object class="GtkButton" id="create_preview_button">
-                                    <property name="label">Preview Template</property>
-                                    <property name="tooltip-text">Preview the template before creating</property>
+                                    <property name="label" translatable="yes">Preview Template</property>
+                                    <property name="tooltip-text" translatable="yes">Preview the template before creating</property>
                                     <signal name="clicked" handler="on_create_preview_clicked"/>
                                     <style>
                                       <class name="flat"/>
@@ -652,8 +652,8 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="create_pkgbuild_button">
-                                    <property name="label">Create PKGBUILD</property>
-                                    <property name="tooltip-text">Create the PKGBUILD file with selected template</property>
+                                    <property name="label" translatable="yes">Create PKGBUILD</property>
+                                    <property name="tooltip-text" translatable="yes">Create the PKGBUILD file with selected template</property>
                                     <signal name="clicked" handler="on_create_pkgbuild_clicked"/>
                                     <style>
                                       <class name="suggested-action"/>
@@ -675,7 +675,7 @@
                     <property name="margin-top">16</property>
                     <child>
                       <object class="GtkLabel" id="recent_header">
-                        <property name="label">Recent Projects and Templates</property>
+                        <property name="label" translatable="yes">Recent Projects and Templates</property>
                         <property name="xalign">0</property>
                         <style>
                           <class name="title-4"/>
@@ -703,8 +703,8 @@
             <property name="revealed">True</property>
             <child type="start">
               <object class="GtkButton" id="help_button">
-                <property name="label">Getting Started Guide</property>
-                <property name="tooltip-text">Open help documentation for new projects</property>
+                <property name="label" translatable="yes">Getting Started Guide</property>
+                <property name="tooltip-text" translatable="yes">Open help documentation for new projects</property>
                 <signal name="clicked" handler="on_help_clicked"/>
                 <style>
                   <class name="flat"/>
@@ -713,8 +713,8 @@
             </child>
             <child type="end">
               <object class="GtkButton" id="close_button">
-                <property name="label">Close</property>
-                <property name="tooltip-text">Close this dialog and return</property>
+                <property name="label" translatable="yes">Close</property>
+                <property name="tooltip-text" translatable="yes">Close this dialog and return</property>
                 <signal name="clicked" handler="on_close_clicked"/>
                 <style>
                   <class name="suggested-action"/>

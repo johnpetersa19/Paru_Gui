@@ -105,6 +105,6 @@ impl ParuGuiApplication {
             .copyright("© 2026 Unknown")
             .build();
 
-        about.present(Some(&window));
+        about.present(&window);
     }
 }

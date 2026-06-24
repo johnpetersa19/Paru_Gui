@@ -2,7 +2,7 @@
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="GtkDialog" id="advanced_mode_dialog">
     <property name="default-height">700</property>
@@ -51,7 +51,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -72,7 +72,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -841,7 +841,7 @@
                                   <object class="GtkLabel" id="paru_version_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">--</property>
+                                    <property name="label" translatable="yes">--</property>
                                     <property name="selectable">true</property>
                                     <layout>
                                       <property name="column">1</property>
@@ -866,7 +866,7 @@
                                   <object class="GtkLabel" id="pacman_version_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">--</property>
+                                    <property name="label" translatable="yes">--</property>
                                     <property name="selectable">true</property>
                                     <layout>
                                       <property name="column">1</property>
@@ -891,7 +891,7 @@
                                   <object class="GtkLabel" id="aur_helper_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">paru</property>
+                                    <property name="label" translatable="yes">paru</property>
                                     <property name="selectable">true</property>
                                     <layout>
                                       <property name="column">1</property>
@@ -916,7 +916,7 @@
                                   <object class="GtkLabel" id="cache_dir_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">~/.cache/paru</property>
+                                    <property name="label" translatable="yes">~/.cache/paru</property>
                                     <property name="selectable">true</property>
                                     <layout>
                                       <property name="column">1</property>
@@ -941,7 +941,7 @@
                                   <object class="GtkLabel" id="build_dir_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">~/.cache/paru/clone</property>
+                                    <property name="label" translatable="yes">~/.cache/paru/clone</property>
                                     <property name="selectable">true</property>
                                     <layout>
                                       <property name="column">1</property>
@@ -1098,7 +1098,7 @@
                                   <object class="GtkLabel" id="disk_space_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">--</property>
+                                    <property name="label" translatable="yes">--</property>
                                     <layout>
                                       <property name="column">1</property>
                                       <property name="row">0</property>
@@ -1122,7 +1122,7 @@
                                   <object class="GtkLabel" id="memory_usage_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">--</property>
+                                    <property name="label" translatable="yes">--</property>
                                     <layout>
                                       <property name="column">1</property>
                                       <property name="row">1</property>
@@ -1146,7 +1146,7 @@
                                   <object class="GtkLabel" id="cpu_cores_label">
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
-                                    <property name="label">--</property>
+                                    <property name="label" translatable="yes">--</property>
                                     <layout>
                                       <property name="column">1</property>
                                       <property name="row">2</property>

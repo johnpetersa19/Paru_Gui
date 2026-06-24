@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
   <object class="AdwDialog" id="NewsViewerDialog">
     <property name="title" translatable="yes">Arch Linux News</property>
     <property name="content-width">1000</property>
@@ -39,12 +39,12 @@
                 </child>
               </object>
             </child>
-            <child type="title">
+            <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Arch Linux News</property>
                 <property name="subtitle" translatable="yes">Latest news and announcements</property>
               </object>
-            </child>
+            </property>
             <child type="end">
               <object class="GtkBox" id="header_actions">
                 <property name="spacing">4</property>
@@ -122,7 +122,7 @@
                             </child>
                             <child>
                               <object class="GtkLabel" id="article_count_label">
-                                <property name="label">0 articles</property>
+                                <property name="label" translatable="yes">0 articles</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
@@ -289,7 +289,7 @@
                                 <property name="spacing">16</property>
                                 <child>
                                   <object class="GtkLabel" id="article_date">
-                                    <property name="label"></property>
+                                    <property name="label" translatable="yes"></property>
                                     <property name="halign">start</property>
                                     <style>
                                       <class name="caption"/>
@@ -299,7 +299,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="article_author">
-                                    <property name="label"></property>
+                                    <property name="label" translatable="yes"></property>
                                     <property name="hexpand">True</property>
                                     <property name="halign">center</property>
                                     <style>
@@ -310,7 +310,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="read_status_label">
-                                    <property name="label"></property>
+                                    <property name="label" translatable="yes"></property>
                                     <property name="halign">end</property>
                                     <style>
                                       <class name="caption"/>
@@ -354,7 +354,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="article_position_label">
-                                    <property name="label">-- / --</property>
+                                    <property name="label" translatable="yes">-- / --</property>
                                     <style>
                                       <class name="caption"/>
                                       <class name="dim-label"/>

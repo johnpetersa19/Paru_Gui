@@ -2,7 +2,7 @@
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="GtkDialog" id="package_install_dialog">
     <property name="default-height">700</property>
@@ -10,9 +10,9 @@
     <property name="destroy-with-parent">true</property>
     <property name="modal">true</property>
     <property name="resizable">true</property>
-    <property name="title">Package Installation Wizard</property>
+    <property name="title" translatable="yes">Package Installation Wizard</property>
     <accessibility>
-      <property name="label">Package installation wizard with step-by-step guidance</property>
+      <property name="label" translatable="yes">Package installation wizard with step-by-step guidance</property>
     </accessibility>
 
     <child internal-child="content_area">
@@ -32,8 +32,8 @@
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_packages">
-                    <property name="label">Packages</property>
-                    <property name="tooltip-text">Return to package listing</property>
+                    <property name="label" translatable="yes">Packages</property>
+                    <property name="tooltip-text" translatable="yes">Return to package listing</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -43,7 +43,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator1">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -51,8 +51,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="breadcrumb_package">
-                    <property name="label">[Package Name]</property>
-                    <property name="tooltip-text">Return to package details</property>
+                    <property name="label" translatable="yes">[Package Name]</property>
+                    <property name="tooltip-text" translatable="yes">Return to package details</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -62,7 +62,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator2">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -70,7 +70,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_current">
-                    <property name="label">Install</property>
+                    <property name="label" translatable="yes">Install</property>
                     <style>
                       <class name="heading"/>
                     </style>
@@ -82,7 +82,7 @@
             <child type="start">
               <object class="GtkButton" id="back_to_package_details_button">
                 <property name="icon-name">go-previous-symbolic</property>
-                <property name="tooltip-text">Back to Package Details - return to package information view</property>
+                <property name="tooltip-text" translatable="yes">Back to Package Details - return to package information view</property>
                 <style>
                   <class name="circular"/>
                   <class name="suggested-action"/>
@@ -128,7 +128,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step1_number">
-                        <property name="label">1</property>
+                        <property name="label" translatable="yes">1</property>
                         <property name="width-request">24</property>
                         <property name="height-request">24</property>
                         <style>
@@ -140,7 +140,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="step1_label">
-                        <property name="label">Configure</property>
+                        <property name="label" translatable="yes">Configure</property>
                         <style>
                           <class name="heading"/>
                         </style>
@@ -165,7 +165,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step2_number">
-                        <property name="label">2</property>
+                        <property name="label" translatable="yes">2</property>
                         <property name="width-request">24</property>
                         <property name="height-request">24</property>
                         <style>
@@ -176,7 +176,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="step2_label">
-                        <property name="label">Install</property>
+                        <property name="label" translatable="yes">Install</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -201,7 +201,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="step3_number">
-                        <property name="label">3</property>
+                        <property name="label" translatable="yes">3</property>
                         <property name="width-request">24</property>
                         <property name="height-request">24</property>
                         <style>
@@ -212,7 +212,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="step3_label">
-                        <property name="label">Complete</property>
+                        <property name="label" translatable="yes">Complete</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -275,7 +275,7 @@
                                       <object class="GtkLabel" id="package_name_label">
                                         <property name="halign">start</property>
                                         <property name="hexpand">true</property>
-                                        <property name="label">Package Name</property>
+                                        <property name="label" translatable="yes">Package Name</property>
                                         <property name="selectable">true</property>
                                         <style>
                                           <class name="title-1"/>
@@ -288,7 +288,7 @@
                                         <child>
                                           <object class="GtkImage" id="signature_indicator">
                                             <property name="icon-name">security-high-symbolic</property>
-                                            <property name="tooltip-text">Package signature verified</property>
+                                            <property name="tooltip-text" translatable="yes">Package signature verified</property>
                                             <style>
                                               <class name="success"/>
                                             </style>
@@ -297,7 +297,7 @@
                                         <child>
                                           <object class="GtkImage" id="trust_indicator">
                                             <property name="icon-name">emblem-ok-symbolic</property>
-                                            <property name="tooltip-text">Trusted maintainer</property>
+                                            <property name="tooltip-text" translatable="yes">Trusted maintainer</property>
                                             <style>
                                               <class name="success"/>
                                             </style>
@@ -310,7 +310,7 @@
                                 <child>
                                   <object class="GtkLabel" id="package_version_label">
                                     <property name="halign">start</property>
-                                    <property name="label">Version: 1.0.0-1</property>
+                                    <property name="label" translatable="yes">Version: 1.0.0-1</property>
                                     <property name="selectable">true</property>
                                     <style>
                                       <class name="heading"/>
@@ -320,7 +320,7 @@
                                 <child>
                                   <object class="GtkLabel" id="package_description_label">
                                     <property name="halign">start</property>
-                                    <property name="label">Package description will be displayed here</property>
+                                    <property name="label" translatable="yes">Package description will be displayed here</property>
                                     <property name="wrap">true</property>
                                     <style>
                                       <class name="dim-label"/>
@@ -344,7 +344,7 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="halign">start</property>
-                                    <property name="label">Installation Configuration</property>
+                                    <property name="label" translatable="yes">Installation Configuration</property>
                                     <style>
                                       <class name="heading"/>
                                     </style>
@@ -357,28 +357,28 @@
                                     <child>
                                       <object class="GtkCheckButton" id="install_deps_check">
                                         <property name="active">true</property>
-                                        <property name="label">Install missing dependencies automatically</property>
-                                        <property name="tooltip-text">Automatically resolve and install required dependencies</property>
+                                        <property name="label" translatable="yes">Install missing dependencies automatically</property>
+                                        <property name="tooltip-text" translatable="yes">Automatically resolve and install required dependencies</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkCheckButton" id="verify_signature_check">
                                         <property name="active">true</property>
-                                        <property name="label">Verify package signatures</property>
-                                        <property name="tooltip-text">Verify cryptographic signatures for security</property>
+                                        <property name="label" translatable="yes">Verify package signatures</property>
+                                        <property name="tooltip-text" translatable="yes">Verify cryptographic signatures for security</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkCheckButton" id="clean_build_check">
                                         <property name="active">true</property>
-                                        <property name="label">Clean build directory after installation</property>
-                                        <property name="tooltip-text">Remove temporary build files to save space</property>
+                                        <property name="label" translatable="yes">Clean build directory after installation</property>
+                                        <property name="tooltip-text" translatable="yes">Remove temporary build files to save space</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkCheckButton" id="install_optional_check">
-                                        <property name="label">Install selected optional dependencies</property>
-                                        <property name="tooltip-text">Include optional dependencies marked below</property>
+                                        <property name="label" translatable="yes">Install selected optional dependencies</property>
+                                        <property name="tooltip-text" translatable="yes">Include optional dependencies marked below</property>
                                       </object>
                                     </child>
                                   </object>
@@ -397,7 +397,7 @@
                                       <object class="GtkLabel">
                                         <property name="halign">start</property>
                                         <property name="hexpand">true</property>
-                                        <property name="label">Required Dependencies</property>
+                                        <property name="label" translatable="yes">Required Dependencies</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -405,7 +405,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="required_deps_count">
-                                        <property name="label">0 packages</property>
+                                        <property name="label" translatable="yes">0 packages</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="dim-label"/>
@@ -436,7 +436,7 @@
                                       <object class="GtkLabel">
                                         <property name="halign">start</property>
                                         <property name="hexpand">true</property>
-                                        <property name="label">Optional Dependencies</property>
+                                        <property name="label" translatable="yes">Optional Dependencies</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -444,7 +444,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="optional_deps_count">
-                                        <property name="label">0 packages</property>
+                                        <property name="label" translatable="yes">0 packages</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="dim-label"/>
@@ -502,7 +502,7 @@
 
                         <child>
                           <object class="GtkLabel" id="install_status_label">
-                            <property name="label">Installing Package...</property>
+                            <property name="label" translatable="yes">Installing Package...</property>
                             <style>
                               <class name="title-2"/>
                             </style>
@@ -511,7 +511,7 @@
 
                         <child>
                           <object class="GtkLabel" id="install_progress_label">
-                            <property name="label">Downloading sources and dependencies</property>
+                            <property name="label" translatable="yes">Downloading sources and dependencies</property>
                             <style>
                               <class name="dim-label"/>
                             </style>
@@ -584,7 +584,7 @@
 
                         <child>
                           <object class="GtkLabel" id="completion_title">
-                            <property name="label">Installation Complete!</property>
+                            <property name="label" translatable="yes">Installation Complete!</property>
                             <style>
                               <class name="title-1"/>
                             </style>
@@ -593,7 +593,7 @@
 
                         <child>
                           <object class="GtkLabel" id="completion_message">
-                            <property name="label">Package has been successfully installed and is ready to use.</property>
+                            <property name="label" translatable="yes">Package has been successfully installed and is ready to use.</property>
                             <property name="wrap">true</property>
                             <property name="justify">center</property>
                             <style>
@@ -612,8 +612,8 @@
 
                         <child>
                           <object class="GtkButton" id="install_another_button">
-                            <property name="label">Install Another Package</property>
-                            <property name="tooltip-text">Return to package listing to install additional packages</property>
+                            <property name="label" translatable="yes">Install Another Package</property>
+                            <property name="tooltip-text" translatable="yes">Return to package listing to install additional packages</property>
                             <style>
                               <class name="suggested-action"/>
                               <class name="pill"/>
@@ -624,8 +624,8 @@
 
                         <child>
                           <object class="GtkButton" id="view_installed_button">
-                            <property name="label">View Installed Packages</property>
-                            <property name="tooltip-text">Open installed packages manager</property>
+                            <property name="label" translatable="yes">View Installed Packages</property>
+                            <property name="tooltip-text" translatable="yes">Open installed packages manager</property>
                             <style>
                               <class name="flat"/>
                               <class name="pill"/>
@@ -646,10 +646,10 @@
 
     <child type="action">
       <object class="GtkButton" id="wizard_cancel_button">
-        <property name="label">Cancel</property>
-        <property name="tooltip-text">Cancel installation and return to package details</property>
+        <property name="label" translatable="yes">Cancel</property>
+        <property name="tooltip-text" translatable="yes">Cancel installation and return to package details</property>
         <accessibility>
-          <property name="label">Cancel package installation</property>
+          <property name="label" translatable="yes">Cancel package installation</property>
         </accessibility>
         <signal name="clicked" handler="on_wizard_cancel_clicked"/>
       </object>
@@ -657,8 +657,8 @@
 
     <child type="action">
       <object class="GtkButton" id="wizard_back_button">
-        <property name="label">Back</property>
-        <property name="tooltip-text">Return to previous step</property>
+        <property name="label" translatable="yes">Back</property>
+        <property name="tooltip-text" translatable="yes">Return to previous step</property>
         <property name="visible">false</property>
         <signal name="clicked" handler="on_wizard_back_clicked"/>
       </object>
@@ -666,13 +666,13 @@
 
     <child type="action">
       <object class="GtkButton" id="wizard_next_button">
-        <property name="label">Start Installation</property>
-        <property name="tooltip-text">Proceed to installation with selected configuration</property>
+        <property name="label" translatable="yes">Start Installation</property>
+        <property name="tooltip-text" translatable="yes">Proceed to installation with selected configuration</property>
         <style>
           <class name="suggested-action"/>
         </style>
         <accessibility>
-          <property name="label">Start package installation</property>
+          <property name="label" translatable="yes">Start package installation</property>
         </accessibility>
         <signal name="clicked" handler="on_wizard_next_clicked"/>
       </object>

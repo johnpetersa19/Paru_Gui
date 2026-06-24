@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/paru-gui">
-    <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
-    <file preprocess="xml-stripblanks">ui/components/empty_state.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/Keyboard_Shortcuts.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/advanced_card.ui</file>
     <file preprocess="xml-stripblanks">ui/components/cards/package_card.ui</file>
-    <file preprocess="xml-stripblanks">ui/screens/pkgbuild_review.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/patch_card.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/cards/pkgbuild_card.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/empty_state.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/error_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/file_chooser_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/components/search_bar.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/advanced_mode_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/aur_specific_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/chroot_manager_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/command_builder_widget.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/command_confirmation_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/empty_directory_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/live_progress_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/news_viewer_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/operation_result_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/orphan_manager_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/package_build_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/package_install_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/package_remove_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/package_search_advanced_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/patch_card_template.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/pkgbuild_downloader_dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/dialogs/preferences_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/repo_manager_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/system_stats_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/dialogs/system_upgrade_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/screens/content_view.ui</file>
+    <file preprocess="xml-stripblanks">ui/screens/pkgbuild_review.ui</file>
+    <file preprocess="xml-stripblanks">ui/screens/upstream_update.ui</file>
+    <file preprocess="xml-stripblanks">window.ui</file>
   </gresource>
 </gresources>

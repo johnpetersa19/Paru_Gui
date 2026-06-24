@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.0"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="GtkBox" id="CommandBuilderWidget">
     <property name="orientation">vertical</property>
@@ -312,7 +312,7 @@
                             </style>
                             <child>
                               <object class="GtkLabel" id="command_preview_label">
-                                <property name="label">paru -S</property>
+                                <property name="label" translatable="yes">paru -S</property>
                                 <property name="halign">start</property>
                                 <property name="selectable">true</property>
                                 <property name="wrap">true</property>
@@ -487,7 +487,7 @@
 
                             <child>
                               <object class="GtkLabel" id="template_count_label">
-                                <property name="label">0 templates</property>
+                                <property name="label" translatable="yes">0 templates</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>

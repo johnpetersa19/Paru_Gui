@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
   <requires lib="gio" version="2.0"/>
 
   <object class="AdwApplicationWindow" id="patch_management_window">
@@ -286,7 +286,7 @@
                         </child>
                         <child>
                           <object class="GtkLabel" id="files_count">
-                            <property name="label">3 files</property>
+                            <property name="label" translatable="yes">3 files</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>
@@ -311,7 +311,7 @@
                         </child>
                         <child>
                           <object class="GtkLabel" id="patch_size">
-                            <property name="label">2.1 KB</property>
+                            <property name="label" translatable="yes">2.1 KB</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="caption"/>

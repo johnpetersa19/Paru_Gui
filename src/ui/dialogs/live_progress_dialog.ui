@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.0"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="LiveProgressDialog">
     <property name="title" translatable="yes">Operation Progress</property>
@@ -237,7 +237,7 @@
 
                             <child>
                               <object class="GtkLabel" id="progress_text_label">
-                                <property name="label">0%</property>
+                                <property name="label" translatable="yes">0%</property>
                                 <property name="halign">end</property>
                                 <style>
                                   <class name="numeric"/>
@@ -420,7 +420,7 @@
 
                             <child>
                               <object class="GtkLabel" id="build_progress_text">
-                                <property name="label">0/0</property>
+                                <property name="label" translatable="yes">0/0</property>
                                 <property name="halign">end</property>
                                 <style>
                                   <class name="numeric"/>

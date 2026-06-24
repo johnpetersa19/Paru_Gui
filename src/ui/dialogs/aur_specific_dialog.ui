@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.0"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="AurSpecificDialog">
     <property name="title" translatable="yes">AUR Tools</property>
@@ -507,7 +507,7 @@
                                     </style>
                                     <child>
                                       <object class="GtkLabel" id="command_preview_label">
-                                        <property name="label">paru -S --aur</property>
+                                        <property name="label" translatable="yes">paru -S --aur</property>
                                         <property name="halign">start</property>
                                         <property name="selectable">true</property>
                                         <property name="wrap">true</property>

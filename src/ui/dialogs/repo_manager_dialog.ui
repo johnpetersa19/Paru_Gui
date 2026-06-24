@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="repo_manager_dialog">
     <property name="title" translatable="yes">Repository Manager</property>
@@ -40,12 +40,12 @@
                 </child>
               </object>
             </child>
-            <child type="title">
+            <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Repository Manager</property>
                 <property name="subtitle" translatable="yes">Manage system package repositories</property>
               </object>
-            </child>
+            </property>
             <child type="end">
               <object class="GtkBox" id="header_actions">
                 <property name="spacing">4</property>
@@ -130,7 +130,7 @@
 
                         <child>
                           <object class="GtkLabel" id="repo_count_label">
-                            <property name="label">0 repositories</property>
+                            <property name="label" translatable="yes">0 repositories</property>
                             <style>
                               <class name="caption"/>
                               <class name="dim-label"/>
@@ -285,7 +285,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="packages_affected_count">
-                                        <property name="label">0</property>
+                                        <property name="label" translatable="yes">0</property>
                                         <property name="halign">end</property>
                                         <property name="hexpand">true</property>
                                         <style>
@@ -311,7 +311,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="storage_impact_size">
-                                        <property name="label">0 MB</property>
+                                        <property name="label" translatable="yes">0 MB</property>
                                         <property name="halign">end</property>
                                         <property name="hexpand">true</property>
                                         <style>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.0"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="PackageSearchAdvancedDialog">
     <property name="title" translatable="yes">Advanced Package Search</property>
@@ -30,7 +30,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <property name="css-classes">breadcrumb-separator</property>
                       </object>
                     </child>
@@ -42,7 +42,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <property name="css-classes">breadcrumb-separator</property>
                       </object>
                     </child>
@@ -325,7 +325,7 @@
 
                                 <child>
                                   <object class="GtkLabel" id="command_preview_label">
-                                    <property name="label">paru -Ss</property>
+                                    <property name="label" translatable="yes">paru -Ss</property>
                                     <property name="halign">start</property>
                                     <property name="selectable">true</property>
                                     <property name="wrap">true</property>

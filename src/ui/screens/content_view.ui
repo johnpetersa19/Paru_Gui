@@ -2,7 +2,7 @@
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
   <requires lib="gio" version="2.0"/>
-  <requires lib="adw" version="1.0"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="GtkBox" id="ContentView">
     <property name="orientation">vertical</property>
@@ -33,7 +33,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <property name="css-classes">breadcrumb-separator</property>
                   </object>
                 </child>
@@ -45,7 +45,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <property name="css-classes">breadcrumb-separator</property>
                   </object>
                 </child>
@@ -193,7 +193,7 @@
                     <property name="ellipsize">middle</property>
                     <property name="halign">start</property>
                     <property name="hexpand">true</property>
-                    <property name="label">/home/user</property>
+                    <property name="label" translatable="yes">/home/user</property>
                     <property name="max-width-chars">50</property>
                     <property name="wrap">false</property>
                     <property name="selectable">true</property>
