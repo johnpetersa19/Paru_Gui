@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.4"/>
+  <requires lib="adw" version="1.4"/>
 
   <object class="AdwStatusPage" id="empty_state">
     <property name="icon-name">folder-symbolic</property>
     <property name="title" translatable="yes">This Directory is Empty</property>
-    <property name="description" translatable="yes">Get started by downloading a PKGBUILD from AUR, creating a new project, or browsing available packages.</property>
+    <property name="description" translatable="yes">Download a PKGBUILD, create a project, or browse available AUR packages.</property>
     <property name="child">
       <object class="AdwClamp">
-        <property name="maximum-size">450</property>
+        <property name="maximum-size">560</property>
         <property name="child">
           <object class="GtkBox">
             <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
+            <property name="spacing">18</property>
 
             <child>
               <object class="AdwPreferencesGroup">
@@ -22,8 +22,12 @@
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Download PKGBUILD from AUR</property>
                     <property name="subtitle" translatable="yes">Search and download from the AUR</property>
-                    <property name="icon-name">folder-download-symbolic</property>
                     <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">folder-download-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="download_pkgbuild_button">
                         <property name="label" translatable="yes">Download</property>
@@ -31,7 +35,6 @@
                         <signal name="clicked" handler="on_download_pkgbuild_clicked"/>
                         <style>
                           <class name="suggested-action"/>
-                          <class name="pill"/>
                         </style>
                       </object>
                     </child>
@@ -40,17 +43,18 @@
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Create New PKGBUILD</property>
-                    <property name="subtitle" translatable="yes">Use the guided wizard to create a custom PKGBUILD</property>
-                    <property name="icon-name">document-new-symbolic</property>
+                    <property name="subtitle" translatable="yes">Use the guided workflow to create a custom PKGBUILD</property>
                     <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">document-new-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="builder_mode_button">
                         <property name="label" translatable="yes">Create</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_builder_mode_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -58,17 +62,18 @@
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Browse AUR Packages</property>
-                    <property name="subtitle" translatable="yes">Explore popular and trending packages in the AUR</property>
-                    <property name="icon-name">system-search-symbolic</property>
+                    <property name="subtitle" translatable="yes">Explore packages in the AUR</property>
                     <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">system-search-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="browse_aur_button">
                         <property name="label" translatable="yes">Browse</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_browse_aur_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -76,17 +81,18 @@
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Create New Directory</property>
-                    <property name="subtitle" translatable="yes">Create a new folder for organizing your projects</property>
-                    <property name="icon-name">folder-new-symbolic</property>
+                    <property name="subtitle" translatable="yes">Create a folder for organizing projects</property>
                     <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">folder-new-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="create_directory_button">
                         <property name="label" translatable="yes">Create</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_create_directory_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -96,22 +102,22 @@
 
             <child>
               <object class="AdwPreferencesGroup" id="recent_actions_group">
-                <property name="title" translatable="yes">Recent Actions</property>
+                <property name="title" translatable="yes">Recent</property>
                 <property name="visible">False</property>
                 <child>
                   <object class="AdwActionRow" id="recent_downloads_row">
                     <property name="title" translatable="yes">Recent Downloads</property>
                     <property name="subtitle" translatable="yes">Access recently downloaded PKGBUILDs</property>
-                    <property name="icon-name">document-open-recent-symbolic</property>
-                    <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">document-open-recent-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="recent_downloads_button">
                         <property name="label" translatable="yes">View</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_recent_downloads_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -120,16 +126,16 @@
                   <object class="AdwActionRow" id="recent_projects_row">
                     <property name="title" translatable="yes">Recent Projects</property>
                     <property name="subtitle" translatable="yes">Return to recently worked on projects</property>
-                    <property name="icon-name">folder-documents-symbolic</property>
-                    <property name="activatable">True</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">folder-documents-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="recent_projects_button">
                         <property name="label" translatable="yes">Open</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_recent_projects_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -137,17 +143,17 @@
                 <child>
                   <object class="AdwActionRow" id="favorite_packages_row">
                     <property name="title" translatable="yes">Favorite Packages</property>
-                    <property name="subtitle" translatable="yes">Quick access to your bookmarked packages</property>
-                    <property name="icon-name">starred-symbolic</property>
-                    <property name="activatable">True</property>
+                    <property name="subtitle" translatable="yes">Quick access to bookmarked packages</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">starred-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="favorite_packages_button">
                         <property name="label" translatable="yes">Browse</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_favorite_packages_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -157,21 +163,21 @@
 
             <child>
               <object class="AdwPreferencesGroup">
-                <property name="title" translatable="yes">Advanced Options</property>
+                <property name="title" translatable="yes">Advanced</property>
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Import Existing PKGBUILD</property>
-                    <property name="subtitle" translatable="yes">Import a file from your local filesystem</property>
-                    <property name="icon-name">document-open-symbolic</property>
-                    <property name="activatable">True</property>
+                    <property name="subtitle" translatable="yes">Import a file from the local filesystem</property>
+                    <child type="prefix">
+                      <object class="GtkImage">
+                        <property name="icon-name">document-open-symbolic</property>
+                      </object>
+                    </child>
                     <child type="suffix">
                       <object class="GtkButton" id="import_pkgbuild_button">
                         <property name="label" translatable="yes">Import</property>
                         <property name="valign">center</property>
                         <signal name="clicked" handler="on_import_pkgbuild_clicked"/>
-                        <style>
-                          <class name="pill"/>
-                        </style>
                       </object>
                     </child>
                   </object>

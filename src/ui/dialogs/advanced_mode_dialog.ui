@@ -1,333 +1,1293 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="adw" version="1.4"/>
 
-  <template class="AdvancedModeDialog" parent="AdwDialog">
-    <property name="content-height">700</property>
-    <property name="content-width">900</property>
+  <object class="GtkDialog" id="advanced_mode_dialog">
+    <property name="default-height">700</property>
+    <property name="default-width">900</property>
+    <property name="destroy-with-parent">true</property>
+    <property name="modal">true</property>
+    <property name="resizable">true</property>
     <property name="title" translatable="yes">Advanced Mode</property>
+    <accessibility>
+      <property name="label" translatable="yes">Advanced operations and debugging tools</property>
+    </accessibility>
 
-    <property name="child">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar">
-            <property name="title-widget">
-              <object class="AdwViewSwitcher">
-                <property name="stack">advanced_notebook</property>
-                <property name="policy">wide</property>
-              </object>
-            </property>
-          </object>
-        </child>
+    <child internal-child="content_area">
+      <object class="GtkBox">
+        <property name="margin-bottom">0</property>
+        <property name="margin-end">0</property>
+        <property name="margin-start">0</property>
+        <property name="margin-top">0</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">0</property>
 
-        <property name="content">
-          <object class="GtkBox">
+        <child>
+          <object class="GtkBox" id="navigation_header">
+            <property name="margin-bottom">0</property>
+            <property name="margin-end">24</property>
+            <property name="margin-start">24</property>
+            <property name="margin-top">18</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">0</property>
+            <property name="spacing">12</property>
 
             <child>
-              <object class="AdwViewStack" id="advanced_notebook">
-                <property name="hexpand">true</property>
-                <property name="vexpand">true</property>
-
-                <!-- Custom Command Page -->
+              <object class="GtkBox" id="breadcrumb_box">
+                <property name="spacing">6</property>
                 <child>
-                  <object class="AdwViewStackPage">
-                    <property name="name">custom_command</property>
-                    <property name="title" translatable="yes">Custom Command</property>
-                    <property name="icon-name">utilities-terminal-symbolic</property>
-                    <property name="child">
-                      <object class="AdwPreferencesPage">
+                  <object class="GtkButton" id="breadcrumb_main">
+                    <property name="label" translatable="yes">Main</property>
+                    <property name="tooltip-text" translatable="yes">Return to main view</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="caption"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Navigate to main view</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="breadcrumb_content">
+                    <property name="label" translatable="yes">Content</property>
+                    <property name="tooltip-text" translatable="yes">Return to content management</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="caption"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Navigate to content management</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">›</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Advanced Mode</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="accent"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox" id="mode_selector_box">
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="hexpand">true</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">12</property>
                         <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">Custom Command</property>
-                            <property name="description" translatable="yes">High Risk - Advanced Users Only. Enter any paru command.</property>
-
-                            <child>
-                              <object class="AdwEntryRow" id="command_entry">
-                                <property name="title" translatable="yes">Command</property>
-                                <property name="text" translatable="yes">paru </property>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="AdwEntryRow" id="working_dir_entry">
-                                <property name="title" translatable="yes">Working Directory</property>
-                                <child type="suffix">
-                                  <object class="GtkButton" id="browse_dir_button">
-                                    <property name="icon-name">folder-symbolic</property>
-                                    <property name="valign">center</property>
-                                    <style><class name="flat"/></style>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
+                          <object class="GtkImage">
+                            <property name="halign">center</property>
+                            <property name="icon-name">applications-system-symbolic</property>
+                            <property name="pixel-size">32</property>
+                            <property name="valign">center</property>
+                            <style>
+                              <class name="accent"/>
+                            </style>
                           </object>
                         </child>
-
                         <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">Execution Options</property>
+                          <object class="GtkBox">
+                            <property name="hexpand">true</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">3</property>
                             <child>
-                              <object class="AdwSwitchRow" id="dry_run_check">
-                                <property name="title" translatable="yes">Dry run (--dry-run)</property>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Advanced Mode</property>
+                                <style>
+                                  <class name="title-2"/>
+                                </style>
                               </object>
                             </child>
                             <child>
-                              <object class="AdwSwitchRow" id="verbose_check">
-                                <property name="title" translatable="yes">Verbose output (--verbose)</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwSwitchRow" id="no_confirm_check">
-                                <property name="title" translatable="yes">No confirmation (--noconfirm)</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwSwitchRow" id="force_check">
-                                <property name="title" translatable="yes">Force operation (--force)</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="AdwPreferencesGroup">
-                            <child>
-                              <object class="GtkBox">
-                                <property name="spacing">12</property>
-                                <property name="halign">center</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                                <child>
-                                  <object class="GtkButton" id="validate_command_button">
-                                    <property name="label" translatable="yes">Validate Command</property>
-                                    <style><class name="pill"/></style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="execute_command_button">
-                                    <property name="label" translatable="yes">Execute Command</property>
-                                    <style><class name="pill"/><class name="suggested-action"/></style>
-                                  </object>
-                                </child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Execute custom commands, debug operations, and view system information</property>
+                                <property name="wrap">true</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
                               </object>
                             </child>
                           </object>
                         </child>
                       </object>
-                    </property>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="mode_toggle_box">
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkToggleButton" id="guided_mode_toggle">
+                            <property name="active">true</property>
+                            <property name="label" translatable="yes">Guided Mode</property>
+                            <property name="tooltip-text" translatable="yes">Step-by-step guidance with explanations</property>
+                            <style>
+                              <class name="pill"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Enable guided mode with assistance</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkToggleButton" id="expert_mode_toggle">
+                            <property name="group">guided_mode_toggle</property>
+                            <property name="label" translatable="yes">Expert Mode</property>
+                            <property name="tooltip-text" translatable="yes">Direct access to all features without guidance</property>
+                            <style>
+                              <class name="pill"/>
+                            </style>
+                            <accessibility>
+                              <property name="label" translatable="yes">Enable expert mode for advanced users</property>
+                            </accessibility>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
-
-                <!-- System Info Page -->
                 <child>
-                  <object class="AdwViewStackPage">
-                    <property name="name">system_info</property>
-                    <property name="title" translatable="yes">System Info</property>
-                    <property name="icon-name">computer-symbolic</property>
-                    <property name="child">
-                      <object class="AdwPreferencesPage">
+                  <object class="GtkButton" id="return_simple_mode_button">
+                    <property name="label" translatable="yes">Return to Simple Mode</property>
+                    <property name="tooltip-text" translatable="yes">Exit advanced mode and return to simple interface</property>
+                    <style>
+                      <class name="destructive-action"/>
+                    </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Exit advanced mode and return to simple interface</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparator">
+            <property name="margin-bottom">12</property>
+            <property name="margin-end">24</property>
+            <property name="margin-start">24</property>
+            <property name="margin-top">12</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkNotebook" id="advanced_notebook">
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
+            <property name="show-border">false</property>
+            <accessibility>
+              <property name="label" translatable="yes">Advanced mode options</property>
+            </accessibility>
+
+            <child>
+              <object class="GtkNotebookPage">
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkBox" id="custom_command_tab">
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-end">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-top">24</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">18</property>
+
                         <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">System Information</property>
-                            <property name="description" translatable="yes">Safe - Read-Only Information</property>
-                            
+                          <object class="GtkBox" id="difficulty_indicator_commands">
+                            <property name="spacing">6</property>
                             <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Paru Version</property>
-                                <property name="subtitle" id="paru_version_label">--</property>
+                              <object class="GtkImage">
+                                <property name="icon-name">security-high-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
                               </object>
                             </child>
                             <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Pacman Version</property>
-                                <property name="subtitle" id="pacman_version_label">--</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">AUR Helper</property>
-                                <property name="subtitle" id="aur_helper_label">paru</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Cache Directory</property>
-                                <property name="subtitle" id="cache_dir_label">~/.cache/paru</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Build Directory</property>
-                                <property name="subtitle" id="build_dir_label">~/.cache/paru/clone</property>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">High Risk - Advanced Users Only</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="warning"/>
+                                </style>
                               </object>
                             </child>
                           </object>
                         </child>
 
                         <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">Configuration Status</property>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
                             <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Configuration Valid</property>
-                                <child type="prefix">
-                                  <object class="GtkImage" id="config_valid_icon"><property name="icon-name">emblem-ok-symbolic</property><style><class name="success"/></style></object>
-                                </child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Custom Command</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
                               </object>
                             </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">AUR Access</property>
-                                <child type="prefix">
-                                  <object class="GtkImage" id="aur_access_icon"><property name="icon-name">emblem-ok-symbolic</property><style><class name="success"/></style></object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Git Available</property>
-                                <child type="prefix">
-                                  <object class="GtkImage" id="git_available_icon"><property name="icon-name">emblem-ok-symbolic</property><style><class name="success"/></style></object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Makepkg Available</property>
-                                <child type="prefix">
-                                  <object class="GtkImage" id="makepkg_available_icon"><property name="icon-name">emblem-ok-symbolic</property><style><class name="success"/></style></object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">System Resources</property>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Available Disk Space</property>
-                                <property name="subtitle" id="disk_space_label">--</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">Memory Usage</property>
-                                <property name="subtitle" id="memory_usage_label">--</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow">
-                                <property name="title" translatable="yes">CPU Cores</property>
-                                <property name="subtitle" id="cpu_cores_label">--</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        
-                        <child>
-                          <object class="AdwPreferencesGroup">
                             <child>
                               <object class="GtkBox">
-                                <property name="spacing">12</property>
-                                <property name="halign">center</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="open_config_button">
-                                    <property name="label" translatable="yes">Open Configuration</property>
-                                    <style><class name="pill"/></style>
+                                  <object class="GtkEntry" id="command_entry">
+                                    <property name="placeholder-text" translatable="yes">Enter paru command (e.g., paru -S package-name)</property>
+                                    <property name="width-request">400</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Custom paru command input</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="open_logs_button">
-                                    <property name="label" translatable="yes">View Logs</property>
-                                    <style><class name="pill"/></style>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Enter any paru command. Common examples: -S (install), -R (remove), -Ss (search), -Syu (update)</property>
+                                    <property name="wrap">true</property>
+                                    <style>
+                                      <class name="caption"/>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Execution Options</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="command_options_grid">
+                                <property name="column-spacing">12</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="dry_run_check">
+                                    <property name="label" translatable="yes">Dry run (--dry-run)</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Enable dry run mode</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="verbose_check">
+                                    <property name="label" translatable="yes">Verbose output (--verbose)</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Enable verbose output</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="no_confirm_check">
+                                    <property name="label" translatable="yes">No confirmation (--noconfirm)</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Skip confirmation prompts</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="force_check">
+                                    <property name="label" translatable="yes">Force operation (--force)</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Force operation execution</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Working Directory</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkEntry" id="working_dir_entry">
+                                    <property name="hexpand">true</property>
+                                    <property name="placeholder-text" translatable="yes">/path/to/working/directory</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Working directory path</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="browse_dir_button">
+                                    <property name="icon-name">folder-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Browse for directory</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Browse for working directory</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkRevealer" id="progress_revealer_commands">
+                            <property name="reveal-child">false</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="halign">center</property>
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkSpinner" id="command_spinner">
+                                    <property name="spinning">true</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Executing command...</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">center</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkButton" id="validate_command_button">
+                                <property name="label" translatable="yes">Validate Command</property>
+                                <property name="tooltip-text" translatable="yes">Check command syntax before execution</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Validate command syntax</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="execute_command_button">
+                                <property name="label" translatable="yes">Execute Command</property>
+                                <property name="tooltip-text" translatable="yes">Run the custom paru command</property>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Execute the custom command</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <property name="tab">
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">utilities-terminal-symbolic</property>
+                        <property name="pixel-size">16</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Custom Command</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkNotebookPage">
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkBox" id="debug_options_tab">
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-end">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-top">24</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">18</property>
+
+                        <child>
+                          <object class="GtkBox" id="difficulty_indicator_debug">
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">security-medium-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Medium Risk - Debugging Tools</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="accent"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Debug Level</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Verbosity Level:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkDropDown" id="debug_level_dropdown">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item translatable="yes">Normal</item>
+                                          <item translatable="yes">Verbose (-v)</item>
+                                          <item translatable="yes">Very Verbose (-vv)</item>
+                                          <item translatable="yes">Debug (-vvv)</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                    <property name="selected">0</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Select debug verbosity level</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Debug Options</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="debug_options_grid">
+                                <property name="column-spacing">12</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="show_downloads_check">
+                                    <property name="label" translatable="yes">Show Downloads</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Show download progress and details</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="show_build_files_check">
+                                    <property name="label" translatable="yes">Show Build Files</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Show build file operations</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="keep_build_files_check">
+                                    <property name="label" translatable="yes">Keep Build Files</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Preserve build files after completion</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="debug_pkgbuild_check">
+                                    <property name="label" translatable="yes">Debug PKGBUILD</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Enable PKGBUILD debugging</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="show_deps_tree_check">
+                                    <property name="label" translatable="yes">Show Dependencies Tree</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Display complete dependency tree</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="parallel_downloads_check">
+                                    <property name="active">true</property>
+                                    <property name="label" translatable="yes">Parallel Downloads</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Enable parallel download processing</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Performance Settings</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="performance_grid">
+                                <property name="column-spacing">12</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Max Downloads:</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="max_downloads_spin">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">1</property>
+                                            <property name="upper">20</property>
+                                            <property name="step-increment">1</property>
+                                            <property name="value">5</property>
+                                          </object>
+                                        </property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Maximum simultaneous downloads</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Build Jobs:</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="build_jobs_spin">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">1</property>
+                                            <property name="upper">32</property>
+                                            <property name="step-increment">1</property>
+                                            <property name="value">4</property>
+                                          </object>
+                                        </property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Number of parallel build jobs</property>
+                                        </accessibility>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <property name="tab">
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">applications-debugging-symbolic</property>
+                        <property name="pixel-size">16</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Debug Options</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkNotebookPage">
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkBox" id="system_info_tab">
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-end">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-top">24</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">18</property>
+
+                        <child>
+                          <object class="GtkBox" id="difficulty_indicator_system">
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">security-low-symbolic</property>
+                                <property name="pixel-size">16</property>
+                                <style>
+                                  <class name="success"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Safe - Read-Only Information</property>
+                                <style>
+                                  <class name="caption"/>
+                                  <class name="success"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label" translatable="yes">System Information</property>
+                                    <style>
+                                      <class name="heading"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="refresh_system_info_button">
-                                    <property name="label" translatable="yes">Refresh Info</property>
-                                    <style><class name="pill"/></style>
+                                    <property name="icon-name">view-refresh-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Refresh system information</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Refresh system information</property>
+                                    </accessibility>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="system_info_grid">
+                                <property name="column-spacing">24</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Paru Version:</property>
+                                    <property name="width-request">150</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="paru_version_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">--</property>
+                                    <property name="selectable">true</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Pacman Version:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="pacman_version_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">--</property>
+                                    <property name="selectable">true</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">AUR Helper:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="aur_helper_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">paru</property>
+                                    <property name="selectable">true</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Cache Directory:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">3</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="cache_dir_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">~/.cache/paru</property>
+                                    <property name="selectable">true</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">3</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Build Directory:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">4</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="build_dir_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">~/.cache/paru/clone</property>
+                                    <property name="selectable">true</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">4</property>
+                                    </layout>
                                   </object>
                                 </child>
                               </object>
                             </child>
                           </object>
                         </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Configuration Status</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="config_status_grid">
+                                <property name="column-spacing">24</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage" id="config_valid_icon">
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                        <style>
+                                          <class name="success"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Configuration Valid</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage" id="aur_access_icon">
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                        <style>
+                                          <class name="success"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">AUR Access</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage" id="git_available_icon">
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                        <style>
+                                          <class name="success"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Git Available</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage" id="makepkg_available_icon">
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                        <style>
+                                          <class name="success"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label" translatable="yes">Makepkg Available</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">System Resources</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="resources_grid">
+                                <property name="column-spacing">24</property>
+                                <property name="row-spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Available Disk Space:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="disk_space_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">--</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">Memory Usage:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="memory_usage_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">--</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">CPU Cores:</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="cpu_cores_label">
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">true</property>
+                                    <property name="label">--</property>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">center</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkButton" id="open_config_button">
+                                <property name="label" translatable="yes">Open Configuration</property>
+                                <property name="tooltip-text" translatable="yes">Open paru configuration file in editor</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Open paru configuration file</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="open_logs_button">
+                                <property name="label" translatable="yes">View Logs</property>
+                                <property name="tooltip-text" translatable="yes">View system and paru operation logs</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">View system and paru logs</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
                       </object>
-                    </property>
+                    </child>
                   </object>
-                </child>
-
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkBox" id="output_section">
-                <property name="margin-bottom">18</property>
-                <property name="margin-end">24</property>
-                <property name="margin-start">24</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
-                <child>
+                </property>
+                <property name="tab">
                   <object class="GtkBox">
-                    <property name="spacing">12</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">computer-symbolic</property>
+                        <property name="pixel-size">16</property>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="halign">start</property>
-                        <property name="hexpand">true</property>
-                        <property name="label" translatable="yes">Real-time Output</property>
-                        <style>
-                          <class name="heading"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="clear_output_button">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Clear output</property>
-                        <style><class name="flat"/><class name="circular"/></style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="save_output_button">
-                        <property name="icon-name">document-save-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Save output to file</property>
-                        <style><class name="flat"/><class name="circular"/></style>
+                        <property name="label" translatable="yes">System Info</property>
                       </object>
                     </child>
                   </object>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="height-request">200</property>
-                    <property name="vexpand">true</property>
-                    <child>
-                      <object class="GtkTextView" id="output_textview">
-                        <property name="editable">false</property>
-                        <property name="monospace">true</property>
-                        <property name="wrap-mode">word</property>
-                        <style>
-                          <class name="card"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                </property>
               </object>
             </child>
 
           </object>
-        </property>
-      </object>
-    </property>
+        </child>
 
-  </template>
+        <child>
+          <object class="GtkBox" id="output_section">
+            <property name="margin-bottom">18</property>
+            <property name="margin-end">24</property>
+            <property name="margin-start">24</property>
+            <property name="margin-top">0</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">true</property>
+                    <property name="label" translatable="yes">Real-time Output</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="clear_output_button">
+                    <property name="icon-name">edit-clear-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Clear output</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Clear output log</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="save_output_button">
+                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Save output to file</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Save output log to file</property>
+                    </accessibility>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="height-request">200</property>
+                <property name="vexpand">true</property>
+                <child>
+                  <object class="GtkTextView" id="output_textview">
+                    <property name="editable">false</property>
+                    <property name="monospace">true</property>
+                    <property name="wrap-mode">word</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Command output and real-time logs</property>
+                    </accessibility>
+                    <style>
+                      <class name="card"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <child type="action">
+      <object class="GtkButton" id="advanced_close_button">
+        <property name="label" translatable="yes">Close</property>
+        <property name="tooltip-text" translatable="yes">Close advanced mode and return to main interface</property>
+        <style>
+          <class name="suggested-action"/>
+        </style>
+        <accessibility>
+          <property name="label" translatable="yes">Close advanced mode dialog</property>
+        </accessibility>
+      </object>
+    </child>
+
+  </object>
 
 </interface>

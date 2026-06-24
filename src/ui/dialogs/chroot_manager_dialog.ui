@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
-  <template class="ChrootManagerDialog" parent="AdwDialog">
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.4"/>
+  <object class="AdwDialog" id="ChrootManagerDialog">
     <property name="title" translatable="yes">Chroot Manager</property>
     <property name="content-width">900</property>
     <property name="content-height">700</property>
@@ -12,13 +12,14 @@
           <object class="AdwHeaderBar" id="header_bar">
             <child type="start">
               <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="valign">center</property>
                 <child>
                   <object class="GtkButton" id="back_to_advanced_button">
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to Advanced Tools</property>
-                    <signal name="clicked" handler="on_back_to_advanced_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_back_to_advanced_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -40,7 +41,7 @@
             <child type="title">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Chroot Manager</property>
-                
+                <property name="subtitle" translatable="yes">Manage isolated system environments</property>
               </object>
             </child>
             <child type="end">
@@ -50,7 +51,7 @@
                   <object class="GtkButton" id="learn_chroot_button">
                     <property name="icon-name">help-contents-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Learn About Chroot Environments</property>
-                    <signal name="clicked" handler="on_learn_chroot_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_learn_chroot_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -61,7 +62,7 @@
                   <object class="GtkButton" id="refresh_status_button">
                     <property name="icon-name">view-refresh-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Refresh Chroot Status</property>
-                    <signal name="clicked" handler="on_refresh_status_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_refresh_status_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -91,7 +92,7 @@
                       <object class="AdwBanner" id="warning_banner">
                         <property name="title" translatable="yes">Warning: Advanced Tool</property>
                         <property name="button-label" translatable="yes">I Understand</property>
-                        <signal name="button-clicked" handler="on_warning_acknowledged" swapped="true"/>
+                        <signal name="button-clicked" handler="on_warning_acknowledged"/>
                       </object>
                     </child>
                   </object>
@@ -104,7 +105,7 @@
                     <child>
                       <object class="AdwActionRow" id="chroot_path_row">
                         <property name="title" translatable="yes">Chroot Root Directory</property>
-                        
+                        <property name="subtitle" translatable="yes">Not configured</property>
                         <child type="prefix">
                           <object class="GtkImage" id="chroot_status_icon">
                             <property name="icon-name">dialog-question-symbolic</property>
@@ -131,7 +132,7 @@
                                 <property name="icon-name">folder-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Show Chroot Directory</property>
                                 <property name="valign">center</property>
-                                <signal name="clicked" handler="on_show_path_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_show_path_clicked"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="circular"/>
@@ -145,7 +146,7 @@
                     <child>
                       <object class="AdwActionRow" id="chroot_health_row">
                         <property name="title" translatable="yes">Environment Health</property>
-                        
+                        <property name="subtitle" translatable="yes">System integrity and package status</property>
                         <child type="prefix">
                           <object class="GtkImage" id="health_status_icon">
                             <property name="icon-name">emblem-default-symbolic</property>
@@ -172,7 +173,7 @@
                                 <property name="icon-name">medical-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Check Environment Health</property>
                                 <property name="valign">center</property>
-                                <signal name="clicked" handler="on_check_health_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_check_health_clicked"/>
                                 <style>
                                   <class name="flat"/>
                                   <class name="circular"/>
@@ -188,6 +189,7 @@
 
                 <child>
                   <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
                     <property name="spacing">20</property>
                     <property name="homogeneous">true</property>
                     <property name="vexpand">true</property>
@@ -276,8 +278,8 @@
                                       <object class="GtkEntry" id="package_entry">
                                         <property name="placeholder-text" translatable="yes">Enter package name to install in chroot</property>
                                         <property name="hexpand">True</property>
-                                        <signal name="activate" handler="on_install_activate" swapped="true"/>
-                                        <signal name="changed" handler="on_package_entry_changed" swapped="true"/>
+                                        <signal name="activate" handler="on_install_activate"/>
+                                        <signal name="changed" handler="on_package_entry_changed"/>
                                       </object>
                                     </child>
                                     <child>
@@ -285,7 +287,7 @@
                                         <property name="label" translatable="yes">Install</property>
                                         <property name="tooltip-text" translatable="yes">Install package in chroot environment</property>
                                         <property name="sensitive">False</property>
-                                        <signal name="clicked" handler="on_install_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_install_clicked"/>
                                         <style>
                                           <class name="suggested-action"/>
                                         </style>
@@ -322,7 +324,7 @@
                                           <object class="GtkButton" id="shell_button">
                                             <property name="label" translatable="yes">Open Interactive Shell</property>
                                             <property name="tooltip-text" translatable="yes">Open interactive shell in chroot environment</property>
-                                            <signal name="clicked" handler="on_shell_clicked" swapped="true"/>
+                                            <signal name="clicked" handler="on_shell_clicked"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -332,7 +334,7 @@
                                           <object class="GtkButton" id="upgrade_button">
                                             <property name="label" translatable="yes">Upgrade All Packages</property>
                                             <property name="tooltip-text" translatable="yes">Upgrade all packages in chroot environment</property>
-                                            <signal name="clicked" handler="on_upgrade_clicked" swapped="true"/>
+                                            <signal name="clicked" handler="on_upgrade_clicked"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -391,7 +393,7 @@
                       <object class="AdwBanner" id="destructive_warning_banner">
                         <property name="title" translatable="yes">Destructive Operation Warning</property>
                         <property name="button-label" translatable="yes">Proceed Anyway</property>
-                        <signal name="button-clicked" handler="on_destructive_warning_acknowledged" swapped="true"/>
+                        <signal name="button-clicked" handler="on_destructive_warning_acknowledged"/>
                         <style>
                           <class name="error"/>
                         </style>
@@ -409,7 +411,7 @@
               <object class="GtkButton" id="advanced_tools_button">
                 <property name="label" translatable="yes">Back to Advanced Tools</property>
                 <property name="tooltip-text" translatable="yes">Return to advanced tools panel</property>
-                <signal name="clicked" handler="on_back_to_advanced_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_to_advanced_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -422,7 +424,7 @@
                   <object class="GtkButton" id="clean_chroot_button">
                     <property name="label" translatable="yes">Clean Chroot</property>
                     <property name="tooltip-text" translatable="yes">Remove unnecessary files and clean package cache</property>
-                    <signal name="clicked" handler="on_clean_chroot_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_clean_chroot_clicked"/>
                     <style>
                       <class name="pill"/>
                     </style>
@@ -432,7 +434,7 @@
                   <object class="GtkButton" id="reset_chroot_button">
                     <property name="label" translatable="yes">Reset Environment</property>
                     <property name="tooltip-text" translatable="yes">WARNING: This will completely reset the chroot environment</property>
-                    <signal name="clicked" handler="on_reset_chroot_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_reset_chroot_clicked"/>
                     <style>
                       <class name="destructive-action"/>
                       <class name="pill"/>
@@ -448,13 +450,13 @@
                   <object class="GtkButton" id="help_button">
                     <property name="label" translatable="yes">Learn About Chroot</property>
                     <property name="tooltip-text" translatable="yes">Open documentation about chroot environments</property>
-                    <signal name="clicked" handler="on_learn_chroot_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_learn_chroot_clicked"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="close_button">
                     <property name="label" translatable="yes">Close</property>
-                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_close_clicked"/>
                   </object>
                 </child>
               </object>
@@ -463,5 +465,5 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

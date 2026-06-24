@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="LiveProgressDialog" parent="AdwDialog">
+  <object class="AdwDialog" id="LiveProgressDialog">
     <property name="title" translatable="yes">Operation Progress</property>
     <property name="content-width">860</property>
     <property name="content-height">780</property>
-    
+    <property name="can-close">false</property>
     <accessibility>
       <property name="label" translatable="yes">Live Progress Dialog</property>
       <property name="description" translatable="yes">Monitor real-time progress of package operations</property>
@@ -20,12 +20,13 @@
             <property name="title-widget">
               <object class="AdwWindowTitle" id="operation_title">
                 <property name="title" translatable="yes">Operation Progress</property>
-                
+                <property name="subtitle" translatable="yes">Processing packages...</property>
               </object>
             </property>
 
             <child type="start">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -33,10 +34,13 @@
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Return to originating view</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_back_to_origin_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_back_to_origin_clicked" swapped="no"/>
                     <style>
                       <class name="flat"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Return to previous screen</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -44,10 +48,13 @@
                   <object class="GtkButton" id="minimize_button">
                     <property name="icon-name">window-minimize-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Continue in background</property>
-                    <signal name="clicked" handler="on_minimize_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_minimize_clicked" swapped="no"/>
                     <style>
                       <class name="flat"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Minimize progress window</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -55,16 +62,20 @@
 
             <child type="end">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
                   <object class="GtkButton" id="details_toggle_button">
                     <property name="icon-name">view-more-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Toggle detailed view</property>
-                    <signal name="clicked" handler="on_details_toggle_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_details_toggle_clicked" swapped="no"/>
                     <style>
                       <class name="flat"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Show or hide detailed information</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -73,10 +84,13 @@
                     <property name="icon-name">document-save-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Export operation log</property>
                     <property name="sensitive">false</property>
-                    <signal name="clicked" handler="on_save_log_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_save_log_clicked" swapped="no"/>
                     <style>
                       <class name="flat"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Save operation log to file</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -112,6 +126,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -159,7 +174,10 @@
                                 <style>
                                   <class name="flat"/>
                                 </style>
-                                <signal name="clicked" handler="on_view_source_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_view_source_clicked" swapped="no"/>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Navigate back to operation source</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -190,14 +208,15 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
                               <object class="GtkSpinner" id="operation_spinner">
                                 <property name="spinning">true</property>
                                 <property name="valign">center</property>
-                                
-                                
+                                <property name="width-request">24</property>
+                                <property name="height-request">24</property>
                               </object>
                             </child>
 
@@ -210,6 +229,9 @@
                                 <style>
                                   <class name="heading"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Current operation stage</property>
+                                </accessibility>
                               </object>
                             </child>
 
@@ -220,6 +242,9 @@
                                 <style>
                                   <class name="numeric"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Progress percentage</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -229,11 +254,15 @@
                           <object class="GtkProgressBar" id="overall_progress_bar">
                             <property name="fraction">0.0</property>
                             <property name="show-text">false</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Overall operation progress</property>
+                            </accessibility>
                           </object>
                         </child>
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">24</property>
 
                             <child>
@@ -244,6 +273,9 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Download speed indicator</property>
+                                </accessibility>
                               </object>
                             </child>
 
@@ -255,6 +287,9 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Estimated time remaining</property>
+                                </accessibility>
                               </object>
                             </child>
 
@@ -267,6 +302,9 @@
                                   <class name="dim-label"/>
                                   <class name="numeric"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Elapsed operation time</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -323,7 +361,7 @@
                     <property name="css-classes">card</property>
                     <property name="child">
                       <object class="GtkScrolledWindow">
-                        
+                        <property name="height-request">160</property>
                         <property name="hscrollbar-policy">automatic</property>
                         <property name="vscrollbar-policy">automatic</property>
                         <property name="child">
@@ -365,6 +403,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -373,6 +412,9 @@
                                 <property name="halign">start</property>
                                 <property name="hexpand">true</property>
                                 <property name="ellipsize">end</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Build stage description</property>
+                                </accessibility>
                               </object>
                             </child>
 
@@ -383,6 +425,9 @@
                                 <style>
                                   <class name="numeric"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Build progress counter</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -392,6 +437,9 @@
                           <object class="GtkProgressBar" id="build_progress_bar">
                             <property name="fraction">0.0</property>
                             <property name="show-text">false</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Build operation progress</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -421,6 +469,7 @@
 
                             <child>
                               <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
                                 <property name="spacing">6</property>
                                 <property name="margin-top">8</property>
                                 <property name="margin-start">12</property>
@@ -444,7 +493,10 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="toggled" handler="on_autoscroll_toggled" swapped="true"/>
+                                    <signal name="toggled" handler="on_autoscroll_toggled" swapped="no"/>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Toggle automatic scrolling</property>
+                                    </accessibility>
                                   </object>
                                 </child>
 
@@ -455,7 +507,10 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_copy_output_clicked" swapped="true"/>
+                                    <signal name="clicked" handler="on_copy_output_clicked" swapped="no"/>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Copy log to clipboard</property>
+                                    </accessibility>
                                   </object>
                                 </child>
 
@@ -466,7 +521,10 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_clear_log_clicked" swapped="true"/>
+                                    <signal name="clicked" handler="on_clear_log_clicked" swapped="no"/>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Clear output log</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -474,7 +532,7 @@
 
                             <child>
                               <object class="GtkScrolledWindow">
-                                
+                                <property name="height-request">180</property>
                                 <property name="hscrollbar-policy">automatic</property>
                                 <property name="vscrollbar-policy">automatic</property>
                                 <property name="child">
@@ -514,6 +572,7 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -522,7 +581,10 @@
                     <property name="icon-name">media-playback-pause-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Pause current operation</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_pause_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_pause_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Pause operation</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -532,20 +594,27 @@
                     <property name="icon-name">media-playback-start-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Resume paused operation</property>
                     <property name="visible">false</property>
-                    <signal name="clicked" handler="on_resume_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_resume_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Resume operation</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
                   <object class="GtkButton" id="background_button">
                     <property name="label" translatable="yes">Continue in Background</property>
                     <property name="tooltip-text" translatable="yes">Hide progress and continue operation in background</property>
-                    <signal name="clicked" handler="on_background_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_background_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Continue operation in background</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -556,7 +625,10 @@
                     <style>
                       <class name="destructive-action"/>
                     </style>
-                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_cancel_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Cancel current operation</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -568,7 +640,10 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Close progress dialog</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -577,5 +652,5 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

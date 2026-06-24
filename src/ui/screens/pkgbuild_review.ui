@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="adw" version="1.4"/>
 
-  <template class="PkgbuildReviewDialog" parent="AdwDialog">
+  <object class="AdwDialog" id="pkgbuild_review_dialog">
     <property name="title" translatable="yes">PKGBUILD Security Review</property>
-    <property name="content-width">750</property>
-    <property name="content-height">800</property>
+    <property name="content-width">760</property>
+    <property name="content-height">760</property>
+    <property name="can-close">True</property>
 
     <child>
       <object class="AdwToolbarView">
@@ -16,18 +17,25 @@
               <object class="GtkButton" id="back_to_files_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to file list</property>
-                <signal name="clicked" handler="on_back_to_files_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_to_files_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
               </object>
             </child>
 
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">PKGBUILD Review</property>
+                <property name="subtitle" translatable="yes">Security and build configuration</property>
+              </object>
+            </property>
+
             <child type="end">
               <object class="GtkButton" id="view_source_button">
                 <property name="icon-name">text-editor-symbolic</property>
                 <property name="tooltip-text" translatable="yes">View source directory</property>
-                <signal name="clicked" handler="on_view_source_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_view_source_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -37,203 +45,209 @@
         </child>
 
         <property name="content">
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="spacing">20</property>
-            <property name="margin-top">16</property>
-            <property name="margin-bottom">16</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
-
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
             <child>
-              <object class="GtkBox" id="package_header">
-                <property name="spacing">16</property>
-                <child>
-                  <object class="GtkImage" id="package_icon">
-                    <property name="icon-name">text-x-script-symbolic</property>
-                    <property name="pixel-size">64</property>
-                    <property name="valign">start</property>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="GtkBox" id="package_details">
+              <object class="AdwClamp">
+                <property name="maximum-size">720</property>
+                <property name="child">
+                  <object class="GtkBox">
                     <property name="orientation">vertical</property>
-                    <property name="spacing">6</property>
-                    <property name="hexpand">True</property>
+                    <property name="spacing">18</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
                     <child>
-                      <object class="GtkLabel" id="package_name_label">
-                        <property name="label">package-name</property>
-                        <property name="halign">start</property>
-                        <property name="ellipsize">end</property>
-                        <style>
-                          <class name="title-2"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="package_version_label">
-                        <property name="label">Version: 1.0.0</property>
-                        <property name="halign">start</property>
-                        <style>
-                          <class name="subtitle"/>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkBox" id="edit_flow_container">
-                <property name="spacing">12</property>
-                <property name="halign">center</property>
-                <style>
-                  <class name="linked"/>
-                </style>
-                <child>
-                  <object class="GtkButton" id="edit_pkgbuild_button">
-                    <property name="label" translatable="yes">Edit PKGBUILD</property>
-                    <signal name="clicked" handler="on_edit_pkgbuild_clicked" swapped="true"/>
-                    <style>
-                      <class name="pill"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="save_changes_button">
-                    <property name="label" translatable="yes">Save Changes</property>
-                    <property name="sensitive">False</property>
-                    <signal name="clicked" handler="on_save_changes_clicked" swapped="true"/>
-                    <style>
-                      <class name="pill"/>
-                      <class name="suggested-action"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="continue_review_button">
-                    <property name="label" translatable="yes">Continue Review</property>
-                    <signal name="clicked" handler="on_continue_review_clicked" swapped="true"/>
-                    <style>
-                      <class name="pill"/>
-                    </style>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwViewSwitcher" id="review_switcher">
-                <property name="stack">review_stack</property>
-                <property name="policy">wide</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwViewStack" id="review_stack">
-                <property name="vexpand">True</property>
-                <child>
-                  <object class="AdwViewStackPage">
-                    <property name="name">diff-review</property>
-                    <property name="title" translatable="yes">Changes Analysis</property>
-                    <property name="icon-name">edit-find-replace-symbolic</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">16</property>
+                      <object class="GtkBox" id="package_header">
+                        <property name="spacing">14</property>
                         <child>
-                          <object class="GtkFrame">
-                            <style>
-                              <class name="view"/>
-                            </style>
+                          <object class="GtkImage" id="package_icon">
+                            <property name="icon-name">text-x-script-symbolic</property>
+                            <property name="pixel-size">48</property>
+                            <property name="valign">start</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="package_details">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+                            <property name="hexpand">True</property>
                             <child>
+                              <object class="GtkLabel" id="package_name_label">
+                                <property name="label">package-name</property>
+                                <property name="xalign">0</property>
+                                <property name="ellipsize">end</property>
+                                <style>
+                                  <class name="title-2"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="package_version_label">
+                                <property name="label">Version: 1.0.0</property>
+                                <property name="xalign">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkBox" id="edit_flow_container">
+                        <property name="spacing">8</property>
+                        <property name="halign">center</property>
+                        <style>
+                          <class name="linked"/>
+                        </style>
+                        <child>
+                          <object class="GtkButton" id="edit_pkgbuild_button">
+                            <property name="label" translatable="yes">Edit PKGBUILD</property>
+                            <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="save_changes_button">
+                            <property name="label" translatable="yes">Save Changes</property>
+                            <property name="sensitive">False</property>
+                            <signal name="clicked" handler="on_save_changes_clicked"/>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="continue_review_button">
+                            <property name="label" translatable="yes">Continue Review</property>
+                            <signal name="clicked" handler="on_continue_review_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwViewSwitcher" id="review_switcher">
+                        <property name="stack">review_stack</property>
+                        <property name="policy">wide</property>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="AdwViewStack" id="review_stack">
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">diff-review</property>
+                            <property name="title" translatable="yes">Changes</property>
+                            <property name="icon-name">edit-find-replace-symbolic</property>
+                            <property name="child">
                               <object class="GtkScrolledWindow">
-                                <property name="height-request">200</property>
+                                <property name="height-request">260</property>
+                                <property name="has-frame">True</property>
                                 <child>
                                   <object class="GtkTextView" id="source_diff_view">
                                     <property name="editable">False</property>
                                     <property name="monospace">True</property>
-                                    <property name="margin-top">8</property>
-                                    <property name="margin-bottom">8</property>
-                                    <property name="margin-start">8</property>
-                                    <property name="margin-end">8</property>
+                                    <property name="cursor-visible">False</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="left-margin">12</property>
+                                    <property name="right-margin">12</property>
+                                    <property name="top-margin">12</property>
+                                    <property name="bottom-margin">12</property>
                                   </object>
                                 </child>
                               </object>
-                            </child>
+                            </property>
                           </object>
                         </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
 
-                <child>
-                  <object class="AdwViewStackPage">
-                    <property name="name">security-analysis</property>
-                    <property name="title" translatable="yes">Security Checklist</property>
-                    <property name="icon-name">security-high-symbolic</property>
-                    <property name="child">
-                      <object class="AdwPreferencesPage">
                         <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">Critical Security Risks</property>
-                            <child>
-                              <object class="AdwSwitchRow" id="risk_sudo_commands">
-                                <property name="title" translatable="yes">Contains sudo commands</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwSwitchRow" id="risk_unverified_sources">
-                                <property name="title" translatable="yes">Unverified source URLs</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-
-                <child>
-                  <object class="AdwViewStackPage">
-                    <property name="name">build-configuration</property>
-                    <property name="title" translatable="yes">Build Settings</property>
-                    <property name="icon-name">applications-engineering-symbolic</property>
-                    <property name="child">
-                      <object class="AdwPreferencesPage">
-                        <child>
-                          <object class="AdwPreferencesGroup">
-                            <property name="title" translatable="yes">Build Environment</property>
-                            <child>
-                              <object class="AdwExpanderRow" id="sandbox_settings">
-                                <property name="title" translatable="yes">Sandbox Isolation</property>
-                                <property name="show-enable-switch">True</property>
-                                <child type="row">
-                                  <object class="AdwComboRow" id="isolation_level_row">
-                                    <property name="title" translatable="yes">Isolation Level</property>
-                                    <property name="model">
-                                      <object class="GtkStringList">
-                                        <items>
-                                          <item translatable="yes">Strict</item>
-                                          <item translatable="yes">Medium</item>
-                                          <item translatable="yes">Minimal</item>
-                                        </items>
+                          <object class="AdwViewStackPage">
+                            <property name="name">security-analysis</property>
+                            <property name="title" translatable="yes">Security</property>
+                            <property name="icon-name">security-high-symbolic</property>
+                            <property name="child">
+                              <object class="AdwPreferencesPage">
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="title" translatable="yes">Critical Security Risks</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="risk_sudo_commands">
+                                        <property name="title" translatable="yes">Contains sudo commands</property>
+                                        <child type="prefix">
+                                          <object class="GtkImage">
+                                            <property name="icon-name">dialog-warning-symbolic</property>
+                                          </object>
+                                        </child>
                                       </object>
-                                    </property>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="risk_unverified_sources">
+                                        <property name="title" translatable="yes">Unverified source URLs</property>
+                                        <child type="prefix">
+                                          <object class="GtkImage">
+                                            <property name="icon-name">dialog-error-symbolic</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
-                            </child>
+                            </property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">build-configuration</property>
+                            <property name="title" translatable="yes">Build</property>
+                            <property name="icon-name">applications-engineering-symbolic</property>
+                            <property name="child">
+                              <object class="AdwPreferencesPage">
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="title" translatable="yes">Build Environment</property>
+                                    <child>
+                                      <object class="AdwExpanderRow" id="sandbox_settings">
+                                        <property name="title" translatable="yes">Sandbox Isolation</property>
+                                        <property name="show-enable-switch">True</property>
+                                        <child type="prefix">
+                                          <object class="GtkImage">
+                                            <property name="icon-name">changes-prevent-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child type="row">
+                                          <object class="AdwComboRow" id="isolation_level_row">
+                                            <property name="title" translatable="yes">Isolation Level</property>
+                                            <property name="model">
+                                              <object class="GtkStringList">
+                                                <items>
+                                                  <item translatable="yes">Strict</item>
+                                                  <item translatable="yes">Medium</item>
+                                                  <item translatable="yes">Minimal</item>
+                                                </items>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
                           </object>
                         </child>
                       </object>
-                    </property>
+                    </child>
                   </object>
-                </child>
+                </property>
               </object>
             </child>
           </object>
@@ -244,13 +258,9 @@
             <child type="start">
               <object class="GtkButton" id="cancel_review_button">
                 <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_cancel_review_clicked" swapped="true"/>
-                <style>
-                  <class name="pill"/>
-                </style>
+                <signal name="clicked" handler="on_cancel_review_clicked"/>
               </object>
             </child>
-
             <child type="end">
               <object class="GtkBox">
                 <property name="spacing">8</property>
@@ -258,29 +268,22 @@
                   <object class="GtkButton" id="previous_step_button">
                     <property name="label" translatable="yes">Previous</property>
                     <property name="visible">False</property>
-                    <signal name="clicked" handler="on_previous_step_clicked" swapped="true"/>
-                    <style>
-                      <class name="pill"/>
-                    </style>
+                    <signal name="clicked" handler="on_previous_step_clicked"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="next_step_button">
                     <property name="label" translatable="yes">Next</property>
-                    <signal name="clicked" handler="on_next_step_clicked" swapped="true"/>
-                    <style>
-                      <class name="pill"/>
-                    </style>
+                    <signal name="clicked" handler="on_next_step_clicked"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="build_after_review_button">
                     <property name="label" translatable="yes">Build Package</property>
                     <property name="visible">False</property>
-                    <signal name="clicked" handler="on_build_after_review_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_build_after_review_clicked"/>
                     <style>
                       <class name="suggested-action"/>
-                      <class name="pill"/>
                     </style>
                   </object>
                 </child>
@@ -290,5 +293,5 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="AdwShortcutsDialog" id="shortcuts_dialog">
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkShortcutsWindow" id="shortcuts_window">
     <property name="title" translatable="yes">Keyboard Shortcuts</property>
+
     <child>
-      <object class="AdwShortcutsSection">
-        <property name="title" translatable="yes">General</property>
+      <object class="GtkShortcutsSection">
+        <property name="title" translatable="yes">Application</property>
+        <property name="section-name">application</property>
+
         <child>
-          <object class="AdwShortcutsGroup">
-            <property name="title" translatable="yes">Application</property>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">General</property>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Show Shortcuts</property>
                 <property name="accelerator">&lt;Primary&gt;question</property>
               </object>
             </child>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Preferences</property>
                 <property name="accelerator">&lt;Primary&gt;comma</property>
               </object>
             </child>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quit</property>
                 <property name="accelerator">&lt;Primary&gt;q</property>
               </object>
@@ -30,26 +38,32 @@
         </child>
       </object>
     </child>
+
     <child>
-      <object class="AdwShortcutsSection">
+      <object class="GtkShortcutsSection">
         <property name="title" translatable="yes">Navigation</property>
+        <property name="section-name">navigation</property>
+
         <child>
-          <object class="AdwShortcutsGroup">
+          <object class="GtkShortcutsGroup">
             <property name="title" translatable="yes">Movement</property>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Back</property>
                 <property name="accelerator">&lt;Alt&gt;Left</property>
               </object>
             </child>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Forward</property>
                 <property name="accelerator">&lt;Alt&gt;Right</property>
               </object>
             </child>
+
             <child>
-              <object class="AdwShortcutsItem">
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Search</property>
                 <property name="accelerator">&lt;Primary&gt;f</property>
               </object>

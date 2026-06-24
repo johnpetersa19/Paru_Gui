@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="adw" version="1.4"/>
 
   <object class="AdwDialog" id="package_build_dialog">
     <property name="content-width">900</property>
@@ -16,11 +16,6 @@
           <object class="AdwHeaderBar" id="dialog_header_bar">
             <property name="centering-policy">strict</property>
             <property name="show-title">true</property>
-            <property name="title-widget">
-              <object class="AdwWindowTitle" id="dialog_title">
-                <property name="title" translatable="yes">Build Package</property>
-              </object>
-            </property>
             <child type="start">
               <object class="GtkBox" id="navigation_start_box">
                 <property name="spacing">6</property>
@@ -28,16 +23,26 @@
                   <object class="GtkButton" id="dialog_close_button">
                     <property name="icon-name">window-close-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Close build dialog</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Close dialog</property>
+                    </accessibility>
                     <style>
                       <class name="flat"/>
                     </style>
                   </object>
                 </child>
-                
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="orientation">vertical</property>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkButton" id="back_to_file_button">
                     <property name="label" translatable="yes">Back to File</property>
                     <property name="tooltip-text" translatable="yes">Return to PKGBUILD file view</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Return to PKGBUILD file view</property>
+                    </accessibility>
                     <style>
                       <class name="flat"/>
                     </style>
@@ -50,6 +55,9 @@
                 <property name="icon-name">preferences-system-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Build options and advanced settings</property>
                 <property name="menu-model">build_options_menu_model</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Build options menu</property>
+                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -63,25 +71,30 @@
             <property name="orientation">vertical</property>
 
             <child>
-              <object class="GtkBox" id="review_warning_container">
-<property name="margin-top">12</property>
-<property name="margin-bottom">12</property>
-<property name="margin-start">24</property>
-<property name="margin-end">24</property>
-<child>
-<object class="GtkBox" id="review_warning_box">
+              <object class="GtkBox" id="breadcrumb_navigation">
+                <property name="margin-bottom">0</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">18</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkBox" id="breadcrumb_box">
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">dialog-warning-symbolic</property>
-                        <property name="pixel-size">16</property>
+                      <object class="GtkButton" id="breadcrumb_content">
+                        <property name="label" translatable="yes">Content</property>
+                        <property name="tooltip-text" translatable="yes">Return to content management</property>
                         <style>
-                          <class name="warning"/>
+                          <class name="flat"/>
+                          <class name="caption"/>
                         </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to content management</property>
+                        </accessibility>
                       </object>
                     </child>
-</object>
-</child>
                     <child>
                       <object class="GtkLabel">
                         <property name="label">›</property>
@@ -98,6 +111,9 @@
                           <class name="flat"/>
                           <class name="caption"/>
                         </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">Navigate to PKGBUILD management</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -166,6 +182,9 @@
                           <class name="pill"/>
                           <class name="suggested-action"/>
                         </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">Review PKGBUILD before building</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -173,7 +192,14 @@
               </object>
             </child>
 
-            
+            <child>
+              <object class="GtkSeparator">
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">12</property>
+              </object>
+            </child>
 
             <child>
               <object class="AdwViewStack" id="build_view_stack">
@@ -210,12 +236,18 @@
                               <object class="GtkButton" id="edit_pkgbuild_button">
                                 <property name="label" translatable="yes">Edit</property>
                                 <property name="tooltip-text" translatable="yes">Edit PKGBUILD file in external editor</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Edit PKGBUILD file</property>
+                                </accessibility>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="reload_pkgbuild_button">
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reload PKGBUILD content from file</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Reload PKGBUILD</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -235,37 +267,38 @@
                                 <property name="bottom-margin">12</property>
                                 <property name="left-margin">12</property>
                                 <property name="right-margin">12</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">PKGBUILD file content</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
                         </child>
 
                         <child>
-                          <object class="AdwPreferencesGroup" id="pkgbuild_metadata_box">
+                          <object class="GtkBox" id="pkgbuild_metadata_box">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
                             <child>
-                              <object class="AdwActionRow" id="package_name_row">
-                                <property name="title" translatable="yes">Package</property>
-                                <property name="subtitle" id="package_name_value">example-package</property>
-                                <property name="subtitle-selectable">true</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow" id="package_version_row">
-                                <property name="title" translatable="yes">Version</property>
-                                <property name="subtitle" id="package_version_value">1.0.0-1</property>
-                                <property name="subtitle-selectable">true</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwActionRow" id="package_description_row">
-                                <property name="title" translatable="yes">Description</property>
-                                <property name="subtitle" id="package_description_value">Package description</property>
-                                <property name="subtitle-selectable">true</property>
-                                <property name="subtitle-lines">0</property>
-                              </object>
-                            </child>
-                          </object>
-</child>
+                              <object class="GtkBox" id="package_name_box">
+                                <property name="spacing">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">6</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <child>
+                                  <object class="GtkLabel" id="package_name_label">
+                                    <property name="label" translatable="yes">Package:</property>
+                                    <property name="halign">start</property>
+                                    <property name="width-chars">12</property>
+                                    <style>
+                                      <class name="caption-heading"/>
+                                    </style>
+                                  </object>
+                                </child>
                                 <child>
                                   <object class="GtkLabel" id="package_name_value">
                                     <property name="label">example-package</property>
@@ -375,6 +408,9 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Runtime dependencies list</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -399,6 +435,9 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Build dependencies list</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -423,6 +462,9 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Check dependencies list</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -447,6 +489,9 @@
                                     <style>
                                       <class name="boxed-list"/>
                                     </style>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Optional dependencies list</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -489,6 +534,9 @@
                               <object class="GtkButton" id="download_sources_button">
                                 <property name="label" translatable="yes">Download Sources</property>
                                 <property name="tooltip-text" translatable="yes">Download all source files required for building</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Download all source files</property>
+                                </accessibility>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
@@ -508,6 +556,9 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Source files list</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -534,6 +585,9 @@
                                   <object class="GtkButton" id="verify_checksums_button">
                                     <property name="label" translatable="yes">Verify</property>
                                     <property name="tooltip-text" translatable="yes">Verify integrity of downloaded files</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Verify file checksums</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -544,6 +598,9 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">File checksums list</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -601,6 +658,9 @@
                               <object class="GtkProgressBar" id="build_progressbar">
                                 <property name="show-text">true</property>
                                 <property name="text" translatable="yes">0%</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Build progress indicator</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -625,6 +685,9 @@
                               <object class="GtkButton" id="clear_log_button">
                                 <property name="icon-name">edit-clear-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Clear build log</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Clear build log</property>
+                                </accessibility>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -634,6 +697,9 @@
                               <object class="GtkButton" id="save_log_button">
                                 <property name="icon-name">document-save-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Save build log to file</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Save build log</property>
+                                </accessibility>
                                 <style>
                                   <class name="flat"/>
                                 </style>
@@ -658,6 +724,9 @@
                                 <property name="bottom-margin">12</property>
                                 <property name="left-margin">12</property>
                                 <property name="right-margin">12</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Real-time build output log</property>
+                                </accessibility>
                                 <style>
                                   <class name="card"/>
                                 </style>
@@ -682,43 +751,59 @@
         </child>
 
         <child type="bottom">
-          <object class="GtkActionBar" id="action_bar">
-            <child type="end">
-              <object class="GtkButton" id="install_button">
-                <property name="label" translatable="yes">Build &amp; Install</property>
-                <property name="tooltip-text" translatable="yes">Build package and install it to the system</property>
-                <style>
-                  <class name="destructive-action"/>
-                </style>
+          <object class="AdwActionRow" id="action_bar">
+            <property name="title" translatable="yes">Build Actions</property>
+            <child type="suffix">
+              <object class="GtkBox" id="action_buttons_box">
+                <property name="spacing">6</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
+                <child>
+                  <object class="GtkButton" id="clean_button">
+                    <property name="label" translatable="yes">Clean</property>
+                    <property name="tooltip-text" translatable="yes">Clean build directory and remove old files</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Clean build directory</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="install_deps_button">
+                    <property name="label" translatable="yes">Install Dependencies</property>
+                    <property name="tooltip-text" translatable="yes">Install all build and runtime dependencies</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Install build dependencies</property>
+                    </accessibility>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="build_button">
+                    <property name="label" translatable="yes">Build Package</property>
+                    <property name="tooltip-text" translatable="yes">Start building the package from source</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Start building the package</property>
+                    </accessibility>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="install_button">
+                    <property name="label" translatable="yes">Build &amp; Install</property>
+                    <property name="tooltip-text" translatable="yes">Build package and install it to the system</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Build and install the package</property>
+                    </accessibility>
+                    <style>
+                      <class name="destructive-action"/>
+                    </style>
+                  </object>
+                </child>
               </object>
-            </child>
-            <child type="end">
-              <object class="GtkButton" id="build_button">
-                <property name="label" translatable="yes">Build Package</property>
-                <property name="tooltip-text" translatable="yes">Start building the package from source</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkButton" id="install_deps_button">
-                <property name="label" translatable="yes">Install Dependencies</property>
-                <property name="tooltip-text" translatable="yes">Install all build and runtime dependencies</property>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
-            <child type="start">
-              <object class="GtkButton" id="clean_button">
-                <property name="label" translatable="yes">Clean</property>
-                <property name="tooltip-text" translatable="yes">Clean build directory and remove old files</property>
-              </object>
-            </child>
-          </object>
-</child>
-      </object>
             </child>
           </object>
         </child>
@@ -783,6 +868,9 @@
           <object class="GtkButton" id="dependency_info_button">
             <property name="icon-name">help-about-symbolic</property>
             <property name="tooltip-text" translatable="yes">Show package information and details</property>
+            <accessibility>
+              <property name="label" translatable="yes">Package information</property>
+            </accessibility>
             <style>
               <class name="flat"/>
             </style>
@@ -808,6 +896,9 @@
               <object class="GtkButton" id="source_download_button">
                 <property name="icon-name">folder-download-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Download this source file</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Download source</property>
+                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -817,6 +908,9 @@
               <object class="GtkButton" id="source_verify_button">
                 <property name="icon-name">security-high-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Verify source file integrity</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Verify source</property>
+                </accessibility>
                 <style>
                   <class name="flat"/>
                 </style>

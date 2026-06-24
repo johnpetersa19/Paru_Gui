@@ -1,26 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.14"/>
+  <requires lib="gtk" version="4.0"/>
   <requires lib="gio" version="2.0"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="ContentView" parent="AdwBin">
+  <object class="GtkBox" id="ContentView">
+    <property name="orientation">vertical</property>
+    <property name="spacing">16</property>
     <style>
       <class name="view-root"/>
     </style>
+    <accessibility>
+      <property name="label" translatable="yes">Main content view for package management with navigation and filtering</property>
+    </accessibility>
 
-    <property name="child">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar" id="content_header">
-            <property name="title-widget">
-              <object class="AdwWindowTitle">
-                <property name="title" translatable="yes">Content Browser</property>
-                <property name="subtitle" translatable="yes">Main &#8250; Content &#8250; Files</property>
-              </object>
-            </property>
-            <child type="start">
+    <child>
+      <object class="AdwHeaderBar" id="content_header">
+        <property name="title-widget">
           <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">4</property>
+            <child>
+              <object class="GtkBox" id="breadcrumb_container">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">6</property>
+                <property name="halign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Main</property>
+                    <property name="css-classes">breadcrumb</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">›</property>
+                    <property name="css-classes">breadcrumb-separator</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Browse</property>
+                    <property name="css-classes">breadcrumb</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">›</property>
+                    <property name="css-classes">breadcrumb-separator</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="current_breadcrumb">
+                    <property name="label" translatable="yes">Current Directory</property>
+                    <property name="css-classes">breadcrumb-current</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Browse and manage package files</property>
+                <style>
+                  <class name="subtitle"/>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </property>
+        <child type="start">
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkButton" id="up_button">
@@ -30,6 +80,9 @@
                   <class name="flat"/>
                   <class name="circular"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate up one directory level</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -40,12 +93,16 @@
                   <class name="flat"/>
                   <class name="circular"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate to home directory</property>
+                </accessibility>
               </object>
             </child>
           </object>
         </child>
         <child type="end">
           <object class="GtkBox">
+            <property name="orientation">horizontal</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkToggleButton" id="search_toggle">
@@ -55,116 +112,52 @@
                   <class name="flat"/>
                   <class name="circular"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle search functionality</property>
+                </accessibility>
               </object>
             </child>
             <child>
               <object class="GtkMenuButton" id="view_options_button">
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="tooltip-text" translatable="yes">View and sort options</property>
-                <property name="popover">
-                  <object class="GtkPopoverMenu">
-                    <property name="menu-model">
-                      <object class="GMenu">
-                        <section>
-                          <submenu>
-                            <attribute name="label" translatable="yes">View Mode</attribute>
-                            <section>
-                              <item>
-                                <attribute name="label" translatable="yes">Grid View</attribute>
-                                <attribute name="action">content.view-mode</attribute>
-                                <attribute name="target">grid</attribute>
-                              </item>
-                              <item>
-                                <attribute name="label" translatable="yes">List View</attribute>
-                                <attribute name="action">content.view-mode</attribute>
-                                <attribute name="target">list</attribute>
-                              </item>
-                            </section>
-                          </submenu>
-                        </section>
-                        <section>
-                          <submenu>
-                            <attribute name="label" translatable="yes">Sort By</attribute>
-                            <section>
-                              <item>
-                                <attribute name="label" translatable="yes">Name</attribute>
-                                <attribute name="action">content.sort-by</attribute>
-                                <attribute name="target">name</attribute>
-                              </item>
-                              <item>
-                                <attribute name="label" translatable="yes">Date Modified</attribute>
-                                <attribute name="action">content.sort-by</attribute>
-                                <attribute name="target">date</attribute>
-                              </item>
-                              <item>
-                                <attribute name="label" translatable="yes">Size</attribute>
-                                <attribute name="action">content.sort-by</attribute>
-                                <attribute name="target">size</attribute>
-                              </item>
-                              <item>
-                                <attribute name="label" translatable="yes">Type</attribute>
-                                <attribute name="action">content.sort-by</attribute>
-                                <attribute name="target">type</attribute>
-                              </item>
-                            </section>
-                          </submenu>
-                        </section>
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Add to Favorites</attribute>
-                            <attribute name="action">content.add-favorite</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Manage Favorites</attribute>
-                            <attribute name="action">content.manage-favorites</attribute>
-                          </item>
-                        </section>
-                      </object>
-                    </property>
-                  </object>
-                </property>
+                <property name="menu-model">view_options_menu</property>
               </object>
             </child>
           </object>
         </child>
-          </object>
-        </child>
-        <property name="content">
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
+      </object>
+    </child>
 
+    <child>
+      <object class="GtkRevealer" id="search_revealer">
+        <property name="reveal-child">false</property>
+        <property name="transition-type">slide_down</property>
+        <property name="child">
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Search and Filter</property>
+            <property name="description" translatable="yes">Find specific files and filter by type</property>
             <child>
-              <object class="AdwPreferencesGroup" id="search_group">
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-top">6</property>
-                <property name="margin-bottom">6</property>
-                <child>
-                  <object class="AdwEntryRow" id="search_entry_row">
-                    <property name="title" translatable="yes">Search files...</property>
-                    <property name="show-apply-button">false</property>
-                    <property name="input-hints">no-spellcheck</property>
-                    <child type="prefix">
-                      <object class="GtkImage">
-                        <property name="icon-name">system-search-symbolic</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                    <child type="suffix">
-                      <object class="GtkButton" id="clear_file_search_button">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Clear search</property>
-                        <property name="valign">center</property>
-                        <style>
-                          <class name="flat"/>
-                          <class name="circular"/>
-                        </style>
-                      </object>
-                    </child>
+              <object class="AdwEntryRow" id="search_entry">
+                <property name="title" translatable="yes">Search Files</property>
+                <property name="text"></property>
+                <property name="tooltip-text" translatable="yes">Search for files by name or content</property>
+                <child type="suffix">
+                  <object class="GtkButton" id="clear_search_button">
+                    <property name="icon-name">edit-clear-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Clear search</property>
+                    <style>
+                      <class name="flat"/>
+                      <class name="circular"/>
+                    </style>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </property>
+      </object>
+    </child>
 
     <child>
       <object class="GtkBox" id="path_and_controls_bar">
@@ -172,12 +165,16 @@
         <style>
           <class name="view-section"/>
         </style>
+        <accessibility>
+          <property name="label" translatable="yes">Path display and control panel</property>
+        </accessibility>
 
         <child>
           <object class="GtkFrame">
             <property name="css-classes">quick-card</property>
             <property name="child">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
                 <property name="margin-top">8</property>
                 <property name="margin-bottom">8</property>
@@ -204,6 +201,9 @@
                       <class name="monospace"/>
                     </style>
                     <property name="tooltip-text" translatable="yes">Current directory path - click to select</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Current directory path display</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -215,6 +215,9 @@
                       <class name="flat"/>
                       <class name="circular"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Add current directory to favorites</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -271,12 +274,16 @@
         <style>
           <class name="view-section"/>
         </style>
+        <accessibility>
+          <property name="label" translatable="yes">File type filters and view controls</property>
+        </accessibility>
 
         <child>
-          <object class="GtkFlowBox" id="filter_buttons">
-            <property name="column-spacing">6</property>
-            <property name="row-spacing">6</property>
-            <property name="selection-mode">none</property>
+          <object class="GtkBox" id="filter_buttons">
+            <property name="spacing">6</property>
+            <accessibility>
+              <property name="label" translatable="yes">File type filter buttons</property>
+            </accessibility>
             <child>
               <object class="GtkToggleButton" id="filter_pkgbuild">
                 <property name="active">true</property>
@@ -287,6 +294,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show PKGBUILD files</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle PKGBUILD files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -299,6 +309,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show pre-compiled package files (.pkg.tar.zst)</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle package files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -311,6 +324,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show patch files (.patch, .diff)</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle patch files visibility</property>
+                </accessibility>
               </object>
             </child>
             <child>
@@ -323,6 +339,9 @@
                   <class name="pill"/>
                 </style>
                 <property name="tooltip-text" translatable="yes">Show other compatible files and advanced options</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle advanced options visibility</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -333,6 +352,9 @@
             <property name="halign">end</property>
             <property name="hexpand">true</property>
             <property name="spacing">6</property>
+            <accessibility>
+              <property name="label" translatable="yes">View mode and sorting controls</property>
+            </accessibility>
 
             <child>
               <object class="GtkDropDown" id="sort_dropdown">
@@ -348,6 +370,9 @@
                 </property>
                 <property name="selected">0</property>
                 <property name="tooltip-text" translatable="yes">Choose sorting method</property>
+                <accessibility>
+                  <property name="label" translatable="yes">File sorting options</property>
+                </accessibility>
               </object>
             </child>
 
@@ -358,13 +383,41 @@
                 <style>
                   <class name="flat"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Toggle sort order</property>
+                </accessibility>
               </object>
             </child>
 
             <child>
-              <object class="AdwViewSwitcher" id="view_switcher">
-                <property name="stack">view_stack</property>
-                <property name="policy">narrow</property>
+              <object class="GtkBox" id="view_mode_buttons">
+                <property name="spacing">0</property>
+                <style>
+                  <class name="linked"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">View mode selection buttons</property>
+                </accessibility>
+                <child>
+                  <object class="GtkToggleButton" id="grid_view_button">
+                    <property name="icon-name">view-grid-symbolic</property>
+                    <property name="active">true</property>
+                    <property name="tooltip-text" translatable="yes">Grid view</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Switch to grid view</property>
+                    </accessibility>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="list_view_button">
+                    <property name="icon-name">view-list-symbolic</property>
+                    <property name="group">grid_view_button</property>
+                    <property name="tooltip-text" translatable="yes">List view</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Switch to list view</property>
+                    </accessibility>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -380,13 +433,17 @@
         <style>
           <class name="view-section"/>
         </style>
+        <accessibility>
+          <property name="label" translatable="yes">Main content area with file cards</property>
+        </accessibility>
 
         <child>
-          <object class="AdwViewStack" id="view_stack">
+          <object class="GtkStack" id="view_stack">
             <property name="vexpand">true</property>
+            <property name="transition-type">crossfade</property>
 
             <child>
-              <object class="AdwViewStackPage">
+              <object class="GtkStackPage">
                 <property name="name">grid</property>
                 <property name="title" translatable="yes">Grid View</property>
                 <property name="child">
@@ -394,6 +451,9 @@
                     <property name="hscrollbar-policy">automatic</property>
                     <property name="vexpand">true</property>
                     <property name="vscrollbar-policy">automatic</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Grid view scrollable content area</property>
+                    </accessibility>
                     <child>
                       <object class="GtkFlowBox" id="content_cards">
                         <property name="accept-unpaired-release">false</property>
@@ -402,6 +462,7 @@
                         <property name="homogeneous">false</property>
                         <property name="max-children-per-line">4</property>
                         <property name="min-children-per-line">0</property>
+                        <property name="orientation">horizontal</property>
                         <property name="row-spacing">16</property>
                         <property name="selection-mode">none</property>
                         <property name="valign">start</property>
@@ -409,6 +470,9 @@
                         <property name="margin-bottom">12</property>
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Grid of file cards organized by type</property>
+                        </accessibility>
 
                         <child>
                           <object class="GtkFlowBoxChild">
@@ -421,6 +485,9 @@
                                 <property name="margin-top">4</property>
                                 <property name="width-request">220</property>
                                 <property name="height-request">300</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">PKGBUILD file card template</property>
+                                </accessibility>
                                 <property name="child">
                                   <object class="GtkBox">
                                     <property name="margin-bottom">12</property>
@@ -436,6 +503,9 @@
                                           <object class="GtkImage" id="pkgbuild_icon">
                                             <property name="icon-name">text-x-generic-symbolic</property>
                                             <property name="pixel-size">32</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">PKGBUILD file icon</property>
+                                            </accessibility>
                                           </object>
                                         </child>
                                         <child>
@@ -443,10 +513,16 @@
                                             <property name="halign">end</property>
                                             <property name="hexpand">true</property>
                                             <property name="spacing">4</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Trust level indicators</property>
+                                            </accessibility>
                                             <child>
                                               <object class="GtkImage" id="trust_icon">
                                                 <property name="pixel-size">16</property>
                                                 <property name="tooltip-text" translatable="yes">Trust level indicator</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Trust level icon</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                             <child>
@@ -457,6 +533,9 @@
                                                   <class name="dim-label"/>
                                                 </style>
                                                 <property name="tooltip-text" translatable="yes">AUR trust level (votes, update time, comments)</property>
+                                                <accessibility>
+                                                  <property name="label" translatable="yes">Trust level text description</property>
+                                                </accessibility>
                                               </object>
                                             </child>
                                           </object>
@@ -476,6 +555,9 @@
                                         <style>
                                           <class name="heading"/>
                                         </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Package name</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
@@ -487,6 +569,9 @@
                                           <class name="caption"/>
                                           <class name="dim-label"/>
                                         </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Package version</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
@@ -494,11 +579,17 @@
                                         <property name="margin-top">8</property>
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">6</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">PKGBUILD action buttons</property>
+                                        </accessibility>
                                         <child>
                                           <object class="GtkButton" id="build_button">
                                             <property name="css-classes">suggested-action pill</property>
                                             <property name="label" translatable="yes">Compile Package</property>
                                             <property name="tooltip-text" translatable="yes">Compile the PKGBUILD into an installable package</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Compile package from PKGBUILD</property>
+                                            </accessibility>
                                           </object>
                                         </child>
                                         <child>
@@ -509,6 +600,9 @@
                                               <class name="pill"/>
                                             </style>
                                             <property name="tooltip-text" translatable="yes">Open the PKGBUILD file in your default editor</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Open PKGBUILD file in editor</property>
+                                            </accessibility>
                                           </object>
                                         </child>
                                         <child>
@@ -519,6 +613,9 @@
                                               <class name="pill"/>
                                             </style>
                                             <property name="tooltip-text" translatable="yes">Show the package dependencies</property>
+                                            <accessibility>
+                                              <property name="label" translatable="yes">Display package dependencies</property>
+                                            </accessibility>
                                           </object>
                                         </child>
                                       </object>
@@ -541,6 +638,9 @@
                                 <property name="margin-top">4</property>
                                 <property name="width-request">220</property>
                                 <property name="height-request">300</property>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Empty folder card template</property>
+                                </accessibility>
                                 <property name="child">
                                   <object class="GtkBox">
                                     <property name="halign">center</property>
@@ -556,6 +656,9 @@
                                         <property name="icon-name">folder-symbolic</property>
                                         <property name="opacity">0.5</property>
                                         <property name="pixel-size">48</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Empty folder icon</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
@@ -570,6 +673,9 @@
                                         <style>
                                           <class name="heading"/>
                                         </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Empty folder message</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                     <child>
@@ -577,6 +683,9 @@
                                         <property name="css-classes">suggested-action pill</property>
                                         <property name="label" translatable="yes">Download PKGBUILD</property>
                                         <property name="tooltip-text" translatable="yes">Download a PKGBUILD from AUR</property>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Download PKGBUILD from AUR</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -593,7 +702,7 @@
             </child>
 
             <child>
-              <object class="AdwViewStackPage">
+              <object class="GtkStackPage">
                 <property name="name">list</property>
                 <property name="title" translatable="yes">List View</property>
                 <property name="child">
@@ -601,6 +710,9 @@
                     <property name="hscrollbar-policy">automatic</property>
                     <property name="vexpand">true</property>
                     <property name="vscrollbar-policy">automatic</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">List view scrollable content area</property>
+                    </accessibility>
                     <child>
                       <object class="GtkListBox" id="content_listbox">
                         <property name="selection-mode">none</property>
@@ -611,6 +723,9 @@
                         <style>
                           <class name="boxed-list"/>
                         </style>
+                        <accessibility>
+                          <property name="label" translatable="yes">List of files organized by type</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -633,13 +748,20 @@
               <class name="terminal-box"/>
               <class name="view-section"/>
             </style>
+            <accessibility>
+              <property name="label" translatable="yes">Terminal output area</property>
+            </accessibility>
 
             <child>
               <object class="GtkBox" id="terminal_toolbar">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
                 <property name="margin-top">6</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Terminal control toolbar</property>
+                </accessibility>
 
                 <child>
                   <object class="GtkLabel" id="terminal_label">
@@ -651,6 +773,9 @@
                     <style>
                       <class name="heading"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal output section title</property>
+                    </accessibility>
                   </object>
                 </child>
                 <child>
@@ -658,6 +783,9 @@
                     <property name="halign">end</property>
                     <property name="hexpand">true</property>
                     <property name="spacing">6</property>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal control buttons</property>
+                    </accessibility>
                     <child>
                       <object class="GtkToggleButton" id="autoscroll_toggle">
                         <property name="label" translatable="yes">Auto-scroll</property>
@@ -666,6 +794,9 @@
                           <class name="flat"/>
                         </style>
                         <property name="tooltip-text" translatable="yes">Automatically scroll to the bottom of the terminal output</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Toggle automatic scrolling</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -675,6 +806,9 @@
                           <class name="flat"/>
                         </style>
                         <property name="tooltip-text" translatable="yes">Clear the terminal output</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Clear terminal output</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -684,6 +818,9 @@
                           <class name="flat"/>
                         </style>
                         <property name="tooltip-text" translatable="yes">Hide the terminal output panel</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Hide terminal panel</property>
+                        </accessibility>
                       </object>
                     </child>
                     <child>
@@ -699,6 +836,9 @@
                         </property>
                         <property name="selected">1</property>
                         <property name="tooltip-text" translatable="yes">Select the level of detail for terminal output</property>
+                        <accessibility>
+                          <property name="label" translatable="yes">Terminal output detail level selector</property>
+                        </accessibility>
                       </object>
                     </child>
                   </object>
@@ -714,6 +854,9 @@
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
                 <property name="margin-bottom">12</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Terminal output scrollable view</property>
+                </accessibility>
                 <child>
                   <object class="GtkTextView" id="terminal_output_view">
                     <property name="bottom-margin">8</property>
@@ -727,6 +870,9 @@
                     <style>
                       <class name="terminal-view"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Terminal output text view</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -736,42 +882,109 @@
       </object>
     </child>
 
+    <child>
+      <object class="GtkBox" id="status_bar">
+        <property name="margin-top">8</property>
+        <property name="spacing">12</property>
+        <accessibility>
+          <property name="label" translatable="yes">Status bar with file count and information</property>
+        </accessibility>
+        <child>
+          <object class="GtkLabel" id="file_count_label">
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
+            <property name="label" translatable="yes">0 files found</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">File count display</property>
+            </accessibility>
           </object>
-        </property>
-        <child type="bottom">
-          <object class="GtkActionBar" id="status_bar">
-            <child type="start">
-              <object class="GtkLabel" id="file_count_label">
-                <property name="halign">start</property>
-                <property name="hexpand">true</property>
-                <property name="label" translatable="yes">0 files found</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child type="center">
-              <object class="GtkLabel" id="selected_count_label">
-                <property name="label" translatable="yes">No files selected</property>
-                <property name="visible">false</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkLabel" id="status_message_label">
-                <property name="halign">end</property>
-                <property name="label" translatable="yes">Ready</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
+        </child>
+        <child>
+          <object class="GtkLabel" id="selected_count_label">
+            <property name="halign">center</property>
+            <property name="label" translatable="yes">No files selected</property>
+            <property name="visible">false</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Selected files count display</property>
+            </accessibility>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="status_message_label">
+            <property name="halign">end</property>
+            <property name="label" translatable="yes">Ready</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Current status message</property>
+            </accessibility>
           </object>
         </child>
       </object>
-    </property>
-  </template>
-</interface>
+    </child>
+  </object>
 
+  <menu id="view_options_menu">
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">View Mode</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Grid View</attribute>
+            <attribute name="action">content.view-mode</attribute>
+            <attribute name="target">grid</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">List View</attribute>
+            <attribute name="action">content.view-mode</attribute>
+            <attribute name="target">list</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">Sort By</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Name</attribute>
+            <attribute name="action">content.sort-by</attribute>
+            <attribute name="target">name</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Date Modified</attribute>
+            <attribute name="action">content.sort-by</attribute>
+            <attribute name="target">date</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Size</attribute>
+            <attribute name="action">content.sort-by</attribute>
+            <attribute name="target">size</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Type</attribute>
+            <attribute name="action">content.sort-by</attribute>
+            <attribute name="target">type</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Add to Favorites</attribute>
+        <attribute name="action">content.add-favorite</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Manage Favorites</attribute>
+        <attribute name="action">content.manage-favorites</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

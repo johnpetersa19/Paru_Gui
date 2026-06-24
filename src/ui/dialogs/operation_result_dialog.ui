@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="adw" version="1.4"/>
 
-  <template class="OperationResultDialog" parent="AdwDialog">
+  <object class="AdwWindow" id="OperationResultDialog">
     <property name="title" translatable="yes">Operation Result</property>
-    
-    
+    <property name="modal">true</property>
+    <property name="resizable">true</property>
     <property name="deletable">true</property>
-    <property name="content-width">700</property>
-    <property name="content-height">600</property>
-    
-    
+    <property name="default-width">700</property>
+    <property name="default-height">600</property>
+    <property name="width-request">500</property>
+    <property name="height-request">400</property>
+    <accessibility>
+      <property name="label" translatable="yes">Operation result and next steps dialog</property>
+    </accessibility>
 
     <child>
       <object class="AdwToolbarView">
@@ -20,7 +23,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle" id="header_title">
                 <property name="title" translatable="yes">Operation Complete</property>
-                <property name="subtitle" id="operation_context_subtitle"></property>
+                <property name="subtitle"></property>
               </object>
             </property>
 
@@ -28,10 +31,13 @@
               <object class="GtkButton" id="return_to_origin_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Return to originating view</property>
-                <signal name="clicked" handler="on_return_to_origin_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_return_to_origin_clicked" swapped="no"/>
                 <style>
                   <class name="flat"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Navigate back to operation source</property>
+                </accessibility>
               </object>
             </child>
 
@@ -39,10 +45,13 @@
               <object class="GtkButton" id="close_dialog_button">
                 <property name="icon-name">window-close-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Close dialog</property>
-                <signal name="clicked" handler="on_close_dialog_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_close_dialog_clicked" swapped="no"/>
                 <style>
                   <class name="flat"/>
                 </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Close result dialog</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -55,9 +64,9 @@
             <property name="propagate-natural-width">true</property>
 
             <child>
-              <object class="AdwPreferencesPage">
-                
-                
+              <object class="AdwClamp">
+                <property name="maximum-size">800</property>
+                <property name="tightening-threshold">600</property>
 
                 <child>
                   <object class="GtkBox">
@@ -78,6 +87,7 @@
                             <property name="css-classes">quick-card</property>
                             <property name="child">
                               <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <property name="margin-top">16</property>
                                 <property name="margin-bottom">16</property>
@@ -129,7 +139,10 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_view_origin_clicked" swapped="true"/>
+                                    <signal name="clicked" handler="on_view_origin_clicked" swapped="no"/>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Navigate to operation origin</property>
+                                    </accessibility>
                                   </object>
                                 </child>
                               </object>
@@ -141,6 +154,7 @@
 
                     <child>
                       <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
                         <property name="spacing">20</property>
 
                         <child>
@@ -169,6 +183,9 @@
                                 <style>
                                   <class name="title-2"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Operation result status</property>
+                                </accessibility>
                               </object>
                             </child>
 
@@ -182,6 +199,9 @@
                                 <style>
                                   <class name="body"/>
                                 </style>
+                                <accessibility>
+                                  <property name="label" translatable="yes">Detailed result description</property>
+                                </accessibility>
                               </object>
                             </child>
                           </object>
@@ -197,24 +217,33 @@
                         <child>
                           <object class="AdwActionRow" id="status_code_row">
                             <property name="title" translatable="yes">Result Status</property>
-                            <property name="subtitle" id="status_code_value">Success</property>
+                            <property name="subtitle">Success</property>
                             <property name="icon-name">emblem-ok-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Operation status information</property>
+                            </accessibility>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwActionRow" id="processed_packages_row">
                             <property name="title" translatable="yes">Packages Processed</property>
-                            <property name="subtitle" id="processed_packages_count">0</property>
+                            <property name="subtitle">0</property>
                             <property name="icon-name">package-x-generic-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Number of packages processed</property>
+                            </accessibility>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwActionRow" id="operation_duration_row">
                             <property name="title" translatable="yes">Total Duration</property>
-                            <property name="subtitle" id="total_duration_value">00:00:00</property>
+                            <property name="subtitle">00:00:00</property>
                             <property name="icon-name">preferences-system-time-symbolic</property>
+                            <accessibility>
+                              <property name="label" translatable="yes">Total operation duration</property>
+                            </accessibility>
                           </object>
                         </child>
                       </object>
@@ -250,7 +279,7 @@
                                           <object class="GtkButton" id="explore_packages_suggestion">
                                             <property name="label" translatable="yes">Explore More Packages</property>
                                             <property name="tooltip-text" translatable="yes">Browse available packages</property>
-                                            <signal name="clicked" handler="on_explore_packages_clicked" swapped="true"/>
+                                            <signal name="clicked" handler="on_explore_packages_clicked" swapped="no"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -265,7 +294,7 @@
                                           <object class="GtkButton" id="manage_installed_suggestion">
                                             <property name="label" translatable="yes">Manage Installed</property>
                                             <property name="tooltip-text" translatable="yes">View and manage installed packages</property>
-                                            <signal name="clicked" handler="on_manage_installed_clicked" swapped="true"/>
+                                            <signal name="clicked" handler="on_manage_installed_clicked" swapped="no"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -280,7 +309,7 @@
                                           <object class="GtkButton" id="check_updates_suggestion">
                                             <property name="label" translatable="yes">Check for Updates</property>
                                             <property name="tooltip-text" translatable="yes">Look for package updates</property>
-                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="true"/>
+                                            <signal name="clicked" handler="on_check_updates_clicked" swapped="no"/>
                                             <style>
                                               <class name="pill"/>
                                             </style>
@@ -305,7 +334,7 @@
                         <child>
                           <object class="AdwExpanderRow" id="log_expander_row">
                             <property name="title" translatable="yes">View Operation Log</property>
-                            
+                            <property name="subtitle" translatable="yes">Complete command output and operation details</property>
                             <property name="icon-name">text-x-generic-symbolic</property>
 
                             <child>
@@ -319,6 +348,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">12</property>
@@ -340,10 +370,13 @@
                                       <object class="GtkButton" id="copy_operation_log_button">
                                         <property name="icon-name">edit-copy-symbolic</property>
                                         <property name="tooltip-text" translatable="yes">Copy operation log to clipboard</property>
-                                        <signal name="clicked" handler="on_copy_operation_log_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_copy_operation_log_clicked" swapped="no"/>
                                         <style>
                                           <class name="flat"/>
                                         </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Copy operation log to clipboard</property>
+                                        </accessibility>
                                       </object>
                                     </child>
 
@@ -351,10 +384,13 @@
                                       <object class="GtkButton" id="save_operation_log_button">
                                         <property name="icon-name">document-save-symbolic</property>
                                         <property name="tooltip-text" translatable="yes">Save operation log to file</property>
-                                        <signal name="clicked" handler="on_save_operation_log_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_save_operation_log_clicked" swapped="no"/>
                                         <style>
                                           <class name="flat"/>
                                         </style>
+                                        <accessibility>
+                                          <property name="label" translatable="yes">Save operation log to file</property>
+                                        </accessibility>
                                       </object>
                                     </child>
                                   </object>
@@ -362,7 +398,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    
+                                    <property name="height-request">200</property>
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="has-frame">false</property>
@@ -406,6 +442,7 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
@@ -413,7 +450,10 @@
                     <property name="label" translatable="yes">Repeat Operation</property>
                     <property name="tooltip-text" translatable="yes">Run the same operation again</property>
                     <property name="icon-name">view-refresh-symbolic</property>
-                    <signal name="clicked" handler="on_repeat_operation_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_repeat_operation_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Repeat the same operation</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -422,20 +462,27 @@
                     <property name="label" translatable="yes">Try Different</property>
                     <property name="tooltip-text" translatable="yes">Try a different operation or configuration</property>
                     <property name="icon-name">preferences-other-symbolic</property>
-                    <signal name="clicked" handler="on_try_different_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_try_different_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Try different operation or settings</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
 
                 <child>
                   <object class="GtkButton" id="return_to_source_button">
                     <property name="label" translatable="yes">Return to Source</property>
                     <property name="tooltip-text" translatable="yes">Return to the originating view</property>
-                    <signal name="clicked" handler="on_return_to_source_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_return_to_source_clicked" swapped="no"/>
+                    <accessibility>
+                      <property name="label" translatable="yes">Return to operation source</property>
+                    </accessibility>
                   </object>
                 </child>
 
@@ -443,10 +490,13 @@
                   <object class="GtkButton" id="close_button">
                     <property name="label" translatable="yes">Close</property>
                     <property name="tooltip-text" translatable="yes">Close result dialog</property>
-                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_close_clicked" swapped="no"/>
                     <style>
                       <class name="suggested-action"/>
                     </style>
+                    <accessibility>
+                      <property name="label" translatable="yes">Close operation result dialog</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -455,5 +505,5 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

@@ -1,212 +1,276 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="UpstreamUpdateView" parent="AdwToolbarView">
+  <object class="GtkBox" id="UpstreamUpdateView">
+    <property name="orientation">vertical</property>
+    <property name="spacing">0</property>
     <style>
       <class name="upstream-updates-view"/>
       <class name="view-root"/>
     </style>
 
-    <child type="top">
-      <object class="AdwHeaderBar">
-        <property name="title-widget">
-          <object class="AdwWindowTitle">
-            <property name="title" translatable="yes">Upstream Updates</property>
-          </object>
-        </property>
-        <child type="start">
+    <child>
+      <object class="GtkBox" id="navigation_header">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="margin-start">16</property>
+        <property name="margin-end">16</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">8</property>
+        <style>
+          <class name="navigation-breadcrumb"/>
+          <class name="view-section"/>
+        </style>
+
+        <child>
           <object class="GtkButton" id="back_to_main_button">
             <property name="icon-name">go-previous-symbolic</property>
             <property name="tooltip-text" translatable="yes">Back to main view</property>
-            <signal name="clicked" handler="on_back_to_main_clicked" swapped="true"/>
-            <style><class name="flat"/></style>
+            <signal name="clicked" handler="on_back_to_main_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
           </object>
         </child>
-        <child type="end">
-          <object class="GtkButton" id="settings_button">
-            <property name="icon-name">preferences-system-symbolic</property>
-            <property name="tooltip-text" translatable="yes">Update check settings</property>
-            <signal name="clicked" handler="on_settings_clicked" swapped="true"/>
-            <style><class name="flat"/></style>
+
+        <child>
+          <object class="GtkLabel" id="breadcrumb_label">
+            <property name="label" translatable="yes">Main › Upstream Updates</property>
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="breadcrumb"/>
+              <class name="caption"/>
+            </style>
           </object>
         </child>
-        <child type="end">
+
+        <child>
           <object class="GtkButton" id="refresh_updates_button">
             <property name="icon-name">view-refresh-symbolic</property>
             <property name="tooltip-text" translatable="yes">Refresh upstream updates</property>
-            <signal name="clicked" handler="on_refresh_updates_clicked" swapped="true"/>
-            <style><class name="flat"/></style>
+            <signal name="clicked" handler="on_refresh_updates_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="settings_button">
+            <property name="icon-name">preferences-system-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Update check settings</property>
+            <signal name="clicked" handler="on_settings_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
 
-    <property name="content">
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        
-        <child>
-          <object class="GtkBox" id="status_header">
-            <property name="spacing">16</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
-            <property name="margin-top">12</property>
-            <property name="margin-bottom">8</property>
-            
-            <child>
-              <object class="GtkBox" id="status_info">
-                <property name="spacing">8</property>
-                <property name="halign">start</property>
-                <property name="hexpand">true</property>
-                
-                <child>
-                  <object class="GtkImage" id="status_icon">
-                    <property name="icon-name">software-update-available-symbolic</property>
-                    <property name="pixel-size">32</property>
-                    <style><class name="success"/></style>
-                  </object>
-                </child>
-                
-                <child>
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel" id="status_label">
-                        <property name="label" translatable="yes">Updates Available</property>
-                        <property name="halign">start</property>
-                        <style><class name="heading"/></style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="update_count_label">
-                        <property name="label">0 packages</property>
-                        <property name="halign">start</property>
-                        <style><class name="caption"/><class name="accent"/></style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
+    <child>
+      <object class="GtkSeparator"/>
+    </child>
 
-            <child>
-              <object class="GtkBox" id="filter_container">
-                <property name="spacing">8</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label" translatable="yes">Filter:</property>
-                    <style><class name="dim-label"/></style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkDropDown" id="filter_dropdown">
-                    <property name="model">
-                      <object class="GtkStringList">
-                        <items>
-                          <item translatable="yes">All Updates</item>
-                          <item translatable="yes">Security Fixes</item>
-                          <item translatable="yes">Major Versions</item>
-                          <item translatable="yes">Minor Updates</item>
-                        </items>
-                      </object>
-                    </property>
-                    <property name="selected">0</property>
-                    <signal name="notify::selected" handler="on_filter_changed" swapped="true"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
+    <child>
+      <object class="GtkBox" id="status_header">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">16</property>
+        <property name="margin-start">16</property>
+        <property name="margin-end">16</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">8</property>
+        <style>
+          <class name="view-section"/>
+        </style>
 
         <child>
-          <object class="GtkBox" id="bulk_actions_bar">
+          <object class="GtkBox" id="status_info">
+            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
-            <property name="margin-start">16</property>
-            <property name="margin-end">16</property>
-            <property name="margin-bottom">8</property>
-            <property name="visible">false</property>
-            <style><class name="toolbar"/><class name="bulk-actions"/></style>
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
 
             <child>
-              <object class="GtkCheckButton" id="select_all_check">
-                <property name="label" translatable="yes">Select All</property>
-                <signal name="toggled" handler="on_select_all_toggled" swapped="true"/>
+              <object class="GtkImage" id="status_icon">
+                <property name="icon-name">software-update-available-symbolic</property>
+                <property name="icon-size">normal</property>
+                <style>
+                  <class name="success"/>
+                </style>
               </object>
             </child>
 
             <child>
-              <object class="GtkLabel" id="selection_count_label">
-                <property name="label">0 selected</property>
+              <object class="GtkLabel" id="status_label">
+                <property name="label" translatable="yes">Updates Available</property>
                 <property name="halign">start</property>
-                <property name="hexpand">true</property>
-                <style><class name="caption"/></style>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
 
             <child>
-              <object class="GtkButton" id="update_selected_button">
-                <property name="label" translatable="yes">Update Selected</property>
-                <property name="sensitive">false</property>
-                <signal name="clicked" handler="on_update_selected_clicked" swapped="true"/>
-                <style><class name="suggested-action"/><class name="pill"/></style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="ignore_selected_button">
-                <property name="label" translatable="yes">Ignore Selected</property>
-                <property name="sensitive">false</property>
-                <signal name="clicked" handler="on_ignore_selected_clicked" swapped="true"/>
-                <style><class name="flat"/><class name="pill"/></style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkButton" id="clear_selection_button">
-                <property name="icon-name">edit-clear-symbolic</property>
-                <signal name="clicked" handler="on_clear_selection_clicked" swapped="true"/>
-                <style><class name="flat"/><class name="circular"/></style>
+              <object class="GtkLabel" id="update_count_label">
+                <property name="label">0 packages</property>
+                <property name="halign">start</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="accent"/>
+                </style>
               </object>
             </child>
           </object>
         </child>
 
         <child>
-          <object class="GtkScrolledWindow" id="updates_scroll">
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="vexpand">true</property>
+          <object class="GtkBox" id="filter_container">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">end</property>
 
             <child>
-              <object class="GtkFlowBox" id="updates_flowbox">
-                <property name="selection-mode">none</property>
-                <property name="max-children-per-line">4</property>
-                <property name="min-children-per-line">1</property>
-                <property name="row-spacing">8</property>
-                <property name="column-spacing">8</property>
-                <property name="margin-start">16</property>
-                <property name="margin-end">16</property>
-                <property name="margin-bottom">16</property>
-                <property name="homogeneous">true</property>
-                <signal name="child-activated" handler="on_update_card_activated" swapped="true"/>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Filter:</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkDropDown" id="filter_dropdown">
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">All Updates</item>
+                      <item translatable="yes">Security Fixes</item>
+                      <item translatable="yes">Major Versions</item>
+                      <item translatable="yes">Minor Updates</item>
+                    </items>
+                  </object>
+                </property>
+                <property name="selected">0</property>
+                <signal name="notify::selected" handler="on_filter_changed"/>
               </object>
             </child>
           </object>
         </child>
       </object>
-    </property>
+    </child>
 
-    <child type="bottom">
+    <child>
+      <object class="GtkBox" id="bulk_actions_bar">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">8</property>
+        <property name="margin-start">16</property>
+        <property name="margin-end">16</property>
+        <property name="margin-bottom">8</property>
+        <property name="visible">false</property>
+        <style>
+          <class name="toolbar"/>
+          <class name="bulk-actions"/>
+          <class name="view-section"/>
+        </style>
+
+        <child>
+          <object class="GtkCheckButton" id="select_all_check">
+            <property name="label" translatable="yes">Select All</property>
+            <property name="tooltip-text" translatable="yes">Select all available updates</property>
+            <signal name="toggled" handler="on_select_all_toggled"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="selection_count_label">
+            <property name="label">0 selected</property>
+            <property name="halign">start</property>
+            <property name="hexpand">true</property>
+            <style>
+              <class name="caption"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="update_selected_button">
+            <property name="label" translatable="yes">Update Selected</property>
+            <property name="tooltip-text" translatable="yes">Update all selected packages</property>
+            <property name="sensitive">false</property>
+            <signal name="clicked" handler="on_update_selected_clicked"/>
+            <style>
+              <class name="suggested-action"/>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="ignore_selected_button">
+            <property name="label" translatable="yes">Ignore Selected</property>
+            <property name="tooltip-text" translatable="yes">Ignore selected updates</property>
+            <property name="sensitive">false</property>
+            <signal name="clicked" handler="on_ignore_selected_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="clear_selection_button">
+            <property name="icon-name">edit-clear-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Clear selection</property>
+            <signal name="clicked" handler="on_clear_selection_clicked"/>
+            <style>
+              <class name="flat"/>
+              <class name="circular"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkScrolledWindow" id="updates_scroll">
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+        <property name="vexpand">true</property>
+
+        <child>
+          <object class="GtkFlowBox" id="updates_flowbox">
+            <property name="selection-mode">none</property>
+            <property name="max-children-per-line">4</property>
+            <property name="min-children-per-line">1</property>
+            <property name="row-spacing">8</property>
+            <property name="column-spacing">8</property>
+            <property name="margin-start">16</property>
+            <property name="margin-end">16</property>
+            <property name="margin-bottom">16</property>
+            <property name="homogeneous">true</property>
+            <signal name="child-activated" handler="on_update_card_activated"/>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
       <object class="GtkRevealer" id="progress_revealer">
         <property name="reveal-child">false</property>
         <property name="transition-type">slide-up</property>
+        <property name="transition-duration">200</property>
 
         <child>
           <object class="GtkBox" id="progress_container">
+            <property name="orientation">horizontal</property>
             <property name="spacing">12</property>
             <property name="margin-start">16</property>
             <property name="margin-end">16</property>
@@ -219,7 +283,7 @@
 
             <child>
               <object class="GtkSpinner" id="progress_spinner">
-                <property name="spinning">true</property>
+                <property name="spinning">false</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -246,7 +310,8 @@
             <child>
               <object class="GtkButton" id="cancel_updates_button">
                 <property name="icon-name">process-stop-symbolic</property>
-                <signal name="clicked" handler="on_cancel_updates_clicked" swapped="true"/>
+                <property name="tooltip-text" translatable="yes">Cancel update process</property>
+                <signal name="clicked" handler="on_cancel_updates_clicked"/>
                 <style>
                   <class name="flat"/>
                   <class name="circular"/>
@@ -257,7 +322,7 @@
         </child>
       </object>
     </child>
-  </template>
+  </object>
 
   <object class="GtkFrame" id="upstream_update_card_template">
     <property name="visible">false</property>
@@ -267,6 +332,7 @@
       <class name="upstream-update-card"/>
     </style>
     <property name="width-request">280</property>
+    <property name="height-request">320</property>
 
     <child>
       <object class="GtkBox">
@@ -279,19 +345,20 @@
 
         <child>
           <object class="GtkBox" id="card_header">
+            <property name="orientation">horizontal</property>
             <property name="spacing">8</property>
 
             <child>
               <object class="GtkCheckButton" id="package_select_check">
                 <property name="tooltip-text" translatable="yes">Select for bulk update</property>
-                <signal name="toggled" handler="on_package_select_toggled" swapped="true"/>
+                <signal name="toggled" handler="on_package_select_toggled"/>
               </object>
             </child>
 
             <child>
               <object class="GtkImage" id="update_status_icon">
                 <property name="icon-name">software-update-available-symbolic</property>
-                <property name="pixel-size">24</property>
+                <property name="icon-size">large</property>
                 <style>
                   <class name="success"/>
                 </style>
@@ -308,7 +375,7 @@
                 <child>
                   <object class="GtkImage" id="security_indicator">
                     <property name="icon-name">security-high-symbolic</property>
-                    <property name="pixel-size">16</property>
+                    <property name="icon-size">normal</property>
                     <property name="tooltip-text" translatable="yes">Security fix available</property>
                     <property name="visible">false</property>
                     <style>
@@ -320,7 +387,7 @@
                 <child>
                   <object class="GtkImage" id="major_update_indicator">
                     <property name="icon-name">dialog-warning-symbolic</property>
-                    <property name="pixel-size">16</property>
+                    <property name="icon-size">normal</property>
                     <property name="tooltip-text" translatable="yes">Major version update</property>
                     <property name="visible">false</property>
                     <style>
@@ -453,7 +520,7 @@
               <object class="GtkButton" id="update_package_button">
                 <property name="label" translatable="yes">Update Package</property>
                 <property name="tooltip-text" translatable="yes">Update this package to the new version</property>
-                <signal name="clicked" handler="on_update_package_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_update_package_clicked"/>
                 <style>
                   <class name="suggested-action"/>
                   <class name="pill"/>
@@ -463,6 +530,7 @@
 
             <child>
               <object class="GtkBox" id="secondary_actions">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">4</property>
                 <property name="homogeneous">true</property>
 
@@ -470,7 +538,7 @@
                   <object class="GtkButton" id="view_package_button">
                     <property name="label" translatable="yes">View Package</property>
                     <property name="tooltip-text" translatable="yes">View package details and information</property>
-                    <signal name="clicked" handler="on_view_package_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_view_package_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="pill"/>
@@ -482,7 +550,7 @@
                   <object class="GtkButton" id="view_changelog_button">
                     <property name="label" translatable="yes">Changelog</property>
                     <property name="tooltip-text" translatable="yes">View update changelog and release notes</property>
-                    <signal name="clicked" handler="on_view_changelog_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_view_changelog_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="pill"/>
@@ -496,7 +564,7 @@
               <object class="GtkButton" id="ignore_update_button">
                 <property name="label" translatable="yes">Ignore This Version</property>
                 <property name="tooltip-text" translatable="yes">Don't show notifications for this version</property>
-                <signal name="clicked" handler="on_ignore_update_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_ignore_update_clicked"/>
                 <style>
                   <class name="flat"/>
                   <class name="pill"/>

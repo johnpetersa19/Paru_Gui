@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="AurSpecificDialog" parent="AdwDialog">
+  <object class="AdwDialog" id="AurSpecificDialog">
     <property name="title" translatable="yes">AUR Tools</property>
     <property name="content-width">900</property>
     <property name="content-height">800</property>
-    
+    <property name="can-close">true</property>
 
     <child>
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
             <child type="start">
-              <object class="GtkButton" id="back_to_package_management_button">
+              <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="back_to_package_management_button">
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to Package Management</property>
-                    <signal name="clicked" handler="on_back_to_package_management_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_back_to_package_management_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
                     </style>
                   </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="breadcrumb_label">
+                    <property name="label" translatable="yes">Main › AUR Tools › Operations</property>
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
             </child>
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">AUR Tools</property>
-                
+                <property name="subtitle" translatable="yes">Arch User Repository operations and configuration</property>
               </object>
             </property>
             <child type="end">
@@ -37,7 +54,7 @@
                   <object class="GtkButton" id="search_aur_button">
                     <property name="icon-name">edit-find-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Search AUR Packages</property>
-                    <signal name="clicked" handler="on_search_aur_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_search_aur_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -48,7 +65,7 @@
                   <object class="GtkButton" id="about_aur_button">
                     <property name="icon-name">help-contents-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Learn About AUR</property>
-                    <signal name="clicked" handler="on_about_aur_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_about_aur_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -61,9 +78,13 @@
         </child>
 
         <property name="content">
-          <object class="AdwPreferencesPage">
-                
-                
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vscrollbar-policy">automatic</property>
+            <child>
+              <object class="AdwClamp">
+                <property name="maximum-size">800</property>
+                <property name="tightening-threshold">600</property>
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -146,7 +167,7 @@
                                       <object class="GtkButton" id="learn_more_button">
                                         <property name="label" translatable="yes">Learn More About AUR</property>
                                         <property name="tooltip-text" translatable="yes">Open comprehensive AUR documentation</property>
-                                        <signal name="clicked" handler="on_learn_more_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_learn_more_clicked"/>
                                         <style>
                                           <class name="pill"/>
                                         </style>
@@ -156,7 +177,7 @@
                                       <object class="GtkButton" id="search_packages_button">
                                         <property name="label" translatable="yes">Search AUR Packages</property>
                                         <property name="tooltip-text" translatable="yes">Browse and search AUR package database</property>
-                                        <signal name="clicked" handler="on_search_aur_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_search_aur_clicked"/>
                                         <style>
                                           <class name="suggested-action"/>
                                           <class name="pill"/>
@@ -180,7 +201,7 @@
                           <object class="AdwBanner" id="security_warning_banner">
                             <property name="title" translatable="yes">Security Warning: AUR packages are user-contributed</property>
                             <property name="button-label" translatable="yes">I Understand</property>
-                            <signal name="button-clicked" handler="on_security_warning_acknowledged" swapped="true"/>
+                            <signal name="button-clicked" handler="on_security_warning_acknowledged"/>
                             <style>
                               <class name="warning"/>
                             </style>
@@ -197,12 +218,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">AUR Packages Only</property>
-                            
+                            <property name="subtitle" translatable="yes">Install packages exclusively from AUR (--aur)</property>
                             <property name="activatable-widget">aur_only_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="aur_only_radio">
                                 <property name="active">true</property>
-                                <signal name="toggled" handler="on_source_type_changed" swapped="true"/>
+                                <signal name="toggled" handler="on_source_type_changed"/>
                               </object>
                             </child>
                           </object>
@@ -211,12 +232,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Official Repositories Only</property>
-                            
+                            <property name="subtitle" translatable="yes">Install packages only from official Arch repositories (--repo)</property>
                             <property name="activatable-widget">repo_only_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="repo_only_radio">
                                 <property name="group">aur_only_radio</property>
-                                <signal name="toggled" handler="on_source_type_changed" swapped="true"/>
+                                <signal name="toggled" handler="on_source_type_changed"/>
                               </object>
                             </child>
                           </object>
@@ -225,12 +246,12 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Mixed Sources (Default)</property>
-                            
+                            <property name="subtitle" translatable="yes">Search both AUR and official repositories</property>
                             <property name="activatable-widget">mixed_sources_radio</property>
                             <child type="prefix">
                               <object class="GtkCheckButton" id="mixed_sources_radio">
                                 <property name="group">aur_only_radio</property>
-                                <signal name="toggled" handler="on_source_type_changed" swapped="true"/>
+                                <signal name="toggled" handler="on_source_type_changed"/>
                               </object>
                             </child>
                           </object>
@@ -247,7 +268,7 @@
                           <object class="AdwEntryRow" id="package_name_entry">
                             <property name="title" translatable="yes">Package Name</property>
                             <property name="text"></property>
-                            <signal name="changed" handler="on_package_name_changed" swapped="true"/>
+                            <signal name="changed" handler="on_package_name_changed"/>
                             <child type="suffix">
                               <object class="GtkButton" id="package_info_button">
                                 <property name="icon-name">dialog-information-symbolic</property>
@@ -258,7 +279,7 @@
                                   <class name="flat"/>
                                   <class name="circular"/>
                                 </style>
-                                <signal name="clicked" handler="on_package_info_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_package_info_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -267,7 +288,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">View PKGBUILD File</property>
-                            
+                            <property name="subtitle" translatable="yes">Review build script before installation (--show)</property>
                             <child type="suffix">
                               <object class="GtkButton" id="view_pkgbuild_button">
                                 <property name="label" translatable="yes">View PKGBUILD</property>
@@ -277,7 +298,7 @@
                                 <style>
                                   <class name="flat"/>
                                 </style>
-                                <signal name="clicked" handler="on_view_pkgbuild_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_view_pkgbuild_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -286,7 +307,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Edit PKGBUILD File</property>
-                            
+                            <property name="subtitle" translatable="yes">Open interactive editor for PKGBUILD files (--editmenu)</property>
                             <child type="prefix">
                               <object class="GtkImage">
                                 <property name="icon-name">dialog-warning-symbolic</property>
@@ -305,7 +326,7 @@
                                 <style>
                                   <class name="destructive-action"/>
                                 </style>
-                                <signal name="clicked" handler="on_edit_pkgbuild_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_edit_pkgbuild_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -321,33 +342,46 @@
                         <child>
                           <object class="AdwSwitchRow" id="chroot_switch">
                             <property name="title" translatable="yes">Build in Isolated Environment</property>
-                            
+                            <property name="subtitle" translatable="yes">Build packages in clean chroot environment (--chroot)</property>
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_build_option_changed" swapped="true"/>
+                            <signal name="notify::active" handler="on_build_option_changed"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="keep_build_switch">
                             <property name="title" translatable="yes">Keep Build Directory</property>
-                            
-                            <signal name="notify::active" handler="on_build_option_changed" swapped="true"/>
+                            <property name="subtitle" translatable="yes">Preserve build files after installation (--keepbuild)</property>
+                            <signal name="notify::active" handler="on_build_option_changed"/>
                           </object>
                         </child>
 
                         <child>
-                          <object class="AdwEntryRow" id="clonedir_entry">
+                          <object class="AdwActionRow">
                             <property name="title" translatable="yes">Clone Directory</property>
-                            <property name="text"></property>
-                            <signal name="changed" handler="on_clonedir_changed" swapped="true"/>
+                            <property name="subtitle" translatable="yes">Directory where AUR packages are downloaded and built</property>
                             <child type="suffix">
-                              <object class="GtkButton" id="clonedir_button">
-                                <property name="icon-name">folder-open-symbolic</property>
-                                <property name="valign">center</property>
-                                <style>
-                                  <class name="flat"/>
-                                </style>
-                                <signal name="clicked" handler="on_clonedir_select_clicked" swapped="true"/>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">8</property>
+                                <child>
+                                  <object class="GtkEntry" id="clonedir_entry">
+                                    <property name="placeholder-text" translatable="yes">/tmp/paru</property>
+                                    <property name="width-chars">30</property>
+                                    <signal name="changed" handler="on_clonedir_changed"/>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="clonedir_button">
+                                    <property name="icon-name">folder-open-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Select Build Directory</property>
+                                    <style>
+                                      <class name="flat"/>
+                                      <class name="circular"/>
+                                    </style>
+                                    <signal name="clicked" handler="on_clonedir_select_clicked"/>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -363,25 +397,25 @@
                         <child>
                           <object class="AdwSwitchRow" id="skip_pgp_switch">
                             <property name="title" translatable="yes">Skip PGP Signature Verification</property>
-                            
-                            <signal name="notify::active" handler="on_security_option_changed" swapped="true"/>
+                            <property name="subtitle" translatable="yes">WARNING: Skip cryptographic signature verification (--skippgpcheck)</property>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="sign_packages_switch">
                             <property name="title" translatable="yes">Sign Built Packages</property>
-                            
-                            <signal name="notify::active" handler="on_security_option_changed" swapped="true"/>
+                            <property name="subtitle" translatable="yes">Cryptographically sign packages after building (--sign)</property>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="review_pkgbuild_switch">
                             <property name="title" translatable="yes">Always Review PKGBUILD</property>
-                            
+                            <property name="subtitle" translatable="yes">Mandatory PKGBUILD review before installation (Recommended)</property>
                             <property name="active">true</property>
-                            <signal name="notify::active" handler="on_security_option_changed" swapped="true"/>
+                            <signal name="notify::active" handler="on_security_option_changed"/>
                           </object>
                         </child>
                       </object>
@@ -395,7 +429,7 @@
                           <object class="AdwBanner" id="dangerous_action_banner">
                             <property name="title" translatable="yes">Warning: Risky Security Settings Detected</property>
                             <property name="button-label" translatable="yes">Acknowledge Risk</property>
-                            <signal name="button-clicked" handler="on_dangerous_action_acknowledged" swapped="true"/>
+                            <signal name="button-clicked" handler="on_dangerous_action_acknowledged"/>
                             <style>
                               <class name="error"/>
                             </style>
@@ -425,6 +459,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <child>
                                       <object class="GtkImage" id="command_status_icon">
@@ -491,6 +526,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">8</property>
                                     <property name="halign">center</property>
                                     <child>
@@ -515,7 +551,7 @@
                                             </child>
                                           </object>
                                         </child>
-                                        <signal name="clicked" handler="on_copy_command_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_copy_command_clicked"/>
                                       </object>
                                     </child>
                                     <child>
@@ -525,7 +561,7 @@
                                         <style>
                                           <class name="pill"/>
                                         </style>
-                                        <signal name="clicked" handler="on_test_command_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_test_command_clicked"/>
                                       </object>
                                     </child>
                                   </object>
@@ -539,6 +575,8 @@
                   </object>
                 </child>
               </object>
+            </child>
+          </object>
         </property>
 
         <child type="bottom">
@@ -548,7 +586,7 @@
               <object class="GtkButton" id="package_management_button">
                 <property name="label" translatable="yes">Back to Package Management</property>
                 <property name="tooltip-text" translatable="yes">Return to package management panel</property>
-                <signal name="clicked" handler="on_back_to_package_management_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_to_package_management_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -557,7 +595,7 @@
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_cancel_clicked"/>
               </object>
             </child>
             <child type="end">
@@ -567,7 +605,7 @@
                   <object class="GtkButton" id="dry_run_button">
                     <property name="label" translatable="yes">Dry Run</property>
                     <property name="tooltip-text" translatable="yes">Preview operation without making changes</property>
-                    <signal name="clicked" handler="on_dry_run_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_dry_run_clicked"/>
                   </object>
                 </child>
                 <child>
@@ -577,7 +615,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_execute_clicked"/>
                   </object>
                 </child>
               </object>
@@ -591,5 +629,5 @@
       <property name="label" translatable="yes">AUR Tools Dialog</property>
       <property name="description" translatable="yes">Comprehensive AUR package management with educational content and security warnings</property>
     </accessibility>
-  </template>
+  </object>
 </interface>

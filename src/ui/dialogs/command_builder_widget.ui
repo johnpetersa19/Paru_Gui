@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="CommandBuilderWidget" parent="GtkBox">
+  <object class="GtkBox" id="CommandBuilderWidget">
     <property name="orientation">vertical</property>
     <property name="spacing">0</property>
 
     <child>
       <object class="GtkBox" id="navigation_header">
+        <property name="orientation">horizontal</property>
         <property name="spacing">12</property>
         <property name="margin-top">16</property>
         <property name="margin-bottom">16</property>
@@ -18,7 +19,7 @@
           <object class="GtkButton" id="back_to_advanced_button">
             <property name="icon-name">go-previous-symbolic</property>
             <property name="tooltip-text" translatable="yes">Back to Advanced Tools</property>
-            <signal name="clicked" handler="on_back_to_advanced_clicked" swapped="true"/>
+            <signal name="clicked" handler="on_back_to_advanced_clicked"/>
             <style>
               <class name="flat"/>
               <class name="circular"/>
@@ -50,7 +51,7 @@
           <object class="GtkButton" id="help_button">
             <property name="icon-name">help-contents-symbolic</property>
             <property name="tooltip-text" translatable="yes">Command Builder Help</property>
-            <signal name="clicked" handler="on_help_clicked" swapped="true"/>
+            <signal name="clicked" handler="on_help_clicked"/>
             <style>
               <class name="flat"/>
               <class name="circular"/>
@@ -89,9 +90,10 @@
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Load Command Template</property>
-                    
+                    <property name="subtitle" translatable="yes">Choose from popular paru command patterns</property>
                     <child type="suffix">
                       <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
                         <property name="spacing">8</property>
 
                         <child>
@@ -112,7 +114,7 @@
                               </object>
                             </property>
                             <property name="selected">0</property>
-                            <signal name="notify::selected" handler="on_template_selected" swapped="true"/>
+                            <signal name="notify::selected" handler="on_template_selected"/>
                           </object>
                         </child>
 
@@ -124,7 +126,7 @@
                             <style>
                               <class name="suggested-action"/>
                             </style>
-                            <signal name="clicked" handler="on_use_template_clicked" swapped="true"/>
+                            <signal name="clicked" handler="on_use_template_clicked"/>
                           </object>
                         </child>
                       </object>
@@ -142,7 +144,7 @@
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Base Operation</property>
-                    
+                    <property name="subtitle" translatable="yes">Select the main operation type</property>
                     <child type="suffix">
                       <object class="GtkDropDown" id="operation_dropdown">
                         <property name="model">
@@ -160,7 +162,7 @@
                           </object>
                         </property>
                         <property name="selected">0</property>
-                        <signal name="notify::selected" handler="on_operation_changed" swapped="true"/>
+                        <signal name="notify::selected" handler="on_operation_changed"/>
                       </object>
                     </child>
                   </object>
@@ -170,60 +172,60 @@
                   <object class="AdwEntryRow" id="package_name_entry">
                     <property name="title" translatable="yes">Package Name(s)</property>
                     <property name="text"></property>
-                    <signal name="changed" handler="on_package_name_changed" swapped="true"/>
+                    <signal name="changed" handler="on_package_name_changed"/>
                   </object>
                 </child>
 
                 <child>
                   <object class="AdwExpanderRow" id="flags_expander">
                     <property name="title" translatable="yes">Advanced Options</property>
-                    
+                    <property name="subtitle" translatable="yes">Additional flags and parameters</property>
 
                     <child>
                       <object class="AdwSwitchRow" id="noconfirm_switch">
                         <property name="title" translatable="yes">No Confirmation</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Skip interactive prompts (--noconfirm)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
                     <child>
                       <object class="AdwSwitchRow" id="aur_switch">
                         <property name="title" translatable="yes">AUR Only</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Search only AUR packages (--aur)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
                     <child>
                       <object class="AdwSwitchRow" id="repo_switch">
                         <property name="title" translatable="yes">Repository Only</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Search only official repositories (--repo)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
                     <child>
                       <object class="AdwSwitchRow" id="devel_switch">
                         <property name="title" translatable="yes">Development Packages</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Include VCS packages in updates (--devel)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
                     <child>
                       <object class="AdwSwitchRow" id="needed_switch">
                         <property name="title" translatable="yes">Skip Up-to-date</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Do not reinstall up-to-date packages (--needed)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
                     <child>
                       <object class="AdwSwitchRow" id="recursive_switch">
                         <property name="title" translatable="yes">Recursive Operations</property>
-                        
-                        <signal name="notify::active" handler="on_flag_changed" swapped="true"/>
+                        <property name="subtitle" translatable="yes">Remove dependencies and dependents (-s)</property>
+                        <signal name="notify::active" handler="on_flag_changed"/>
                       </object>
                     </child>
 
@@ -231,7 +233,7 @@
                       <object class="AdwEntryRow" id="ignore_entry">
                         <property name="title" translatable="yes">Ignore Packages</property>
                         <property name="text"></property>
-                        <signal name="changed" handler="on_ignore_changed" swapped="true"/>
+                        <signal name="changed" handler="on_ignore_changed"/>
                       </object>
                     </child>
                   </object>
@@ -260,6 +262,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
 
                             <child>
@@ -328,6 +331,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">8</property>
                             <property name="halign">center</property>
 
@@ -353,7 +357,7 @@
                                     </child>
                                   </object>
                                 </child>
-                                <signal name="clicked" handler="on_copy_command_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_copy_command_clicked"/>
                               </object>
                             </child>
 
@@ -380,7 +384,7 @@
                                     </child>
                                   </object>
                                 </child>
-                                <signal name="clicked" handler="on_execute_command_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_execute_command_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -401,7 +405,7 @@
                   <object class="AdwEntryRow" id="template_name_entry">
                     <property name="title" translatable="yes">Template Name</property>
                     <property name="text"></property>
-                    <signal name="changed" handler="on_template_name_changed" swapped="true"/>
+                    <signal name="changed" handler="on_template_name_changed"/>
                   </object>
                 </child>
 
@@ -409,14 +413,14 @@
                   <object class="AdwEntryRow" id="template_description_entry">
                     <property name="title" translatable="yes">Template Description</property>
                     <property name="text"></property>
-                    <signal name="changed" handler="on_template_description_changed" swapped="true"/>
+                    <signal name="changed" handler="on_template_description_changed"/>
                   </object>
                 </child>
 
                 <child>
                   <object class="AdwActionRow">
                     <property name="title" translatable="yes">Save Command Template</property>
-                    
+                    <property name="subtitle" translatable="yes">Add this command to your template collection</property>
                     <child type="suffix">
                       <object class="GtkButton" id="save_template_button">
                         <property name="label" translatable="yes">Save as Template</property>
@@ -440,7 +444,7 @@
                             </child>
                           </object>
                         </child>
-                        <signal name="clicked" handler="on_save_template_clicked" swapped="true"/>
+                        <signal name="clicked" handler="on_save_template_clicked"/>
                       </object>
                     </child>
                   </object>
@@ -464,6 +468,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">8</property>
                             <property name="margin-top">16</property>
                             <property name="margin-start">16</property>
@@ -498,7 +503,7 @@
                                   <class name="flat"/>
                                   <class name="circular"/>
                                 </style>
-                                <signal name="clicked" handler="on_refresh_templates_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_refresh_templates_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -506,7 +511,7 @@
 
                         <child>
                           <object class="GtkScrolledWindow">
-                            
+                            <property name="height-request">200</property>
                             <property name="hscrollbar-policy">never</property>
                             <property name="vscrollbar-policy">automatic</property>
                             <property name="margin-bottom">16</property>
@@ -516,7 +521,7 @@
                                 <style>
                                   <class name="boxed-list"/>
                                 </style>
-                                <signal name="row-activated" handler="on_saved_template_activated" swapped="true"/>
+                                <signal name="row-activated" handler="on_saved_template_activated"/>
                               </object>
                             </child>
                           </object>
@@ -538,7 +543,7 @@
           <object class="GtkButton" id="advanced_tools_button">
             <property name="label" translatable="yes">Back to Advanced Tools</property>
             <property name="tooltip-text" translatable="yes">Return to advanced tools panel</property>
-            <signal name="clicked" handler="on_back_to_advanced_clicked" swapped="true"/>
+            <signal name="clicked" handler="on_back_to_advanced_clicked"/>
             <style>
               <class name="flat"/>
             </style>
@@ -551,14 +556,14 @@
               <object class="GtkButton" id="reset_builder_button">
                 <property name="label" translatable="yes">Reset Builder</property>
                 <property name="tooltip-text" translatable="yes">Clear all fields and start over</property>
-                <signal name="clicked" handler="on_reset_builder_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_reset_builder_clicked"/>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="export_command_button">
                 <property name="label" translatable="yes">Export Command</property>
                 <property name="tooltip-text" translatable="yes">Export command to file or share</property>
-                <signal name="clicked" handler="on_export_command_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_export_command_clicked"/>
                 <style>
                   <class name="suggested-action"/>
                 </style>
@@ -573,5 +578,5 @@
       <property name="label" translatable="yes">Visual Command Builder</property>
       <property name="description" translatable="yes">Interactive tool for building and managing paru commands with real-time preview</property>
     </accessibility>
-  </template>
+  </object>
 </interface>

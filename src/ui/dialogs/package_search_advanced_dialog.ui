@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="PackageSearchAdvancedDialog" parent="AdwDialog">
+  <object class="AdwDialog" id="PackageSearchAdvancedDialog">
     <property name="title" translatable="yes">Advanced Package Search</property>
     <property name="content-width">800</property>
     <property name="content-height">750</property>
-    
+    <property name="can-close">true</property>
 
     <child>
       <object class="AdwToolbarView">
@@ -19,6 +19,7 @@
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
                     <property name="spacing">6</property>
                     <property name="halign">center</property>
                     <child>
@@ -65,41 +66,14 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to Search Results</property>
-                <signal name="clicked" handler="on_back_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_clicked"/>
               </object>
             </child>
             <child type="end">
               <object class="GtkMenuButton" id="view_menu_button">
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="tooltip-text" translatable="yes">View Options</property>
-                <property name="popover">
-                  <object class="GtkPopoverMenu">
-                    <property name="menu-model">
-                      <object class="GMenu">
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Switch to Simple Search</attribute>
-                            <attribute name="action">dialog.switch-simple</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Save Current Search</attribute>
-                            <attribute name="action">dialog.save-search</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Load Saved Search</attribute>
-                            <attribute name="action">dialog.load-search</attribute>
-                          </item>
-                        </section>
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Reset All Filters</attribute>
-                            <attribute name="action">dialog.reset-filters</attribute>
-                          </item>
-                        </section>
-                      </object>
-                    </property>
-                  </object>
-                </property>
+                <property name="menu-model">advanced_search_view_menu</property>
               </object>
             </child>
           </object>
@@ -110,9 +84,9 @@
             <property name="hscrollbar-policy">never</property>
             <property name="vscrollbar-policy">automatic</property>
             <property name="child">
-              <object class="AdwPreferencesPage">
-                
-                
+              <object class="AdwClamp">
+                <property name="maximum-size">750</property>
+                <property name="tightening-threshold">500</property>
                 <property name="child">
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -126,12 +100,8 @@
                       <object class="AdwBanner" id="search_progress_banner">
                         <property name="title" translatable="yes">Searching packages...</property>
                         <property name="revealed">false</property>
-                        <child>
-                          <object class="GtkButton">
-                            <property name="label" translatable="yes">Cancel</property>
-                            <property name="action-name">dialog.cancel-search</property>
-                          </object>
-                        </child>
+                        <property name="button-label" translatable="yes">Cancel</property>
+                        <property name="action-name">dialog.cancel-search</property>
                       </object>
                     </child>
 
@@ -145,7 +115,7 @@
                             <property name="title" translatable="yes">Search Term</property>
                             <property name="text"></property>
                             <property name="tooltip-text" translatable="yes">Enter package name or keywords to search</property>
-                            <signal name="changed" handler="on_search_term_changed" swapped="true"/>
+                            <signal name="changed" handler="on_search_term_changed"/>
                             <child type="suffix">
                               <object class="GtkButton" id="search_button">
                                 <property name="label" translatable="yes">Search</property>
@@ -154,7 +124,7 @@
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
-                                <signal name="clicked" handler="on_search_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_search_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -163,7 +133,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Search Source</property>
-                            
+                            <property name="subtitle" translatable="yes">Select where to search for packages</property>
                             <child type="suffix">
                               <object class="GtkDropDown" id="source_dropdown">
                                 <property name="model">
@@ -177,7 +147,7 @@
                                 </property>
                                 <property name="selected">0</property>
                                 <property name="tooltip-text" translatable="yes">Choose search scope: all sources, AUR only, or repositories only</property>
-                                <signal name="notify::selected" handler="on_source_changed" swapped="true"/>
+                                <signal name="notify::selected" handler="on_source_changed"/>
                               </object>
                             </child>
                           </object>
@@ -193,7 +163,7 @@
                         <child>
                           <object class="AdwActionRow">
                             <property name="title" translatable="yes">Package Category</property>
-                            
+                            <property name="subtitle" translatable="yes">Filter by package group or category</property>
                             <child type="suffix">
                               <object class="GtkDropDown" id="category_dropdown">
                                 <property name="model">
@@ -219,7 +189,7 @@
                                 </property>
                                 <property name="selected">0</property>
                                 <property name="tooltip-text" translatable="yes">Filter packages by category or group</property>
-                                <signal name="notify::selected" handler="on_category_changed" swapped="true"/>
+                                <signal name="notify::selected" handler="on_category_changed"/>
                               </object>
                             </child>
                           </object>
@@ -228,27 +198,27 @@
                         <child>
                           <object class="AdwSwitchRow" id="installed_only_switch">
                             <property name="title" translatable="yes">Installed Packages Only</property>
-                            
+                            <property name="subtitle" translatable="yes">Show only currently installed packages</property>
                             <property name="tooltip-text" translatable="yes">Filter to show only packages currently installed on your system</property>
-                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
+                            <signal name="notify::active" handler="on_filter_changed"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="orphaned_switch">
                             <property name="title" translatable="yes">Orphaned Packages</property>
-                            
+                            <property name="subtitle" translatable="yes">Show packages with no dependencies</property>
                             <property name="tooltip-text" translatable="yes">Display packages that are no longer needed by other packages</property>
-                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
+                            <signal name="notify::active" handler="on_filter_changed"/>
                           </object>
                         </child>
 
                         <child>
                           <object class="AdwSwitchRow" id="outdated_switch">
                             <property name="title" translatable="yes">Updates Available</property>
-                            
+                            <property name="subtitle" translatable="yes">Show packages with available updates</property>
                             <property name="tooltip-text" translatable="yes">Display only packages that have newer versions available</property>
-                            <signal name="notify::active" handler="on_filter_changed" swapped="true"/>
+                            <signal name="notify::active" handler="on_filter_changed"/>
                           </object>
                         </child>
 
@@ -257,7 +227,7 @@
                             <property name="title" translatable="yes">Keyword Filter</property>
                             <property name="text"></property>
                             <property name="tooltip-text" translatable="yes">Additional keywords to filter search results</property>
-                            <signal name="changed" handler="on_keyword_filter_changed" swapped="true"/>
+                            <signal name="changed" handler="on_keyword_filter_changed"/>
                           </object>
                         </child>
                       </object>
@@ -278,6 +248,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">12</property>
@@ -300,7 +271,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_view_all_results_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_view_all_results_clicked"/>
                                       </object>
                                     </child>
                                   </object>
@@ -308,7 +279,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    
+                                    <property name="height-request">250</property>
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="margin-start">12</property>
@@ -366,6 +337,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <child>
                                       <object class="GtkButton" id="copy_command_button">
@@ -375,7 +347,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_copy_command_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_copy_command_clicked"/>
                                       </object>
                                     </child>
                                     <child>
@@ -386,7 +358,7 @@
                                         <style>
                                           <class name="flat"/>
                                         </style>
-                                        <signal name="clicked" handler="on_run_terminal_clicked" swapped="true"/>
+                                        <signal name="clicked" handler="on_run_terminal_clicked"/>
                                       </object>
                                     </child>
                                   </object>
@@ -408,6 +380,7 @@
                             <property name="css-classes">card</property>
                             <property name="child">
                               <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
                                 <property name="margin-top">12</property>
                                 <property name="margin-bottom">12</property>
@@ -425,7 +398,7 @@
                                     <property name="selected">0</property>
                                     <property name="hexpand">true</property>
                                     <property name="tooltip-text" translatable="yes">Load a previously saved search configuration</property>
-                                    <signal name="notify::selected" handler="on_saved_search_selected" swapped="true"/>
+                                    <signal name="notify::selected" handler="on_saved_search_selected"/>
                                   </object>
                                 </child>
                                 <child>
@@ -436,7 +409,7 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                    <signal name="clicked" handler="on_save_current_clicked" swapped="true"/>
+                                    <signal name="clicked" handler="on_save_current_clicked"/>
                                   </object>
                                 </child>
                               </object>
@@ -457,25 +430,27 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="simple_search_button">
                     <property name="label" translatable="yes">Simple Search</property>
                     <property name="tooltip-text" translatable="yes">Switch to Simple Search mode</property>
-                    <signal name="clicked" handler="on_simple_search_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_simple_search_clicked"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="cancel_button">
                     <property name="label" translatable="yes">Cancel</property>
                     <property name="tooltip-text" translatable="yes">Close dialog without executing search</property>
-                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_cancel_clicked"/>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="reset_button">
@@ -484,7 +459,7 @@
                     <style>
                       <class name="flat"/>
                     </style>
-                    <signal name="clicked" handler="on_reset_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_reset_clicked"/>
                   </object>
                 </child>
                 <child>
@@ -494,7 +469,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_execute_clicked"/>
                   </object>
                 </child>
               </object>
@@ -508,5 +483,28 @@
       <property name="label" translatable="yes">Advanced Package Search Dialog</property>
       <property name="description" translatable="yes">Configure and execute advanced package searches with filters and real-time preview</property>
     </accessibility>
-  </template>
+  </object>
+
+  <menu id="advanced_search_view_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Switch to Simple Search</attribute>
+        <attribute name="action">dialog.switch-simple</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Save Current Search</attribute>
+        <attribute name="action">dialog.save-search</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Load Saved Search</attribute>
+        <attribute name="action">dialog.load-search</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Reset All Filters</attribute>
+        <attribute name="action">dialog.reset-filters</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

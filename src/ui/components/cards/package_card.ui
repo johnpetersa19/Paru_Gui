@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="gio" version="2.0"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.4"/>
 
-  <template class="PackageCard" parent="GtkBox">
+  <object class="GtkBox" id="package_card">
     <property name="orientation">vertical</property>
-    <style><class name="card"/></style>
+    <property name="spacing">12</property>
+    <property name="width-request">260</property>
+    <property name="margin-top">6</property>
+    <property name="margin-bottom">6</property>
+    <property name="margin-start">6</property>
+    <property name="margin-end">6</property>
+    <style>
+      <class name="card"/>
+      <class name="package-card"/>
+    </style>
 
     <child>
-      <object class="GtkBox" id="card_header">
-        <property name="spacing">8</property>
+      <object class="GtkBox" id="header_box">
+        <property name="spacing">10</property>
         <property name="margin-top">12</property>
-        <property name="margin-bottom">8</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
         <child>
           <object class="GtkImage" id="file_icon">
-            <property name="icon-name">package-x-generic</property>
+            <property name="icon-name">package-x-generic-symbolic</property>
             <property name="pixel-size">32</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
-            <property name="hexpand">true</property>
+            <property name="spacing">2</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkLabel" id="package_name_label">
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <property name="ellipsize">end</property>
-                <style><class name="heading"/></style>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="lines">2</property>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="version_label">
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <property name="ellipsize">end</property>
-                <style><class name="caption"/><class name="dim-label"/></style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="signature_container">
-            <property name="spacing">4</property>
-            <property name="valign">start</property>
-            <child>
-              <object class="GtkImage" id="signature_icon">
-                <property name="pixel-size">16</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="signature_label">
-                <style><class name="caption"/></style>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
           </object>
@@ -62,41 +62,38 @@
 
     <child>
       <object class="GtkLabel" id="details_label">
+        <property name="xalign">0</property>
+        <property name="wrap">True</property>
+        <property name="wrap-mode">word-char</property>
+        <property name="lines">3</property>
+        <property name="ellipsize">end</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        <property name="wrap">true</property>
-        <property name="xalign">0</property>
-        <style><class name="caption"/><class name="dim-label"/></style>
+        <style>
+          <class name="caption"/>
+          <class name="dim-label"/>
+        </style>
       </object>
     </child>
 
     <child>
-      <object class="GtkBox" id="actions_box">
-        <property name="orientation">vertical</property>
+      <object class="GtkBox" id="signature_container">
         <property name="spacing">6</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">12</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
         <child>
-          <object class="GtkButton" id="install_button">
-            <property name="label" translatable="yes">Install Package</property>
-            <signal name="clicked" handler="on_install_clicked" swapped="true"/>
-            <style><class name="suggested-action"/><class name="pill"/></style>
+          <object class="GtkImage" id="signature_icon">
+            <property name="pixel-size">16</property>
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="info_button">
-            <property name="label" translatable="yes">View Information</property>
-            <signal name="clicked" handler="on_info_clicked" swapped="true"/>
-            <style><class name="flat"/><class name="pill"/></style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="verify_button">
-            <property name="label" translatable="yes">Verify Signature</property>
-            <signal name="clicked" handler="on_verify_clicked" swapped="true"/>
-            <style><class name="flat"/><class name="pill"/></style>
+          <object class="GtkLabel" id="signature_label">
+            <property name="xalign">0</property>
+            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
+            <style>
+              <class name="caption"/>
+            </style>
           </object>
         </child>
       </object>
@@ -106,24 +103,25 @@
       <object class="GtkRevealer" id="progress_revealer">
         <property name="transition-type">slide-down</property>
         <child>
-          <object class="GtkBox">
-            <property name="spacing">6</property>
-            <property name="margin-top">6</property>
-            <property name="margin-bottom">8</property>
+          <object class="GtkBox" id="progress_container">
+            <property name="spacing">8</property>
             <property name="margin-start">12</property>
             <property name="margin-end">12</property>
             <child>
               <object class="GtkSpinner" id="operation_spinner">
-                <property name="spinning">true</property>
+                <property name="spinning">True</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="operation_status">
                 <property name="label" translatable="yes">Processing...</property>
-                <property name="hexpand">true</property>
+                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="ellipsize">end</property>
-                <style><class name="caption"/><class name="dim-label"/></style>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
           </object>
@@ -132,12 +130,51 @@
     </child>
 
     <child>
-      <object class="GtkBox" id="status_indicator">
-        <property name="spacing">4</property>
+      <object class="GtkBox" id="actions_box">
+        <property name="spacing">6</property>
         <property name="margin-start">12</property>
         <property name="margin-end">12</property>
-        <property name="margin-bottom">8</property>
-        <property name="halign">center</property>
+        <property name="margin-bottom">12</property>
+        <child>
+          <object class="GtkButton" id="install_button">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="label" translatable="yes">Install</property>
+            <property name="hexpand">True</property>
+            <signal name="clicked" handler="on_install_clicked"/>
+            <style>
+              <class name="suggested-action"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="info_button">
+            <property name="icon-name">dialog-information-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Package Information</property>
+            <signal name="clicked" handler="on_info_clicked"/>
+            <style>
+              <class name="flat"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="verify_button">
+            <property name="icon-name">security-high-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Verify Signature</property>
+            <signal name="clicked" handler="on_verify_clicked"/>
+            <style>
+              <class name="flat"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkBox" id="status_indicator">
+        <property name="spacing">6</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">12</property>
         <child>
           <object class="GtkImage" id="status_icon">
             <property name="icon-name">emblem-ok-symbolic</property>
@@ -147,10 +184,14 @@
         <child>
           <object class="GtkLabel" id="status_text">
             <property name="label" translatable="yes">Ready to install</property>
-            <style><class name="caption"/><class name="dim-label"/></style>
+            <property name="ellipsize">end</property>
+            <style>
+              <class name="caption"/>
+              <class name="dim-label"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

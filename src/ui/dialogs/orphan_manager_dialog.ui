@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
 
-  <template class="OrphanManagerDialog" parent="AdwDialog">
+  <object class="AdwDialog" id="OrphanManagerDialog">
     <property name="title" translatable="yes">Orphan Package Manager</property>
     <property name="content-width">900</property>
     <property name="content-height">750</property>
-    
+    <property name="can-close">true</property>
 
     <child>
       <object class="AdwToolbarView">
@@ -19,6 +19,7 @@
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
                     <property name="spacing">6</property>
                     <property name="halign">center</property>
                     <child>
@@ -65,41 +66,14 @@
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to System Tools</property>
-                <signal name="clicked" handler="on_back_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_clicked"/>
               </object>
             </child>
             <child type="end">
               <object class="GtkMenuButton" id="actions_menu_button">
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Additional Actions</property>
-                <property name="popover">
-                  <object class="GtkPopoverMenu">
-                    <property name="menu-model">
-                      <object class="GMenu">
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Export Package List</attribute>
-                            <attribute name="action">dialog.export-list</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Import Package List</attribute>
-                            <attribute name="action">dialog.import-list</attribute>
-                          </item>
-                        </section>
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Refresh All Lists</attribute>
-                            <attribute name="action">dialog.refresh-all</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">System Package Report</attribute>
-                            <attribute name="action">dialog.system-report</attribute>
-                          </item>
-                        </section>
-                      </object>
-                    </property>
-                  </object>
-                </property>
+                <property name="menu-model">orphan_actions_menu</property>
               </object>
             </child>
           </object>
@@ -113,12 +87,8 @@
               <object class="AdwBanner" id="operation_progress_banner">
                 <property name="title" translatable="yes">Processing packages...</property>
                 <property name="revealed">false</property>
-                <child>
-                  <object class="GtkButton">
-                    <property name="label" translatable="yes">Cancel</property>
-                    <property name="action-name">dialog.cancel-operation</property>
-                  </object>
-                </child>
+                <property name="button-label" translatable="yes">Cancel</property>
+                <property name="action-name">dialog.cancel-operation</property>
               </object>
             </child>
 
@@ -155,7 +125,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Orphaned Package Definition</property>
-                                
+                                <property name="subtitle" translatable="yes">Packages installed as dependencies but no longer needed by any explicitly installed package</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">dialog-information-symbolic</property>
@@ -167,7 +137,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Why Do They Occur?</property>
-                                
+                                <property name="subtitle" translatable="yes">When you remove a package, its dependencies may remain if not needed elsewhere</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">dialog-question-symbolic</property>
@@ -179,7 +149,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Safe to Remove?</property>
-                                
+                                <property name="subtitle" translatable="yes">Generally yes, but review the list carefully before removing packages</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">emblem-ok-symbolic</property>
@@ -192,6 +162,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">start</property>
 
@@ -200,7 +171,7 @@
                                 <property name="label" translatable="yes">Refresh List</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Scan system for orphaned packages (paru -Qtdq)</property>
-                                <signal name="clicked" handler="on_refresh_orphans_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_refresh_orphans_clicked"/>
                               </object>
                             </child>
 
@@ -209,7 +180,7 @@
                                 <property name="label" translatable="yes">Select All</property>
                                 <property name="icon-name">edit-select-all-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Select all orphaned packages for bulk operation</property>
-                                <signal name="clicked" handler="on_select_all_orphans_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_select_all_orphans_clicked"/>
                               </object>
                             </child>
 
@@ -218,7 +189,7 @@
                                 <property name="label" translatable="yes">Export List</property>
                                 <property name="icon-name">document-save-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Export orphaned package list to file</property>
-                                <signal name="clicked" handler="on_create_orphans_list_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_create_orphans_list_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -234,6 +205,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">12</property>
@@ -262,7 +234,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    
+                                    <property name="height-request">300</property>
                                     <property name="vexpand">true</property>
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
@@ -275,8 +247,8 @@
                                         <style>
                                           <class name="boxed-list"/>
                                         </style>
-                                        <signal name="row-activated" handler="on_orphan_row_activated" swapped="true"/>
-                                        <signal name="selected-rows-changed" handler="on_orphan_selection_changed" swapped="true"/>
+                                        <signal name="row-activated" handler="on_orphan_row_activated"/>
+                                        <signal name="selected-rows-changed" handler="on_orphan_selection_changed"/>
                                       </object>
                                     </property>
                                   </object>
@@ -288,6 +260,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">end</property>
 
@@ -299,7 +272,7 @@
                                 <style>
                                   <class name="destructive-action"/>
                                 </style>
-                                <signal name="clicked" handler="on_clean_all_orphans_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_clean_all_orphans_clicked"/>
                               </object>
                             </child>
 
@@ -312,7 +285,7 @@
                                 <style>
                                   <class name="destructive-action"/>
                                 </style>
-                                <signal name="clicked" handler="on_remove_selected_orphans_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_remove_selected_orphans_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -344,7 +317,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">What Are Explicit Packages?</property>
-                                
+                                <property name="subtitle" translatable="yes">Packages you directly installed with pacman/paru, not as dependencies</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">dialog-information-symbolic</property>
@@ -356,7 +329,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Mark as Dependency</property>
-                                
+                                <property name="subtitle" translatable="yes">Change installation reason from explicit to dependency</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">emblem-shared-symbolic</property>
@@ -369,6 +342,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">start</property>
 
@@ -377,7 +351,7 @@
                                 <property name="label" translatable="yes">Refresh List</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Scan system for explicitly installed packages (paru -Qe)</property>
-                                <signal name="clicked" handler="on_refresh_explicit_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_refresh_explicit_clicked"/>
                               </object>
                             </child>
 
@@ -386,7 +360,7 @@
                                 <property name="label" translatable="yes">Select All</property>
                                 <property name="icon-name">edit-select-all-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Select all explicit packages for bulk operation</property>
-                                <signal name="clicked" handler="on_select_all_explicit_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_select_all_explicit_clicked"/>
                               </object>
                             </child>
 
@@ -395,7 +369,7 @@
                                 <property name="label" translatable="yes">Export List</property>
                                 <property name="icon-name">document-save-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Export explicit package list to file</property>
-                                <signal name="clicked" handler="on_create_explicit_list_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_create_explicit_list_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -411,6 +385,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">12</property>
@@ -439,7 +414,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    
+                                    <property name="height-request">300</property>
                                     <property name="vexpand">true</property>
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
@@ -452,8 +427,8 @@
                                         <style>
                                           <class name="boxed-list"/>
                                         </style>
-                                        <signal name="row-activated" handler="on_explicit_row_activated" swapped="true"/>
-                                        <signal name="selected-rows-changed" handler="on_explicit_selection_changed" swapped="true"/>
+                                        <signal name="row-activated" handler="on_explicit_row_activated"/>
+                                        <signal name="selected-rows-changed" handler="on_explicit_selection_changed"/>
                                       </object>
                                     </property>
                                   </object>
@@ -465,6 +440,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">end</property>
 
@@ -474,7 +450,7 @@
                                 <property name="icon-name">emblem-shared-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Mark selected packages as dependencies (paru -D --asdeps)</property>
                                 <property name="sensitive">false</property>
-                                <signal name="clicked" handler="on_mark_as_deps_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_mark_as_deps_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -506,7 +482,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">What Are Dependencies?</property>
-                                
+                                <property name="subtitle" translatable="yes">Packages automatically installed to support other packages</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">dialog-information-symbolic</property>
@@ -518,7 +494,7 @@
                             <child>
                               <object class="AdwActionRow">
                                 <property name="title" translatable="yes">Mark as Explicit</property>
-                                
+                                <property name="subtitle" translatable="yes">Change installation reason from dependency to explicit</property>
                                 <child type="prefix">
                                   <object class="GtkImage">
                                     <property name="icon-name">starred-symbolic</property>
@@ -531,6 +507,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">start</property>
 
@@ -539,7 +516,7 @@
                                 <property name="label" translatable="yes">Refresh List</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Scan system for dependency packages (paru -Qd)</property>
-                                <signal name="clicked" handler="on_refresh_deps_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_refresh_deps_clicked"/>
                               </object>
                             </child>
 
@@ -548,7 +525,7 @@
                                 <property name="label" translatable="yes">Select All</property>
                                 <property name="icon-name">edit-select-all-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Select all dependency packages for bulk operation</property>
-                                <signal name="clicked" handler="on_select_all_deps_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_select_all_deps_clicked"/>
                               </object>
                             </child>
 
@@ -557,7 +534,7 @@
                                 <property name="label" translatable="yes">Export List</property>
                                 <property name="icon-name">document-save-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Export dependency package list to file</property>
-                                <signal name="clicked" handler="on_create_deps_list_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_create_deps_list_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -573,6 +550,7 @@
 
                                 <child>
                                   <object class="GtkBox">
+                                    <property name="orientation">horizontal</property>
                                     <property name="spacing">12</property>
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">12</property>
@@ -601,7 +579,7 @@
 
                                 <child>
                                   <object class="GtkScrolledWindow">
-                                    
+                                    <property name="height-request">300</property>
                                     <property name="vexpand">true</property>
                                     <property name="hscrollbar-policy">automatic</property>
                                     <property name="vscrollbar-policy">automatic</property>
@@ -614,8 +592,8 @@
                                         <style>
                                           <class name="boxed-list"/>
                                         </style>
-                                        <signal name="row-activated" handler="on_deps_row_activated" swapped="true"/>
-                                        <signal name="selected-rows-changed" handler="on_deps_selection_changed" swapped="true"/>
+                                        <signal name="row-activated" handler="on_deps_row_activated"/>
+                                        <signal name="selected-rows-changed" handler="on_deps_selection_changed"/>
                                       </object>
                                     </property>
                                   </object>
@@ -627,6 +605,7 @@
 
                         <child>
                           <object class="GtkBox">
+                            <property name="orientation">horizontal</property>
                             <property name="spacing">12</property>
                             <property name="halign">end</property>
 
@@ -636,7 +615,7 @@
                                 <property name="icon-name">starred-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Mark selected packages as explicitly installed (paru -D --asexplicit)</property>
                                 <property name="sensitive">false</property>
-                                <signal name="clicked" handler="on_mark_as_explicit_clicked" swapped="true"/>
+                                <signal name="clicked" handler="on_mark_as_explicit_clicked"/>
                               </object>
                             </child>
                           </object>
@@ -655,25 +634,27 @@
             <property name="show-title">false</property>
             <child type="start">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="system_tools_button">
                     <property name="label" translatable="yes">System Tools</property>
                     <property name="tooltip-text" translatable="yes">Return to System Tools</property>
-                    <signal name="clicked" handler="on_system_tools_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_system_tools_clicked"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="cancel_button">
                     <property name="label" translatable="yes">Close</property>
                     <property name="tooltip-text" translatable="yes">Close dialog</property>
-                    <signal name="clicked" handler="on_cancel_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_cancel_clicked"/>
                   </object>
                 </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
 
                 <child>
@@ -693,7 +674,7 @@
                     <style>
                       <class name="suggested-action"/>
                     </style>
-                    <signal name="clicked" handler="on_execute_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_execute_clicked"/>
                   </object>
                 </child>
               </object>
@@ -707,5 +688,28 @@
       <property name="label" translatable="yes">Orphan Package Manager Dialog</property>
       <property name="description" translatable="yes">Manage orphaned packages, explicitly installed packages, and dependencies with bulk operations and educational guidance</property>
     </accessibility>
-  </template>
+  </object>
+
+  <menu id="orphan_actions_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Export Package List</attribute>
+        <attribute name="action">dialog.export-list</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Import Package List</attribute>
+        <attribute name="action">dialog.import-list</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Refresh All Lists</attribute>
+        <attribute name="action">dialog.refresh-all</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">System Package Report</attribute>
+        <attribute name="action">dialog.system-report</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

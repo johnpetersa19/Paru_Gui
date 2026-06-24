@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
-  <requires lib="gtk" version="4.14"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="gtk" version="4.10"/>
+  <requires lib="adw" version="1.4"/>
 
   <object class="AdwDialog" id="repo_manager_dialog">
     <property name="title" translatable="yes">Repository Manager</property>
@@ -14,13 +14,14 @@
           <object class="AdwHeaderBar" id="dialog_header">
             <child type="start">
               <object class="GtkBox" id="navigation_header">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">8</property>
                 <property name="valign">center</property>
                 <child>
                   <object class="GtkButton" id="back_to_system_button">
                     <property name="icon-name">go-previous-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Back to System Tools</property>
-                    <signal name="clicked" handler="on_back_to_system_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_back_to_system_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -42,7 +43,7 @@
             <child type="title">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Repository Manager</property>
-                
+                <property name="subtitle" translatable="yes">Manage system package repositories</property>
               </object>
             </child>
             <child type="end">
@@ -52,7 +53,7 @@
                   <object class="GtkButton" id="test_connectivity_button">
                     <property name="icon-name">network-wireless-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Test Repository Connectivity</property>
-                    <signal name="clicked" handler="on_test_connectivity_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_test_connectivity_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -63,7 +64,7 @@
                   <object class="GtkButton" id="refresh_button">
                     <property name="icon-name">view-refresh-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Refresh Repository List</property>
-                    <signal name="clicked" handler="on_refresh_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_refresh_clicked"/>
                     <style>
                       <class name="flat"/>
                       <class name="circular"/>
@@ -93,7 +94,7 @@
                   <object class="AdwBanner" id="connectivity_banner">
                     <property name="title" translatable="yes">Repository Connectivity Status</property>
                     <property name="button-label" translatable="yes">View Details</property>
-                    <signal name="button-clicked" handler="on_connectivity_details_clicked" swapped="true"/>
+                    <signal name="button-clicked" handler="on_connectivity_details_clicked"/>
                   </object>
                 </child>
               </object>
@@ -101,6 +102,7 @@
 
             <child>
               <object class="GtkBox">
+                <property name="orientation">horizontal</property>
                 <property name="spacing">20</property>
                 <property name="vexpand">true</property>
 
@@ -112,6 +114,7 @@
 
                     <child>
                       <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
                         <property name="spacing">12</property>
 
                         <child>
@@ -161,6 +164,7 @@
 
                     <child>
                       <object class="GtkBox" id="repository_actions">
+                        <property name="orientation">horizontal</property>
                         <property name="spacing">8</property>
                         <property name="halign">center</property>
 
@@ -169,7 +173,7 @@
                             <property name="label" translatable="yes">View Packages in Repository</property>
                             <property name="tooltip-text" translatable="yes">Navigate to package list for selected repository</property>
                             <property name="sensitive">false</property>
-                            <signal name="clicked" handler="on_view_packages_clicked" swapped="true"/>
+                            <signal name="clicked" handler="on_view_packages_clicked"/>
                             <style>
                               <class name="suggested-action"/>
                               <class name="pill"/>
@@ -181,7 +185,7 @@
                           <object class="GtkButton" id="list_repos_button">
                             <property name="label" translatable="yes">List All Repositories</property>
                             <property name="tooltip-text" translatable="yes">Display detailed information about all repositories</property>
-                            <signal name="clicked" handler="on_list_repos_clicked" swapped="true"/>
+                            <signal name="clicked" handler="on_list_repos_clicked"/>
                             <style>
                               <class name="pill"/>
                             </style>
@@ -202,7 +206,7 @@
                   <object class="GtkBox" id="impact_preview_section">
                     <property name="orientation">vertical</property>
                     <property name="spacing">16</property>
-                    
+                    <property name="width-request">300</property>
 
                     <child>
                       <object class="GtkLabel">
@@ -343,6 +347,7 @@
 
                 <child>
                   <object class="GtkBox" id="action_bar">
+                    <property name="orientation">horizontal</property>
                     <property name="spacing">8</property>
                     <property name="halign">center</property>
 
@@ -350,7 +355,7 @@
                       <object class="GtkButton" id="clean_repos_button">
                         <property name="label" translatable="yes">Clean Repositories</property>
                         <property name="tooltip-text" translatable="yes">Remove old packages from all local repositories</property>
-                        <signal name="clicked" handler="on_clean_repos_clicked" swapped="true"/>
+                        <signal name="clicked" handler="on_clean_repos_clicked"/>
                         <style>
                           <class name="pill"/>
                         </style>
@@ -362,7 +367,7 @@
                         <property name="label" translatable="yes">Delete Selected Packages</property>
                         <property name="tooltip-text" translatable="yes">Delete selected packages from repository</property>
                         <property name="sensitive">false</property>
-                        <signal name="clicked" handler="on_delete_packages_clicked" swapped="true"/>
+                        <signal name="clicked" handler="on_delete_packages_clicked"/>
                         <style>
                           <class name="destructive-action"/>
                           <class name="pill"/>
@@ -374,7 +379,7 @@
                       <object class="GtkButton" id="refresh_repos_button">
                         <property name="label" translatable="yes">Refresh Package Database</property>
                         <property name="tooltip-text" translatable="yes">Refresh package database for all repositories</property>
-                        <signal name="clicked" handler="on_refresh_repos_clicked" swapped="true"/>
+                        <signal name="clicked" handler="on_refresh_repos_clicked"/>
                         <style>
                           <class name="pill"/>
                         </style>
@@ -461,7 +466,7 @@
               <object class="GtkButton" id="system_tools_button">
                 <property name="label" translatable="yes">Back to System Tools</property>
                 <property name="tooltip-text" translatable="yes">Return to main system tools panel</property>
-                <signal name="clicked" handler="on_back_to_system_clicked" swapped="true"/>
+                <signal name="clicked" handler="on_back_to_system_clicked"/>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -475,7 +480,7 @@
                     <property name="label" translatable="yes">Apply Changes</property>
                     <property name="tooltip-text" translatable="yes">Apply all pending repository changes</property>
                     <property name="sensitive">false</property>
-                    <signal name="clicked" handler="on_apply_changes_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_apply_changes_clicked"/>
                     <style>
                       <class name="suggested-action"/>
                     </style>
@@ -484,7 +489,7 @@
                 <child>
                   <object class="GtkButton" id="close_button">
                     <property name="label" translatable="yes">Close</property>
-                    <signal name="clicked" handler="on_close_clicked" swapped="true"/>
+                    <signal name="clicked" handler="on_close_clicked"/>
                   </object>
                 </child>
               </object>
@@ -500,12 +505,12 @@
 
   <object class="GtkSingleSelection" id="repositories_selection">
     <property name="model">repositories_model</property>
-    <signal name="selection-changed" handler="on_selection_changed" swapped="true"/>
+    <signal name="selection-changed" handler="on_selection_changed"/>
   </object>
 
   <object class="GtkSignalListItemFactory" id="repository_factory">
-    <signal name="setup" handler="on_repository_setup" swapped="true"/>
-    <signal name="bind" handler="on_repository_bind" swapped="true"/>
-    <signal name="unbind" handler="on_repository_unbind" swapped="true"/>
+    <signal name="setup" handler="on_repository_setup"/>
+    <signal name="bind" handler="on_repository_bind"/>
+    <signal name="unbind" handler="on_repository_unbind"/>
   </object>
 </interface>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.10"/>
-  <requires lib="libadwaita" version="1.5"/>
+  <requires lib="adw" version="1.5"/>
 
-  <template class="PreferencesDialog" parent="AdwPreferencesDialog">
+  <object class="AdwPreferencesDialog" id="preferences_dialog">
     <property name="title" translatable="yes">Preferences</property>
 
     <child>
@@ -18,7 +18,6 @@
               <object class="AdwComboRow" id="editor_combo_row">
                 <property name="title" translatable="yes">Default Editor</property>
                 <property name="subtitle" translatable="yes">Text editor for viewing and editing files</property>
-                <property name="icon-name">accessories-text-editor-symbolic</property>
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -29,21 +28,34 @@
                     </items>
                   </object>
                 </property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">accessories-text-editor-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="simplified_mode_switch_row">
                 <property name="title" translatable="yes">Simplified Interface</property>
                 <property name="subtitle" translatable="yes">Hide advanced options and use simplified workflows</property>
-                <property name="icon-name">view-dual-symbolic</property>
                 <property name="active">True</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">view-dual-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="auto_refresh_switch_row">
                 <property name="title" translatable="yes">Auto Refresh Updates</property>
                 <property name="subtitle" translatable="yes">Automatically check for package updates on startup</property>
-                <property name="icon-name">view-refresh-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">view-refresh-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -62,22 +74,29 @@
               <object class="AdwSwitchRow" id="trust_icons_switch_row">
                 <property name="title" translatable="yes">Show Trust Icons</property>
                 <property name="subtitle" translatable="yes">Display trust level indicators for packages</property>
-                <property name="icon-name">security-high-symbolic</property>
                 <property name="active">True</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">security-high-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="block_unvoted_switch_row">
                 <property name="title" translatable="yes">Block Unvoted Packages</property>
                 <property name="subtitle" translatable="yes">Prevent installation of packages with no community votes</property>
-                <property name="icon-name">action-unavailable-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">action-unavailable-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSpinRow" id="trust_score_spin_row">
                 <property name="title" translatable="yes">Minimum Trust Score</property>
                 <property name="subtitle" translatable="yes">Required minimum trust score for package installation</property>
-                <property name="icon-name">starred-symbolic</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">0</property>
@@ -86,6 +105,11 @@
                     <property name="value">50</property>
                   </object>
                 </property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">starred-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -104,22 +128,34 @@
               <object class="AdwSwitchRow" id="clean_after_build_switch_row">
                 <property name="title" translatable="yes">Clean After Build</property>
                 <property name="subtitle" translatable="yes">Remove build directory after successful compilation</property>
-                <property name="icon-name">edit-clear-all-symbolic</property>
                 <property name="active">True</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">edit-clear-all-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="terminal_switch_row">
                 <property name="title" translatable="yes">Show Real-time Terminal</property>
                 <property name="subtitle" translatable="yes">Display live terminal output during operations</property>
-                <property name="icon-name">utilities-terminal-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">utilities-terminal-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="debug_mode_switch_row">
                 <property name="title" translatable="yes">Debug Mode</property>
                 <property name="subtitle" translatable="yes">Enable verbose debug output and logging</property>
-                <property name="icon-name">applications-debugging-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">applications-debugging-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -138,7 +174,6 @@
               <object class="AdwSpinRow" id="parallel_jobs_spin_row">
                 <property name="title" translatable="yes">Parallel Jobs</property>
                 <property name="subtitle" translatable="yes">Number of concurrent compilation processes</property>
-                <property name="icon-name">system-run-symbolic</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">1</property>
@@ -147,25 +182,37 @@
                     <property name="value">4</property>
                   </object>
                 </property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">system-run-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwEntryRow" id="build_dir_entry_row">
                 <property name="title" translatable="yes">Build Directory</property>
-                <property name="subtitle" translatable="yes">Location for temporary build files</property>
-                <property name="icon-name">folder-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">folder-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="keep_source_switch_row">
                 <property name="title" translatable="yes">Keep Source Files</property>
                 <property name="subtitle" translatable="yes">Preserve downloaded source files after build</property>
-                <property name="icon-name">document-save-symbolic</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">document-save-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
       </object>
     </child>
-  </template>
+  </object>
 </interface>
