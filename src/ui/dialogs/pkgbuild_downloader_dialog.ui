@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwWindow" id="pkgbuild_downloader_dialog">
     <property name="title" translatable="yes">Download PKGBUILD</property>
@@ -31,12 +31,12 @@
               </object>
             </child>
 
-            <child type="title">
+            <property name="title-widget">
               <object class="AdwWindowTitle">
                 <property name="title" translatable="yes">Download PKGBUILD</property>
                 <property name="subtitle" translatable="yes">Main › Tools › Download PKGBUILD</property>
               </object>
-            </child>
+            </property>
 
             <child type="end">
               <object class="GtkButton" id="browse_files_button">
@@ -382,11 +382,11 @@
                       <object class="AdwHeaderBar" id="preview_header">
                         <property name="show-end-title-buttons">false</property>
                         <property name="show-start-title-buttons">false</property>
-                        <child type="title">
+                        <property name="title-widget">
                           <object class="AdwWindowTitle">
                             <property name="title" translatable="yes">PKGBUILD Preview</property>
                           </object>
-                        </child>
+                        </property>
                         <child type="end">
                           <object class="GtkButton" id="close_preview_button">
                             <property name="icon-name">window-close-symbolic</property>

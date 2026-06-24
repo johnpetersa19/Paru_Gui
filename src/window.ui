@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwApplicationWindow" id="window">
     <property name="default-height">720</property>
     <property name="default-width">1040</property>
-    <property name="title">Paru GUI</property>
+    <property name="title" translatable="yes">Paru GUI</property>
 
     <property name="content">
       <object class="AdwToastOverlay" id="toast_overlay">

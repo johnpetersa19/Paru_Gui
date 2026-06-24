@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="PackageRemoveDialog">
     <property name="title" translatable="yes">Remove Package</property>
@@ -67,7 +67,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -89,7 +89,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -176,7 +176,7 @@
                             </child>
                             <child type="suffix">
                               <object class="GtkLabel" id="package_size_label">
-                                <property name="label">--</property>
+                                <property name="label" translatable="yes">--</property>
                                 <style>
                                   <class name="caption"/>
                                   <class name="dim-label"/>
@@ -228,7 +228,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="packages_count_label">
-                                        <property name="label">1</property>
+                                        <property name="label" translatable="yes">1</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="accent"/>
@@ -263,7 +263,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="disk_space_label">
-                                        <property name="label">-- MB</property>
+                                        <property name="label" translatable="yes">-- MB</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="accent"/>
@@ -298,7 +298,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="broken_deps_label">
-                                        <property name="label">0</property>
+                                        <property name="label" translatable="yes">0</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="accent"/>
@@ -333,7 +333,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="config_files_label">
-                                        <property name="label">--</property>
+                                        <property name="label" translatable="yes">--</property>
                                         <style>
                                           <class name="caption"/>
                                           <class name="accent"/>
@@ -680,7 +680,7 @@
         </child>
         <child type="suffix">
           <object class="GtkLabel" id="orphaned_package_size">
-            <property name="label">-- MB</property>
+            <property name="label" translatable="yes">-- MB</property>
             <style>
               <class name="caption"/>
               <class name="dim-label"/>

@@ -2,7 +2,7 @@
 <interface domain="paru-gui">
   <requires lib="gio" version="2.0"/>
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="package_build_dialog">
     <property name="content-width">900</property>
@@ -97,7 +97,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -118,7 +118,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -135,7 +135,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label">›</property>
+                        <property name="label" translatable="yes">›</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -301,7 +301,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="package_name_value">
-                                    <property name="label">example-package</property>
+                                    <property name="label" translatable="yes">example-package</property>
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
                                     <property name="selectable">true</property>
@@ -327,7 +327,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="package_version_value">
-                                    <property name="label">1.0.0-1</property>
+                                    <property name="label" translatable="yes">1.0.0-1</property>
                                     <property name="halign">start</property>
                                     <property name="hexpand">true</property>
                                     <property name="selectable">true</property>
@@ -354,7 +354,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="package_description_value">
-                                    <property name="label">Package description</property>
+                                    <property name="label" translatable="yes">Package description</property>
                                     <property name="halign">start</property>
                                     <property name="valign">start</property>
                                     <property name="hexpand">true</property>
@@ -936,7 +936,7 @@
         </child>
         <child type="suffix">
           <object class="GtkLabel" id="checksum_algorithm_label">
-            <property name="label">SHA256</property>
+            <property name="label" translatable="yes">SHA256</property>
             <style>
               <class name="caption"/>
               <class name="dim-label"/>

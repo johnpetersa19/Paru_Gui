@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.10"/>
-  <requires lib="adw" version="1.4"/>
+  <requires lib="adw" version="1.5"/>
 
   <object class="AdwDialog" id="pkgbuild_review_dialog">
     <property name="title" translatable="yes">PKGBUILD Security Review</property>
@@ -76,7 +76,7 @@
                             <property name="hexpand">True</property>
                             <child>
                               <object class="GtkLabel" id="package_name_label">
-                                <property name="label">package-name</property>
+                                <property name="label" translatable="yes">package-name</property>
                                 <property name="xalign">0</property>
                                 <property name="ellipsize">end</property>
                                 <style>
@@ -86,7 +86,7 @@
                             </child>
                             <child>
                               <object class="GtkLabel" id="package_version_label">
-                                <property name="label">Version: 1.0.0</property>
+                                <property name="label" translatable="yes">Version: 1.0.0</property>
                                 <property name="xalign">0</property>
                                 <style>
                                   <class name="dim-label"/>

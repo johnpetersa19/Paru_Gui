@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
   <object class="GtkFrame" id="PatchCard">
     <style>
@@ -27,8 +27,8 @@
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_main">
-                    <property name="label">Main</property>
-                    <property name="tooltip-text">Return to main application view</property>
+                    <property name="label" translatable="yes">Main</property>
+                    <property name="tooltip-text" translatable="yes">Return to main application view</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -38,7 +38,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator1">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -46,8 +46,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="breadcrumb_content">
-                    <property name="label">Content</property>
-                    <property name="tooltip-text">Return to content selection</property>
+                    <property name="label" translatable="yes">Content</property>
+                    <property name="tooltip-text" translatable="yes">Return to content selection</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -57,7 +57,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator2">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -65,8 +65,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="breadcrumb_patches">
-                    <property name="label">Patches</property>
-                    <property name="tooltip-text">Return to patches directory</property>
+                    <property name="label" translatable="yes">Patches</property>
+                    <property name="tooltip-text" translatable="yes">Return to patches directory</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -76,7 +76,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator3">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -84,7 +84,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_current">
-                    <property name="label">[Patch Name]</property>
+                    <property name="label" translatable="yes">[Patch Name]</property>
                     <style>
                       <class name="heading"/>
                     </style>
@@ -96,7 +96,7 @@
             <child type="start">
               <object class="GtkButton" id="back_to_file_list_button">
                 <property name="icon-name">go-previous-symbolic</property>
-                <property name="tooltip-text">Back to File List - return to patch file listing</property>
+                <property name="tooltip-text" translatable="yes">Back to File List - return to patch file listing</property>
                 <style>
                   <class name="circular"/>
                   <class name="suggested-action"/>
@@ -147,7 +147,7 @@
                     <property name="spacing">2</property>
                     <child>
                       <object class="GtkLabel" id="patch_status_label">
-                        <property name="label">Ready to Apply</property>
+                        <property name="label" translatable="yes">Ready to Apply</property>
                         <style>
                           <class name="caption"/>
                           <class name="success"/>
@@ -156,7 +156,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="patch_type_label">
-                        <property name="label">.patch file</property>
+                        <property name="label" translatable="yes">.patch file</property>
                         <style>
                           <class name="caption"/>
                           <class name="dim-label"/>
@@ -209,7 +209,7 @@
                     <property name="halign">center</property>
                     <child>
                       <object class="GtkLabel" id="lines_changed_label">
-                        <property name="label">Lines: +0/-0</property>
+                        <property name="label" translatable="yes">Lines: +0/-0</property>
                         <style>
                           <class name="caption"/>
                           <class name="dim-label"/>
@@ -218,7 +218,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="files_affected_label">
-                        <property name="label">Files: 0</property>
+                        <property name="label" translatable="yes">Files: 0</property>
                         <style>
                           <class name="caption"/>
                           <class name="dim-label"/>
@@ -229,7 +229,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="patch_size_label">
-                    <property name="label">Size: 0 KB</property>
+                    <property name="label" translatable="yes">Size: 0 KB</property>
                     <property name="halign">center</property>
                     <style>
                       <class name="caption"/>
@@ -254,8 +254,8 @@
 
                 <child>
                   <object class="GtkButton" id="apply_button">
-                    <property name="label">Apply Patch</property>
-                    <property name="tooltip-text">Apply patch with confirmation workflow - shows preview before applying</property>
+                    <property name="label" translatable="yes">Apply Patch</property>
+                    <property name="tooltip-text" translatable="yes">Apply patch with confirmation workflow - shows preview before applying</property>
                     <signal name="clicked" handler="on_apply_clicked"/>
                     <style>
                       <class name="suggested-action"/>
@@ -267,8 +267,8 @@
 
                 <child>
                   <object class="GtkButton" id="view_details_button">
-                    <property name="label">View Patch Details</property>
-                    <property name="tooltip-text">Open detailed patch viewer modal with file-by-file changes</property>
+                    <property name="label" translatable="yes">View Patch Details</property>
+                    <property name="tooltip-text" translatable="yes">Open detailed patch viewer modal with file-by-file changes</property>
                     <signal name="clicked" handler="on_view_details_clicked"/>
                     <style>
                       <class name="accent"/>
@@ -280,8 +280,8 @@
 
                 <child>
                   <object class="GtkMenuButton" id="apply_sandbox_button">
-                    <property name="label">Apply with Sandbox</property>
-                    <property name="tooltip-text">Apply patch in an isolated environment with customizable security settings</property>
+                    <property name="label" translatable="yes">Apply with Sandbox</property>
+                    <property name="tooltip-text" translatable="yes">Apply patch in an isolated environment with customizable security settings</property>
                     <style>
                       <class name="flat"/>
                       <class name="pill"/>
@@ -303,7 +303,7 @@
 
                             <child>
                               <object class="GtkLabel" id="sandbox_title">
-                                <property name="label">Sandbox Apply Configuration</property>
+                                <property name="label" translatable="yes">Sandbox Apply Configuration</property>
                                 <style>
                                   <class name="heading"/>
                                 </style>
@@ -316,14 +316,14 @@
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="label">Isolation Level:</property>
+                                    <property name="label" translatable="yes">Isolation Level:</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkComboBoxText" id="patch_sandbox_level_combo">
                                     <property name="valign">center</property>
                                     <property name="hexpand">true</property>
-                                    <property name="tooltip-text">Choose security isolation level for patch application</property>
+                                    <property name="tooltip-text" translatable="yes">Choose security isolation level for patch application</property>
                                     <items>
                                       <item id="strict">Strict Isolation</item>
                                       <item id="medium">Medium Isolation (Recommended)</item>
@@ -337,16 +337,16 @@
 
                             <child>
                               <object class="GtkCheckButton" id="patch_sandbox_network_check">
-                                <property name="label">Enable network access</property>
-                                <property name="tooltip-text">Allow patch application process to access network resources</property>
+                                <property name="label" translatable="yes">Enable network access</property>
+                                <property name="tooltip-text" translatable="yes">Allow patch application process to access network resources</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="patch_sandbox_filesystem_check">
-                                <property name="label">Allow access to home directory</property>
-                                <property name="tooltip-text">Grant read/write access to user home directory during patching</property>
+                                <property name="label" translatable="yes">Allow access to home directory</property>
+                                <property name="tooltip-text" translatable="yes">Grant read/write access to user home directory during patching</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
@@ -360,32 +360,32 @@
 
                             <child>
                               <object class="GtkCheckButton" id="backup_before_apply_check">
-                                <property name="label">Create backup before applying</property>
-                                <property name="tooltip-text">Automatically backup files before patch application for rollback</property>
+                                <property name="label" translatable="yes">Create backup before applying</property>
+                                <property name="tooltip-text" translatable="yes">Automatically backup files before patch application for rollback</property>
                                 <property name="active">true</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="dry_run_first_check">
-                                <property name="label">Perform dry run first</property>
-                                <property name="tooltip-text">Test patch application without making changes first</property>
+                                <property name="label" translatable="yes">Perform dry run first</property>
+                                <property name="tooltip-text" translatable="yes">Test patch application without making changes first</property>
                                 <property name="active">true</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="ignore_whitespace_check">
-                                <property name="label">Ignore whitespace changes</property>
-                                <property name="tooltip-text">Apply patch while ignoring whitespace differences</property>
+                                <property name="label" translatable="yes">Ignore whitespace changes</property>
+                                <property name="tooltip-text" translatable="yes">Apply patch while ignoring whitespace differences</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkButton" id="confirm_patch_sandbox_apply">
-                                <property name="label">Start Sandbox Apply</property>
-                                <property name="tooltip-text">Begin patch application with selected sandbox configuration</property>
+                                <property name="label" translatable="yes">Start Sandbox Apply</property>
+                                <property name="tooltip-text" translatable="yes">Begin patch application with selected sandbox configuration</property>
                                 <style>
                                   <class name="suggested-action"/>
                                   <class name="pill"/>
@@ -403,8 +403,8 @@
 
                 <child>
                   <object class="GtkButton" id="preview_button">
-                    <property name="label">Preview Changes</property>
-                    <property name="tooltip-text">Preview patch changes with integrated diff viewer before applying</property>
+                    <property name="label" translatable="yes">Preview Changes</property>
+                    <property name="tooltip-text" translatable="yes">Preview patch changes with integrated diff viewer before applying</property>
                     <signal name="clicked" handler="on_preview_clicked"/>
                     <style>
                       <class name="small-button"/>
@@ -416,8 +416,8 @@
 
                 <child>
                   <object class="GtkButton" id="validate_button">
-                    <property name="label">Validate Patch</property>
-                    <property name="tooltip-text">Check patch integrity and compatibility with current files</property>
+                    <property name="label" translatable="yes">Validate Patch</property>
+                    <property name="tooltip-text" translatable="yes">Check patch integrity and compatibility with current files</property>
                     <signal name="clicked" handler="on_validate_clicked"/>
                     <style>
                       <class name="small-button"/>
@@ -429,8 +429,8 @@
 
                 <child>
                   <object class="GtkButton" id="revert_button">
-                    <property name="label">Revert Patch</property>
-                    <property name="tooltip-text">Remove previously applied patch and restore original files</property>
+                    <property name="label" translatable="yes">Revert Patch</property>
+                    <property name="tooltip-text" translatable="yes">Remove previously applied patch and restore original files</property>
                     <property name="sensitive">false</property>
                     <signal name="clicked" handler="on_revert_clicked"/>
                     <style>

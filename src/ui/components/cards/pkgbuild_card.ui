@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
   <object class="GtkFrame" id="PkgbuildCard">
     <style>
@@ -27,8 +27,8 @@
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="breadcrumb_main">
-                    <property name="label">Main</property>
-                    <property name="tooltip-text">Return to main application view</property>
+                    <property name="label" translatable="yes">Main</property>
+                    <property name="tooltip-text" translatable="yes">Return to main application view</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -38,7 +38,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator1">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -46,8 +46,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="breadcrumb_content">
-                    <property name="label">Content</property>
-                    <property name="tooltip-text">Return to content selection</property>
+                    <property name="label" translatable="yes">Content</property>
+                    <property name="tooltip-text" translatable="yes">Return to content selection</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -57,7 +57,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator2">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -65,8 +65,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="breadcrumb_pkgbuild">
-                    <property name="label">PKGBUILD</property>
-                    <property name="tooltip-text">Return to PKGBUILD directory</property>
+                    <property name="label" translatable="yes">PKGBUILD</property>
+                    <property name="tooltip-text" translatable="yes">Return to PKGBUILD directory</property>
                     <style>
                       <class name="flat"/>
                       <class name="breadcrumb"/>
@@ -76,7 +76,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_separator3">
-                    <property name="label">›</property>
+                    <property name="label" translatable="yes">›</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -84,7 +84,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="breadcrumb_current">
-                    <property name="label">[Package Name]</property>
+                    <property name="label" translatable="yes">[Package Name]</property>
                     <style>
                       <class name="heading"/>
                     </style>
@@ -96,7 +96,7 @@
             <child type="start">
               <object class="GtkButton" id="back_to_directory_button">
                 <property name="icon-name">go-previous-symbolic</property>
-                <property name="tooltip-text">Back to Directory - return to PKGBUILD file listing</property>
+                <property name="tooltip-text" translatable="yes">Back to Directory - return to PKGBUILD file listing</property>
                 <style>
                   <class name="circular"/>
                   <class name="suggested-action"/>
@@ -150,7 +150,7 @@
                         <property name="icon-size">1</property>
                         <property name="pixel-size">16</property>
                         <property name="visible">True</property>
-                        <property name="tooltip-text">Package trust level indicator</property>
+                        <property name="tooltip-text" translatable="yes">Package trust level indicator</property>
                       </object>
                     </child>
                     <child>
@@ -221,7 +221,7 @@
                     <property name="halign">center</property>
                     <child>
                       <object class="GtkLabel" id="trust_votes_label">
-                        <property name="label">Votes: N/A</property>
+                        <property name="label" translatable="yes">Votes: N/A</property>
                         <style>
                           <class name="caption"/>
                           <class name="dim-label"/>
@@ -230,7 +230,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="trust_update_label">
-                        <property name="label">Updated: N/A</property>
+                        <property name="label" translatable="yes">Updated: N/A</property>
                         <style>
                           <class name="caption"/>
                           <class name="dim-label"/>
@@ -241,7 +241,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="trust_pgp_label">
-                    <property name="label">PGP: Verified</property>
+                    <property name="label" translatable="yes">PGP: Verified</property>
                     <property name="halign">center</property>
                     <style>
                       <class name="caption"/>
@@ -266,8 +266,8 @@
 
                 <child>
                   <object class="GtkButton" id="build_button">
-                    <property name="label">Build Package</property>
-                    <property name="tooltip-text">Compile package and navigate to build dialog - opens package_build_dialog.ui</property>
+                    <property name="label" translatable="yes">Build Package</property>
+                    <property name="tooltip-text" translatable="yes">Compile package and navigate to build dialog - opens package_build_dialog.ui</property>
                     <signal name="clicked" handler="on_build_clicked"/>
                     <style>
                       <class name="suggested-action"/>
@@ -279,8 +279,8 @@
 
                 <child>
                   <object class="GtkButton" id="review_button">
-                    <property name="label">Review PKGBUILD</property>
-                    <property name="tooltip-text">Open PKGBUILD file for review and editing - navigates to pkgbuild_review.ui</property>
+                    <property name="label" translatable="yes">Review PKGBUILD</property>
+                    <property name="tooltip-text" translatable="yes">Open PKGBUILD file for review and editing - navigates to pkgbuild_review.ui</property>
                     <signal name="clicked" handler="on_review_pkgbuild_clicked"/>
                     <style>
                       <class name="accent"/>
@@ -292,8 +292,8 @@
 
                 <child>
                   <object class="GtkMenuButton" id="build_sandbox_button">
-                    <property name="label">Build with Sandbox</property>
-                    <property name="tooltip-text">Compile in an isolated environment with customizable security settings</property>
+                    <property name="label" translatable="yes">Build with Sandbox</property>
+                    <property name="tooltip-text" translatable="yes">Compile in an isolated environment with customizable security settings</property>
                     <style>
                       <class name="flat"/>
                       <class name="pill"/>
@@ -315,7 +315,7 @@
 
                             <child>
                               <object class="GtkLabel" id="sandbox_title">
-                                <property name="label">Sandbox Build Configuration</property>
+                                <property name="label" translatable="yes">Sandbox Build Configuration</property>
                                 <style>
                                   <class name="heading"/>
                                 </style>
@@ -328,14 +328,14 @@
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="label">Isolation Level:</property>
+                                    <property name="label" translatable="yes">Isolation Level:</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkComboBoxText" id="pkgbuild_sandbox_level_combo">
                                     <property name="valign">center</property>
                                     <property name="hexpand">true</property>
-                                    <property name="tooltip-text">Choose security isolation level for build process</property>
+                                    <property name="tooltip-text" translatable="yes">Choose security isolation level for build process</property>
                                     <items>
                                       <item id="strict">Strict Isolation</item>
                                       <item id="medium">Medium Isolation (Recommended)</item>
@@ -349,16 +349,16 @@
 
                             <child>
                               <object class="GtkCheckButton" id="pkgbuild_sandbox_network_check">
-                                <property name="label">Enable network access</property>
-                                <property name="tooltip-text">Allow build process to download sources and dependencies</property>
+                                <property name="label" translatable="yes">Enable network access</property>
+                                <property name="tooltip-text" translatable="yes">Allow build process to download sources and dependencies</property>
                                 <property name="active">true</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="pkgbuild_sandbox_filesystem_check">
-                                <property name="label">Allow access to home directory</property>
-                                <property name="tooltip-text">Grant read/write access to user home directory during build</property>
+                                <property name="label" translatable="yes">Allow access to home directory</property>
+                                <property name="tooltip-text" translatable="yes">Grant read/write access to user home directory during build</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
@@ -372,8 +372,8 @@
 
                             <child>
                               <object class="GtkCheckButton" id="sandbox_skip_pgp_check">
-                                <property name="label">Skip PGP Signature Check (--skippgpcheck)</property>
-                                <property name="tooltip-text">Bypass PGP signature verification - WARNING: reduces security</property>
+                                <property name="label" translatable="yes">Skip PGP Signature Check (--skippgpcheck)</property>
+                                <property name="tooltip-text" translatable="yes">Bypass PGP signature verification - WARNING: reduces security</property>
                                 <property name="active">false</property>
                                 <style>
                                   <class name="warning"/>
@@ -383,8 +383,8 @@
 
                             <child>
                               <object class="GtkCheckButton" id="sandbox_skip_checksum_check">
-                                <property name="label">Skip Checksum Verification (--skipchecksums)</property>
-                                <property name="tooltip-text">Bypass file checksum verification - WARNING: reduces security</property>
+                                <property name="label" translatable="yes">Skip Checksum Verification (--skipchecksums)</property>
+                                <property name="tooltip-text" translatable="yes">Bypass file checksum verification - WARNING: reduces security</property>
                                 <property name="active">false</property>
                                 <style>
                                   <class name="warning"/>
@@ -394,32 +394,32 @@
 
                             <child>
                               <object class="GtkEntry" id="extra_makepkg_flags_entry">
-                                <property name="placeholder-text">Extra makepkg flags (--mflags)</property>
-                                <property name="tooltip-text">Add custom makepkg flags - separate multiple flags with spaces</property>
+                                <property name="placeholder-text" translatable="yes">Extra makepkg flags (--mflags)</property>
+                                <property name="tooltip-text" translatable="yes">Add custom makepkg flags - separate multiple flags with spaces</property>
                                 <property name="hexpand">true</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="sandbox_keep_src_check">
-                                <property name="label">Keep Source Files (--keepsrc)</property>
-                                <property name="tooltip-text">Preserve source files after build completion for debugging</property>
+                                <property name="label" translatable="yes">Keep Source Files (--keepsrc)</property>
+                                <property name="tooltip-text" translatable="yes">Preserve source files after build completion for debugging</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkCheckButton" id="sandbox_no_sign_check">
-                                <property name="label">Do Not Sign Package (--nosign)</property>
-                                <property name="tooltip-text">Skip package signing with GPG key</property>
+                                <property name="label" translatable="yes">Do Not Sign Package (--nosign)</property>
+                                <property name="tooltip-text" translatable="yes">Skip package signing with GPG key</property>
                                 <property name="active">false</property>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkButton" id="confirm_pkgbuild_sandbox_build">
-                                <property name="label">Start Sandbox Build</property>
-                                <property name="tooltip-text">Begin compilation with selected sandbox configuration</property>
+                                <property name="label" translatable="yes">Start Sandbox Build</property>
+                                <property name="tooltip-text" translatable="yes">Begin compilation with selected sandbox configuration</property>
                                 <style>
                                   <class name="suggested-action"/>
                                   <class name="pill"/>
@@ -437,8 +437,8 @@
 
                 <child>
                   <object class="GtkButton" id="edit_button">
-                    <property name="label">Edit PKGBUILD</property>
-                    <property name="tooltip-text">Open PKGBUILD file in text editor for manual modifications</property>
+                    <property name="label" translatable="yes">Edit PKGBUILD</property>
+                    <property name="tooltip-text" translatable="yes">Open PKGBUILD file in text editor for manual modifications</property>
                     <signal name="clicked" handler="on_edit_clicked"/>
                     <style>
                       <class name="small-button"/>
@@ -450,8 +450,8 @@
 
                 <child>
                   <object class="GtkButton" id="dependencies_button">
-                    <property name="label">View Dependencies</property>
-                    <property name="tooltip-text">Display package dependencies and build requirements</property>
+                    <property name="label" translatable="yes">View Dependencies</property>
+                    <property name="tooltip-text" translatable="yes">Display package dependencies and build requirements</property>
                     <signal name="clicked" handler="on_dependencies_clicked"/>
                     <style>
                       <class name="small-button"/>
@@ -463,8 +463,8 @@
 
                 <child>
                   <object class="GtkButton" id="sources_button">
-                    <property name="label">Download Sources</property>
-                    <property name="tooltip-text">Download and verify source files required for building</property>
+                    <property name="label" translatable="yes">Download Sources</property>
+                    <property name="tooltip-text" translatable="yes">Download and verify source files required for building</property>
                     <signal name="clicked" handler="on_sources_clicked"/>
                     <style>
                       <class name="small-button"/>
