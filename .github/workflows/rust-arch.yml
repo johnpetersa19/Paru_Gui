@@ -69,7 +69,9 @@ jobs:
 
           while IFS= read -r file; do
             echo "Validating $file"
-            xvfb-run -a dbus-run-session gtk4-builder-tool validate "$file"
+            xvfb-run -a dbus-run-session \
+              env LD_PRELOAD=/usr/lib/libadwaita-1.so \
+              gtk4-builder-tool validate "$file"
           done < <(find src -type f -name '*.ui' | sort)
 
       - name: Check for Blueprint files
