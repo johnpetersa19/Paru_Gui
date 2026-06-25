@@ -1,0 +1,93 @@
+name: Rust (Arch)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_HTTP_MULTIPLEXING: false
+  CARGO_NET_RETRY: 5
+  CARGO_HTTP_TIMEOUT: 120
+  PKG_CONFIG_PATH: /usr/lib/pkgconfig:/usr/share/pkgconfig
+  LD_LIBRARY_PATH: /usr/lib
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container:
+      image: archlinux:base
+
+    steps:
+      - name: Install Arch dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm --needed \
+            base-devel \
+            ca-certificates \
+            dbus \
+            desktop-file-utils \
+            gettext \
+            git \
+            glib2 \
+            gtk4 \
+            libadwaita \
+            libgit2 \
+            libxml2 \
+            meson \
+            ninja \
+            openssl \
+            pkgconf \
+            rustup \
+            xorg-server-xvfb
+          update-ca-trust
+
+      - uses: actions/checkout@v4
+
+      - name: Initialize Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustc --version
+          cargo --version
+
+      - name: Check pkg-config dependencies
+        run: |
+          pkgconf --modversion glib-2.0
+          pkgconf --modversion gtk4
+          pkgconf --modversion libadwaita-1
+          pkgconf --cflags --libs glib-2.0 gtk4 libadwaita-1
+
+      - name: Validate GTK resources and UI files
+        run: |
+          glib-compile-resources \
+            --sourcedir=src \
+            --generate-dependencies \
+            src/paru-gui.gresource.xml
+
+          while IFS= read -r file; do
+            echo "Validating $file"
+            xvfb-run -a dbus-run-session gtk4-builder-tool validate "$file"
+          done < <(find src -type f -name '*.ui' | sort)
+
+      - name: Check for Blueprint files
+        run: |
+          if ! find . -name '*.blp' -not -path './.git/*' | grep -q .; then
+            echo "No .blp files found; skipping Blueprint lint."
+            exit 0
+          fi
+
+          echo "::error::Blueprint files were found, but this project does not currently build UI from .blp files in CI."
+          find . -name '*.blp' -not -path './.git/*' -print
+          exit 1
+
+      - name: Check with Cargo
+        run: cargo check --locked
+
+      - name: Build with Cargo
+        run: cargo build --release --locked
+
+      - name: Run tests
+        run: cargo test --locked
