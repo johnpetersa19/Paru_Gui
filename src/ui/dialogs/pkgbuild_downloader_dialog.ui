@@ -3,18 +3,15 @@
   <requires lib="gtk" version="4.10"/>
   <requires lib="adw" version="1.5"/>
 
-  <object class="AdwWindow" id="pkgbuild_downloader_dialog">
+  <object class="AdwDialog" id="pkgbuild_downloader_dialog">
     <property name="title" translatable="yes">Download PKGBUILD</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="default-width">800</property>
-    <property name="default-height">650</property>
-    <property name="destroy-with-parent">true</property>
+    <property name="content-width">800</property>
+    <property name="content-height">650</property>
     <accessibility>
       <property name="label" translatable="yes">Download and manage PKGBUILD files from AUR</property>
     </accessibility>
 
-    <child>
+    <property name="child">
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
@@ -383,10 +380,10 @@
                         <property name="show-end-title-buttons">false</property>
                         <property name="show-start-title-buttons">false</property>
                         <property name="title-widget">
-                          <object class="AdwWindowTitle">
+              <object class="AdwWindowTitle">
                             <property name="title" translatable="yes">PKGBUILD Preview</property>
                           </object>
-                        </property>
+            </property>
                         <child type="end">
                           <object class="GtkButton" id="close_preview_button">
                             <property name="icon-name">window-close-symbolic</property>
@@ -469,6 +466,6 @@
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

@@ -127,9 +127,9 @@
                             <property name="description" translatable="yes">What this operation will do in simple terms</property>
 
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkBox">
                                 <property name="css-classes">card</property>
-                                <property name="child">
+                                <child>
                                   <object class="GtkBox">
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">16</property>
@@ -195,7 +195,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -213,9 +213,9 @@
                                 <property name="homogeneous">true</property>
 
                                 <child>
-                                  <object class="GtkFrame" id="system_risk_card">
+                                  <object class="GtkBox" id="system_risk_card">
                                     <property name="css-classes">card</property>
-                                    <property name="child">
+                                    <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">8</property>
@@ -249,14 +249,14 @@
                                           </object>
                                         </child>
                                       </object>
-                                    </property>
+                                    </child>
                                   </object>
                                 </child>
 
                                 <child>
-                                  <object class="GtkFrame" id="data_risk_card">
+                                  <object class="GtkBox" id="data_risk_card">
                                     <property name="css-classes">card</property>
-                                    <property name="child">
+                                    <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">8</property>
@@ -290,14 +290,14 @@
                                           </object>
                                         </child>
                                       </object>
-                                    </property>
+                                    </child>
                                   </object>
                                 </child>
 
                                 <child>
-                                  <object class="GtkFrame" id="complexity_card">
+                                  <object class="GtkBox" id="complexity_card">
                                     <property name="css-classes">card</property>
-                                    <property name="child">
+                                    <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">8</property>
@@ -331,7 +331,7 @@
                                           </object>
                                         </child>
                                       </object>
-                                    </property>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -379,9 +379,9 @@
                             <property name="description" translatable="yes">Disk space that will be used or freed</property>
 
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkBox">
                                 <property name="css-classes">card</property>
-                                <property name="child">
+                                <child>
                                   <object class="GtkBox">
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">12</property>
@@ -419,7 +419,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -431,9 +431,10 @@
                             <property name="description" translatable="yes">Packages that will be affected by this operation</property>
 
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                 <property name="css-classes">card</property>
-                                <property name="child">
+                                <child>
                                   <object class="GtkScrolledWindow">
                                     <property name="height-request">200</property>
                                     <property name="hscrollbar-policy">automatic</property>
@@ -447,7 +448,7 @@
                                       </object>
                                     </property>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -459,9 +460,10 @@
                             <property name="description" translatable="yes">Additional packages required as dependencies</property>
 
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                 <property name="css-classes">card</property>
-                                <property name="child">
+                                <child>
                                   <object class="GtkScrolledWindow">
                                     <property name="height-request">180</property>
                                     <property name="hscrollbar-policy">automatic</property>
@@ -474,7 +476,7 @@
                                       </object>
                                     </property>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -487,9 +489,10 @@
                             <property name="visible">false</property>
 
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                 <property name="css-classes">card</property>
-                                <property name="child">
+                                <child>
                                   <object class="GtkScrolledWindow">
                                     <property name="height-request">150</property>
                                     <property name="hscrollbar-policy">automatic</property>
@@ -503,7 +506,7 @@
                                       </object>
                                     </property>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>

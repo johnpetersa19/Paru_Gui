@@ -324,15 +324,13 @@
     </child>
   </object>
 
-  <object class="GtkFrame" id="upstream_update_card_template">
+  <object class="GtkBox" id="upstream_update_card_template">
     <property name="visible">false</property>
     <style>
       <class name="card"/>
       <class name="quick-card"/>
       <class name="upstream-update-card"/>
     </style>
-    <property name="width-request">280</property>
-    <property name="height-request">320</property>
 
     <child>
       <object class="GtkBox">

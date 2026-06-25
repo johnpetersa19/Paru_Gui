@@ -227,7 +227,7 @@
             <property name="transition-duration">200</property>
 
             <child>
-              <object class="GtkFrame" id="suggestions_frame">
+              <object class="GtkBox" id="suggestions_frame">
                 <property name="margin-top">4</property>
                 <style>
                   <class name="view"/>

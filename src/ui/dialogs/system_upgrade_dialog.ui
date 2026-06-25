@@ -404,7 +404,7 @@
                         <property name="description" translatable="yes">Review the command that will be executed</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <style>
                               <class name="card"/>
                             </style>
@@ -461,7 +461,8 @@
                                 </child>
 
                                 <child>
-                                  <object class="GtkFrame">
+                                  <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                     <style>
                                       <class name="view"/>
                                     </style>

@@ -239,9 +239,9 @@
                         <property name="description" translatable="yes">Real-time preview of packages matching your criteria</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">12</property>
@@ -300,7 +300,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -312,9 +312,9 @@
                         <property name="description" translatable="yes">Preview the exact command that will be executed</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">12</property>
@@ -364,7 +364,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -376,9 +376,9 @@
                         <property name="description" translatable="yes">Quick access to your saved search configurations</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
@@ -413,7 +413,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>

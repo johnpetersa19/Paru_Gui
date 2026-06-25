@@ -170,9 +170,9 @@
         </accessibility>
 
         <child>
-          <object class="GtkFrame">
+          <object class="GtkBox">
             <property name="css-classes">quick-card</property>
-            <property name="child">
+            <child>
               <object class="GtkBox">
                 <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
@@ -262,7 +262,7 @@
                   </object>
                 </child>
               </object>
-            </property>
+            </child>
           </object>
         </child>
       </object>
@@ -477,18 +477,16 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="child">
-                              <object class="GtkFrame" id="pkgbuild_card_template">
+                              <object class="GtkBox" id="pkgbuild_card_template">
                                 <property name="css-classes">quick-card pkgbuild-card</property>
                                 <property name="margin-bottom">4</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-start">4</property>
                                 <property name="margin-top">4</property>
-                                <property name="width-request">220</property>
-                                <property name="height-request">300</property>
                                 <accessibility>
                                   <property name="label" translatable="yes">PKGBUILD file card template</property>
                                 </accessibility>
-                                <property name="child">
+                                <child>
                                   <object class="GtkBox">
                                     <property name="margin-bottom">12</property>
                                     <property name="margin-end">12</property>
@@ -621,7 +619,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </property>
                           </object>
@@ -630,18 +628,16 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="child">
-                              <object class="GtkFrame" id="empty_card_template">
+                              <object class="GtkBox" id="empty_card_template">
                                 <property name="css-classes">quick-card empty-card</property>
                                 <property name="margin-bottom">4</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-start">4</property>
                                 <property name="margin-top">4</property>
-                                <property name="width-request">220</property>
-                                <property name="height-request">300</property>
                                 <accessibility>
                                   <property name="label" translatable="yes">Empty folder card template</property>
                                 </accessibility>
-                                <property name="child">
+                                <child>
                                   <object class="GtkBox">
                                     <property name="halign">center</property>
                                     <property name="margin-bottom">24</property>
@@ -689,7 +685,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </property>
                           </object>

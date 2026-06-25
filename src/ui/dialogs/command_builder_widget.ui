@@ -247,7 +247,7 @@
                 <property name="description" translatable="yes">Live preview of the generated command with validation</property>
 
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkBox">
                     <style>
                       <class name="card"/>
                     </style>
@@ -306,7 +306,8 @@
                         </child>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
+  <property name="orientation">vertical</property>
                             <style>
                               <class name="view"/>
                             </style>
@@ -458,7 +459,7 @@
                 <property name="description" translatable="yes">Your personal collection of command templates</property>
 
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkBox">
                     <style>
                       <class name="card"/>
                     </style>

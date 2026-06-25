@@ -2,14 +2,10 @@
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
   <requires lib="adw" version="1.5"/>
-  <object class="AdwWindow" id="EmptyDirectoryDialog">
-    <property name="width-request">800</property>
-    <property name="height-request">700</property>
-    <property name="default-width">900</property>
-    <property name="default-height">800</property>
-    <property name="modal">True</property>
-    <property name="resizable">True</property>
-    <property name="content">
+  <object class="AdwDialog" id="EmptyDirectoryDialog">
+    <property name="content-width">900</property>
+    <property name="content-height">800</property>
+    <property name="child">
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
         <child>
@@ -211,7 +207,7 @@
                         <property name="row-spacing">16</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <object class="GtkFrame" id="create_new_frame">
+                          <object class="GtkBox" id="create_new_frame">
                             <property name="width-request">350</property>
                             <property name="height-request">120</property>
                             <style>
@@ -258,7 +254,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="import_template_frame">
+                          <object class="GtkBox" id="import_template_frame">
                             <property name="width-request">350</property>
                             <property name="height-request">120</property>
                             <style>
@@ -305,7 +301,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="browse_files_frame">
+                          <object class="GtkBox" id="browse_files_frame">
                             <property name="width-request">350</property>
                             <property name="height-request">120</property>
                             <style>
@@ -352,7 +348,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="change_directory_frame">
+                          <object class="GtkBox" id="change_directory_frame">
                             <property name="width-request">350</property>
                             <property name="height-request">120</property>
                             <style>
@@ -730,23 +726,23 @@
   <menu id="directory_menu">
     <section>
       <item>
-        <attribute name="label">Open in File Manager</attribute>
+        <attribute name="label" translatable="yes">Open in File Manager</attribute>
         <attribute name="action">directory.open-external</attribute>
       </item>
       <item>
-        <attribute name="label">Show Directory Properties</attribute>
+        <attribute name="label" translatable="yes">Show Directory Properties</attribute>
         <attribute name="action">directory.properties</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label">Refresh Directory</attribute>
+        <attribute name="label" translatable="yes">Refresh Directory</attribute>
         <attribute name="action">directory.refresh</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label">Change Permissions</attribute>
+        <attribute name="label" translatable="yes">Change Permissions</attribute>
         <attribute name="action">directory.permissions</attribute>
       </item>
     </section>

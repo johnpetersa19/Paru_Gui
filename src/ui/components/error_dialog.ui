@@ -329,7 +329,7 @@
 
                                 <!-- Frame com código problemático -->
                                 <child>
-                                  <object class="GtkFrame">
+                                  <object class="GtkBox">
                                     <property name="margin-top">6</property>
                                     <style>
                                       <class name="view"/>

@@ -219,7 +219,7 @@
                     </child>
 
                     <child>
-                      <object class="GtkFrame" id="impact_preview_frame">
+                      <object class="GtkBox" id="impact_preview_frame">
                         <property name="vexpand">true</property>
                         <style>
                           <class name="card"/>

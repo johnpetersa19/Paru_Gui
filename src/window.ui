@@ -44,7 +44,6 @@
                 <property name="title-widget">
                   <object class="GtkSearchEntry" id="search_entry">
                     <property name="placeholder-text" translatable="yes">Search packages</property>
-                    <property name="width-request">360</property>
                     <property name="tooltip-text" translatable="yes">Search packages</property>
                     <signal name="search-changed" handler="on_search_changed"/>
                     <signal name="activate" handler="on_search_activate"/>
@@ -120,7 +119,7 @@
                             <child>
                               <object class="AdwClamp">
                                 <property name="maximum-size">1100</property>
-                                <property name="child">
+                                                                <child>
                                   <object class="GtkBox">
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">18</property>
@@ -196,7 +195,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -375,7 +374,7 @@
                             <child>
                               <object class="AdwClamp">
                                 <property name="maximum-size">1100</property>
-                                <property name="child">
+                                                                <child>
                                   <object class="GtkBox">
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">18</property>
@@ -446,7 +445,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>

@@ -520,7 +520,7 @@
                             <child>
                               <object class="GtkStackPage">
                                 <property name="name">empty</property>
-                                <property name="child">
+                                                                <child>
                                   <object class="AdwStatusPage" id="preview_empty">
                                     <property name="icon-name">document-symbolic</property>
                                     <property name="title" translatable="yes">No File Selected</property>
@@ -529,14 +529,14 @@
                                       <property name="label" translatable="yes">Empty preview state</property>
                                     </accessibility>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
 
                             <child>
                               <object class="GtkStackPage">
                                 <property name="name">content</property>
-                                <property name="child">
+                                                                <child>
                                   <object class="GtkScrolledWindow" id="preview_content_scrolled">
                                     <property name="vscrollbar-policy">automatic</property>
                                     <property name="hscrollbar-policy">never</property>
@@ -599,7 +599,8 @@
                                             </accessibility>
 
                                             <child>
-                                              <object class="GtkFrame">
+                                              <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                                 <property name="margin-top">6</property>
                                                 <child>
                                                   <object class="GtkScrolledWindow">
@@ -634,7 +635,7 @@
                                       </object>
                                     </child>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>

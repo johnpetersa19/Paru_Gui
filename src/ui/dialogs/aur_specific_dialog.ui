@@ -100,7 +100,7 @@
                         <property name="description" translatable="yes">Educational content about AUR usage and security considerations</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <style>
                               <class name="quick-card"/>
                             </style>
@@ -444,7 +444,7 @@
                         <property name="description" translatable="yes">Review and execute the generated AUR command</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <style>
                               <class name="quick-card"/>
                             </style>
@@ -501,7 +501,8 @@
                                 </child>
 
                                 <child>
-                                  <object class="GtkFrame">
+                                  <object class="GtkBox">
+  <property name="orientation">vertical</property>
                                     <style>
                                       <class name="view"/>
                                     </style>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkFrame" id="PkgbuildCard">
+  <requires lib="adw" version="1.5"/>
+  <object class="GtkBox" id="PkgbuildCard">
     <style>
       <class name="card"/>
       <class name="pkgbuild-card"/>
@@ -10,18 +11,19 @@
     <property name="margin-end">4</property>
     <property name="margin-start">4</property>
     <property name="margin-top">4</property>
-    <property name="width-request">220</property>
-    <property name="height-request">400</property>
     <property name="hexpand">False</property>
     <property name="vexpand">False</property>
-    <property name="child">
+    <property name="orientation">vertical</property>
+    <child>
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
         <property name="spacing">0</property>
 
         <child>
-          <object class="GtkHeaderBar" id="navigation_header">
-            <property name="title-widget">
+          <object class="GtkBox" id="navigation_header">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">6</property>
+            <child>
               <object class="GtkBox" id="breadcrumb_container">
                 <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
@@ -91,9 +93,9 @@
                   </object>
                 </child>
               </object>
-            </property>
+            </child>
 
-            <child type="start">
+            <child>
               <object class="GtkButton" id="back_to_directory_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Back to Directory - return to PKGBUILD file listing</property>
@@ -105,7 +107,7 @@
               </object>
             </child>
 
-            <child type="end">
+            <child>
               <object class="GtkRevealer" id="progress_revealer">
                 <property name="reveal-child">false</property>
                 <property name="transition-type">slide-left</property>
@@ -323,27 +325,19 @@
                             </child>
 
                             <child>
-                              <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Isolation Level:</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="pkgbuild_sandbox_level_combo">
-                                    <property name="valign">center</property>
-                                    <property name="hexpand">true</property>
-                                    <property name="tooltip-text" translatable="yes">Choose security isolation level for build process</property>
+                              <object class="AdwComboRow" id="pkgbuild_sandbox_level_combo">
+                                <property name="title" translatable="yes">Isolation Level</property>
+                                <property name="subtitle" translatable="yes">Choose security isolation level for build process</property>
+                                <property name="selected">1</property>
+                                <property name="model">
+                                  <object class="GtkStringList">
                                     <items>
-                                      <item id="strict">Strict Isolation</item>
-                                      <item id="medium">Medium Isolation (Recommended)</item>
-                                      <item id="minimal">Minimal Isolation</item>
+                                      <item translatable="yes">Strict Isolation</item>
+                                      <item translatable="yes">Medium Isolation (Recommended)</item>
+                                      <item translatable="yes">Minimal Isolation</item>
                                     </items>
-                                    <property name="active">1</property>
                                   </object>
-                                </child>
+                                </property>
                               </object>
                             </child>
 
@@ -478,6 +472,6 @@
           </object>
         </child>
       </object>
-    </property>
+    </child>
   </object>
 </interface>

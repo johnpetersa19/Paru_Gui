@@ -247,7 +247,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="vexpand">true</property>
                             <style>
                               <class name="card"/>

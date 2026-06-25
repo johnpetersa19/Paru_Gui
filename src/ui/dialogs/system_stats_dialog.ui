@@ -3,19 +3,15 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="adw" version="1.5"/>
 
-  <object class="AdwWindow" id="SystemStatsDialog">
+  <object class="AdwDialog" id="SystemStatsDialog">
     <property name="title" translatable="yes">System Statistics</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="default-width">850</property>
-    <property name="default-height">700</property>
-    <property name="width-request">600</property>
-    <property name="height-request">500</property>
+    <property name="content-width">850</property>
+    <property name="content-height">700</property>
     <accessibility>
       <property name="label" translatable="yes">System statistics and maintenance dialog</property>
     </accessibility>
 
-    <child>
+    <property name="child">
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
@@ -494,9 +490,9 @@
                         <property name="description" translatable="yes">Common maintenance tasks for system optimization</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">12</property>
@@ -578,7 +574,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -657,6 +653,6 @@
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

@@ -4,18 +4,15 @@
   <requires lib="gtk" version="4.10"/>
   <requires lib="adw" version="1.5"/>
 
-  <object class="GtkDialog" id="package_install_dialog">
-    <property name="default-height">700</property>
-    <property name="default-width">900</property>
-    <property name="destroy-with-parent">true</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
+  <object class="AdwDialog" id="package_install_dialog">
+    <property name="content-height">700</property>
+    <property name="content-width">900</property>
     <property name="title" translatable="yes">Package Installation Wizard</property>
     <accessibility>
       <property name="label" translatable="yes">Package installation wizard with step-by-step guidance</property>
     </accessibility>
 
-    <child internal-child="content_area">
+    <property name="child">
       <object class="GtkBox">
         <property name="margin-bottom">0</property>
         <property name="margin-end">0</property>
@@ -25,7 +22,7 @@
         <property name="spacing">0</property>
 
         <child>
-          <object class="GtkHeaderBar" id="navigation_header">
+          <object class="AdwHeaderBar" id="navigation_header">
             <property name="title-widget">
               <object class="GtkBox" id="breadcrumb_container">
                 <property name="orientation">horizontal</property>
@@ -641,42 +638,43 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkActionBar" id="wizard_action_bar">
+            <child type="start">
+              <object class="GtkButton" id="wizard_cancel_button">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="tooltip-text" translatable="yes">Cancel installation and return to package details</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Cancel package installation</property>
+                </accessibility>
+                <signal name="clicked" handler="on_wizard_cancel_clicked"/>
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkButton" id="wizard_back_button">
+                <property name="label" translatable="yes">Back</property>
+                <property name="tooltip-text" translatable="yes">Return to previous step</property>
+                <property name="visible">false</property>
+                <signal name="clicked" handler="on_wizard_back_clicked"/>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="wizard_next_button">
+                <property name="label" translatable="yes">Start Installation</property>
+                <property name="tooltip-text" translatable="yes">Proceed to installation with selected configuration</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+                <accessibility>
+                  <property name="label" translatable="yes">Start package installation</property>
+                </accessibility>
+                <signal name="clicked" handler="on_wizard_next_clicked"/>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
-    </child>
-
-    <child type="action">
-      <object class="GtkButton" id="wizard_cancel_button">
-        <property name="label" translatable="yes">Cancel</property>
-        <property name="tooltip-text" translatable="yes">Cancel installation and return to package details</property>
-        <accessibility>
-          <property name="label" translatable="yes">Cancel package installation</property>
-        </accessibility>
-        <signal name="clicked" handler="on_wizard_cancel_clicked"/>
-      </object>
-    </child>
-
-    <child type="action">
-      <object class="GtkButton" id="wizard_back_button">
-        <property name="label" translatable="yes">Back</property>
-        <property name="tooltip-text" translatable="yes">Return to previous step</property>
-        <property name="visible">false</property>
-        <signal name="clicked" handler="on_wizard_back_clicked"/>
-      </object>
-    </child>
-
-    <child type="action">
-      <object class="GtkButton" id="wizard_next_button">
-        <property name="label" translatable="yes">Start Installation</property>
-        <property name="tooltip-text" translatable="yes">Proceed to installation with selected configuration</property>
-        <style>
-          <class name="suggested-action"/>
-        </style>
-        <accessibility>
-          <property name="label" translatable="yes">Start package installation</property>
-        </accessibility>
-        <signal name="clicked" handler="on_wizard_next_clicked"/>
-      </object>
-    </child>
+    </property>
 
   </object>
 </interface>

@@ -289,7 +289,7 @@
                                 <property name="spacing">16</property>
                                 <child>
                                   <object class="GtkLabel" id="article_date">
-                                    <property name="label" translatable="yes"></property>
+                                    <property name="label"></property>
                                     <property name="halign">start</property>
                                     <style>
                                       <class name="caption"/>
@@ -299,7 +299,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="article_author">
-                                    <property name="label" translatable="yes"></property>
+                                    <property name="label"></property>
                                     <property name="hexpand">True</property>
                                     <property name="halign">center</property>
                                     <style>
@@ -310,7 +310,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="read_status_label">
-                                    <property name="label" translatable="yes"></property>
+                                    <property name="label"></property>
                                     <property name="halign">end</property>
                                     <style>
                                       <class name="caption"/>

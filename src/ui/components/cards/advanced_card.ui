@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="paru-gui">
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkFrame" id="AdvancedCard">
+  <requires lib="adw" version="1.5"/>
+  <object class="GtkBox" id="AdvancedCard">
     <style>
       <class name="card"/>
       <class name="advanced-card"/>
@@ -10,18 +11,19 @@
     <property name="margin-end">4</property>
     <property name="margin-start">4</property>
     <property name="margin-top">4</property>
-    <property name="width-request">220</property>
-    <property name="height-request">380</property>
     <property name="hexpand">False</property>
     <property name="vexpand">False</property>
-    <property name="child">
+    <property name="orientation">vertical</property>
+    <child>
       <object class="GtkBox" id="main_container">
         <property name="orientation">vertical</property>
         <property name="spacing">0</property>
 
         <child>
-          <object class="GtkHeaderBar" id="navigation_header">
-            <property name="title-widget">
+          <object class="GtkBox" id="navigation_header">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">6</property>
+            <child>
               <object class="GtkBox" id="breadcrumb_container">
                 <property name="orientation">horizontal</property>
                 <property name="spacing">6</property>
@@ -72,9 +74,9 @@
                   </object>
                 </child>
               </object>
-            </property>
+            </child>
 
-            <child type="start">
+            <child>
               <object class="GtkButton" id="back_button">
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Return to simple mode</property>
@@ -86,7 +88,7 @@
               </object>
             </child>
 
-            <child type="end">
+            <child>
               <object class="GtkRevealer" id="progress_revealer">
                 <property name="reveal-child">false</property>
                 <property name="transition-type">slide-left</property>
@@ -226,27 +228,19 @@
                             </child>
 
                             <child>
-                              <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">Isolation Level:</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="advanced_sandbox_level_combo">
-                                    <property name="valign">center</property>
-                                    <property name="hexpand">true</property>
-                                    <property name="tooltip-text" translatable="yes">Choose security isolation level for command execution</property>
+                              <object class="AdwComboRow" id="advanced_sandbox_level_combo">
+                                <property name="title" translatable="yes">Isolation Level</property>
+                                <property name="subtitle" translatable="yes">Choose security isolation level for command execution</property>
+                                <property name="selected">1</property>
+                                <property name="model">
+                                  <object class="GtkStringList">
                                     <items>
-                                      <item id="strict">Strict Isolation</item>
-                                      <item id="medium">Medium Isolation (Recommended)</item>
-                                      <item id="minimal">Minimal Isolation</item>
+                                      <item translatable="yes">Strict Isolation</item>
+                                      <item translatable="yes">Medium Isolation (Recommended)</item>
+                                      <item translatable="yes">Minimal Isolation</item>
                                     </items>
-                                    <property name="active">1</property>
                                   </object>
-                                </child>
+                                </property>
                               </object>
                             </child>
 
@@ -322,26 +316,19 @@
                             </child>
 
                             <child>
-                              <object class="GtkBox">
-                                <property name="orientation">horizontal</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label" translatable="yes">PGP Key ID:</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="gpg_key_combo">
-                                    <property name="hexpand">true</property>
-                                    <property name="tooltip-text" translatable="yes">Select GPG key for package signing operations</property>
+                              <object class="AdwComboRow" id="gpg_key_combo">
+                                <property name="title" translatable="yes">PGP Key ID</property>
+                                <property name="subtitle" translatable="yes">Select GPG key for package signing operations</property>
+                                <property name="selected">0</property>
+                                <property name="model">
+                                  <object class="GtkStringList">
                                     <items>
-                                      <item id="default">Default GPG Key</item>
-                                      <item id="auto_fetch">Auto-fetch from KeyServer</item>
-                                      <item id="custom_id">Use Custom ID/Command</item>
+                                      <item translatable="yes">Default GPG Key</item>
+                                      <item translatable="yes">Auto-fetch from KeyServer</item>
+                                      <item translatable="yes">Use Custom ID/Command</item>
                                     </items>
-                                    <property name="active">0</property>
                                   </object>
-                                </child>
+                                </property>
                               </object>
                             </child>
 
@@ -407,6 +394,6 @@
           </object>
         </child>
       </object>
-    </property>
+    </child>
   </object>
 </interface>

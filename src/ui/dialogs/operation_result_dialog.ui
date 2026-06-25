@@ -3,27 +3,22 @@
   <requires lib="gtk" version="4.10"/>
   <requires lib="adw" version="1.5"/>
 
-  <object class="AdwWindow" id="OperationResultDialog">
+  <object class="AdwDialog" id="OperationResultDialog">
     <property name="title" translatable="yes">Operation Result</property>
-    <property name="modal">true</property>
-    <property name="resizable">true</property>
-    <property name="deletable">true</property>
-    <property name="default-width">700</property>
-    <property name="default-height">600</property>
-    <property name="width-request">500</property>
-    <property name="height-request">400</property>
+    <property name="content-width">700</property>
+    <property name="content-height">600</property>
     <accessibility>
       <property name="label" translatable="yes">Operation result and next steps dialog</property>
     </accessibility>
 
-    <child>
+    <property name="child">
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
             <property name="title-widget">
               <object class="AdwWindowTitle" id="header_title">
                 <property name="title" translatable="yes">Operation Complete</property>
-                <property name="subtitle" translatable="yes"></property>
+                <property name="subtitle"></property>
               </object>
             </property>
 
@@ -83,9 +78,9 @@
                         <property name="description" translatable="yes">Source and details of completed operation</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">quick-card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">horizontal</property>
                                 <property name="spacing">12</property>
@@ -146,7 +141,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -255,9 +250,9 @@
                         <property name="description" translatable="yes">Suggested actions and next steps</property>
 
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="css-classes">quick-card</property>
-                            <property name="child">
+                            <child>
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">12</property>
@@ -320,7 +315,7 @@
                                   </object>
                                 </child>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -504,6 +499,6 @@
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>
